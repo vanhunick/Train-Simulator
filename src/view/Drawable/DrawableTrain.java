@@ -6,7 +6,7 @@ import model.Train;
 /**
  * Created by vanhunick on 22/03/16.
  */
-public class DrawableTrain {
+public class DrawableTrain implements Drawable{
 
     private int curX;
     private int curY;
@@ -19,6 +19,7 @@ public class DrawableTrain {
         this.curY = startY;
     }
 
+    @Override
     public void draw(GraphicsContext g){
 
     }

@@ -1,5 +1,6 @@
 package view;
 
+import Test.TestSimpleTrack;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Group;
@@ -9,8 +10,12 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.stage.Stage;
+import model.Section;
+import model.Train;
+import view.Drawable.DrawableSection;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class Main extends Application {
@@ -28,7 +33,11 @@ public class Main extends Application {
 
     @Override
     public void start(final Stage primaryStage) {
-        viewLogic = new ViewLogic();
+        TestSimpleTrack tst = new TestSimpleTrack();
+
+
+
+        viewLogic = setupBasicExample();
 
         Group root = new Group();
         Scene scene = new Scene(root, SCREEN_WIDTH, SCREEN_HEIGHT, Color.rgb(0, 0, 0));
@@ -97,5 +106,22 @@ public class Main extends Application {
         root.getChildren().add(canvas);
         primaryStage.setScene(scene);
         primaryStage.show();
+    }
+
+    public ViewLogic setupBasicExample(){
+        TestSimpleTrack tst = new TestSimpleTrack();
+        Section[] sections = tst.createTrack(10);
+        Train t = tst.createTrain();
+
+        DrawableSection[] ds = new DrawableSection[sections.length];
+
+        // Create the drawable train and sections
+//        for(int i = 0; i < sections.length; i++){
+//            if(sections[i].getID() == 0 || sections[i].getID() == 1 || sections[i].getID() == 3 || sections[i].getID() == 5 || sections[i].getID() == 6 || sections[i].getID() == 8){
+//                ds[i] = new DrawableSection(sections[i],100,100);
+//            }
+//        }
+
+        return null;
     }
 }

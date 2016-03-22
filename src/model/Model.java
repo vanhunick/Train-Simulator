@@ -38,4 +38,12 @@ public class Model implements Events{
     public void setJunction(int junctionID, boolean toggle) {
         //TODO implement junctions
     }
+
+    public List<Train> getTrains() {
+        return trains;
+    }
+
+    public Section[] getSections() {
+        return sections;
+    }
 }

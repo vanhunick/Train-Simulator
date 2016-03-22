@@ -2,12 +2,17 @@ package Test;
 
 import model.Section;
 import model.Track;
+import model.Train;
 
 /**
  * Created by vanhunick on 22/03/16.
  */
 public class TestSimpleTrack {
 
+
+    public Train  createTrain(){
+        return  new Train(5, 20,10, 4, true);
+    }
 
     /**
      * Creates a very basic railway with one track per section

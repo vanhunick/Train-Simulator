@@ -2,6 +2,11 @@ package view;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import view.Drawable.DrawableSection;
+import view.Drawable.DrawableTrain;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -9,6 +14,15 @@ import javafx.scene.paint.Color;
  */
 public class ViewLogic {
 
+    ArrayList<DrawableTrain> trains;
+    ArrayList<DrawableSection> railway;
+
+    public ViewLogic(ArrayList<DrawableTrain> trains, ArrayList<DrawableSection> railWay){
+        this.trains = trains;
+        this.railway = railWay;
+
+
+    }
 
     public void update(){
 
