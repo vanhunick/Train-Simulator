@@ -2,20 +2,17 @@ package view.Drawable.track_types;
 
 import javafx.scene.canvas.GraphicsContext;
 import model.Section;
-import view.Drawable.DrawableSection;
-
-import javax.sound.midi.Soundbank;
 
 /**
  * Created by Nicky on 25/03/2016.
  */
-public abstract class DefualtDrawableSection {
+public abstract class DefSection {
     private static final int TRACK_WIDTH = 30;
     private double startX;
     private double startY;
     private double length;//TODO might just use the train length
     private Section section;
-    private DefualtDrawableSection from;
+    private DefSection from;
     private boolean startPiece;
     private String direction;
 
@@ -28,7 +25,7 @@ public abstract class DefualtDrawableSection {
     /**
      * Constructor for a piece that connects to another piece
      * */
-    public DefualtDrawableSection (Section section, int length, int drawID){
+    public DefSection(Section section, int length, int drawID){
         this.section = section;
         this.length = length;
         this.from = from;
@@ -39,7 +36,7 @@ public abstract class DefualtDrawableSection {
     /**
      * Constructor for the starting piece
      * */
-    public DefualtDrawableSection (Section section, int startX,  int startY, int length, int drawID, String direction){
+    public DefSection(Section section, int startX, int startY, int length, int drawID, String direction){
         this.section = section;
         this.startX = startX;
         this.startY = startY;
@@ -55,7 +52,7 @@ public abstract class DefualtDrawableSection {
     }
 
 
-    public void setStart(DefualtDrawableSection from){
+    public void setStart(DefSection from){
         System.out.println("Should be implemented in subclass");
     }
 
@@ -82,7 +79,7 @@ public abstract class DefualtDrawableSection {
         return startPiece;
     }
 
-    public DefualtDrawableSection getFrom() {
+    public DefSection getFrom() {
         return from;
     }
 

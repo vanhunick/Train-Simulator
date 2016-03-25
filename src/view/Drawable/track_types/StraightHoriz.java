@@ -3,12 +3,11 @@ package view.Drawable.track_types;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import model.Section;
-import view.Drawable.DrawableSection;
 
 /**
  * Created by Nicky on 25/03/2016.
  */
-public class StraightHoriz extends DefualtDrawableSection{
+public class StraightHoriz extends DefSection {
     private static final int TRACK_WIDTH = 30;
 
     /**
@@ -25,7 +24,7 @@ public class StraightHoriz extends DefualtDrawableSection{
         super(section,startX,startY,length,drawID, direction);
     }
 
-    public void setStart(DefualtDrawableSection from){
+    public void setStart(DefSection from){
         double startX = 0;
         double startY = 0;
 
@@ -61,6 +60,12 @@ public class StraightHoriz extends DefualtDrawableSection{
         super.setStartY(startY);
     }
 
+    public boolean containsPoint(double x, double y){
+        return x >= super.getStartX() && x <= super.getStartX() + super.getLength() &&
+                y >= super.getStartY() && y <= super.getStartY() + TRACK_WIDTH;
+    }
+
+
 
     public void draw(GraphicsContext g) {
         g.setStroke(Color.RED);
@@ -69,4 +74,5 @@ public class StraightHoriz extends DefualtDrawableSection{
         g.strokeLine(super.getStartX(), super.getStartY(), super.getStartX() + super.getLength(), super.getStartY());
         g.strokeLine(super.getStartX(), super.getStartY() + TRACK_WIDTH, super.getStartX() + super.getLength(), super.getStartY()+ TRACK_WIDTH);
     }
+
 }

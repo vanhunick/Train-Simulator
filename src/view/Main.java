@@ -49,15 +49,15 @@ public class Main extends Application {
     DrawableSection ds13;
     DrawableSection ds14;
 
-    List<DefualtDrawableSection> situations;
+    List<DefSection> situations = new ArrayList<>();
 
     @Override
     public void start(final Stage primaryStage) {
 
-        situations = testStraightSituations();
-        situations =testVerticalSituations();
-        situations = testQuart1Situations();
-        situations = testQuart2Situations();
+        testStraightSituations(situations);
+        testVerticalSituations(situations);
+        testQuart1Situations(situations);
+        testQuart2Situations(situations);
 
         ds = new DrawableSection(new Section(2, 100, null, null, null), 300, 150, 200,0);
         ds2 = new DrawableSection(new Section(2, 100, null, null, null), 300, 0,ds);
@@ -147,7 +147,7 @@ public class Main extends Application {
 //                ds13.draw(gc);
 //                ds14.draw(gc);
 
-                for(DefualtDrawableSection d : situations){
+                for(DefSection d : situations){
                     d.draw(gc);
                 }
 
@@ -168,12 +168,12 @@ public class Main extends Application {
         primaryStage.show();
     }
 
-    public List<DefualtDrawableSection> testSituations(){
-        List<DefualtDrawableSection> sections = new ArrayList<>();
+    public List<DefSection> testSituations(){
+        List<DefSection> sections = new ArrayList<>();
 
-//        DefualtDrawableSection ds = new StraightHoriz(new Section(2, 100, null, null, null), 300, 150, 200,0, "RIGHT");
-        DefualtDrawableSection ds = new Quart4(new Section(2, 100, null, null, null), 300, 150, 300,4, "RIGHT");
-        DefualtDrawableSection ds2 = new StraightHoriz(new Section(2, 100, null, null, null), 200,0);
+//        DefSection ds = new StraightHoriz(new Section(2, 100, null, null, null), 300, 150, 200,0, "RIGHT");
+        DefSection ds = new Quart4(new Section(2, 100, null, null, null), 300, 150, 300,4, "RIGHT");
+        DefSection ds2 = new StraightHoriz(new Section(2, 100, null, null, null), 200,0);
         ds2.setStart(ds);
 
         sections.add(ds);
@@ -182,13 +182,13 @@ public class Main extends Application {
         return sections;
     }
 
-    public List<DefualtDrawableSection> testStraightSituations(){
-        List<DefualtDrawableSection> sections = new ArrayList<>();
+    public List<DefSection> testStraightSituations(List<DefSection> sections){
+
 
         int x = 100;
 
-        DefualtDrawableSection ds = new Quart4(new Section(2, 100, null, null, null), x, 100, 150,4, "RIGHT");
-        DefualtDrawableSection ds1 = new StraightHoriz(new Section(2, 100, null, null, null), 75,0);
+        DefSection ds = new Quart4(new Section(2, 100, null, null, null), x, 100, 150,4, "RIGHT");
+        DefSection ds1 = new StraightHoriz(new Section(2, 100, null, null, null), 75,0);
         ds1.setStart(ds);
 
         sections.add(ds);
@@ -196,8 +196,8 @@ public class Main extends Application {
 
         x+= 300;
 
-        DefualtDrawableSection ds2 = new Quart1(new Section(2, 100, null, null, null), x, 100, 150,1, "RIGHT");
-        DefualtDrawableSection ds3 = new StraightHoriz(new Section(2, 100, null, null, null), 75,0);
+        DefSection ds2 = new Quart1(new Section(2, 100, null, null, null), x, 100, 150,1, "RIGHT");
+        DefSection ds3 = new StraightHoriz(new Section(2, 100, null, null, null), 75,0);
         ds3.setStart(ds2);
 
 
@@ -206,8 +206,8 @@ public class Main extends Application {
 
         x+=300;
 
-        DefualtDrawableSection ds4 = new Quart2(new Section(2, 100, null, null, null), x, 100, 150,2, "LEFT");
-        DefualtDrawableSection ds5 = new StraightHoriz(new Section(2, 100, null, null, null), 75,0);
+        DefSection ds4 = new Quart2(new Section(2, 100, null, null, null), x, 100, 150,2, "LEFT");
+        DefSection ds5 = new StraightHoriz(new Section(2, 100, null, null, null), 75,0);
         ds5.setStart(ds4);
 
 
@@ -216,8 +216,8 @@ public class Main extends Application {
 
         x+=300;
 
-        DefualtDrawableSection ds6 = new Quart3(new Section(2, 100, null, null, null), x, 100, 150, 3, "LEFT");
-        DefualtDrawableSection ds7 = new StraightHoriz(new Section(2, 100, null, null, null), 75,0);
+        DefSection ds6 = new Quart3(new Section(2, 100, null, null, null), x, 100, 150, 3, "LEFT");
+        DefSection ds7 = new StraightHoriz(new Section(2, 100, null, null, null), 75,0);
         ds7.setStart(ds6);
 
 
@@ -227,13 +227,13 @@ public class Main extends Application {
         return sections;
     }
 
-    public List<DefualtDrawableSection> testVerticalSituations(){
-        List<DefualtDrawableSection> sections = new ArrayList<>();
+    public List<DefSection> testVerticalSituations(List<DefSection> sections){
+
 
         int x = 100;
 
-        DefualtDrawableSection ds = new Quart2(new Section(2, 100, null, null, null), x, 100, 150,2, "RIGHT");
-        DefualtDrawableSection ds1 = new StraightVert(new Section(2, 100, null, null, null), 75,5);
+        DefSection ds = new Quart2(new Section(2, 100, null, null, null), x, 400, 150,2, "RIGHT");
+        DefSection ds1 = new StraightVert(new Section(2, 100, null, null, null), 75,5);
         ds1.setStart(ds);
 
         sections.add(ds);
@@ -241,8 +241,8 @@ public class Main extends Application {
 
         x+= 300;
 
-        DefualtDrawableSection ds2 = new Quart1(new Section(2, 100, null, null, null), x, 100, 150,1, "LEFT");
-        DefualtDrawableSection ds3 = new StraightVert(new Section(2, 100, null, null, null), 75,5);
+        DefSection ds2 = new Quart1(new Section(2, 100, null, null, null), x, 400, 150,1, "LEFT");
+        DefSection ds3 = new StraightVert(new Section(2, 100, null, null, null), 75,5);
         ds3.setStart(ds2);
 
         sections.add(ds2);
@@ -250,8 +250,8 @@ public class Main extends Application {
 
         x+= 300;
 
-        DefualtDrawableSection ds4 = new Quart3(new Section(2, 100, null, null, null), x, 100, 150,3, "RIGHT");
-        DefualtDrawableSection ds5 = new StraightVert(new Section(2, 100, null, null, null), 75,5);
+        DefSection ds4 = new Quart3(new Section(2, 100, null, null, null), x, 400, 150,3, "RIGHT");
+        DefSection ds5 = new StraightVert(new Section(2, 100, null, null, null), 75,5);
         ds5.setStart(ds4);
 
         sections.add(ds4);
@@ -259,8 +259,8 @@ public class Main extends Application {
 
         x+= 300;
 
-        DefualtDrawableSection ds6 = new Quart4(new Section(2, 100, null, null, null), x, 100, 150,4, "LEFT");
-        DefualtDrawableSection ds7 = new StraightVert(new Section(2, 100, null, null, null), 75,5);
+        DefSection ds6 = new Quart4(new Section(2, 100, null, null, null), x, 400, 150,4, "LEFT");
+        DefSection ds7 = new StraightVert(new Section(2, 100, null, null, null), 75,5);
         ds7.setStart(ds6);
 
         sections.add(ds6);
@@ -271,13 +271,13 @@ public class Main extends Application {
         return sections;
     }
 
-    public List<DefualtDrawableSection> testQuart1Situations(){
-        List<DefualtDrawableSection> sections = new ArrayList<>();
+    public List<DefSection> testQuart1Situations(List<DefSection> sections){
+
 
         int x = 100;
 
-        DefualtDrawableSection ds = new Quart3(new Section(2, 100, null, null, null), x, 100, 150,3, "RIGHT");
-        DefualtDrawableSection ds1 = new Quart1(new Section(2, 100, null, null, null), 150,1);
+        DefSection ds = new Quart3(new Section(2, 100, null, null, null), x, 240, 150,3, "RIGHT");
+        DefSection ds1 = new Quart1(new Section(2, 100, null, null, null), 150,1);
         ds1.setStart(ds);
 
         sections.add(ds);
@@ -285,8 +285,8 @@ public class Main extends Application {
 
         x += 300;
 
-        DefualtDrawableSection ds2 = new StraightHoriz(new Section(2, 100, null, null, null), x, 100, 150,0, "LEFT");
-        DefualtDrawableSection ds3 = new Quart1(new Section(2, 100, null, null, null), 150,1);
+        DefSection ds2 = new StraightHoriz(new Section(2, 100, null, null, null), x, 250, 150,0, "LEFT");
+        DefSection ds3 = new Quart1(new Section(2, 100, null, null, null), 150,1);
         ds3.setStart(ds2);
 
         sections.add(ds2);
@@ -294,8 +294,8 @@ public class Main extends Application {
 
         x += 300;
 
-        DefualtDrawableSection ds4 = new Quart2(new Section(2, 100, null, null, null), x, 100, 150,2, "LEFT");
-        DefualtDrawableSection ds5 = new Quart1(new Section(2, 100, null, null, null), 150,1);
+        DefSection ds4 = new Quart2(new Section(2, 100, null, null, null), x, 250, 150,2, "LEFT");
+        DefSection ds5 = new Quart1(new Section(2, 100, null, null, null), 150,1);
         ds5.setStart(ds4);
 
         sections.add(ds4);
@@ -303,8 +303,8 @@ public class Main extends Application {
 
         x+=300;
 
-        DefualtDrawableSection ds6 = new Quart3(new Section(2, 100, null, null, null), x, 100, 150,3, "LEFT");
-        DefualtDrawableSection ds7 = new Quart1(new Section(2, 100, null, null, null), 150,1);
+        DefSection ds6 = new Quart3(new Section(2, 100, null, null, null), x, 250, 150,3, "LEFT");
+        DefSection ds7 = new Quart1(new Section(2, 100, null, null, null), 150,1);
         ds7.setStart(ds6);
 
         sections.add(ds6);
@@ -312,8 +312,8 @@ public class Main extends Application {
 
         x+=300;
 
-        DefualtDrawableSection ds8 = new Quart4(new Section(2, 100, null, null, null), x, 100, 150,4, "LEFT");
-        DefualtDrawableSection ds9 = new Quart1(new Section(2, 100, null, null, null), 150,1);
+        DefSection ds8 = new Quart4(new Section(2, 100, null, null, null), x, 250, 150,4, "LEFT");
+        DefSection ds9 = new Quart1(new Section(2, 100, null, null, null), 150,1);
         ds9.setStart(ds8);
 
         sections.add(ds8);
@@ -322,13 +322,13 @@ public class Main extends Application {
         return sections;
     }
 
-    public List<DefualtDrawableSection> testQuart2Situations(){
-        List<DefualtDrawableSection> sections = new ArrayList<>();
+    public List<DefSection> testQuart2Situations(List<DefSection> sections){
+
 
         int x = 100;
 
-        DefualtDrawableSection ds = new StraightHoriz(new Section(2, 100, null, null, null), x, 100, 150,0, "RIGHT");
-        DefualtDrawableSection ds1 = new Quart2(new Section(2, 100, null, null, null), 150,2);
+        DefSection ds = new StraightHoriz(new Section(2, 100, null, null, null), x, 600, 150,0, "RIGHT");
+        DefSection ds1 = new Quart2(new Section(2, 100, null, null, null), 150,2);
         ds1.setStart(ds);
 
         sections.add(ds);
@@ -336,8 +336,8 @@ public class Main extends Application {
 
         x += 300;
 
-        DefualtDrawableSection ds2 = new Quart1(new Section(2, 100, null, null, null), x, 100, 150,1, "RIGHT");
-        DefualtDrawableSection ds3 = new Quart2(new Section(2, 100, null, null, null), 150,2);
+        DefSection ds2 = new Quart1(new Section(2, 100, null, null, null), x, 600, 150,1, "RIGHT");
+        DefSection ds3 = new Quart2(new Section(2, 100, null, null, null), 150,2);
         ds3.setStart(ds2);
 
         sections.add(ds2);
@@ -345,8 +345,8 @@ public class Main extends Application {
 
         x += 300;
 
-        DefualtDrawableSection ds4 = new Quart4(new Section(2, 100, null, null, null), x, 100, 150,4, "RIGHT");
-        DefualtDrawableSection ds5 = new Quart2(new Section(2, 100, null, null, null), 150,2);
+        DefSection ds4 = new Quart4(new Section(2, 100, null, null, null), x, 600, 150,4, "RIGHT");
+        DefSection ds5 = new Quart2(new Section(2, 100, null, null, null), 150,2);
         ds5.setStart(ds4);
 
         sections.add(ds4);
@@ -354,8 +354,8 @@ public class Main extends Application {
 
         x += 300;
 
-        DefualtDrawableSection ds6 = new StraightVert(new Section(2, 100, null, null, null), x, 100, 150,5, "LEFT");
-        DefualtDrawableSection ds7 = new Quart2(new Section(2, 100, null, null, null), 150,2);
+        DefSection ds6 = new StraightVert(new Section(2, 100, null, null, null), x, 600, 150,5, "LEFT");
+        DefSection ds7 = new Quart2(new Section(2, 100, null, null, null), 150,2);
         ds7.setStart(ds6);
 
         sections.add(ds6);
@@ -363,8 +363,8 @@ public class Main extends Application {
 
         x += 300;
 
-        DefualtDrawableSection ds8 = new Quart4(new Section(2, 100, null, null, null), x, 100, 200,4, "LEFT");
-        DefualtDrawableSection ds9 = new Quart2(new Section(2, 100, null, null, null), 150,2);
+        DefSection ds8 = new Quart4(new Section(2, 100, null, null, null), x, 600, 200,4, "LEFT");
+        DefSection ds9 = new Quart2(new Section(2, 100, null, null, null), 150,2);
         ds9.setStart(ds8);
 
         sections.add(ds8);

@@ -8,7 +8,7 @@ import model.Section;
 /**
  * Created by Nicky on 25/03/2016.
  */
-public class Quart2 extends DefualtDrawableSection {
+public class Quart2 extends DefSection {
     private static final int TRACK_WIDTH = 30;
 
     /**
@@ -28,7 +28,7 @@ public class Quart2 extends DefualtDrawableSection {
     /**
      * Workds out where to start drawing the piece based on the piece it came from
      * */
-    public void setStart(DefualtDrawableSection from){
+    public void setStart(DefSection from){
         double startX = 0;
         double startY = 0;
 
@@ -58,6 +58,11 @@ public class Quart2 extends DefualtDrawableSection {
         }
         super.setStartX(startX);
         super.setStartY(startY);
+    }
+
+    public boolean containsPoint(double x, double y){
+        return x >= super.getStartX() + super.getLength()/2 && x <= super.getStartX() + super.getLength() &&
+                y >= super.getStartY() && y <= super.getStartY() + super.getLength()/2;
     }
 
     public void draw(GraphicsContext g) {

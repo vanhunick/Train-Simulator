@@ -4,10 +4,6 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 import model.Section;
-import view.Drawable.track_types.DefualtDrawableSection;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Nicky van Hulst on 22/03/16.

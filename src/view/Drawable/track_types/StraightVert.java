@@ -2,13 +2,12 @@ package view.Drawable.track_types;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.ArcType;
 import model.Section;
 
 /**
  * Created by Nicky on 25/03/2016.
  */
-public class StraightVert extends DefualtDrawableSection{
+public class StraightVert extends DefSection {
     private static final int TRACK_WIDTH = 30;
 
     /**
@@ -28,7 +27,7 @@ public class StraightVert extends DefualtDrawableSection{
     /**
      * Workds out where to start drawing the piece based on the piece it came from
      * */
-    public void setStart(DefualtDrawableSection from){
+    public void setStart(DefSection from){
         double startX = 0;
         double startY = 0;
 
@@ -63,6 +62,11 @@ public class StraightVert extends DefualtDrawableSection{
 
         super.setStartX(startX);
         super.setStartY(startY);
+    }
+
+    public boolean containsPoint(double x, double y){
+        return x >= super.getStartX() && x <= super.getStartX() + TRACK_WIDTH &&
+                y >= super.getStartY() && y <= super.getStartY() + super.getLength();
     }
 
     public void draw(GraphicsContext g) {
