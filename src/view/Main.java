@@ -13,6 +13,7 @@ import javafx.stage.Stage;
 import model.Section;
 import model.Train;
 import view.Drawable.DrawableSection;
+import view.Drawable.track_types.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,15 +28,51 @@ public class Main extends Application {
 
     private ViewLogic viewLogic;
 
+
+
     public static void main(String[] args) {
         Application.launch(args);
     }
 
+    DrawableSection ds;
+    DrawableSection ds2;
+    DrawableSection ds3;
+    DrawableSection ds4;
+    DrawableSection ds5;
+    DrawableSection ds6;
+    DrawableSection ds7;
+    DrawableSection ds8;
+    DrawableSection ds9;
+    DrawableSection ds10;
+    DrawableSection ds11;
+    DrawableSection ds12;
+    DrawableSection ds13;
+    DrawableSection ds14;
+
+    List<DefualtDrawableSection> situations;
+
     @Override
     public void start(final Stage primaryStage) {
+
+        situations = testStraightSituations();
+        situations =testVerticalSituations();
+
+        ds = new DrawableSection(new Section(2, 100, null, null, null), 300, 150, 200,0);
+        ds2 = new DrawableSection(new Section(2, 100, null, null, null), 300, 0,ds);
+        ds3 = new DrawableSection(new Section(2, 100, null, null, null), 600, 2,ds2);
+        ds4 = new DrawableSection(new Section(2, 100, null, null, null), 200, 5,ds3);
+        ds5 = new DrawableSection(new Section(2, 100, null, null, null), 400, 3,ds4);
+        ds6 = new DrawableSection(new Section(2, 100, null, null, null), 300, 0,ds5);
+        ds7 = new DrawableSection(new Section(2, 100, null, null, null), 200, 4,ds6);
+        ds8 = new DrawableSection(new Section(2, 100, null, null, null), 200, 2,ds7);
+        ds9 = new DrawableSection(new Section(2, 100, null, null, null), 300, 4,ds8);
+        ds10 = new DrawableSection(new Section(2, 100, null, null, null), 200, 1,ds9);
+        ds11 = new DrawableSection(new Section(2, 100, null, null, null), 200, 3,ds10);
+        ds12 = new DrawableSection(new Section(2, 100, null, null, null), 200, 1,ds11);
+        ds13 = new DrawableSection(new Section(2, 100, null, null, null), 200, 2,ds12);
+        ds14 = new DrawableSection(new Section(2, 100, null, null, null), 200, 4,ds13);
+
         TestSimpleTrack tst = new TestSimpleTrack();
-
-
 
         viewLogic = setupBasicExample();
 
@@ -90,8 +127,29 @@ public class Main extends Application {
                 gc.clearRect(0, 0, primaryStage.getWidth(), primaryStage.getHeight());
 
 
+
                 //redraw all elements on the screen
                 viewLogic.refresh(gc);
+//                ds.draw(gc);
+//                ds2.draw(gc);
+//                ds3.draw(gc);
+//                ds4.draw(gc);
+//                ds5.draw(gc);
+//                ds6.draw(gc);
+//                ds7.draw(gc);
+//                ds8.draw(gc);
+//                ds9.draw(gc);
+//                ds10.draw(gc);
+//                ds11.draw(gc);
+//                ds12.draw(gc);
+//                ds13.draw(gc);
+//                ds14.draw(gc);
+
+                for(DefualtDrawableSection d : situations){
+                    d.draw(gc);
+                }
+
+
 
                 viewLogic.update();
                 // save the origin or the current state of the Graphics Context.
@@ -108,6 +166,121 @@ public class Main extends Application {
         primaryStage.show();
     }
 
+    public List<DefualtDrawableSection> testSituations(){
+        List<DefualtDrawableSection> sections = new ArrayList<>();
+
+//        DefualtDrawableSection ds = new StraightHoriz(new Section(2, 100, null, null, null), 300, 150, 200,0, "RIGHT");
+        DefualtDrawableSection ds = new Quart4(new Section(2, 100, null, null, null), 300, 150, 300,4, "RIGHT");
+        DefualtDrawableSection ds2 = new StraightHoriz(new Section(2, 100, null, null, null), 200,0);
+        ds2.setStart(ds);
+
+        sections.add(ds);
+        sections.add(ds2);
+
+        return sections;
+    }
+
+    public List<DefualtDrawableSection> testStraightSituations(){
+        List<DefualtDrawableSection> sections = new ArrayList<>();
+
+        int x = 100;
+
+        DefualtDrawableSection ds = new Quart4(new Section(2, 100, null, null, null), x, 100, 150,4, "RIGHT");
+        DefualtDrawableSection ds1 = new StraightHoriz(new Section(2, 100, null, null, null), 75,0);
+        ds1.setStart(ds);
+
+        sections.add(ds);
+        sections.add(ds1);
+
+        x+= 300;
+
+        DefualtDrawableSection ds2 = new Quart1(new Section(2, 100, null, null, null), x, 100, 150,1, "RIGHT");
+        DefualtDrawableSection ds3 = new StraightHoriz(new Section(2, 100, null, null, null), 75,0);
+        ds3.setStart(ds2);
+
+
+        sections.add(ds2);
+        sections.add(ds3);
+
+        x+=300;
+
+        DefualtDrawableSection ds4 = new Quart2(new Section(2, 100, null, null, null), x, 100, 150,2, "LEFT");
+        DefualtDrawableSection ds5 = new StraightHoriz(new Section(2, 100, null, null, null), 75,0);
+        ds5.setStart(ds4);
+
+
+        sections.add(ds4);
+        sections.add(ds5);
+
+        x+=300;
+
+        DefualtDrawableSection ds6 = new Quart3(new Section(2, 100, null, null, null), x, 100, 150, 3, "LEFT");
+        DefualtDrawableSection ds7 = new StraightHoriz(new Section(2, 100, null, null, null), 75,0);
+        ds7.setStart(ds6);
+
+
+        sections.add(ds6);
+        sections.add(ds7);
+
+        return sections;
+    }
+
+    public List<DefualtDrawableSection> testVerticalSituations(){
+        List<DefualtDrawableSection> sections = new ArrayList<>();
+
+        int x = 100;
+
+        DefualtDrawableSection ds = new Quart2(new Section(2, 100, null, null, null), x, 100, 150,2, "RIGHT");
+        DefualtDrawableSection ds1 = new StraightVert(new Section(2, 100, null, null, null), 75,5);
+        ds1.setStart(ds);
+
+        sections.add(ds);
+        sections.add(ds1);
+
+        x+= 300;
+
+        DefualtDrawableSection ds2 = new Quart1(new Section(2, 100, null, null, null), x, 100, 150,1, "LEFT");
+        DefualtDrawableSection ds3 = new StraightVert(new Section(2, 100, null, null, null), 75,5);
+        ds3.setStart(ds2);
+
+        sections.add(ds2);
+        sections.add(ds3);
+
+        x+= 300;
+
+        DefualtDrawableSection ds4 = new Quart3(new Section(2, 100, null, null, null), x, 100, 150,3, "RIGHT");
+        DefualtDrawableSection ds5 = new StraightVert(new Section(2, 100, null, null, null), 75,5);
+        ds5.setStart(ds4);
+
+        sections.add(ds4);
+        sections.add(ds5);
+
+        x+= 300;
+
+        DefualtDrawableSection ds6 = new Quart4(new Section(2, 100, null, null, null), x, 100, 150,4, "LEFT");
+        DefualtDrawableSection ds7 = new StraightVert(new Section(2, 100, null, null, null), 75,5);
+        ds7.setStart(ds6);
+
+        sections.add(ds6);
+        sections.add(ds7);
+
+        x+= 300;
+
+        return sections;
+    }
+
+    public List<DefualtDrawableSection> testQuartSituations(){
+        List<DefualtDrawableSection> sections = new ArrayList<>();
+
+        int x = 100;
+
+        DefualtDrawableSection ds = new Quart2(new Section(2, 100, null, null, null), x, 100, 150,2, "RIGHT");
+        DefualtDrawableSection ds1 = new StraightVert(new Section(2, 100, null, null, null), 75,5);
+        ds1.setStart(ds);
+
+        return sections;
+    }
+
     public ViewLogic setupBasicExample(){
         TestSimpleTrack tst = new TestSimpleTrack();
         Section[] sections = tst.createTrack(10);
@@ -122,6 +295,6 @@ public class Main extends Application {
 //            }
 //        }
 
-        return null;
+        return new ViewLogic(null,null);
     }
 }

@@ -30,8 +30,8 @@ public class ViewLogic {
 
     public void refresh(GraphicsContext g){
 
-        g.setFill(Color.WHITE);
-        g.fillRect(400, 250, 100, 100);
+        //g.setFill(Color.WHITE);
+        //g.fillRect(400, 250, 100, 100);
     }
 
 
