@@ -29,29 +29,35 @@ public class Quart2 extends DefualtDrawableSection {
      * Workds out where to start drawing the piece based on the piece it came from
      * */
     public void setStart(DefualtDrawableSection from){
+        double startX = 0;
+        double startY = 0;
 
         if(from.getDirection().equals("RIGHT")){
             if(from.getDrawID() == 0){
-
+                startX = from.getStartX() + from.getLength() - super.getLength()/2;
+                startY = from.getStartY();
             }
             else if(from.getDrawID() == 1){
-
+                startX = from.getStartX() + from.getLength()/2 - super.getLength()/2;
+                startY = from.getStartY();
             }
             else if(from.getDrawID() == 4){
-
+                startX = from.getStartX() + from.getLength()/2 - super.getLength()/2;
+                startY = from.getStartY() + from.getLength()/2 + super.getLength()/2 - TRACK_WIDTH;
             }
         }
         else if(from.getDirection().equals("LEFT")){
-            if(from.getDrawID() == 0){
-
+            if(from.getDrawID() == 5){
+                startX = from.getStartX() - super.getLength();
+                startY = from.getStartY() - super.getLength()/2;
             }
-            else if(from.getDrawID() == 2){
-
-            }
-            else if(from.getDrawID() == 3){
-
+            else if(from.getDrawID() == 4){
+                startX = from.getStartX() - super.getLength() + TRACK_WIDTH;
+                startY = from.getStartY() + from.getLength()/2 - super.getLength()/2;
             }
         }
+        super.setStartX(startX);
+        super.setStartY(startY);
     }
 
     public void draw(GraphicsContext g) {

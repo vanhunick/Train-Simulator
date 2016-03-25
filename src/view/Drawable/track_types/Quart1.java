@@ -29,26 +29,36 @@ public class Quart1 extends DefualtDrawableSection{
      * Workds out where to start drawing the piece based on the piece it came from
      * */
     public void setStart(DefualtDrawableSection from){
+        double startX = 0;
+        double startY = 0;
 
         if(from.getDirection().equals("RIGHT")){
             if(from.getDrawID() == 3){
-
+                startX = from.getStartX();
+                startY = from.getStartY() + from.getLength() - TRACK_WIDTH;
             }
         }
         else if(from.getDirection().equals("LEFT")){
             if(from.getDrawID() == 0){
-
+                startY = from.getStartY();
+                startX = from.getStartX() - super.getLength()/2;
             }
             else if(from.getDrawID() == 2){
-
+                startY = from.getStartY();
+                startX = from.getStartX() + from.getLength()/2 - (super.getLength()/2);
             }
             else if(from.getDrawID() == 3){
-
+                startX = from.getStartX() + from.getLength() - TRACK_WIDTH;
+                startY = from.getStartY() + (from.getLength()/2) - super.getLength()/2;
             }
             else if(from.getDrawID() == 4){
-
+                startX = from.getStartX() ;
+                startY = from.getStartY() + from.getLength()/2 - super.getLength()/2;
             }
         }
+
+        setStartX(startX);
+        setStartY(startY);
     }
 
     public void draw(GraphicsContext g) {
