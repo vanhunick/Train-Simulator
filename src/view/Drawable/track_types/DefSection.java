@@ -7,7 +7,7 @@ import model.Section;
  * Created by Nicky on 25/03/2016.
  */
 public abstract class DefSection {
-    private static final int TRACK_WIDTH = 30;
+    public static final int TRACK_WIDTH = 30;
     private double startX;
     private double startY;
     private double length;//TODO might just use the train length
@@ -105,5 +105,19 @@ public abstract class DefSection {
 
     public void setStartX(double startX) {
         this.startX = startX;
+    }
+
+    public void setDirection(String direction){this.direction = direction;}
+
+    public double getNextX(double curX, double moveBy){
+        System.out.println("Should be implemented in subclass");
+
+        return 0;
+    }
+
+    public double getNextY(double curY, double moveBy){
+        System.out.println("Should be implemented in subclass");
+
+        return 0;
     }
 }

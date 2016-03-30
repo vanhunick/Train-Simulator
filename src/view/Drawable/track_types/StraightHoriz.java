@@ -25,13 +25,16 @@ public class StraightHoriz extends DefSection {
     }
 
     public void setStart(DefSection from){
+
         double startX = 0;
         double startY = 0;
 
         if(from.getDirection().equals("RIGHT")){
+            super.setDirection("RIGHT");
             if(from.getDrawID() == 0){
-                super.setStartX(from.getStartX() + from.getLength());
-                super.setStartY(from.getStartY());
+                System.out.println("Setting x");
+                startX = from.getStartX() + from.getLength();
+                startY = from.getStartY();
             }
             else if(from.getDrawID() == 1){
                 startX = from.getStartX() + from.getLength()/2;
@@ -43,6 +46,7 @@ public class StraightHoriz extends DefSection {
             }
         }
         else if(from.getDirection().equals("LEFT")){
+            super.setDirection("LEFT");
             if(from.getDrawID() == 0){
                 startX =from.getStartX() - super.getLength();
                 startY = from.getStartY();
@@ -65,12 +69,37 @@ public class StraightHoriz extends DefSection {
                 y >= super.getStartY() && y <= super.getStartY() + TRACK_WIDTH;
     }
 
+    public double getNextX(double curX, double moveBy){
+        if(super.getDirection().equals("RIGHT")){
+            if(curX + moveBy > super.getStartX() + super.getLength()){
+                return 0;//No longer in this section TODO update later
+            }
+            else{
+                return curX + moveBy;
+            }
+        }
+        else if(super.getDirection().equals("LEFT")){
+            if(curX - moveBy < super.getStartX() - super.getLength()){
+                return 0;//No longer in this section TODO update later
+            }
+            else{
+                return curX - moveBy;
+            }
+        }
+
+        return 0;
+    }
+
+    public double getNextY(double curY, double moveBy){
+        //going straight y never changes on this section
+        return curY;
+    }
+
+
 
 
     public void draw(GraphicsContext g) {
         g.setStroke(Color.RED);
-        System.out.println(super.getStartX());
-        System.out.println(super.getStartY());
         g.strokeLine(super.getStartX(), super.getStartY(), super.getStartX() + super.getLength(), super.getStartY());
         g.strokeLine(super.getStartX(), super.getStartY() + TRACK_WIDTH, super.getStartX() + super.getLength(), super.getStartY()+ TRACK_WIDTH);
     }

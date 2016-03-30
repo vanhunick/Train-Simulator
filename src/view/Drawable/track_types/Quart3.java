@@ -32,27 +32,35 @@ public class Quart3 extends DefSection {
         double startX = 0;
         double startY = 0;
 
-        if(from.getDirection().equals("RIGHT")){
-            if(from.getDrawID() == 0){
-                startX = from.getStartX() + from.getLength() + super.getLength()/2;
-                startY = from.getStartY() - super.getLength()/2;
-            }
-            else if(from.getDrawID() == 1){
+        if(from.getDirection().equals("DOWN")){
+            super.setDirection("LEFT");
 
-            }
-            else if(from.getDrawID() == 4){
-
-            }
-        }
-        else if(from.getDirection().equals("LEFT")){
-            if(from.getDrawID() == 0){
-
+            if(from.getDrawID() == 1){
+                startX = from.getStartX() - super.getLength()/2;
+                startY = from.getStartY() + from.getLength()/2 + super.getLength();
             }
             else if(from.getDrawID() == 2){
-
+                startX = from.getStartX() + from.getLength()/2 -super.getLength()/2;
+                startY = from.getStartY() + from.getLength()/2 - super.getLength()/2;
             }
-            else if(from.getDrawID() == 3){
-
+            else if(from.getDrawID() == 5){
+                startX = from.getStartX() - super.getLength();//  - TRACK_WIDTH
+                startY = from.getStartY() + from.getLength() - super.getLength()/2;
+            }
+        }
+        else if(from.getDirection().equals("RIGHT")){
+            super.setDirection("UP");
+            if(from.getDrawID() == 0){
+                startX = from.getStartX() + from.getLength() -super.getLength()/2;
+                startY = from.getStartY() - super.getLength() + TRACK_WIDTH;
+            }
+            else if(from.getDrawID() == 1){
+                startX = from.getStartX() + from.getLength()/2 - super.getLength()/2;
+                startY = from.getStartY() - super.getLength() + TRACK_WIDTH;
+            }
+            else if(from.getDrawID() == 4){
+                startX = from.getStartX() + from.getLength()/2 - super.getLength()/2;
+                startY = from.getStartY();////TODO check if right
             }
         }
 

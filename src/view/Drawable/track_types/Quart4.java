@@ -29,29 +29,45 @@ public class Quart4 extends DefSection {
      * Workds out where to start drawing the piece based on the piece it came from
      * */
     public void setStart(DefSection from){
+        double startX = 0;
+        double startY = 0;
 
-        if(from.getDirection().equals("RIGHT")){
-            if(from.getDrawID() == 0){
+        if(from.getDirection().equals("DOWN")){
+            super.setDirection("RIGHT");
 
+            if(from.getDrawID() == 1){
+                startX = from.getStartX() - super.getLength()/2;
+                startY = from.getStartY() - super.getLength()/2 - from.getLength()/2;
             }
-            else if(from.getDrawID() == 1){
-
+            else if(from.getDrawID() == 2){
+                System.out.println("TESTING TESTING ");
+                System.out.println(super.getStartX());
+                startX = from.getStartX() + super.getLength()/2;
+                startY = from.getStartY();
             }
-            else if(from.getDrawID() == 4){
-
+            else if(from.getDrawID() == 5){
+                startX = from.getStartX()  - TRACK_WIDTH;//TODO might need to account for different sizes
+                startY = from.getStartY() + from.getLength() - super.getLength()/2;
             }
         }
         else if(from.getDirection().equals("LEFT")){
+            super.setDirection("UP");
             if(from.getDrawID() == 0){
-
+                startX = from.getStartX() - super.getLength()/2;
+                startY = from.getStartY() - super.getLength()/2 - from.getLength()/2 + TRACK_WIDTH ;//- super.getLength()/2
             }
             else if(from.getDrawID() == 2){
-
+                startX = from.getStartX() - super.getLength()/2 - from.getLength()/2;
+                startY = from.getStartY() - super.getLength()/2 - from.getLength()/2;
             }
             else if(from.getDrawID() == 3){
-
+                startX = from.getStartX() - super.getLength()/2;
+                startY = from.getStartY() + from.getLength()/2 - super.getLength()/2;
             }
         }
+
+        super.setStartX(startX);
+        super.setStartY(startY);
     }
 
     public boolean containsPoint(double x, double y){

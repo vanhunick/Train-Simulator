@@ -33,6 +33,7 @@ public class Quart2 extends DefSection {
         double startY = 0;
 
         if(from.getDirection().equals("RIGHT")){
+            super.setDirection("DOWN");
             if(from.getDrawID() == 0){
                 startX = from.getStartX() + from.getLength() - super.getLength()/2;
                 startY = from.getStartY();
@@ -46,7 +47,8 @@ public class Quart2 extends DefSection {
                 startY = from.getStartY() + from.getLength()/2 + super.getLength()/2 - TRACK_WIDTH;
             }
         }
-        else if(from.getDirection().equals("LEFT")){
+        else if(from.getDirection().equals("UP")){
+            super.setDirection("LEFT");
             if(from.getDrawID() == 5){
                 startX = from.getStartX() - super.getLength();
                 startY = from.getStartY() - super.getLength()/2;

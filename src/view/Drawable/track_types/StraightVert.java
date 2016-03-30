@@ -31,10 +31,13 @@ public class StraightVert extends DefSection {
         double startX = 0;
         double startY = 0;
 
-        if(from.getDirection().equals("RIGHT")){
+        //if a vertical section is added the direction from the piece it comes from can only be up or down
+        if(from.getDirection().equals("DOWN")){
+            super.setDirection("DOWN");
+
             if(from.getDrawID() == 2){
-                   startX = from.getStartX() + from.getLength();
-                   startY = from.getStartY() + from.getLength()/2;
+                startX = from.getStartX() + from.getLength();
+                startY = from.getStartY() + from.getLength()/2;
             }
             else if(from.getDrawID() == 3){
                 startX = from.getStartX() + from.getLength();
@@ -45,7 +48,9 @@ public class StraightVert extends DefSection {
                 startY = from.getStartY() + from.getLength()/2;
             }
         }
-        else if(from.getDirection().equals("LEFT")){
+        else if(from.getDirection().equals("UP")){
+            super.setDirection("UP");
+
             if(from.getDrawID() == 1){
                 startX = from.getStartX() + TRACK_WIDTH;
                 startY = from.getStartY() + from.getLength()/2;
@@ -67,6 +72,31 @@ public class StraightVert extends DefSection {
     public boolean containsPoint(double x, double y){
         return x >= super.getStartX() && x <= super.getStartX() + TRACK_WIDTH &&
                 y >= super.getStartY() && y <= super.getStartY() + super.getLength();
+    }
+
+    public double getNextX(double curX, double moveBy){
+        //Going down or up never changes x value
+        return curX;
+    }
+
+    public double getNextY(double curY, double moveBy){
+        if(super.getDirection().equals("DOWN")){
+            if(curY + moveBy > super.getStartY() + super.getLength()){
+                return 0;//No longer in this section TODO update later
+            }
+            else{
+                return curY + moveBy;
+            }
+        }
+        else if(super.getDirection().equals("UP")){
+            if(curY - moveBy < super.getStartY() - super.getLength()){
+                return 0;//No longer in this section TODO update later
+            }
+            else{
+                return curY - moveBy;
+            }
+        }
+        return 0;
     }
 
     public void draw(GraphicsContext g) {

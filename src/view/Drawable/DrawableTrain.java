@@ -14,17 +14,19 @@ public class DrawableTrain implements Drawable{
     private double width = 40;
     private double length = 80;
 
-    private int curX;
-    private int curY;
+    private double curX;
+    private double curY;
     private Train train;
     private long lastUpdate;
     private List<DefSection> sections;
+    private DrawableSection curSection;
 
-    public DrawableTrain(Train train, int startX, int startY, List<DefSection> sections){
+    public DrawableTrain(Train train, DrawableSection curSection, List<DefSection> sections){
         this.train = train;
-        this.curX = startX;
-        this.curY = startY;
         this.sections = sections;
+        this.curSection = curSection;
+        this.curX = curSection.getStartX();
+        this.curY = curSection.getStartY();
     }
 
     @Override
@@ -36,10 +38,6 @@ public class DrawableTrain implements Drawable{
     public void update(){
         long curTime = System.currentTimeMillis();
         lastUpdate = curTime;
-
-        for(DefSection s : sections){
-
-        }
 
     }
 }

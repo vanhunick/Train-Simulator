@@ -3,12 +3,16 @@ package view;
 import Test.TestSimpleTrack;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import model.Section;
 import model.Train;
@@ -50,9 +54,14 @@ public class Main extends Application {
     DrawableSection ds14;
 
     List<DefSection> situations = new ArrayList<>();
+    List<DefSection> sections = new ArrayList<>();
+
+    TrackBuilder trackBuilder;
 
     @Override
     public void start(final Stage primaryStage) {
+
+        trackBuilder = new TrackBuilder(sections);
 
         testStraightSituations(situations);
         testVerticalSituations(situations);
@@ -77,12 +86,27 @@ public class Main extends Application {
         TestSimpleTrack tst = new TestSimpleTrack();
 
         viewLogic = setupBasicExample();
+        viewLogic.addTrakcBuilder(trackBuilder);
 
         Group root = new Group();
         Scene scene = new Scene(root, SCREEN_WIDTH, SCREEN_HEIGHT, Color.rgb(0, 0, 0));
         primaryStage.setHeight(1000);
         primaryStage.setWidth(1500);
         //responds to a key being pressed
+
+
+        scene.widthProperty().addListener(new ChangeListener<Number>() {
+            @Override public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneWidth, Number newSceneWidth) {
+                trackBuilder.screenWidthChanged(newSceneWidth.doubleValue());
+            }
+        });
+        scene.heightProperty().addListener(new ChangeListener<Number>() {
+            @Override public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneHeight, Number newSceneHeight) {
+                trackBuilder.screenHeightChanged(newSceneHeight.doubleValue());
+            }
+        });
+
+
         scene.setOnKeyPressed(
                 e -> {
                     String code = e.getCode().toString();
@@ -147,9 +171,13 @@ public class Main extends Application {
 //                ds13.draw(gc);
 //                ds14.draw(gc);
 
-                for(DefSection d : situations){
+                for(DefSection d : sections){
+                    gc.setLineWidth(5);
                     d.draw(gc);
+                    gc.setLineWidth(1);
                 }
+
+                trackBuilder.draw(gc);
 
 
 
