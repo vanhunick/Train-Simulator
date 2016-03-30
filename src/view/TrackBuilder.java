@@ -41,8 +41,10 @@ public class TrackBuilder {
 
         //In constructor so the creation of pieces know where to start drawing
         Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
-        screenWidth = primaryScreenBounds.getWidth();
-        screenHeight = primaryScreenBounds.getHeight();
+//        screenWidth = primaryScreenBounds.getWidth();
+//        screenHeight = primaryScreenBounds.getHeight();
+        screenWidth = Main.SCREEN_WIDTH;
+        screenHeight = Main.SCREEN_HEIGHT;
 
         this.hiddenPanelStartX = screenWidth - 20 - hiddenPanelSze;
         this.shownPanelStartX = screenWidth - boxSize - boxGap*2;
@@ -57,9 +59,10 @@ public class TrackBuilder {
     }
 
     public void draw(GraphicsContext gc){
-        Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
-        screenWidth = primaryScreenBounds.getWidth();
-        screenHeight = primaryScreenBounds.getHeight();
+//        Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
+//        screenWidth = primaryScreenBounds.getWidth();
+//        screenHeight = primaryScreenBounds.getHeight();
+//
 
         this.boxSize = ((screenHeight - 50 - ((NUMB_PIECES*boxGap)+boxGap))/NUMB_PIECES);
 
@@ -202,7 +205,6 @@ public class TrackBuilder {
 
     public void addFirstPiece(){
         if(selectedBox == 0){
-            System.out.println("adding starting track");
             DefSection ds0 = new StraightHoriz(new Section(2, 100, null, null, null),(int)trackStartX,(int)trackStartY, (int)pieceSize,0, "RIGHT");
             sectionsForTrack.add(ds0);
         }
@@ -236,7 +238,6 @@ public class TrackBuilder {
         System.out.println(sectionsForTrack);
 
         if(selectedBox == 0){
-            System.out.println("Adding normal track");
             DefSection ds1 = new StraightHoriz(new Section(2, 100, null, null, null), (int)pieceSize,0);
             ds1.setStart(sectionsForTrack.get(sectionsForTrack.size()-1));
             sectionsForTrack.add(ds1);

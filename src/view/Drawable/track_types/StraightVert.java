@@ -35,13 +35,13 @@ public class StraightVert extends DefSection {
         if(from.getDirection().equals("DOWN")){
             super.setDirection("DOWN");
 
-            if(from.getDrawID() == 2){
-                startX = from.getStartX() + from.getLength();
+            if(from.getDrawID() == 1){
+                startX = from.getStartX() + TRACK_WIDTH;
                 startY = from.getStartY() + from.getLength()/2;
             }
-            else if(from.getDrawID() == 3){
+            else if(from.getDrawID() == 2){
                 startX = from.getStartX() + from.getLength();
-                startY = from.getStartY() + from.getLength()/2 - super.getLength();
+                startY = from.getStartY() + from.getLength()/2;
             }
             else if(from.getDrawID() == 5){
                 startX = from.getStartX();
@@ -51,9 +51,9 @@ public class StraightVert extends DefSection {
         else if(from.getDirection().equals("UP")){
             super.setDirection("UP");
 
-            if(from.getDrawID() == 1){
-                startX = from.getStartX() + TRACK_WIDTH;
-                startY = from.getStartY() + from.getLength()/2;
+            if(from.getDrawID() == 3){
+                startX = from.getStartX() + from.getLength();
+                startY = from.getStartY() + from.getLength()/2 - super.getLength();
             }
             else if(from.getDrawID() == 4){
                 startX = from.getStartX() + TRACK_WIDTH;

@@ -25,15 +25,15 @@ public class ViewLogic {
     }
 
     public void update(){
-        for(DrawableTrain t : trains){
-            t.update();
-        }
+//        for(DrawableTrain t : trains){
+//            t.update();
+//        }
     }
 
     public void refresh(GraphicsContext g){
-        for(DrawableTrain t : trains){
-            t.draw(g);
-        }
+//        for(DrawableTrain t : trains){
+//            //t.draw(g);
+//        }
 
         //g.setFill(Color.WHITE);
         //g.fillRect(400, 250, 100, 100);

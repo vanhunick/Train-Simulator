@@ -25,8 +25,8 @@ import java.util.List;
 
 public class Main extends Application {
 
-    public static final  int SCREEN_WIDTH = 800;
-    public static final  int SCREEN_HEIGHT = 500;
+    public static final  int SCREEN_WIDTH = 1200;
+    public static final  int SCREEN_HEIGHT = 800;
 
     ArrayList<String> input = new ArrayList<>();
 
@@ -90,8 +90,8 @@ public class Main extends Application {
 
         Group root = new Group();
         Scene scene = new Scene(root, SCREEN_WIDTH, SCREEN_HEIGHT, Color.rgb(0, 0, 0));
-        primaryStage.setHeight(1000);
-        primaryStage.setWidth(1500);
+        primaryStage.setHeight(SCREEN_HEIGHT);
+        primaryStage.setWidth(SCREEN_WIDTH);
         //responds to a key being pressed
 
 
