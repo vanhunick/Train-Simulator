@@ -38,23 +38,10 @@ public class Main extends Application {
         Application.launch(args);
     }
 
-    DrawableSection ds;
-    DrawableSection ds2;
-    DrawableSection ds3;
-    DrawableSection ds4;
-    DrawableSection ds5;
-    DrawableSection ds6;
-    DrawableSection ds7;
-    DrawableSection ds8;
-    DrawableSection ds9;
-    DrawableSection ds10;
-    DrawableSection ds11;
-    DrawableSection ds12;
-    DrawableSection ds13;
-    DrawableSection ds14;
 
     List<DefSection> situations = new ArrayList<>();
     List<DefSection> sections = new ArrayList<>();
+    List<DefSection> simpleTrack = createBasicTrack();
 
     TrackBuilder trackBuilder;
 
@@ -62,26 +49,6 @@ public class Main extends Application {
     public void start(final Stage primaryStage) {
 
         trackBuilder = new TrackBuilder(sections);
-
-        testStraightSituations(situations);
-        testVerticalSituations(situations);
-        testQuart1Situations(situations);
-        testQuart2Situations(situations);
-
-        ds = new DrawableSection(new Section(2, 100, null, null, null), 300, 150, 200,0);
-        ds2 = new DrawableSection(new Section(2, 100, null, null, null), 300, 0,ds);
-        ds3 = new DrawableSection(new Section(2, 100, null, null, null), 600, 2,ds2);
-        ds4 = new DrawableSection(new Section(2, 100, null, null, null), 200, 5,ds3);
-        ds5 = new DrawableSection(new Section(2, 100, null, null, null), 400, 3,ds4);
-        ds6 = new DrawableSection(new Section(2, 100, null, null, null), 300, 0,ds5);
-        ds7 = new DrawableSection(new Section(2, 100, null, null, null), 200, 4,ds6);
-        ds8 = new DrawableSection(new Section(2, 100, null, null, null), 200, 2,ds7);
-        ds9 = new DrawableSection(new Section(2, 100, null, null, null), 300, 4,ds8);
-        ds10 = new DrawableSection(new Section(2, 100, null, null, null), 200, 1,ds9);
-        ds11 = new DrawableSection(new Section(2, 100, null, null, null), 200, 3,ds10);
-        ds12 = new DrawableSection(new Section(2, 100, null, null, null), 200, 1,ds11);
-        ds13 = new DrawableSection(new Section(2, 100, null, null, null), 200, 2,ds12);
-        ds14 = new DrawableSection(new Section(2, 100, null, null, null), 200, 4,ds13);
 
         TestSimpleTrack tst = new TestSimpleTrack();
 
@@ -156,25 +123,15 @@ public class Main extends Application {
 
                 //redraw all elements on the screen
                 viewLogic.refresh(gc);
-//                ds.draw(gc);
-//                ds2.draw(gc);
-//                ds3.draw(gc);
-//                ds4.draw(gc);
-//                ds5.draw(gc);
-//                ds6.draw(gc);
-//                ds7.draw(gc);
-//                ds8.draw(gc);
-//                ds9.draw(gc);
-//                ds10.draw(gc);
-//                ds11.draw(gc);
-//                ds12.draw(gc);
-//                ds13.draw(gc);
-//                ds14.draw(gc);
 
                 for(DefSection d : sections){
                     gc.setLineWidth(5);
                     d.draw(gc);
                     gc.setLineWidth(1);
+                }
+
+                for(DefSection d : simpleTrack){
+                    d.draw(gc);
                 }
 
                 trackBuilder.draw(gc);
@@ -194,6 +151,51 @@ public class Main extends Application {
         root.getChildren().add(canvas);
         primaryStage.setScene(scene);
         primaryStage.show();
+    }
+
+    public List<DefSection> createBasicTrack(){
+        List<DefSection> sections = new ArrayList<>();
+
+        DefSection ds1 = new StraightHoriz(new Section(2, 100, null, null, null), 200, 100, 100,0, "RIGHT");
+        DefSection ds2 = new StraightHoriz(new Section(2, 100, null, null, null), 100,0);
+        ds2.setStart(ds1);
+
+        DefSection ds3 = new Quart2(new Section(2, 100, null, null, null), 200,2);
+        ds3.setStart(ds2);
+
+        DefSection ds4 = new StraightVert(new Section(2, 100, null, null, null), 100,5);
+        ds4.setStart(ds3);
+
+        DefSection ds5 = new Quart3(new Section(2, 100, null, null, null), 200,3);
+        ds5.setStart(ds4);
+
+        DefSection ds6 = new StraightHoriz(new Section(2, 100, null, null, null), 100,0);
+        ds6.setStart(ds5);
+
+        DefSection ds7 = new StraightHoriz(new Section(2, 100, null, null, null), 100,0);
+        ds7.setStart(ds6);
+
+        DefSection ds8 = new Quart4(new Section(2, 100, null, null, null), 200,4);
+        ds8.setStart(ds7);
+
+        DefSection ds9 = new StraightVert(new Section(2, 100, null, null, null), 100,5);
+        ds9.setStart(ds8);
+
+        DefSection ds10 = new Quart1(new Section(2, 100, null, null, null), 200,1);
+        ds10.setStart(ds9);
+
+        sections.add(ds1);
+        sections.add(ds2);
+        sections.add(ds3);
+        sections.add(ds4);
+        sections.add(ds5);
+        sections.add(ds6);
+        sections.add(ds7);
+        sections.add(ds8);
+        sections.add(ds9);
+        sections.add(ds10);
+
+        return sections;
     }
 
     public List<DefSection> testSituations(){

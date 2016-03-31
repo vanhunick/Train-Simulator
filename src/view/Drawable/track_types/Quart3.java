@@ -78,7 +78,7 @@ public class Quart3 extends DefSection {
         double startY = super.getStartY();
         double length = super.getLength();
 
-        g.setStroke(Color.SALMON);
+
         g.strokeArc(startX , startY, length, length, -90, 90, ArcType.OPEN);
         g.strokeArc(startX + TRACK_WIDTH, startY + TRACK_WIDTH, length - (TRACK_WIDTH*2), length - (TRACK_WIDTH*2), -90, 90, ArcType.OPEN);
     }

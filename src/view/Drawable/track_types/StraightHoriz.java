@@ -99,7 +99,7 @@ public class StraightHoriz extends DefSection {
 
 
     public void draw(GraphicsContext g) {
-        g.setStroke(Color.RED);
+
         g.strokeLine(super.getStartX(), super.getStartY(), super.getStartX() + super.getLength(), super.getStartY());
         g.strokeLine(super.getStartX(), super.getStartY() + TRACK_WIDTH, super.getStartX() + super.getLength(), super.getStartY()+ TRACK_WIDTH);
     }

@@ -104,7 +104,6 @@ public class StraightVert extends DefSection {
         double startY = super.getStartY();
         double length = super.getLength();
 
-        g.setStroke(Color.PURPLE);
         g.strokeLine(startX, startY, startX, startY + length);
         g.strokeLine(startX - TRACK_WIDTH, startY, startX - TRACK_WIDTH, startY + length);
     }
