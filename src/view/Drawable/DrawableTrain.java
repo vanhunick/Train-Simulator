@@ -3,6 +3,7 @@ package view.Drawable;
 import java.util.List;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import model.Section;
 import model.Train;
 import view.Drawable.track_types.DefSection;
 
@@ -18,11 +19,13 @@ public class DrawableTrain implements Drawable{
     private double curY;
     private Train train;
     private long lastUpdate;
-    private List<DefSection> sections;
+    private List<DefSection> drawSections;
+    private List<Section> sections;
     private DrawableSection curSection;
 
-    public DrawableTrain(Train train, DrawableSection curSection, List<DefSection> sections){
+    public DrawableTrain(Train train, DrawableSection curSection, List<DefSection> drawSections, List<Section> sections){
         this.train = train;
+        this.drawSections = drawSections;
         this.sections = sections;
         this.curSection = curSection;
         this.curX = curSection.getStartX();
@@ -37,7 +40,18 @@ public class DrawableTrain implements Drawable{
 
     public void update(){
         long curTime = System.currentTimeMillis();
+        if(lastUpdate - curTime > 1000){
+//            for(DefSection s : sections){
+////
+//            }
+        }
+
         lastUpdate = curTime;
 
+
+        train.getSpeed();
+
     }
+
+
 }

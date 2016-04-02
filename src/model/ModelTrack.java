@@ -5,12 +5,12 @@ import java.util.List;
 /**
  * Created by vanhunick on 22/03/16.
  */
-public class Model implements Events{
+public class ModelTrack implements Events{
 
     private List<Train> trains;
     private Section[] sections;
 
-    public Model(List<Train> trains, Section[] sections){
+    public ModelTrack(List<Train> trains, Section[] sections){
         this.trains = trains;
         this.sections = sections;
     }
@@ -23,6 +23,12 @@ public class Model implements Events{
                 t.getSection(id).toggleStatus();
             }
         }
+    }
+
+
+
+    public void sendOutSectionEvent(){
+
     }
 
     @Override

@@ -45,7 +45,7 @@ public class StraightVert extends DefSection {
             }
             else if(from.getDrawID() == 5){
                 startX = from.getStartX();
-                startY = from.getStartY() + from.getLength()/2;
+                startY = from.getStartY() + from.getLength();
             }
         }
         else if(from.getDirection().equals("UP")){

@@ -2,11 +2,13 @@ package view;
 
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.MouseButton;
 import javafx.scene.paint.Color;
 import javafx.stage.Screen;
 import model.Section;
 import view.Drawable.track_types.*;
 
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,9 +22,6 @@ public class TrackBuilder {
     private int selectedBox;
     private double boxSize;
 
-    private double hiddenPanelSze = 20;
-    private double hiddenPanelStartX;
-    private double hiddenPanelStartY;
 
     private double shownPanelStartX;
     private double shownPanelStartY;
@@ -35,23 +34,15 @@ public class TrackBuilder {
 
     private double boxGap = 10;
 
-    public TrackBuilder(List<DefSection> sections){
-        this.hidden = true;
-        this.sectionsForTrack = sections;
+    public TrackBuilder(){
+        this.hidden = false;
+        this.sectionsForTrack = new ArrayList<>();
 
-        //In constructor so the creation of pieces know where to start drawing
-        Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
-//        screenWidth = primaryScreenBounds.getWidth();
-//        screenHeight = primaryScreenBounds.getHeight();
         screenWidth = Main.SCREEN_WIDTH;
         screenHeight = Main.SCREEN_HEIGHT;
 
-        this.hiddenPanelStartX = screenWidth - 20 - hiddenPanelSze;
         this.shownPanelStartX = screenWidth - boxSize - boxGap*2;
         this.shownPanelStartY = 20;
-        this.hiddenPanelStartY = 20;
-
-        hiddenPanelStartX = screenWidth - 20 - hiddenPanelSze;
 
         shownPanelStartX = screenWidth - (boxSize - (boxGap*2));
         this.boxSize = ((screenHeight - 50 - ((NUMB_PIECES*boxGap)+boxGap))/NUMB_PIECES);
@@ -59,32 +50,20 @@ public class TrackBuilder {
     }
 
     public void draw(GraphicsContext gc){
-//        Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
-//        screenWidth = primaryScreenBounds.getWidth();
-//        screenHeight = primaryScreenBounds.getHeight();
-//
+
+        //Draw the currently created track
+        for(DefSection d : sectionsForTrack){
+            gc.setStroke(Color.WHITE);
+            d.draw(gc);
+        }
 
         this.boxSize = ((screenHeight - 50 - ((NUMB_PIECES*boxGap)+boxGap))/NUMB_PIECES);
-
         this.shownPanelStartX = screenWidth - (boxSize + (boxGap*2));
 
-        hiddenPanelStartX = screenWidth - 20 - hiddenPanelSze;
-
-        if(hidden){
-            drawHiddenPanel(gc);
-        }
-        else {
             drawAddButton(gc);
             drawShownPanel(gc);
-        }
     }
 
-    public void drawHiddenPanel(GraphicsContext gc){
-        gc.setFill(Color.GREY);
-        gc.setStroke(Color.WHITE);
-        gc.fillRect(hiddenPanelStartX, hiddenPanelStartY, hiddenPanelSze + 10, hiddenPanelSze);
-        gc.strokeRect(hiddenPanelStartX, hiddenPanelStartY, hiddenPanelSze+ 10, hiddenPanelSze);
-    }
 
     public void drawShownPanel(GraphicsContext gc){
         gc.setFill(Color.WHITE);
@@ -140,7 +119,6 @@ public class TrackBuilder {
         double middleY = 20 + boxGap + (boxSize/2);
 
         double size = boxSize - (boxGap);
-        System.out.println(boxSize);
         double y = middleY - DefSection.TRACK_WIDTH/2;
         double x = middleX - (size/2);
 
@@ -161,13 +139,10 @@ public class TrackBuilder {
 
         DefSection ds3 = new Quart3(new Section(2, 100, null, null, null),(int)(x),(int)y, (int)(size),3, "RIGHT");
 
-
-
         y += boxSize + boxGap;
         x = middleX - size/2 + size/4 ;
 
         DefSection ds4 = new Quart4(new Section(2, 100, null, null, null),(int)(x),(int)y, (int)(size),4, "RIGHT");
-
 
         x = middleX - DefSection.TRACK_WIDTH /2 + size/4;
         y+= boxSize + boxGap + size/4;
@@ -184,16 +159,16 @@ public class TrackBuilder {
         return sections;
     }
 
-    public void mouseClicked(double x, double y){
-        if(oniddenPanel(x,y)){
-            hidden = !hidden;
-            System.out.printf("Pressing on hidden button");
+    public void mouseClicked(double x, double y, javafx.scene.input.MouseEvent e){
+        if(oneShownPanel(x, y)){
+            selectPiece(x, y);
+            if(e.getButton().equals(MouseButton.PRIMARY)){
+                if(e.getClickCount() == 2){
+                    addPiece();
+                }
+            }
         }
-        else if(!hidden && oneShownPanel(x,y)){
-            selectPiece(x,y);
-        }
-        else if(!hidden && onAddButton(x,y)){
-            System.out.println("Adding piece");
+        else if(onAddButton(x, y)){
             addPiece();
         }
     }
@@ -228,6 +203,7 @@ public class TrackBuilder {
             DefSection ds0 = new StraightVert(new Section(2, 100, null, null, null),(int)trackStartX,(int)trackStartY, (int)pieceSize,5, "DOWN");
             sectionsForTrack.add(ds0);
         }
+        System.out.println("None added");
     }
 
     public void addPiece(){
@@ -235,7 +211,7 @@ public class TrackBuilder {
             addFirstPiece();
             return;
         }
-        System.out.println(sectionsForTrack);
+        System.out.println("Not zero");
 
         if(selectedBox == 0){
             DefSection ds1 = new StraightHoriz(new Section(2, 100, null, null, null), (int)pieceSize,0);
@@ -278,22 +254,19 @@ public class TrackBuilder {
             }
             selected++;
         }
-    }
-
-    public boolean oniddenPanel(double x, double y){
-        return x >= hiddenPanelStartX && x <= hiddenPanelStartX + hiddenPanelSze
-                && y>= hiddenPanelStartY && y <= hiddenPanelStartY + hiddenPanelSze;
-    }
-
-    public void screenHeightChanged(double height){
-        screenHeight = height;
+        this.selectedBox = -1;//None selected
     }
 
 
-    public void screenWidthChanged(double width){
-        screenWidth = width;
-        setUpDrawPieces();
-    }
+//    public void screenHeightChanged(double height){
+//        screenHeight = height;
+//    }
+
+//
+//    public void screenWidthChanged(double width){
+//        screenWidth = width;
+//        setUpDrawPieces();
+//    }
 
     public boolean oneShownPanel(double x, double y){
         if(x > shownPanelStartX)return true;
@@ -303,5 +276,9 @@ public class TrackBuilder {
     public boolean onAddButton(double x, double y){
         return x > startXAddButon && x < startXAddButon + addButtonWidth &&
                 y > startYAddButon && y < startXAddButon + addButtonHeight;
+    }
+
+    public List<DefSection> getCreatedTrack(){
+        return sectionsForTrack;
     }
 }

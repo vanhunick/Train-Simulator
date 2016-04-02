@@ -53,6 +53,10 @@ public class Quart2 extends DefSection {
                 startX = from.getStartX() - super.getLength();
                 startY = from.getStartY() - super.getLength()/2;
             }
+            else if(from.getDrawID() == 3){
+                startX = from.getStartX();
+                startY = from.getStartY() - from.getLength()/2;
+            }
             else if(from.getDrawID() == 4){
                 startX = from.getStartX() - super.getLength() + TRACK_WIDTH;
                 startY = from.getStartY() + from.getLength()/2 - super.getLength()/2;
