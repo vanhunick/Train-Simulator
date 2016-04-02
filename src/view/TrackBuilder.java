@@ -1,13 +1,20 @@
 package view;
 
+import javafx.geometry.Insets;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.Scene;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Button;
 import javafx.scene.input.MouseButton;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Screen;
 import model.Section;
 import view.Drawable.track_types.*;
 
+import javax.swing.border.Border;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +41,16 @@ public class TrackBuilder {
 
     private double boxGap = 10;
 
-    public TrackBuilder(){
+    private VBox vBox;
+
+    private Main main;
+    private int curId = 0;
+
+    public TrackBuilder(Main main){
+        vBox = getBuilderButtons();
+        this.main = main;
+
+
         this.hidden = false;
         this.sectionsForTrack = new ArrayList<>();
 
@@ -60,14 +76,12 @@ public class TrackBuilder {
         this.boxSize = ((screenHeight - 50 - ((NUMB_PIECES*boxGap)+boxGap))/NUMB_PIECES);
         this.shownPanelStartX = screenWidth - (boxSize + (boxGap*2));
 
-            drawAddButton(gc);
             drawShownPanel(gc);
     }
 
 
     public void drawShownPanel(GraphicsContext gc){
         gc.setFill(Color.WHITE);
-//        gc.setGlobalAlpha(0.9);
 
         gc.fillRect(shownPanelStartX, 20, screenWidth - shownPanelStartX, ((boxSize+boxGap)*NUMB_PIECES)+boxGap);//TODO make less silly'
         gc.setStroke(Color.ORANGE);
@@ -92,25 +106,74 @@ public class TrackBuilder {
         gc.setLineWidth(1);
     }
 
-    private double addButtonWidth;
-    private double addButtonHeight;
-    private double startXAddButon;
-    private double startYAddButon;
-
-
-    public void drawAddButton(GraphicsContext gc){
-        startYAddButon = 20;//just the end of the panel
-        startXAddButon = shownPanelStartX - 80;
-        addButtonHeight = 30;
-        addButtonWidth = 70;
-
-        gc.setStroke(Color.WHITE);
-        gc.setFill(Color.GREY);
-        gc.setStroke(Color.BLACK);
-        gc.fillText("Add",startXAddButon + 15, startYAddButon + 10);
-        gc.fillRect(startXAddButon, startYAddButon, addButtonWidth,addButtonHeight);
-        gc.strokeRect(startXAddButon, startYAddButon, addButtonWidth,addButtonHeight);
+    public void addUIElementsToLayout(BorderPane bp){
+        bp.setLeft(vBox);
     }
+
+    public void removeUIElementsFromLayout(BorderPane bp){
+        bp.getChildren().remove(vBox);
+    }
+
+
+    private VBox getBuilderButtons(){
+        VBox vBox = new VBox(8); // spacing = 8
+        vBox.setPadding(new Insets(5,5,5,5));
+        Button sim = new Button("Simulate Track");
+        Button clear = new Button("Clear Track");
+        Button undo = new Button("Undo Track");
+
+        undo.setOnAction(e -> undo());
+        sim.setOnAction(e -> simulateTrack());
+
+        vBox.getChildren().addAll(sim,clear,undo);
+
+        return vBox;
+    }
+
+    public void simulateTrack(){
+        linkUpSections(sectionsForTrack);//must link of the sections inside the drawing sections for the simulation
+        main.setVisualisationWithTrack(sectionsForTrack);
+    }
+
+    public void undo(){
+        System.out.println("Undo");
+        if(sectionsForTrack.size() > 0){
+            this.sectionsForTrack.remove(sectionsForTrack.size()-1);
+        }
+    }
+
+    /**
+     * Creates a very basic railway with one track per section
+     * */
+    public Section[] linkUpSections(List<DefSection> sections){
+        Section[] railway = new Section[sections.size()];
+
+        Section start = sections.get(0).getSection();
+        railway[0] = start;
+        for(int i = 1; i < sections.size(); i++){
+            Section s = sections.get(i).getSection();
+            s.setFrom(railway[i-1]);
+            railway[i] = s;
+        }
+
+
+        for(int i = 0; i < sections.size()-1; i++){
+            railway[i].setTo(railway[i+1]);
+        }
+
+        //link the last one to the start
+        railway[railway.length-1].setTo(railway[0]);
+        railway[0].setFrom(railway[sections.size()-1]);
+
+
+        for(Section s : railway){
+            System.out.println(s);
+        }
+
+
+        return railway;
+    }
+
 
     public List<DefSection> setUpDrawPieces(){
         List<DefSection> sections = new ArrayList<>();
@@ -160,6 +223,7 @@ public class TrackBuilder {
     }
 
     public void mouseClicked(double x, double y, javafx.scene.input.MouseEvent e){
+        int numbSections = sectionsForTrack.size();
         if(oneShownPanel(x, y)){
             selectPiece(x, y);
             if(e.getButton().equals(MouseButton.PRIMARY)){
@@ -168,8 +232,12 @@ public class TrackBuilder {
                 }
             }
         }
-        else if(onAddButton(x, y)){
-            addPiece();
+
+        if(sectionsForTrack.size() < numbSections){
+            curId--;//Track was removed can free vup ID
+        }
+        else if(sectionsForTrack.size() > numbSections){
+            curId++;//Added a track need to increment the ID
         }
     }
 
@@ -180,27 +248,27 @@ public class TrackBuilder {
 
     public void addFirstPiece(){
         if(selectedBox == 0){
-            DefSection ds0 = new StraightHoriz(new Section(2, 100, null, null, null),(int)trackStartX,(int)trackStartY, (int)pieceSize,0, "RIGHT");
+            DefSection ds0 = new StraightHoriz(new Section(curId, 100, null, null, null),(int)trackStartX,(int)trackStartY, (int)pieceSize,0, "RIGHT");
             sectionsForTrack.add(ds0);
         }
         else if(selectedBox == 1){
-            DefSection ds0 = new Quart1(new Section(2, 100, null, null, null),(int)trackStartX,(int)trackStartY, (int)pieceSize,1, "RIGHT");
+            DefSection ds0 = new Quart1(new Section(curId, 100, null, null, null),(int)trackStartX,(int)trackStartY, (int)pieceSize,1, "RIGHT");
             sectionsForTrack.add(ds0);
         }
         else if(selectedBox == 2){
-            DefSection ds0 = new Quart2(new Section(2, 100, null, null, null),(int)trackStartX,(int)trackStartY, (int)pieceSize,2, "DOWN");
+            DefSection ds0 = new Quart2(new Section(curId, 100, null, null, null),(int)trackStartX,(int)trackStartY, (int)pieceSize,2, "DOWN");
             sectionsForTrack.add(ds0);
         }
         else if(selectedBox == 3){
-            DefSection ds0 = new Quart3(new Section(2, 100, null, null, null),(int)trackStartX,(int)trackStartY, (int)pieceSize,3, "LEFT");
+            DefSection ds0 = new Quart3(new Section(curId, 100, null, null, null),(int)trackStartX,(int)trackStartY, (int)pieceSize,3, "LEFT");
             sectionsForTrack.add(ds0);
         }
         else if(selectedBox == 4){
-            DefSection ds0 = new Quart4(new Section(2, 100, null, null, null),(int)trackStartX,(int)trackStartY, (int)pieceSize,4, "UP");
+            DefSection ds0 = new Quart4(new Section(curId, 100, null, null, null),(int)trackStartX,(int)trackStartY, (int)pieceSize,4, "UP");
             sectionsForTrack.add(ds0);
         }
         else if(selectedBox == 5){
-            DefSection ds0 = new StraightVert(new Section(2, 100, null, null, null),(int)trackStartX,(int)trackStartY, (int)pieceSize,5, "DOWN");
+            DefSection ds0 = new StraightVert(new Section(curId, 100, null, null, null),(int)trackStartX,(int)trackStartY, (int)pieceSize,5, "DOWN");
             sectionsForTrack.add(ds0);
         }
         System.out.println("None added");
@@ -214,32 +282,32 @@ public class TrackBuilder {
         System.out.println("Not zero");
 
         if(selectedBox == 0){
-            DefSection ds1 = new StraightHoriz(new Section(2, 100, null, null, null), (int)pieceSize,0);
+            DefSection ds1 = new StraightHoriz(new Section(curId, 100, null, null, null), (int)pieceSize,0);
             ds1.setStart(sectionsForTrack.get(sectionsForTrack.size()-1));
             sectionsForTrack.add(ds1);
         }
         else if(selectedBox == 1){
-            DefSection ds1 = new Quart1(new Section(2, 100, null, null, null), (int)pieceSize,1);
+            DefSection ds1 = new Quart1(new Section(curId, 100, null, null, null), (int)pieceSize,1);
             ds1.setStart(sectionsForTrack.get(sectionsForTrack.size()-1));
             sectionsForTrack.add(ds1);
         }
         else if(selectedBox == 2){
-            DefSection ds1 = new Quart2(new Section(2, 100, null, null, null), (int)pieceSize,2);
+            DefSection ds1 = new Quart2(new Section(curId, 100, null, null, null), (int)pieceSize,2);
             ds1.setStart(sectionsForTrack.get(sectionsForTrack.size()-1));
             sectionsForTrack.add(ds1);
         }
         else if(selectedBox == 3){
-            DefSection ds1 = new Quart3(new Section(2, 100, null, null, null), (int)pieceSize,3);
+            DefSection ds1 = new Quart3(new Section(curId, 100, null, null, null), (int)pieceSize,3);
             ds1.setStart(sectionsForTrack.get(sectionsForTrack.size()-1));
             sectionsForTrack.add(ds1);
         }
         else if(selectedBox == 4){
-            DefSection ds1 = new Quart4(new Section(2, 100, null, null, null), (int)pieceSize,4);
+            DefSection ds1 = new Quart4(new Section(curId, 100, null, null, null), (int)pieceSize,4);
             ds1.setStart(sectionsForTrack.get(sectionsForTrack.size()-1));
             sectionsForTrack.add(ds1);
         }
         else if(selectedBox == 5){
-            DefSection ds1 = new StraightVert(new Section(2, 100, null, null, null), (int)pieceSize,5);
+            DefSection ds1 = new StraightVert(new Section(curId, 100, null, null, null), (int)pieceSize,5);
             ds1.setStart(sectionsForTrack.get(sectionsForTrack.size()-1));
             sectionsForTrack.add(ds1);
         }
@@ -257,28 +325,15 @@ public class TrackBuilder {
         this.selectedBox = -1;//None selected
     }
 
-
-//    public void screenHeightChanged(double height){
-//        screenHeight = height;
-//    }
-
-//
-//    public void screenWidthChanged(double width){
-//        screenWidth = width;
-//        setUpDrawPieces();
-//    }
-
     public boolean oneShownPanel(double x, double y){
         if(x > shownPanelStartX)return true;
         return false;
     }
 
-    public boolean onAddButton(double x, double y){
-        return x > startXAddButon && x < startXAddButon + addButtonWidth &&
-                y > startYAddButon && y < startXAddButon + addButtonHeight;
-    }
-
     public List<DefSection> getCreatedTrack(){
         return sectionsForTrack;
     }
+
+
 }
+

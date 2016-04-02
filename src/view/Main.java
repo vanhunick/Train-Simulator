@@ -3,11 +3,14 @@ package view;
 import Test.TestSimpleTrack;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
+import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 
 import javafx.stage.Stage;
@@ -33,15 +36,16 @@ public class Main extends Application {
     private static String mode = "Simulation";
 
 
-    List<DefSection> simpleTrack;
-    TrackBuilder trackBuilder;
+    private TrackBuilder trackBuilder;
+    private static BorderPane bl;
 
     @Override
     public void start(final Stage primaryStage) {
         primaryStage.setTitle("Train Simulator");
 
-        trackBuilder = new TrackBuilder();
-        visualisation = new Visualisation();
+
+
+        bl = new BorderPane();
 
         Group root = new Group();
         Scene scene = new Scene(root, SCREEN_WIDTH, SCREEN_HEIGHT, Color.rgb(0, 0, 0));
@@ -50,10 +54,12 @@ public class Main extends Application {
 
 
         //Create the custom menu bar
-        TopMenuBar topMenuBar = new TopMenuBar();
+        TopMenuBar topMenuBar = new TopMenuBar(this);
 
+        trackBuilder = new TrackBuilder(this);
+        visualisation = new Visualisation(trackBuilder);
+        visualisation.addUIElementsToLayout(bl);//Add UI elements since it default
 
-        BorderPane bl = new BorderPane();
         bl.setTop(topMenuBar);
 
 
@@ -124,10 +130,27 @@ public class Main extends Application {
         primaryStage.show();
     }
 
-    public static void setMode(String modeToSet){
+
+    public void setMode(String modeToSet){
+        if(modeToSet.equals("Builder") && !mode.equals(modeToSet)){
+            visualisation.removeUIElementsFromLayout(bl);
+            trackBuilder.addUIElementsToLayout(bl);
+
+        }
+        else if(modeToSet.equals("Simulation") && !mode.equals(modeToSet)){
+            trackBuilder.removeUIElementsFromLayout(bl);
+            visualisation.addUIElementsToLayout(bl);
+        }
+
         mode = modeToSet;
     }
 
+    public void setVisualisationWithTrack(List<DefSection> track){
+        visualisation.setRailway(track);
+        trackBuilder.removeUIElementsFromLayout(bl);
+        visualisation.addUIElementsToLayout(bl);
+        mode = "Simulation";
+    }
 
     public static void main(String[] args) {
         Application.launch(args);

@@ -1,14 +1,21 @@
 package view;
 
+import javafx.geometry.Insets;
 import javafx.scene.canvas.GraphicsContext;
 
+import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import model.Section;
+import model.Train;
 import view.Drawable.DrawableTrain;
 import view.Drawable.track_types.*;
+import view.Panes.TrainDialog;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -17,11 +24,15 @@ import java.util.ArrayList;
 public class Visualisation {
 
     private ArrayList<DrawableTrain> trains;
-    private ArrayList<DefSection> railway;
+    private List<DefSection> railway;
 
-    TrackBuilder trackBuilder;
+    private VBox vBox;
 
-    public Visualisation(){
+    TrackBuilder trackBuilder;//TODO change location later
+
+    public Visualisation(TrackBuilder tb){
+        this.trackBuilder = tb;
+        this.vBox = getBuilderButtons();
         //Just the default track
         this.trains = new ArrayList<>();
         this.railway = createBasicTrack();
@@ -58,7 +69,7 @@ public class Visualisation {
     }
 
     public void mouseClicked(double x, double y, MouseEvent e){
-
+        trackBuilder.mouseClicked(x,y,e);
     }
 
     public void mouseMoved(double x, double y){
@@ -73,12 +84,49 @@ public class Visualisation {
         this.trackBuilder = tb;
     }
 
-    public void setRailway(ArrayList<DefSection> rail){
+    public void setRailway(List<DefSection> rail){
         this.railway = rail;
     }
 
     public void addTrain(DrawableTrain train){
         this.trains.add(train);
+    }
+
+    private VBox getBuilderButtons(){
+        VBox vBox = new VBox(8); // spacing = 8
+        vBox.setPadding(new Insets(5,5,5,5));
+        Button sim = new Button("Simulate Track");
+        Button clear = new Button("Clear Track");
+        Button addTrainMenu = new Button("Add Train");
+
+        addTrainMenu.setOnAction(e -> showAddTrainMenu());
+
+
+        vBox.getChildren().addAll(addTrainMenu);
+
+        return vBox;
+    }
+
+    public void showAddTrainMenu(){
+        TrainDialog td = new TrainDialog();
+
+
+        System.out.println(td.getId());
+        System.out.println(td.getStartId());
+        Train t = new Train(td.getId(),td.getLength(),0,td.getStartId(),true);//TODO make some checks for same id
+//        DrawableTrain dt = new DrawableTrain();
+
+    }
+
+
+
+
+    public void addUIElementsToLayout(BorderPane bp){
+        bp.setLeft(vBox);
+    }
+
+    public void removeUIElementsFromLayout(BorderPane bp){
+        bp.getChildren().remove(vBox);
     }
 
     public ArrayList<DefSection> createBasicTrack(){

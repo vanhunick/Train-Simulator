@@ -52,4 +52,33 @@ public class ModelTrack implements Events{
     public Section[] getSections() {
         return sections;
     }
+
+
+    /**
+     * Returns the train that matches the id
+     *
+     * @param id The id to match
+     *
+     * @return the train that matches the id
+     * */
+    public Section getSection(int id){
+        for(Section s : sections){
+            if(s.getID() == id)return s;
+        }
+        return null;
+    }
+
+    /**
+     * Returns the train that matches the id
+     *
+     * @param id The id to match
+     *
+     * @return the train that matches the id
+     * */
+    public Train getTrain(int id){
+        for(Train t : trains){
+            if(t.getId() == id)return t;
+        }
+        return null;
+    }
 }

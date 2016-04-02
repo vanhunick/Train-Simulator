@@ -11,9 +11,12 @@ import view.Main;
  * Created by Nicky on 2/04/2016.
  */
 public class TopMenuBar extends MenuBar {
+    private Main main;
 
-    public TopMenuBar(){
+    public TopMenuBar(Main main){
         super();
+
+        this.main = main;
 
         //Menu items
         Menu menuFile = new Menu("File");
@@ -40,7 +43,7 @@ public class TopMenuBar extends MenuBar {
     }
 
     public void handleNewTrackPressed(ActionEvent e){
-        Main.setMode("Builder");
+        main.setMode("Builder");
     }
 
     public void handleLoadTrackPressed(ActionEvent e){
@@ -49,7 +52,7 @@ public class TopMenuBar extends MenuBar {
 
 
     public void handleSimulatePressed(ActionEvent e){
-        Main.setMode("Simulation");
+        main.setMode("Simulation");
     }
 
 
