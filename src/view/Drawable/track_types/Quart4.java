@@ -75,6 +75,10 @@ public class Quart4 extends DefSection {
 
 
     public void draw(GraphicsContext g) {
+        if(super.getMouseOn()){
+            g.setStroke(Color.GREEN);
+        }
+
         double startX = super.getStartX();
         double startY = super.getStartY();
         double length = super.getLength();

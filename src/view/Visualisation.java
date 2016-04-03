@@ -27,6 +27,8 @@ public class Visualisation {
     private List<DefSection> railway;
 
     private VBox vBox;
+    private double widthOffset;
+    private double heightOffset;
 
     TrackBuilder trackBuilder;//TODO change location later
 
@@ -59,6 +61,10 @@ public class Visualisation {
         }
     }
 
+    public void setOffesets(double width, double height){
+        this.widthOffset = width;
+        this.heightOffset = height;
+    }
 
     public void mousePressed(double x, double y){
 
@@ -73,7 +79,8 @@ public class Visualisation {
     }
 
     public void mouseMoved(double x, double y){
-
+        System.out.println(widthOffset + "  " + heightOffset);
+        trackBuilder.mouseMoved(x - widthOffset, y - heightOffset);
     }
 
     public void mouseDragged(double x, double y){
@@ -111,8 +118,6 @@ public class Visualisation {
         TrainDialog td = new TrainDialog();
 
 
-        System.out.println(td.getId());
-        System.out.println(td.getStartId());
         Train t = new Train(td.getId(),td.getLength(),0,td.getStartId(),true);//TODO make some checks for same id
 //        DrawableTrain dt = new DrawableTrain();
 
@@ -123,6 +128,8 @@ public class Visualisation {
 
     public void addUIElementsToLayout(BorderPane bp){
         bp.setLeft(vBox);
+        widthOffset  = bp.getLeft().getLayoutBounds().getWidth();
+        heightOffset = bp.getTop().getLayoutBounds().getHeight();
     }
 
     public void removeUIElementsFromLayout(BorderPane bp){

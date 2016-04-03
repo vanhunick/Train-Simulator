@@ -25,7 +25,6 @@ public class StraightHoriz extends DefSection {
     }
 
     public void setStart(DefSection from){
-
         double startX = 0;
         double startY = 0;
 
@@ -99,6 +98,9 @@ public class StraightHoriz extends DefSection {
 
 
     public void draw(GraphicsContext g) {
+        if(super.getMouseOn()){
+            g.setStroke(Color.GREEN);
+        }
 
         g.strokeLine(super.getStartX(), super.getStartY(), super.getStartX() + super.getLength(), super.getStartY());
         g.strokeLine(super.getStartX(), super.getStartY() + TRACK_WIDTH, super.getStartX() + super.getLength(), super.getStartY()+ TRACK_WIDTH);

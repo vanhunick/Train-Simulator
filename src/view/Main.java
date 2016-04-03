@@ -43,8 +43,6 @@ public class Main extends Application {
     public void start(final Stage primaryStage) {
         primaryStage.setTitle("Train Simulator");
 
-
-
         bl = new BorderPane();
 
         Group root = new Group();
@@ -58,9 +56,8 @@ public class Main extends Application {
 
         trackBuilder = new TrackBuilder(this);
         visualisation = new Visualisation(trackBuilder);
-        visualisation.addUIElementsToLayout(bl);//Add UI elements since it default
+        bl.setTop(topMenuBar);//Need to add first as it is being used to calculate offset
 
-        bl.setTop(topMenuBar);
 
 
         scene.setOnKeyPressed(
@@ -91,6 +88,7 @@ public class Main extends Application {
         // bind the dimensions when the user resizes the window.
         canvas.widthProperty().bind(primaryStage.widthProperty());
         canvas.heightProperty().bind(primaryStage.heightProperty());
+        visualisation.addUIElementsToLayout(bl);//Add UI elements since it default
 
         // obtain the GraphicsContext (drawing surface)
         final GraphicsContext gc = canvas.getGraphicsContext2D();
@@ -100,24 +98,31 @@ public class Main extends Application {
         new AnimationTimer() {
             @Override
             public void handle(long now) {
-
-                // clear screen
+                System.out.println(bl.getLeft().getLayoutBounds().getWidth());
+                // Clear the screen
+                gc.setStroke(Color.BLACK);
                 gc.clearRect(0, 0, primaryStage.getWidth(), primaryStage.getHeight());
 
+
+                double widthOffset = bl.getLeft().getLayoutBounds().getWidth();
+                double heightOffset = bl.getTop().getLayoutBounds().getHeight();
                 //redraw all elements on the screen
                 if(mode.equals("Simulation")){
+                    visualisation.setOffesets(widthOffset,heightOffset);//TODO not sure if this is the right way to go about it
                     visualisation.draw(gc);
                 }
                 else if(mode.equals("Builder")){
+                    trackBuilder.setScreenHeightAndWidth(SCREEN_WIDTH - widthOffset, SCREEN_HEIGHT - heightOffset);//TODO not sure if this is the right way to go about it
                     trackBuilder.draw(gc);
                 }
-
                 visualisation.update();
 
                 gc.save();
                 gc.restore();
             }
         }.start();
+
+
 
         // add the single node onto the scene graph
 
@@ -126,6 +131,8 @@ public class Main extends Application {
 
         // Add the layout to the root
         root.getChildren().add(bl);
+
+
         primaryStage.setScene(scene);
         primaryStage.show();
     }

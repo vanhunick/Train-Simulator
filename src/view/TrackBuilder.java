@@ -65,6 +65,15 @@ public class TrackBuilder {
         this.sections = setUpDrawPieces();
     }
 
+    public void updateSize(){
+        this.shownPanelStartX = screenWidth - boxSize - boxGap*2;
+        this.shownPanelStartY = 20;
+
+        shownPanelStartX = screenWidth - (boxSize - (boxGap*2));
+        this.boxSize = ((screenHeight - 50 - ((NUMB_PIECES*boxGap)+boxGap))/NUMB_PIECES);
+        this.sections = setUpDrawPieces();
+    }
+
     public void draw(GraphicsContext gc){
 
         //Draw the currently created track
@@ -83,9 +92,8 @@ public class TrackBuilder {
     public void drawShownPanel(GraphicsContext gc){
         gc.setFill(Color.WHITE);
 
-        gc.fillRect(shownPanelStartX, 20, screenWidth - shownPanelStartX, ((boxSize+boxGap)*NUMB_PIECES)+boxGap);//TODO make less silly'
-        gc.setStroke(Color.ORANGE);
-        gc.strokeRect(shownPanelStartX, 20, screenWidth - shownPanelStartX, ((boxSize+boxGap)*NUMB_PIECES)+boxGap);
+        gc.fillRect(shownPanelStartX, 20, screenWidth - shownPanelStartX, ((boxSize+boxGap)*NUMB_PIECES)+boxGap);
+        gc.strokeRect(shownPanelStartX, 20, screenWidth - shownPanelStartX, ((boxSize + boxGap) * NUMB_PIECES) + boxGap);
 
         double curY = 20 + boxGap;
         for(int i = 0; i < NUMB_PIECES; i++){
@@ -104,6 +112,20 @@ public class TrackBuilder {
             ds.draw(gc);
         }
         gc.setLineWidth(1);
+    }
+
+    public void setScreenHeightAndWidth(double width, double height){
+        if(screenWidth != width || screenHeight != height){
+            this.screenHeight = height;
+            this.screenWidth = width;
+
+            this.shownPanelStartX = screenWidth - boxSize - boxGap*2;
+            this.shownPanelStartY = 20;
+
+            shownPanelStartX = screenWidth - (boxSize - (boxGap*2));
+            this.boxSize = ((screenHeight - 50 - ((NUMB_PIECES*boxGap)+boxGap))/NUMB_PIECES);
+            this.sections = setUpDrawPieces();
+        }
     }
 
     public void addUIElementsToLayout(BorderPane bp){
@@ -136,7 +158,6 @@ public class TrackBuilder {
     }
 
     public void undo(){
-        System.out.println("Undo");
         if(sectionsForTrack.size() > 0){
             this.sectionsForTrack.remove(sectionsForTrack.size()-1);
         }
@@ -156,7 +177,6 @@ public class TrackBuilder {
             railway[i] = s;
         }
 
-
         for(int i = 0; i < sections.size()-1; i++){
             railway[i].setTo(railway[i+1]);
         }
@@ -165,11 +185,9 @@ public class TrackBuilder {
         railway[railway.length-1].setTo(railway[0]);
         railway[0].setFrom(railway[sections.size()-1]);
 
-
         for(Section s : railway){
             System.out.println(s);
         }
-
 
         return railway;
     }
@@ -241,6 +259,17 @@ public class TrackBuilder {
         }
     }
 
+    public void mouseMoved(double x, double y){
+        for(DefSection d : sectionsForTrack){
+            if(d.containsPoint(x,y)){
+                d.setMouseOn(true);
+            }
+            else{
+                d.setMouseOn(false);
+            }
+        }
+    }
+
     private double pieceSize = 100;
     private double trackStartX = 300;
     private double trackStartY = 80;
@@ -271,7 +300,6 @@ public class TrackBuilder {
             DefSection ds0 = new StraightVert(new Section(curId, 100, null, null, null),(int)trackStartX,(int)trackStartY, (int)pieceSize,5, "DOWN");
             sectionsForTrack.add(ds0);
         }
-        System.out.println("None added");
     }
 
     public void addPiece(){
@@ -279,7 +307,6 @@ public class TrackBuilder {
             addFirstPiece();
             return;
         }
-        System.out.println("Not zero");
 
         if(selectedBox == 0){
             DefSection ds1 = new StraightHoriz(new Section(curId, 100, null, null, null), (int)pieceSize,0);

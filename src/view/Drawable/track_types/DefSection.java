@@ -1,12 +1,15 @@
 package view.Drawable.track_types;
 
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 import model.Section;
 
 /**
  * Created by Nicky on 25/03/2016.
  */
 public abstract class DefSection {
+    private boolean mouseOn;
+
     public static final int TRACK_WIDTH = 30;
     private double startX;
     private double startY;
@@ -16,8 +19,6 @@ public abstract class DefSection {
     private boolean startPiece;
     private String direction;
 
-    private double conX;
-    private double conY;
 
     // 0 is straight line 1 to 4 represent the section of a ring 5 is down straight piece
     private int drawID;
@@ -48,7 +49,8 @@ public abstract class DefSection {
     }
 
     public void draw(GraphicsContext g){
-        System.out.println("Should be implemented in subclass");
+
+
     }
 
 
@@ -56,20 +58,10 @@ public abstract class DefSection {
         System.out.println("Should be implemented in subclass");
     }
 
-    public double getConnectY() {return conY;}
-    public double getConnectX() {return conX;}
-
     public int getDrawID() {
         return drawID;
     }
 
-    public double getConY() {
-        return conY;
-    }
-
-    public double getConX() {
-        return conX;
-    }
 
     public String getDirection() {
         return direction;
@@ -109,10 +101,20 @@ public abstract class DefSection {
 
     public void setDirection(String direction){this.direction = direction;}
 
+    public boolean getMouseOn(){return  this.mouseOn;}
+
+    public void setMouseOn(boolean on){
+        this.mouseOn = on;
+    }
+
     public double getNextX(double curX, double moveBy){
         System.out.println("Should be implemented in subclass");
 
         return 0;
+    }
+
+    public boolean containsPoint(double x, double y){
+        return false;
     }
 
     public double getNextY(double curY, double moveBy){
