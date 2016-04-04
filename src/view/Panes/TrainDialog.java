@@ -5,6 +5,7 @@ import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
+import javafx.stage.Modality;
 import javafx.util.Pair;
 
 import java.util.Optional;
@@ -20,7 +21,8 @@ public class TrainDialog {
     private double length;
 
     public TrainDialog() {
-        Dialog<Pair<String, String>> dialog = new Dialog<>();
+        Dialog dialog = new Dialog<>();
+        dialog.initModality(Modality.WINDOW_MODAL);
         dialog.setTitle("Add Train");
 
         dialog.setHeaderText("Enter train details");
@@ -50,21 +52,28 @@ public class TrainDialog {
         grid.add(length, 1, 2);
 
 
-        // Enable/Disable login button depending on whether a username was entered.
-//        Node myAddButton = dialog.getDialogPane().lookupButton(addButton);
-//        myAddButton.setDisable(true);
-
         // Do some validation (using the Java 8 lambda syntax).
         id.textProperty().addListener((observable, oldValue, newValue) -> {
+            id.setDisable(newValue.trim().isEmpty());
+        });
+
+        // Do some validation (using the Java 8 lambda syntax).
+        start.textProperty().addListener((observable, oldValue, newValue) -> {
+            id.setDisable(newValue.trim().isEmpty());
+        });
+
+        // Do some validation (using the Java 8 lambda syntax).
+        length.textProperty().addListener((observable, oldValue, newValue) -> {
             id.setDisable(newValue.trim().isEmpty());
         });
 
         dialog.getDialogPane().setContent(grid);
 
         // Request focus on the username field by default.
-        Platform.runLater(() -> id.requestFocus());
+//        Platform.runLater(() -> id.requestFocus());
 
-        // Convert the result to a username-password-pair when the login button is clicked.
+
+
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == addButton) {
                 //set the fields to return
@@ -75,12 +84,13 @@ public class TrainDialog {
             return null;
         });
 
-        Optional<Pair<String, String>> result = dialog.showAndWait();
+        dialog.showAndWait();
 
-        result.ifPresent(ids-> {
-            this.id = Integer.parseInt(ids.getKey());//TODO check if int
-            this.startID = Integer.parseInt(ids.getValue());//TODO check if int
-        });
+//        result.ifPresent(ids-> {
+//            this.id = Integer.parseInt(id.getText());//TODO check if int
+//            this.startID = Integer.parseInt(start.getText());//TODO check if int
+//            this.length = Integer.parseInt(length.getText());//TODO check if int
+//        });
     }
 
     public int getId(){

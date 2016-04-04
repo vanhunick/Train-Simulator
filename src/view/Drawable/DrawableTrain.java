@@ -13,20 +13,15 @@ import view.Drawable.track_types.DefSection;
  */
 public class DrawableTrain implements Drawable{
     private double width = 40;
-    private double length = 80;
 
     private double curX;
     private double curY;
     private Train train;
     private long lastUpdate;
-    private List<DefSection> drawSections;
-    private List<Section> sections;
-    private DrawableSection curSection;
+    private DefSection curSection;
 
-    public DrawableTrain(Train train, DrawableSection curSection, List<DefSection> drawSections, List<Section> sections){
+    public DrawableTrain(Train train, DefSection curSection){
         this.train = train;
-        this.drawSections = drawSections;
-        this.sections = sections;
         this.curSection = curSection;
         this.curX = curSection.getStartX();
         this.curY = curSection.getStartY();
@@ -34,8 +29,9 @@ public class DrawableTrain implements Drawable{
 
     @Override
     public void draw(GraphicsContext g){
-        g.setFill(Color.WHITE);
-        g.fillRect(curX, curY, width, length);
+        g.setFill(Color.RED);
+//        g.fillRect(curX, curY, width, length);
+        g.fillRect(curX, curY, width, train.getLength());
     }
 
     public void update(){

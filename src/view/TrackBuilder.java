@@ -12,7 +12,12 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Screen;
 import model.Section;
+import model.Train;
+import view.Drawable.DrawableSection;
+import view.Drawable.DrawableTrain;
 import view.Drawable.track_types.*;
+import view.Panes.ErrorDialog;
+import view.Panes.TrainDialog;
 
 import javax.swing.border.Border;
 import java.awt.event.MouseEvent;
@@ -25,19 +30,18 @@ import java.util.List;
 public class TrackBuilder {
     public static final int NUMB_PIECES = 6;
 
-    private boolean hidden;
     private int selectedBox;
     private double boxSize;
 
 
     private double shownPanelStartX;
-    private double shownPanelStartY;
 
     private double screenWidth;
     private double screenHeight;
 
     private List<DefSection> sections;
     private List<DefSection> sectionsForTrack;
+    private List<DrawableTrain> trains;
 
     private double boxGap = 10;
 
@@ -47,32 +51,31 @@ public class TrackBuilder {
     private int curId = 0;
 
     public TrackBuilder(Main main){
-        vBox = getBuilderButtons();
+        this.vBox = getBuilderButtons();
         this.main = main;
 
-
-        this.hidden = false;
         this.sectionsForTrack = new ArrayList<>();
+        this.trains = new ArrayList<>();
 
-        screenWidth = Main.SCREEN_WIDTH;
-        screenHeight = Main.SCREEN_HEIGHT;
+        this.screenWidth = Main.SCREEN_WIDTH;
+        this.screenHeight = Main.SCREEN_HEIGHT;
 
         this.shownPanelStartX = screenWidth - boxSize - boxGap*2;
-        this.shownPanelStartY = 20;
 
-        shownPanelStartX = screenWidth - (boxSize - (boxGap*2));
+        this.shownPanelStartX = screenWidth - (boxSize - (boxGap*2));
         this.boxSize = ((screenHeight - 50 - ((NUMB_PIECES*boxGap)+boxGap))/NUMB_PIECES);
         this.sections = setUpDrawPieces();
     }
 
     public void updateSize(){
         this.shownPanelStartX = screenWidth - boxSize - boxGap*2;
-        this.shownPanelStartY = 20;
 
         shownPanelStartX = screenWidth - (boxSize - (boxGap*2));
         this.boxSize = ((screenHeight - 50 - ((NUMB_PIECES*boxGap)+boxGap))/NUMB_PIECES);
         this.sections = setUpDrawPieces();
     }
+
+
 
     public void draw(GraphicsContext gc){
 
@@ -85,7 +88,10 @@ public class TrackBuilder {
         this.boxSize = ((screenHeight - 50 - ((NUMB_PIECES*boxGap)+boxGap))/NUMB_PIECES);
         this.shownPanelStartX = screenWidth - (boxSize + (boxGap*2));
 
-            drawShownPanel(gc);
+        drawShownPanel(gc);
+        for(DrawableTrain dt : trains){
+            dt.draw(gc);
+        }
     }
 
 
@@ -120,7 +126,6 @@ public class TrackBuilder {
             this.screenWidth = width;
 
             this.shownPanelStartX = screenWidth - boxSize - boxGap*2;
-            this.shownPanelStartY = 20;
 
             shownPanelStartX = screenWidth - (boxSize - (boxGap*2));
             this.boxSize = ((screenHeight - 50 - ((NUMB_PIECES*boxGap)+boxGap))/NUMB_PIECES);
@@ -143,23 +148,55 @@ public class TrackBuilder {
         Button sim = new Button("Simulate Track");
         Button clear = new Button("Clear Track");
         Button undo = new Button("Undo Track");
+        Button addTrainMenu = new Button("Add Train");
 
+        addTrainMenu.setOnAction(e -> showAddTrainMenu());
         undo.setOnAction(e -> undo());
         sim.setOnAction(e -> simulateTrack());
+        clear.setOnAction(e -> clear());
 
-        vBox.getChildren().addAll(sim,clear,undo);
+        vBox.getChildren().addAll(sim,clear,undo,addTrainMenu);
 
         return vBox;
     }
 
     public void simulateTrack(){
+        if(sectionsForTrack.size() == 0 || trains.size() == 0){
+            new ErrorDialog("No track or trains to simulate", "Error");
+            return;
+        }
+
         linkUpSections(sectionsForTrack);//must link of the sections inside the drawing sections for the simulation
-        main.setVisualisationWithTrack(sectionsForTrack);
+        main.setVisualisationWithTrack(sectionsForTrack, trains);
     }
 
     public void undo(){
         if(sectionsForTrack.size() > 0){
             this.sectionsForTrack.remove(sectionsForTrack.size()-1);
+        }
+    }
+
+    public void clear(){
+        sectionsForTrack.clear();
+    }
+
+
+    public void showAddTrainMenu(){
+        TrainDialog td = new TrainDialog();
+        System.out.println("Stuck");
+        //TODO do some checks
+
+
+        for(DefSection s : sectionsForTrack){
+            if(s.getSection().getID() == td.getStartId()){//section the train should start on
+
+                //Create the train
+                Train train = new Train(td.getId(),td.getLength(),0,td.getStartId(),true);
+
+                // Create the drawable train
+                DrawableTrain drawableTrain = new DrawableTrain(train, s);
+                trains.add(drawableTrain);
+            }
         }
     }
 
@@ -186,7 +223,6 @@ public class TrackBuilder {
         railway[0].setFrom(railway[sections.size()-1]);
 
         for(Section s : railway){
-            System.out.println(s);
         }
 
         return railway;

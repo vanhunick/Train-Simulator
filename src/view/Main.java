@@ -4,6 +4,7 @@ import Test.TestSimpleTrack;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.geometry.Insets;
+import javafx.scene.CacheHint;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -13,10 +14,12 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import model.Section;
 import model.Train;
 import view.Drawable.DrawableSection;
+import view.Drawable.DrawableTrain;
 import view.Drawable.track_types.*;
 import view.Panes.TopMenuBar;
 
@@ -39,24 +42,59 @@ public class Main extends Application {
     private TrackBuilder trackBuilder;
     private static BorderPane bl;
 
+
+    // Fps counter fields
+    private final long ONE_SECOND = 1000000000;
+    private long currentTime = 0;
+    private long lastTime = 0;
+    private int fps = 0;
+    private double delta = 0;
+    private int fpsText;
+
+
+
     @Override
     public void start(final Stage primaryStage) {
         primaryStage.setTitle("Train Simulator");
 
+
+
         bl = new BorderPane();
+        Canvas canvas = new Canvas();
+
+
+
 
         Group root = new Group();
         Scene scene = new Scene(root, SCREEN_WIDTH, SCREEN_HEIGHT, Color.rgb(0, 0, 0));
+
+
+
+
+
+        TopMenuBar topMenuBar = new TopMenuBar(this);
+
         primaryStage.setHeight(SCREEN_HEIGHT);
         primaryStage.setWidth(SCREEN_WIDTH);
 
 
         //Create the custom menu bar
-        TopMenuBar topMenuBar = new TopMenuBar(this);
+
 
         trackBuilder = new TrackBuilder(this);
         visualisation = new Visualisation(trackBuilder);
+
         bl.setTop(topMenuBar);//Need to add first as it is being used to calculate offset
+        bl.setCenter(canvas);
+
+//        bl.setCache(true);
+//        bl.setCacheHint(CacheHint.SPEED);
+//
+//        canvas.setCache(true);
+//        canvas.setCacheHint(CacheHint.SPEED);
+//
+//        root.setCache(true);
+//        root.setCacheHint(CacheHint.SPEED);
 
 
 
@@ -83,7 +121,7 @@ public class Main extends Application {
         scene.setOnMouseDragged(e -> visualisation.mouseDragged(e.getX(), e.getY()));
 
         // create a MainWindow node
-        Canvas canvas = new Canvas();
+
 
         // bind the dimensions when the user resizes the window.
         canvas.widthProperty().bind(primaryStage.widthProperty());
@@ -93,16 +131,35 @@ public class Main extends Application {
         // obtain the GraphicsContext (drawing surface)
         final GraphicsContext gc = canvas.getGraphicsContext2D();
 
+        lastTime = System.nanoTime();
+        // Set the canvas to the center of the border layout
+
 
         // create an animation (update & render loop)
         new AnimationTimer() {
             @Override
             public void handle(long now) {
-                System.out.println(bl.getLeft().getLayoutBounds().getWidth());
+
+
+                currentTime = now;
+                fps++;
+                delta += currentTime-lastTime;
+
+
+                if(delta > ONE_SECOND){
+                    fpsText = fps;
+                    delta -= ONE_SECOND;
+                    fps = 0;
+                }
+
+                lastTime = currentTime;
+
                 // Clear the screen
                 gc.setStroke(Color.BLACK);
                 gc.clearRect(0, 0, primaryStage.getWidth(), primaryStage.getHeight());
+                gc.setStroke(Color.WHITE);
 
+                gc.strokeText("FPS " + fpsText, 0, 20);
 
                 double widthOffset = bl.getLeft().getLayoutBounds().getWidth();
                 double heightOffset = bl.getTop().getLayoutBounds().getHeight();
@@ -122,17 +179,8 @@ public class Main extends Application {
             }
         }.start();
 
-
-
-        // add the single node onto the scene graph
-
-        // Set the canvas to the center of the border layout
-        bl.setCenter(canvas);
-
         // Add the layout to the root
         root.getChildren().add(bl);
-
-
         primaryStage.setScene(scene);
         primaryStage.show();
     }
@@ -148,12 +196,12 @@ public class Main extends Application {
             trackBuilder.removeUIElementsFromLayout(bl);
             visualisation.addUIElementsToLayout(bl);
         }
-
         mode = modeToSet;
     }
 
-    public void setVisualisationWithTrack(List<DefSection> track){
+    public void setVisualisationWithTrack(List<DefSection> track, List<DrawableTrain> trains){
         visualisation.setRailway(track);
+        visualisation.setTrains(trains);
         trackBuilder.removeUIElementsFromLayout(bl);
         visualisation.addUIElementsToLayout(bl);
         mode = "Simulation";
