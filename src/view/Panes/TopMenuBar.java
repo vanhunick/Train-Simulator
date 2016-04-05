@@ -5,18 +5,19 @@ import javafx.event.EventHandler;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import view.Controller;
 import view.Main;
 
 /**
  * Created by Nicky on 2/04/2016.
  */
 public class TopMenuBar extends MenuBar {
-    private Main main;
+    private Controller controller;
 
-    public TopMenuBar(Main main){
+    public TopMenuBar(Controller controller){
         super();
 
-        this.main = main;
+        this.controller = controller;
 
         //Menu items
         Menu menuFile = new Menu("File");
@@ -43,19 +44,17 @@ public class TopMenuBar extends MenuBar {
     }
 
     public void handleNewTrackPressed(ActionEvent e){
-        main.setMode("Builder");
+        controller.setMode(Controller.BUILDER_MODE);
     }
 
+    public void handleSimulatePressed(ActionEvent e){
+        controller.setMode(Controller.VISUALISATION_MODE);
+    }
+
+    // TODO implement
     public void handleLoadTrackPressed(ActionEvent e){
         System.out.println("Load Track Pressed");
     }
-
-
-    public void handleSimulatePressed(ActionEvent e){
-        main.setMode("Simulation");
-    }
-
-
 
 
 }

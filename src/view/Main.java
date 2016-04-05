@@ -1,24 +1,16 @@
 package view;
 
-import Test.TestSimpleTrack;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
-import javafx.geometry.Insets;
-import javafx.scene.CacheHint;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Button;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import model.Section;
-import model.Train;
-import view.Drawable.DrawableSection;
 import view.Drawable.DrawableTrain;
 import view.Drawable.track_types.*;
 import view.Panes.TopMenuBar;
@@ -29,21 +21,15 @@ import java.util.List;
 
 public class Main extends Application {
 
+    // Screen sizes
     public static final  int SCREEN_WIDTH = 1200;
     public static final  int SCREEN_HEIGHT = 800;
 
-    ArrayList<String> input = new ArrayList<>();
-
-    private Visualisation visualisation;
-
-    private static String mode = "Simulation";
-
-
-    private TrackBuilder trackBuilder;
+    private ArrayList<String> input = new ArrayList<>();
     private static BorderPane bl;
 
-
     // Fps counter fields
+    public boolean debug;
     private final long ONE_SECOND = 1000000000;
     private long currentTime = 0;
     private long lastTime = 0;
@@ -52,132 +38,58 @@ public class Main extends Application {
     private int fpsText;
 
 
+    // Controls the flow of the program
+    private Controller controller;
 
     @Override
     public void start(final Stage primaryStage) {
-        primaryStage.setTitle("Train Simulator");
 
-
-
-        bl = new BorderPane();
-        Canvas canvas = new Canvas();
-
-
-
+        // Initialises the control that will control the flow of the program
+        this.controller = new Controller(Controller.VISUALISATION_MODE);
 
         Group root = new Group();
         Scene scene = new Scene(root, SCREEN_WIDTH, SCREEN_HEIGHT, Color.rgb(0, 0, 0));
 
+        // Responds to a key being pressed
+        scene.setOnKeyPressed(e -> {String code = e.getCode().toString();if ( !input.contains(code) ) input.add( code );});
+
+        //responds to a key being released
+        scene.setOnKeyReleased(e -> {String code = e.getCode().toString();input.remove( code );});
+
+        //Update the controller with any mouse events
+        scene.setOnMousePressed(e -> {
+            System.out.println("Test");controller.mousePressed(e.getX(), e.getY(), e);});
+        scene.setOnMouseReleased(e -> controller.mouseReleased(e.getX(), e.getY(),e));
+        scene.setOnMouseClicked(e -> controller.mouseClicked(e.getX(), e.getY(),e));
+        scene.setOnMouseMoved(e -> controller.mouseMoved(e.getX(), e.getY(),e));
+        scene.setOnMouseDragged(e -> controller.mouseDragged(e.getX(), e.getY(),e));
+
+        setupGUI(primaryStage, scene, root);
+    }
 
 
+    public void setupGUI(Stage primaryStage, Scene scene, Group root){
+        primaryStage.setTitle("Train Simulator");
 
+        bl = new BorderPane();
+        controller.setBorderPane(bl);
+        Canvas canvas = new Canvas();
 
-        TopMenuBar topMenuBar = new TopMenuBar(this);
+        TopMenuBar topMenuBar = new TopMenuBar(controller);
 
         primaryStage.setHeight(SCREEN_HEIGHT);
         primaryStage.setWidth(SCREEN_WIDTH);
 
-
-        //Create the custom menu bar
-
-
-        trackBuilder = new TrackBuilder(this);
-        visualisation = new Visualisation(trackBuilder);
-
         bl.setTop(topMenuBar);//Need to add first as it is being used to calculate offset
         bl.setCenter(canvas);
-
-//        bl.setCache(true);
-//        bl.setCacheHint(CacheHint.SPEED);
-//
-//        canvas.setCache(true);
-//        canvas.setCacheHint(CacheHint.SPEED);
-//
-//        root.setCache(true);
-//        root.setCacheHint(CacheHint.SPEED);
-
-
-
-        scene.setOnKeyPressed(
-                e -> {
-                    String code = e.getCode().toString();
-
-                    // only add once... prevent duplicates
-                    if ( !input.contains(code) )
-                        input.add( code );
-                });
-        //responds to a key being released
-        scene.setOnKeyReleased(
-                e -> {
-                    String code = e.getCode().toString();
-                    input.remove( code );
-                });
-
-        //mouse events
-        scene.setOnMousePressed(e -> visualisation.mousePressed(e.getX(), e.getY()));
-        scene.setOnMouseReleased(e -> visualisation.mouseReleased(e.getX(), e.getY()));
-        scene.setOnMouseClicked(e -> visualisation.mouseClicked(e.getX(), e.getY(),e));
-        scene.setOnMouseMoved(e -> visualisation.mouseMoved(e.getX(), e.getY()));
-        scene.setOnMouseDragged(e -> visualisation.mouseDragged(e.getX(), e.getY()));
-
-        // create a MainWindow node
 
 
         // bind the dimensions when the user resizes the window.
         canvas.widthProperty().bind(primaryStage.widthProperty());
         canvas.heightProperty().bind(primaryStage.heightProperty());
-        visualisation.addUIElementsToLayout(bl);//Add UI elements since it default
-
-        // obtain the GraphicsContext (drawing surface)
-        final GraphicsContext gc = canvas.getGraphicsContext2D();
 
         lastTime = System.nanoTime();
-        // Set the canvas to the center of the border layout
-
-
-        // create an animation (update & render loop)
-        new AnimationTimer() {
-            @Override
-            public void handle(long now) {
-
-
-                currentTime = now;
-                fps++;
-                delta += currentTime-lastTime;
-
-
-                if(delta > ONE_SECOND){
-                    fpsText = fps;
-                    delta -= ONE_SECOND;
-                    fps = 0;
-                }
-
-                lastTime = currentTime;
-
-                // Clear the screen
-                gc.setStroke(Color.BLACK);
-                gc.clearRect(0, 0, primaryStage.getWidth(), primaryStage.getHeight());
-                gc.setStroke(Color.WHITE);
-
-                gc.strokeText("FPS " + fpsText, 0, 20);
-
-                double widthOffset = bl.getLeft().getLayoutBounds().getWidth();
-                double heightOffset = bl.getTop().getLayoutBounds().getHeight();
-                //redraw all elements on the screen
-                if(mode.equals("Simulation")){
-                    visualisation.setOffesets(widthOffset,heightOffset);//TODO not sure if this is the right way to go about it
-                    visualisation.draw(gc);
-                }
-                else if(mode.equals("Builder")){
-                    trackBuilder.setScreenHeightAndWidth(SCREEN_WIDTH - widthOffset, SCREEN_HEIGHT - heightOffset);//TODO not sure if this is the right way to go about it
-                    trackBuilder.draw(gc);
-                }
-                visualisation.update();
-
-                gc.save();
-                gc.restore();
-            }
-        }.start();
+        setupAnimationTimer(primaryStage,canvas);
 
         // Add the layout to the root
         root.getChildren().add(bl);
@@ -185,26 +97,45 @@ public class Main extends Application {
         primaryStage.show();
     }
 
+    public void setupAnimationTimer(Stage primaryStage, Canvas canvas){
+        final GraphicsContext gc = canvas.getGraphicsContext2D();
 
-    public void setMode(String modeToSet){
-        if(modeToSet.equals("Builder") && !mode.equals(modeToSet)){
-            visualisation.removeUIElementsFromLayout(bl);
-            trackBuilder.addUIElementsToLayout(bl);
+        new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                // Shows fps counter in debug mode
+                if(debug){
+                    currentTime = now;
+                    fps++;
+                    delta += currentTime-lastTime;
 
-        }
-        else if(modeToSet.equals("Simulation") && !mode.equals(modeToSet)){
-            trackBuilder.removeUIElementsFromLayout(bl);
-            visualisation.addUIElementsToLayout(bl);
-        }
-        mode = modeToSet;
-    }
+                    if(delta > ONE_SECOND){
+                        fpsText = fps;
+                        delta -= ONE_SECOND;
+                        fps = 0;
+                    }
+                    lastTime = currentTime;
+                }
 
-    public void setVisualisationWithTrack(List<DefSection> track, List<DrawableTrain> trains){
-        visualisation.setRailway(track);
-        visualisation.setTrains(trains);
-        trackBuilder.removeUIElementsFromLayout(bl);
-        visualisation.addUIElementsToLayout(bl);
-        mode = "Simulation";
+                // Clear the screen
+                gc.setStroke(Color.BLACK);
+                gc.clearRect(0, 0, primaryStage.getWidth(), primaryStage.getHeight());
+                gc.setStroke(Color.WHITE);
+
+
+                // Update and refresh the controller
+                controller.update();
+                controller.refresh(gc);
+
+                // Draw the fps counter
+                if(debug){
+                    gc.strokeText("FPS " + fpsText, 0, 20);
+                }
+
+                gc.save();
+                gc.restore();
+            }
+        }.start();
     }
 
     public static void main(String[] args) {

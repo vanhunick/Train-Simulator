@@ -1,33 +1,27 @@
 package view;
 
+import javafx.event.Event;
 import javafx.geometry.Insets;
-import javafx.geometry.Rectangle2D;
-import javafx.scene.Scene;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.stage.Screen;
 import model.Section;
 import model.Train;
-import view.Drawable.DrawableSection;
 import view.Drawable.DrawableTrain;
 import view.Drawable.track_types.*;
 import view.Panes.ErrorDialog;
 import view.Panes.TrainDialog;
-
-import javax.swing.border.Border;
-import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by User on 26/03/2016.
  */
-public class TrackBuilder {
+public class TrackBuilder implements MouseEvents{
     public static final int NUMB_PIECES = 6;
 
     private int selectedBox;
@@ -47,12 +41,12 @@ public class TrackBuilder {
 
     private VBox vBox;
 
-    private Main main;
+    private Controller controller;
     private int curId = 0;
 
-    public TrackBuilder(Main main){
+    public TrackBuilder(Controller controller){
+        this.controller = controller;
         this.vBox = getBuilderButtons();
-        this.main = main;
 
         this.sectionsForTrack = new ArrayList<>();
         this.trains = new ArrayList<>();
@@ -75,9 +69,11 @@ public class TrackBuilder {
         this.sections = setUpDrawPieces();
     }
 
+    public void update(){
 
+    }
 
-    public void draw(GraphicsContext gc){
+    public void refresh(GraphicsContext gc){
 
         //Draw the currently created track
         for(DefSection d : sectionsForTrack){
@@ -167,7 +163,7 @@ public class TrackBuilder {
         }
 
         linkUpSections(sectionsForTrack);//must link of the sections inside the drawing sections for the simulation
-        main.setVisualisationWithTrack(sectionsForTrack, trains);
+        controller.setVisualisationMode(sectionsForTrack, trains);
     }
 
     public void undo(){
@@ -183,7 +179,6 @@ public class TrackBuilder {
 
     public void showAddTrainMenu(){
         TrainDialog td = new TrainDialog();
-        System.out.println("Stuck");
         //TODO do some checks
 
 
@@ -232,7 +227,7 @@ public class TrackBuilder {
     public List<DefSection> setUpDrawPieces(){
         List<DefSection> sections = new ArrayList<>();
 
-        double middleX = (screenWidth - boxSize - boxGap) + (boxSize/2);//Start of the box to draw in
+        double middleX = (screenWidth - boxSize - boxGap) + (boxSize/2);//Start of the box to refresh in
         double middleY = 20 + boxGap + (boxSize/2);
 
         double size = boxSize - (boxGap);
@@ -276,7 +271,14 @@ public class TrackBuilder {
         return sections;
     }
 
-    public void mouseClicked(double x, double y, javafx.scene.input.MouseEvent e){
+    @Override
+    public void mousePressed(double x, double y, MouseEvent e) {}
+
+    @Override
+    public void mouseReleased(double x, double y, MouseEvent e) {}
+
+    @Override
+    public void mouseClicked(double x, double y, MouseEvent e){
         int numbSections = sectionsForTrack.size();
         if(oneShownPanel(x, y)){
             selectPiece(x, y);
@@ -295,7 +297,8 @@ public class TrackBuilder {
         }
     }
 
-    public void mouseMoved(double x, double y){
+    @Override
+    public void mouseMoved(double x, double y, MouseEvent e){
         for(DefSection d : sectionsForTrack){
             if(d.containsPoint(x,y)){
                 d.setMouseOn(true);
@@ -304,6 +307,11 @@ public class TrackBuilder {
                 d.setMouseOn(false);
             }
         }
+    }
+
+    @Override
+    public void mouseDragged(double x, double y, MouseEvent e) {
+
     }
 
     private double pieceSize = 100;
@@ -396,7 +404,6 @@ public class TrackBuilder {
     public List<DefSection> getCreatedTrack(){
         return sectionsForTrack;
     }
-
 
 }
 

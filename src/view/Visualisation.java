@@ -11,6 +11,7 @@ import javafx.scene.paint.Color;
 import model.ModelTrack;
 import model.Section;
 import model.Train;
+import view.Drawable.Drawable;
 import view.Drawable.DrawableTrain;
 import view.Drawable.track_types.*;
 import view.Panes.TrainDialog;
@@ -22,23 +23,17 @@ import java.util.List;
 /**
  * Created by vanhunick on 22/03/16.
  */
-public class Visualisation {
+public class Visualisation implements MouseEvents {
 
     private ModelTrack modelTrack;
-
     private boolean started;
 
     private List<DrawableTrain> trains;
     private List<DefSection> railway;
 
     private VBox vBox;
-    private double widthOffset;
-    private double heightOffset;
 
-    TrackBuilder trackBuilder;//TODO change location later
-
-    public Visualisation(TrackBuilder tb){
-        this.trackBuilder = tb;
+    public Visualisation(){
         this.vBox = getBuilderButtons();
         //Just the default track
         this.trains = new ArrayList<>();
@@ -51,8 +46,7 @@ public class Visualisation {
         }
     }
 
-    public void draw(GraphicsContext g){
-
+    public void refresh(GraphicsContext g){
         g.setStroke(Color.WHITE);
 
         // Draw the track
@@ -66,33 +60,29 @@ public class Visualisation {
         }
     }
 
-    public void setOffesets(double width, double height){
-        this.widthOffset = width;
-        this.heightOffset = height;
-    }
-
-    public void mousePressed(double x, double y){
+    @Override
+    public void mousePressed(double x, double y, MouseEvent e) {
 
     }
 
-    public void mouseReleased(double x, double y){
+    @Override
+    public void mouseReleased(double x, double y, MouseEvent e) {
 
     }
 
-    public void mouseClicked(double x, double y, MouseEvent e){
-        trackBuilder.mouseClicked(x,y,e);
-    }
-
-    public void mouseMoved(double x, double y){
-        trackBuilder.mouseMoved(x - widthOffset, y - heightOffset);
-    }
-
-    public void mouseDragged(double x, double y){
+    @Override
+    public void mouseClicked(double x, double y, MouseEvent e) {
 
     }
 
-    public void addTrakcBuilder(TrackBuilder tb){
-        this.trackBuilder = tb;
+    @Override
+    public void mouseMoved(double x, double y, MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseDragged(double x, double y, MouseEvent e) {
+
     }
 
     public void setRailway(List<DefSection> rail){
@@ -122,18 +112,44 @@ public class Visualisation {
     }
 
     public void startSimulation(){
-        this.modelTrack = new ModelTrack()
+        testMovement();//Just creates some trains
+
+        this.modelTrack = new ModelTrack(getTrains(), new TrackBuilder(null).linkUpSections(railway));
+
+
+
     }
 
+    public List<Train> getTrains(){
+        List<Train> trains = new ArrayList<>();
+
+        for(DrawableTrain dt : this.trains){
+            trains.add(dt.getTrain());
+        }
+        return trains;
+    }
 
     public void addUIElementsToLayout(BorderPane bp){
         bp.setLeft(vBox);
-        widthOffset  = bp.getLeft().getLayoutBounds().getWidth();
-        heightOffset = bp.getTop().getLayoutBounds().getHeight();
     }
 
     public void removeUIElementsFromLayout(BorderPane bp){
         bp.getChildren().remove(vBox);
+    }
+
+    public void testMovement(){
+
+        // Add a train to the track
+        for(DefSection ds : railway){
+            if(ds.getDrawID() == 1){
+                //Create the train
+                Train train = new Train(1,50,0,1,true);
+
+                // Create the drawable train
+                DrawableTrain drawableTrain = new DrawableTrain(train, ds);
+                trains.add(drawableTrain);
+            }
+        }
     }
 
 

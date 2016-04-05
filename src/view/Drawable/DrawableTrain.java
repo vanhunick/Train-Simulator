@@ -50,4 +50,8 @@ public class DrawableTrain implements Drawable{
     }
 
 
+    public Train getTrain(){
+        return this.train;
+    }
+
 }

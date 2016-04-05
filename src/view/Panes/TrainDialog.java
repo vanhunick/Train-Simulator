@@ -14,11 +14,16 @@ import java.util.Optional;
  * Created by Nicky on 3/04/2016.
  */
 public class TrainDialog {
-    // Create the custom dialog.
 
+    // The train id
     private int id;
+
+    // The id of the section to start the train on
     private int startID;
+
+    // The length of train in pixels
     private double length;
+
 
     public TrainDialog() {
         Dialog dialog = new Dialog<>();
@@ -69,10 +74,8 @@ public class TrainDialog {
 
         dialog.getDialogPane().setContent(grid);
 
-        // Request focus on the username field by default.
-//        Platform.runLater(() -> id.requestFocus());
-
-
+        // Request focus on the id field by default
+        Platform.runLater(() -> id.requestFocus());
 
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == addButton) {
@@ -85,12 +88,6 @@ public class TrainDialog {
         });
 
         dialog.showAndWait();
-
-//        result.ifPresent(ids-> {
-//            this.id = Integer.parseInt(id.getText());//TODO check if int
-//            this.startID = Integer.parseInt(start.getText());//TODO check if int
-//            this.length = Integer.parseInt(length.getText());//TODO check if int
-//        });
     }
 
     public int getId(){
