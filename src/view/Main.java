@@ -25,6 +25,12 @@ public class Main extends Application {
     public static final  int SCREEN_WIDTH = 1200;
     public static final  int SCREEN_HEIGHT = 800;
 
+    // Screen sizes
+    public static int canvasWidth;
+    public static int canvasHeight;
+
+
+
     private ArrayList<String> input = new ArrayList<>();
     private static BorderPane bl;
 
@@ -49,6 +55,7 @@ public class Main extends Application {
 
         Group root = new Group();
         Scene scene = new Scene(root, SCREEN_WIDTH, SCREEN_HEIGHT, Color.rgb(0, 0, 0));
+        Canvas canvas = new Canvas();
 
         // Responds to a key being pressed
         scene.setOnKeyPressed(e -> {String code = e.getCode().toString();if ( !input.contains(code) ) input.add( code );});
@@ -57,23 +64,23 @@ public class Main extends Application {
         scene.setOnKeyReleased(e -> {String code = e.getCode().toString();input.remove( code );});
 
         //Update the controller with any mouse events
-        scene.setOnMousePressed(e -> {
-            System.out.println("Test");controller.mousePressed(e.getX(), e.getY(), e);});
-        scene.setOnMouseReleased(e -> controller.mouseReleased(e.getX(), e.getY(),e));
-        scene.setOnMouseClicked(e -> controller.mouseClicked(e.getX(), e.getY(),e));
-        scene.setOnMouseMoved(e -> controller.mouseMoved(e.getX(), e.getY(),e));
-        scene.setOnMouseDragged(e -> controller.mouseDragged(e.getX(), e.getY(),e));
+        canvas.setOnMousePressed(e -> controller.mousePressed(e.getX(), e.getY(), e));
+        canvas.setOnMouseReleased(e -> controller.mouseReleased(e.getX(), e.getY(),e));
+        canvas.setOnMouseClicked(e -> controller.mouseClicked(e.getX(), e.getY(),e));
+        canvas.setOnMouseMoved(e -> controller.mouseMoved(e.getX(), e.getY(),e));
+        canvas.setOnMouseDragged(e -> controller.mouseDragged(e.getX(), e.getY(),e));
 
-        setupGUI(primaryStage, scene, root);
+
+        setupGUI(primaryStage, scene, root,canvas);
     }
 
 
-    public void setupGUI(Stage primaryStage, Scene scene, Group root){
+    public void setupGUI(Stage primaryStage, Scene scene, Group root, Canvas canvas){
         primaryStage.setTitle("Train Simulator");
 
         bl = new BorderPane();
         controller.setBorderPane(bl);
-        Canvas canvas = new Canvas();
+
 
         TopMenuBar topMenuBar = new TopMenuBar(controller);
 

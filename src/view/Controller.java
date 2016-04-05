@@ -37,6 +37,7 @@ public class Controller implements MouseEvents {
         else if(modeToSet.equals(BUILDER_MODE)){
             this.mode = BUILDER_MODE;
             setBuilderMode();
+            trackBuilder.updateSize();
             this.curMode = trackBuilder;
         }
         else {
