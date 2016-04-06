@@ -68,6 +68,59 @@ public class Quart4 extends DefSection {
         super.setStartY(startY);
     }
 
+    public double getNextX(double curX, double moveBy){
+        if(super.getDirection().equals("RIGHT")){
+            if(curX + moveBy > super.getStartX() + super.getLength()/2 - 20){//
+
+                return -1;//No longer in this section TODO update later
+            }
+            else{
+                return curX + moveBy;
+            }
+        }
+        else if(super.getDirection().equals("UP")){
+            if(curX - moveBy < super.getStartX() ){
+                return -1;//No longer in this section TODO update later
+            }
+            else{
+                return curX - moveBy;
+            }
+        }
+
+        return -1;
+    }
+
+    public double getNextY(double curY, double moveBy){
+        System.out.println("Checking y");
+        if(super.getDirection().equals("RIGHT")){
+            System.out.println(curY + moveBy  + " " + super.getStartY() + super.getLength()/2);
+            if(curY + moveBy > super.getStartY() + super.getLength()/2){
+                System.out.println("Lower than the y");
+                return -1;//No longer in this section TODO update later
+            }
+            else{
+                return curY + moveBy;
+            }
+        }
+        else if(super.getDirection().equals("UP")){
+            if(curY - moveBy < super.getStartY() - super.getLength()/2){
+                System.out.println("-1");
+                return -1;//No longer in this section TODO update later
+            }
+            else{
+                System.out.println("adjusting");
+                return curY - moveBy;
+            }
+        }
+        return -1;
+    }
+
+    public boolean checkOnSectionAfterMovement(double curX, double curY, double dist){
+        if(getNextX(curX,dist) == -1 )return false;
+        if(getNextY(curY,dist) == -1 )return false;// TODO dont need this
+        return true;
+    }
+
     public boolean containsPoint(double x, double y){
         return x >= super.getStartX() && x <= super.getStartX() + super.getLength()/2 &&
                 y >= super.getStartY() + super.getLength()/2 && y <= super.getStartY() + super.getLength();

@@ -5,6 +5,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.input.MouseEvent;
 import view.Drawable.DrawableTrain;
 import view.Drawable.track_types.DefSection;
+
 import java.util.List;
 
 public class Controller implements MouseEvents {
@@ -20,11 +21,18 @@ public class Controller implements MouseEvents {
 
     private BorderPane borderPane;
 
-    public Controller (String mode){
-        if(mode.equals(VISUALISATION_MODE)){
-            visualisation = new Visualisation();// Since by default it starts in this mode
-        }
-        setMode(mode);
+    public Controller (){
+
+
+    }
+
+    public void setDefMode(BorderPane borderPane){
+        visualisation = new Visualisation();// Since by default it starts in this mode
+        visualisation.addUIElementsToLayout(borderPane);
+
+        // By default add one train
+        visualisation.testMovement();
+        setMode(Controller.VISUALISATION_MODE);
     }
 
     public void setMode(String modeToSet){
@@ -79,6 +87,7 @@ public class Controller implements MouseEvents {
 
     }
 
+
     public void setBuilderMode(){
         this.trackBuilder = new TrackBuilder(this);// Pass the controller to the builder
 
@@ -112,4 +121,14 @@ public class Controller implements MouseEvents {
     }
 
     public void setBorderPane(BorderPane borderPane){this.borderPane = borderPane;}
+
+    public double getCanvasWidth(){
+        System.out.println(borderPane.getCenter().getLayoutBounds().getWidth());
+        return borderPane.getCenter().getLayoutBounds().getWidth();
+    }
+
+    public double getCanvasHeight(){
+        System.out.println(borderPane.getCenter().getLayoutBounds().getHeight());
+        return borderPane.getCenter().getLayoutBounds().getHeight();
+    }
 }

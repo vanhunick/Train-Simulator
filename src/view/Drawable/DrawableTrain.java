@@ -30,28 +30,40 @@ public class DrawableTrain implements Drawable{
     @Override
     public void draw(GraphicsContext g){
         g.setFill(Color.RED);
-//        g.fillRect(curX, curY, width, length);
-        g.fillRect(curX, curY, width, train.getLength());
+        g.fillRect(curX, curY, width, width);
     }
 
     public void update(){
+
         long curTime = System.currentTimeMillis();
-        if(lastUpdate - curTime > 1000){
-//            for(DefSection s : sections){
-////
-//            }
+        if(curTime - lastUpdate > 100){
+            lastUpdate = curTime;
+
+            this.curX = curSection.getNextX(curX,8);
+            this.curY = curSection.getNextY(curY,8);
         }
-
-        lastUpdate = curTime;
-
-
         train.getSpeed();
-
     }
 
 
     public Train getTrain(){
         return this.train;
+    }
+
+    public DefSection getCurSection(){
+        return this.curSection;
+    }
+
+    public void setCurSection(DefSection section){
+        this.curSection = section;
+    }
+
+    public double getX(){
+        return this.curX;
+    }
+
+    public double getY(){
+        return  this.curY;
     }
 
 }

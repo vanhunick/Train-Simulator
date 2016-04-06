@@ -15,7 +15,6 @@ public abstract class DefSection {
     private double startY;
     private double length;//TODO might just use the train length
     private Section section;
-    private DefSection from;
     private boolean startPiece;
     private String direction;
 
@@ -29,7 +28,6 @@ public abstract class DefSection {
     public DefSection(Section section, int length, int drawID){
         this.section = section;
         this.length = length;
-        this.from = from;
         this.section = section;
         this.drawID = drawID;
 
@@ -53,6 +51,13 @@ public abstract class DefSection {
 
     }
 
+    public boolean checkOnSectionAfterMovement(double curX, double curY, double dist){
+        System.out.println("Should be implemented in subclass");
+        return false;
+    }
+
+
+
 
     public void setStart(DefSection from){
         System.out.println("Should be implemented in subclass");
@@ -69,10 +74,6 @@ public abstract class DefSection {
 
     public boolean isStartPiece() {
         return startPiece;
-    }
-
-    public DefSection getFrom() {
-        return from;
     }
 
     public Section getSection() {
@@ -121,5 +122,41 @@ public abstract class DefSection {
         System.out.println("Should be implemented in subclass");
 
         return 0;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof DefSection)) return false;
+
+        DefSection that = (DefSection) o;
+
+        if (getMouseOn() != that.getMouseOn()) return false;
+        if (Double.compare(that.getStartX(), getStartX()) != 0) return false;
+        if (Double.compare(that.getStartY(), getStartY()) != 0) return false;
+        if (Double.compare(that.getLength(), getLength()) != 0) return false;
+        if (isStartPiece() != that.isStartPiece()) return false;
+        if (getDrawID() != that.getDrawID()) return false;
+        if (!getSection().equals(that.getSection())) return false;
+        return getDirection().equals(that.getDirection());
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result;
+        long temp;
+        result = (getMouseOn() ? 1 : 0);
+        temp = Double.doubleToLongBits(getStartX());
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(getStartY());
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(getLength());
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        result = 31 * result + getSection().hashCode();
+        result = 31 * result + (isStartPiece() ? 1 : 0);
+        result = 31 * result + getDirection().hashCode();
+        result = 31 * result + getDrawID();
+        return result;
     }
 }

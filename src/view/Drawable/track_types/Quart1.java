@@ -73,6 +73,57 @@ public class Quart1 extends DefSection {
                 y >= super.getStartY() && y <= super.getStartY() + super.getLength()/2;
     }
 
+    public double getNextX(double curX, double moveBy){
+        if(super.getDirection().equals("RIGHT")){
+            if(curX + moveBy > super.getStartX() + super.getLength()/2 - 20){//
+
+                return -1;//No longer in this section TODO update later
+            }
+            else{
+                return curX + moveBy;
+            }
+        }
+        else if(super.getDirection().equals("DOWN")){
+            if(curX - moveBy < super.getStartX() ){
+                return -1;//No longer in this section TODO update later
+            }
+            else{
+                return curX - moveBy;
+            }
+        }
+
+        return -1;
+    }
+
+    public double getNextY(double curY, double moveBy){
+        if(super.getDirection().equals("DOWN")){
+            System.out.println(curY + moveBy  + " " + super.getStartY() + super.getLength()/2);
+            if(curY + moveBy > super.getStartY() + super.getLength()/2){
+                return -1;//No longer in this section TODO update later
+            }
+            else{
+                return curY + moveBy;
+            }
+        }
+        else if(super.getDirection().equals("RIGHT")){
+            if(curY - moveBy < super.getStartY() - super.getLength()/2){
+                System.out.println("-1");
+                return -1;//No longer in this section TODO update later
+            }
+            else{
+                return curY - moveBy;
+            }
+        }
+        return -1;
+    }
+
+    public boolean checkOnSectionAfterMovement(double curX, double curY, double dist){
+        if(getNextX(curX,dist) == -1 )return false;
+        if(getNextY(curY,dist) == -1 )return false;// TODO dont need this
+        return true;
+    }
+
+
     public void draw(GraphicsContext g) {
         if(super.getMouseOn()){
             g.setStroke(Color.GREEN);

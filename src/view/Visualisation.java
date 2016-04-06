@@ -11,10 +11,8 @@ import javafx.scene.paint.Color;
 import model.ModelTrack;
 import model.Section;
 import model.Train;
-import view.Drawable.Drawable;
 import view.Drawable.DrawableTrain;
 import view.Drawable.track_types.*;
-import view.Panes.TrainDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,12 +24,14 @@ import java.util.List;
 public class Visualisation implements MouseEvents {
 
     private ModelTrack modelTrack;
-    private boolean started;
+    private boolean started = false;
 
     private List<DrawableTrain> trains;
     private List<DefSection> railway;
 
     private VBox vBox;
+
+    private long lastUpdate;
 
     public Visualisation(){
         this.vBox = getBuilderButtons();
@@ -41,8 +41,20 @@ public class Visualisation implements MouseEvents {
     }
 
     public void update(){
-        for(DrawableTrain t : trains){
-            t.update();
+        if(started){
+            long curTime = System.currentTimeMillis();
+//            if(curTime - lastUpdate > 2){
+                lastUpdate = curTime;
+                for(DrawableTrain t : trains){
+                    onSectionCheck(t);
+                    t.update();
+                }
+
+//            }
+
+
+
+
         }
     }
 
@@ -56,8 +68,34 @@ public class Visualisation implements MouseEvents {
 
         //Draw the trains
         for(DrawableTrain t : trains){
+            //Need to check if the train moving moves it into another section
+
+
             t.draw(g);
         }
+    }
+
+    public void onSectionCheck(DrawableTrain t){
+        DefSection curSection = t.getCurSection();
+        double speed = t.getTrain().getSpeed();
+        speed = 8;
+
+        if(!curSection.checkOnSectionAfterMovement(t.getX(),t.getY(),speed)){
+            System.out.println("Changing drawplace");
+            for(int i = 0; i < railway.size(); i++){
+
+                // Check if the current track
+                if(railway.get(i).getSection().getID() == curSection.getSection().getID()){
+                    if(i == railway.size() -1)t.setCurSection(railway.get(0));// The cur section is the last in the track so set the next to be the start section
+                    else {
+                        t.setCurSection(railway.get(i+1));
+                        //make the model generate an event
+                    }
+                    return;
+                }
+            }
+        }
+
     }
 
     @Override
@@ -112,10 +150,11 @@ public class Visualisation implements MouseEvents {
     }
 
     public void startSimulation(){
-        testMovement();//Just creates some trains
+        System.out.println("Starting");
+        started = true;
 
         this.modelTrack = new ModelTrack(getTrains(), new TrackBuilder(null).linkUpSections(railway));
-
+        lastUpdate = System.currentTimeMillis();
 
 
     }
@@ -137,17 +176,20 @@ public class Visualisation implements MouseEvents {
         bp.getChildren().remove(vBox);
     }
 
+
+
     public void testMovement(){
 
         // Add a train to the track
         for(DefSection ds : railway){
-            if(ds.getDrawID() == 1){
+            if(ds.getDrawID() == 0){
                 //Create the train
-                Train train = new Train(1,50,0,1,true);
+                Train train = new Train(1,50,8,1,true);
 
                 // Create the drawable train
                 DrawableTrain drawableTrain = new DrawableTrain(train, ds);
                 trains.add(drawableTrain);
+                return;
             }
         }
     }
@@ -157,32 +199,32 @@ public class Visualisation implements MouseEvents {
     public ArrayList<DefSection> createBasicTrack(){
         ArrayList<DefSection> sections = new ArrayList<>();
 
-        DefSection ds1 = new StraightHoriz(new Section(2, 100, null, null, null), 200, 100, 100,0, "RIGHT");
+        DefSection ds1 = new StraightHoriz(new Section(1, 100, null, null, null), 200, 100, 100,0, "RIGHT");
         DefSection ds2 = new StraightHoriz(new Section(2, 100, null, null, null), 100,0);
         ds2.setStart(ds1);
 
-        DefSection ds3 = new Quart2(new Section(2, 100, null, null, null), 200,2);
+        DefSection ds3 = new Quart2(new Section(3, 100, null, null, null), 200,2);
         ds3.setStart(ds2);
 
-        DefSection ds4 = new StraightVert(new Section(2, 100, null, null, null), 100,5);
+        DefSection ds4 = new StraightVert(new Section(4, 100, null, null, null), 100,5);
         ds4.setStart(ds3);
 
-        DefSection ds5 = new Quart3(new Section(2, 100, null, null, null), 200,3);
+        DefSection ds5 = new Quart3(new Section(5, 100, null, null, null), 200,3);
         ds5.setStart(ds4);
 
-        DefSection ds6 = new StraightHoriz(new Section(2, 100, null, null, null), 100,0);
+        DefSection ds6 = new StraightHoriz(new Section(6, 100, null, null, null), 100,0);
         ds6.setStart(ds5);
 
-        DefSection ds7 = new StraightHoriz(new Section(2, 100, null, null, null), 100,0);
+        DefSection ds7 = new StraightHoriz(new Section(7, 100, null, null, null), 100,0);
         ds7.setStart(ds6);
 
-        DefSection ds8 = new Quart4(new Section(2, 100, null, null, null), 200,4);
+        DefSection ds8 = new Quart4(new Section(8, 100, null, null, null), 200,4);
         ds8.setStart(ds7);
 
-        DefSection ds9 = new StraightVert(new Section(2, 100, null, null, null), 100,5);
+        DefSection ds9 = new StraightVert(new Section(9, 100, null, null, null), 100,5);
         ds9.setStart(ds8);
 
-        DefSection ds10 = new Quart1(new Section(2, 100, null, null, null), 200,1);
+        DefSection ds10 = new Quart1(new Section(10, 100, null, null, null), 200,1);
         ds10.setStart(ds9);
 
         sections.add(ds1);

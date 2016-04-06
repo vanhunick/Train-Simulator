@@ -51,9 +51,6 @@ public class TrackBuilder implements MouseEvents{
         this.sectionsForTrack = new ArrayList<>();
         this.trains = new ArrayList<>();
 
-        this.screenWidth = Main.SCREEN_WIDTH;
-        this.screenHeight = Main.SCREEN_HEIGHT;
-
         this.shownPanelStartX = screenWidth - boxSize - boxGap*2;
 
         this.shownPanelStartX = screenWidth - (boxSize - (boxGap*2));
@@ -62,6 +59,9 @@ public class TrackBuilder implements MouseEvents{
     }
 
     public void updateSize(){
+        this.screenWidth = controller.getCanvasWidth();
+        this.screenHeight = controller.getCanvasHeight();
+
         this.shownPanelStartX = screenWidth - boxSize - boxGap*2;
 
         shownPanelStartX = screenWidth - (boxSize - (boxGap*2));

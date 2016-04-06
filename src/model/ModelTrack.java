@@ -25,6 +25,9 @@ public class ModelTrack implements Events{
         }
     }
 
+    public void updateTrainOnSection(Train t, Section newSection, Section prevSection){
+        System.out.println(("Train " + t + " Changed from " + prevSection + " To section " + newSection));
+    }
 
 
     public void sendOutSectionEvent(){

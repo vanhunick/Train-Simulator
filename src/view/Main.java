@@ -51,7 +51,7 @@ public class Main extends Application {
     public void start(final Stage primaryStage) {
 
         // Initialises the control that will control the flow of the program
-        this.controller = new Controller(Controller.VISUALISATION_MODE);
+        this.controller = new Controller();
 
         Group root = new Group();
         Scene scene = new Scene(root, SCREEN_WIDTH, SCREEN_HEIGHT, Color.rgb(0, 0, 0));
@@ -72,6 +72,8 @@ public class Main extends Application {
 
 
         setupGUI(primaryStage, scene, root,canvas);
+
+        controller.setDefMode(bl);
     }
 
 
