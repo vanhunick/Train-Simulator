@@ -42,19 +42,11 @@ public class Visualisation implements MouseEvents {
 
     public void update(){
         if(started){
-            long curTime = System.currentTimeMillis();
-//            if(curTime - lastUpdate > 2){
-                lastUpdate = curTime;
                 for(DrawableTrain t : trains){
+                    System.out.println("Updating");
                     onSectionCheck(t);
                     t.update();
                 }
-
-//            }
-
-
-
-
         }
     }
 
@@ -68,9 +60,6 @@ public class Visualisation implements MouseEvents {
 
         //Draw the trains
         for(DrawableTrain t : trains){
-            //Need to check if the train moving moves it into another section
-
-
             t.draw(g);
         }
     }
@@ -78,9 +67,16 @@ public class Visualisation implements MouseEvents {
     public void onSectionCheck(DrawableTrain t){
         DefSection curSection = t.getCurSection();
         double speed = t.getTrain().getSpeed();
-        speed = 8;
 
-        if(!curSection.checkOnSectionAfterMovement(t.getX(),t.getY(),speed)){
+        if(lastUpdate == 0){
+            lastUpdate = System.currentTimeMillis();
+        }
+
+        long curTime = System.currentTimeMillis();
+        long timeChanged = curTime - lastUpdate;
+        double pixelsToMove = (timeChanged/1000.0)*speed;
+        lastUpdate = System.currentTimeMillis();
+        if(!curSection.checkOnSectionAfterMovement(t.getX(),t.getY(),pixelsToMove)){
             System.out.println("Changing drawplace");
             for(int i = 0; i < railway.size(); i++){
 
@@ -155,8 +151,6 @@ public class Visualisation implements MouseEvents {
 
         this.modelTrack = new ModelTrack(getTrains(), new TrackBuilder(null).linkUpSections(railway));
         lastUpdate = System.currentTimeMillis();
-
-
     }
 
     public List<Train> getTrains(){
@@ -184,7 +178,7 @@ public class Visualisation implements MouseEvents {
         for(DefSection ds : railway){
             if(ds.getDrawID() == 0){
                 //Create the train
-                Train train = new Train(1,50,8,1,true);
+                Train train = new Train(1,50,80,1,true);
 
                 // Create the drawable train
                 DrawableTrain drawableTrain = new DrawableTrain(train, ds);

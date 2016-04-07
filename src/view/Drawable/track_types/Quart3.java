@@ -5,6 +5,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
 import model.Section;
 
+import java.awt.*;
+import java.util.ArrayList;
+
 /**
  * Created by Nicky on 25/03/2016.
  */
@@ -112,6 +115,37 @@ public class Quart3 extends DefSection {
         return -1;
     }
 
+    public ArrayList<Point> getDrawPoints(){
+        ArrayList<Point> points = new ArrayList<>();
+
+        double angle = 90;
+        double radius = ((super.getLength())/2 -  TRACK_WIDTH/2);
+
+        double x = super.getStartX() + super.getLength()/2;
+        double y = super.getStartY() + super.getLength() - TRACK_WIDTH/2;
+
+        double a = 1.57079632679;
+        a=a-angle*Math.PI/180;
+
+        double fx = Math.cos(a);
+        double fy = Math.sin(a);
+
+        double lx = -(Math.sin(a));
+        double ly = Math.cos(a);
+
+
+        for(double i = 0; i < 15; i++){
+            double subAngle = (i/15)*Math.toRadians(angle);
+
+
+            double xi = x + radius*(Math.sin(subAngle)*fx + (1-Math.cos(subAngle))*(-lx));
+            double yi = y + radius*(Math.sin(subAngle)*fy + (1-Math.cos(subAngle))*(-ly));
+            points.add(new Point((int)xi,(int)yi));
+        }
+
+        return points;
+    }
+
     public boolean checkOnSectionAfterMovement(double curX, double curY, double dist){
         if(getNextX(curX,dist) == -1 )return false;
         if(getNextY(curY,dist) == -1 )return false;// TODO dont need this
@@ -131,6 +165,12 @@ public class Quart3 extends DefSection {
         double startX = super.getStartX();
         double startY = super.getStartY();
         double length = super.getLength();
+
+        for(Point p : getDrawPoints()){
+//            System.out.println(p.getX() + " " + p.getY());
+            g.fillOval(p.getX(),p.getY(),5,5);
+        }
+        g.setFill(Color.WHITE);
 
 
         g.strokeArc(startX , startY, length, length, -90, 90, ArcType.OPEN);

@@ -76,7 +76,7 @@ public class StraightVert extends DefSection {
 
     public double getNextX(double curX, double moveBy){
         //Going down or up never changes x value
-        return curX;
+        return curX + TRACK_WIDTH/2;
     }
 
     public double getNextY(double curY, double moveBy){

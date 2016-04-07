@@ -5,6 +5,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
 import model.Section;
 
+import java.awt.*;
+import java.util.ArrayList;
+
 /**
  * Created by Nicky on 25/03/2016.
  */
@@ -127,6 +130,8 @@ public class Quart4 extends DefSection {
     }
 
 
+
+
     public void draw(GraphicsContext g) {
         if(super.getMouseOn()){
             g.setStroke(Color.GREEN);
@@ -136,8 +141,46 @@ public class Quart4 extends DefSection {
         double startY = super.getStartY();
         double length = super.getLength();
 
+        g.setFill(Color.BLUE);
+        for(Point p : getDrawPoints()){
+            g.fillOval(p.getX(),p.getY(), 4,4);
+            g.setFill(Color.RED);
+        }
+
 
         g.strokeArc(startX, startY, length, length, -90, -90, ArcType.OPEN);
         g.strokeArc(startX + TRACK_WIDTH, startY + TRACK_WIDTH, length - (TRACK_WIDTH * 2), length - (TRACK_WIDTH * 2), -90, -90, ArcType.OPEN);
+    }
+
+    public ArrayList<Point> getDrawPoints(){
+        ArrayList<Point> points = new ArrayList<>();
+
+        double angle = 90;
+        double radius = ((super.getLength())/2 -  TRACK_WIDTH/2);
+
+        double x = super.getStartX() + TRACK_WIDTH/2;
+        double y = super.getStartY() + super.getLength()/2;
+
+        double a = 1.57079632679;//pi/2 radians
+
+        a=a+angle*Math.PI;
+
+        double fx = Math.cos(a);
+        double fy = Math.sin(a);
+
+        double lx = -(Math.sin(a));
+        double ly = Math.cos(a);
+
+
+        for(double i = 0; i < 15; i++){
+            double subAngle = (i/15)*Math.toRadians(angle);
+
+
+            double xi = x + radius*(Math.sin(subAngle)*fx + (1-Math.cos(subAngle))*(-lx));
+            double yi = y + radius*(Math.sin(subAngle)*fy + (1-Math.cos(subAngle))*(-ly));
+            points.add(new Point((int)xi,(int)yi));
+        }
+
+        return points;
     }
 }

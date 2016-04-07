@@ -4,7 +4,6 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import model.Section;
 
-import javax.swing.plaf.synth.SynthOptionPaneUI;
 
 /**
  * Created by Nicky on 25/03/2016.
@@ -33,7 +32,6 @@ public class StraightHoriz extends DefSection {
         if(from.getDirection().equals("RIGHT")){
             super.setDirection("RIGHT");
             if(from.getDrawID() == 0){
-                System.out.println("Setting x");
                 startX = from.getStartX() + from.getLength();
                 startY = from.getStartY();
             }
@@ -72,7 +70,10 @@ public class StraightHoriz extends DefSection {
 
     public double getNextX(double curX, double moveBy){
         if(super.getDirection().equals("RIGHT")){
-            if(curX + moveBy > super.getStartX() + super.getLength()){
+            System.out.println("FIrst part " + (curX + moveBy) + " Second part " + (super.getStartX() + super.getLength()));
+            System.out.println("Move by " + moveBy);
+            if(curX + moveBy > (super.getStartX() + super.getLength())){
+                System.out.println("VERY TRUE");
                 return -1;//No longer in this section TODO update later
             }
             else{
@@ -91,9 +92,24 @@ public class StraightHoriz extends DefSection {
         return -1;
     }
 
+    /**
+     * Return the y value in the middle of the track
+     * */
     public double getNextY(double curY, double moveBy){
         //going straight y never changes on this section
         return curY;
+    }
+
+    public double getInitialX(double trainWidth){
+        return super.getStartX();
+    }
+
+
+    /**
+     * USed to put the train in the middle of the track when first drawn
+     * */
+    public double getInitialY(double trainWidth){
+        return super.getStartY() + TRACK_WIDTH/2 - trainWidth/2;
     }
 
     public boolean checkOnSectionAfterMovement(double curX, double curY, double dist){

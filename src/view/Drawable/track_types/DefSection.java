@@ -4,6 +4,8 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import model.Section;
 
+import java.awt.*;
+
 /**
  * Created by Nicky on 25/03/2016.
  */
@@ -108,9 +110,24 @@ public abstract class DefSection {
         this.mouseOn = on;
     }
 
+    public Point getNextPoint(double curX, double  curY, int lastSubAngle, double moveBy){
+        return null;
+    }
+
     public double getNextX(double curX, double moveBy){
         System.out.println("Should be implemented in subclass");
 
+        return 0;
+    }
+
+    public double getInitialX(double trainWidth){
+        System.out.println("Should be implemented in subclass");
+        return 0;
+    }
+
+
+    public double getInitialY(double trainWidth){
+        System.out.println("Should be implemented in subclass");
         return 0;
     }
 

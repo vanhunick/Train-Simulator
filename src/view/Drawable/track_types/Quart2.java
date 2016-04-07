@@ -5,6 +5,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
 import model.Section;
 
+import java.awt.*;
+import java.util.ArrayList;
+
 /**
  * Created by Nicky on 25/03/2016.
  */
@@ -68,16 +71,15 @@ public class Quart2 extends DefSection {
 
     public double getNextX(double curX, double moveBy){
         if(super.getDirection().equals("DOWN")){
-            if(curX + moveBy > super.getStartX() + super.getLength() - 20){//
+            if(curX + moveBy > super.getStartX() + super.getLength()){//Not so important in this case Y matters more
                 return -1;//No longer in this section TODO update later
             }
             else{
-                System.out.println("Moving x");
                 return curX + moveBy;
             }
         }
         else if(super.getDirection().equals("LEFT")){
-            if(curX - moveBy < super.getStartX() - super.getLength()){
+            if(curX - moveBy < super.getStartX() + super.getLength()/2){// X is important in this case
                 return -1;//No longer in this section TODO update later
             }
             else{
@@ -90,9 +92,7 @@ public class Quart2 extends DefSection {
 
     public double getNextY(double curY, double moveBy){
         if(super.getDirection().equals("DOWN")){
-            System.out.println(curY + moveBy  + " " + super.getStartY() + super.getLength()/2);
             if(curY + moveBy > super.getStartY() + super.getLength()/2){
-                System.out.println("Lower than the y");
                 return -1;//No longer in this section TODO update later
             }
             else{
@@ -130,8 +130,87 @@ public class Quart2 extends DefSection {
         double startY = super.getStartY();
         double length = super.getLength();
 
+        g.setFill(Color.BLUE);
+        for(Point p : getDrawPoints()){
+            g.fillOval(p.getX(),p.getY(), 4,4);
+            g.setFill(Color.RED);
+        }
+
 
         g.strokeArc(startX , startY, length, length, 360, 90, ArcType.OPEN);
         g.strokeArc(startX + TRACK_WIDTH, startY + TRACK_WIDTH, length - (TRACK_WIDTH*2), length - (TRACK_WIDTH*2), 360, 90, ArcType.OPEN);
+    }
+
+
+
+    public Point getNextPoint(double curX, double  curY, int lastSubAngle, double moveBy){
+        double lengthOfQauter = lengthOfQuater();
+        int points = (int)(lengthOfQauter/moveBy);
+        points = 100;
+        double angle = 90;
+
+        lastSubAngle = points - lastSubAngle;
+        System.out.println("Last sub angle " + lastSubAngle);
+
+        double subAngle = (lastSubAngle/points)*Math.toRadians(angle);
+
+
+        double radius = ((super.getLength())/2 -  TRACK_WIDTH/2);
+
+        double x = super.getStartX() + super.getLength() - TRACK_WIDTH/2;
+        double y = super.getStartY() + super.getLength()/2;
+
+        double a = 1.57079632679;
+        a=a+angle*Math.PI/90;
+
+        double fx = Math.cos(a);
+        double fy = Math.sin(a);
+
+        double lx = -(Math.sin(a));
+        double ly = Math.cos(a);
+
+
+        double xi = x + radius*(Math.sin(subAngle)*fx + (1-Math.cos(subAngle))*(-lx));
+        double yi = y + radius*(Math.sin(subAngle)*fy + (1-Math.cos(subAngle))*(-ly));
+        System.out.println("x " + xi + " y " + yi);
+
+        return new Point((int)xi,(int)yi);
+    }
+
+    public ArrayList<Point> getDrawPoints(){
+        ArrayList<Point> points = new ArrayList<>();
+
+        double angle = 90;
+        double radius = ((super.getLength())/2 -  TRACK_WIDTH/2);
+
+        double x = super.getStartX() + super.getLength() - TRACK_WIDTH/2;
+        double y = super.getStartY() + super.getLength()/2;
+
+        double a = 1.57079632679;
+        a=a+angle*Math.PI/90;
+
+        double fx = Math.cos(a);
+        double fy = Math.sin(a);
+
+        double lx = -(Math.sin(a));
+        double ly = Math.cos(a);
+
+
+        for(double i = 0; i < 15; i++){
+            double subAngle = (i/15)*Math.toRadians(angle);
+
+
+            double xi = x + radius*(Math.sin(subAngle)*fx + (1-Math.cos(subAngle))*(-lx));
+            double yi = y + radius*(Math.sin(subAngle)*fy + (1-Math.cos(subAngle))*(-ly));
+            points.add(new Point((int)xi,(int)yi));
+        }
+
+        return points;
+    }
+
+    public double lengthOfQuater(){
+        double radius = (super.getLength()-TRACK_WIDTH/2)/2;
+        double circumference = 2 * Math.PI * radius;
+        return circumference/4;
     }
 }
