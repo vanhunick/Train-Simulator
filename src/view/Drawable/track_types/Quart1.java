@@ -29,7 +29,7 @@ public class Quart1 extends DefSection {
     }
 
     /**
-     * Workds out where to start drawing the piece based on the piece it came from
+     * Works out where to start drawing the piece based on the piece it came from
      * */
     public void setStart(DefSection from){
         double startX = 0;

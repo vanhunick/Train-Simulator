@@ -22,7 +22,7 @@ public class DrawableTrain implements Drawable{
     private DefSection curSection;
 
     //Drawing along curve fields
-    private int lastPointOnCurve;
+    private int lastPointOnCurve = 1;
 
 
     public DrawableTrain(Train train, DefSection curSection){
@@ -49,13 +49,16 @@ public class DrawableTrain implements Drawable{
         long timeChanged = curTime - lastUpdate;
         double pixelsToMove = (timeChanged/1000.0)*speed;
 
-        this.curX = curSection.getNextX(curX,pixelsToMove);
-        this.curY = curSection.getNextY(curY,pixelsToMove);
+
 
         if(curSection instanceof Quart2){
             this.curX = curSection.getNextPoint(curX,curY,lastPointOnCurve, pixelsToMove).getX();
             this.curY = curSection.getNextPoint(curX,curY,lastPointOnCurve, pixelsToMove).getY();
             lastPointOnCurve++;
+        }
+        else{
+            this.curX = curSection.getNextX(curX,pixelsToMove);
+            this.curY = curSection.getNextY(curY,pixelsToMove);
         }
 
         lastUpdate = curTime;

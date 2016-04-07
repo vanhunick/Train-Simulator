@@ -43,7 +43,6 @@ public class Visualisation implements MouseEvents {
     public void update(){
         if(started){
                 for(DrawableTrain t : trains){
-                    System.out.println("Updating");
                     onSectionCheck(t);
                     t.update();
                 }

@@ -130,6 +130,11 @@ public class Quart2 extends DefSection {
         double startY = super.getStartY();
         double length = super.getLength();
 
+        g.setFill(Color.PURPLE);
+
+        double x = super.getStartX() + super.getLength()/2 - TRACK_WIDTH/2;
+        double y = super.getStartY() + super.getLength()/2;
+        g.fillOval(x,y, 4,4);
         g.setFill(Color.BLUE);
         for(Point p : getDrawPoints()){
             g.fillOval(p.getX(),p.getY(), 4,4);
@@ -145,12 +150,12 @@ public class Quart2 extends DefSection {
 
     public Point getNextPoint(double curX, double  curY, int lastSubAngle, double moveBy){
         double lengthOfQauter = lengthOfQuater();
-        int points = (int)(lengthOfQauter/moveBy);
-        points = 100;
+        double points = (int)(lengthOfQauter/moveBy);
+        points = 40;
         double angle = 90;
 
-        lastSubAngle = points - lastSubAngle;
-        System.out.println("Last sub angle " + lastSubAngle);
+        lastSubAngle = (int)points - lastSubAngle;
+
 
         double subAngle = (lastSubAngle/points)*Math.toRadians(angle);
 
@@ -172,9 +177,9 @@ public class Quart2 extends DefSection {
 
         double xi = x + radius*(Math.sin(subAngle)*fx + (1-Math.cos(subAngle))*(-lx));
         double yi = y + radius*(Math.sin(subAngle)*fy + (1-Math.cos(subAngle))*(-ly));
-        System.out.println("x " + xi + " y " + yi);
-
-        return new Point((int)xi,(int)yi);
+        System.out.println("x " + xi + " y " + yi + " Last sub angle " + lastSubAngle);
+        System.out.println(x + " " + y);
+        return new Point((int)xi-20,(int)yi-20);
     }
 
     public ArrayList<Point> getDrawPoints(){
@@ -203,6 +208,7 @@ public class Quart2 extends DefSection {
             double xi = x + radius*(Math.sin(subAngle)*fx + (1-Math.cos(subAngle))*(-lx));
             double yi = y + radius*(Math.sin(subAngle)*fy + (1-Math.cos(subAngle))*(-ly));
             points.add(new Point((int)xi,(int)yi));
+            //System.out.println("DrawPint " + i + " x " + xi + " y " + yi);
         }
 
         return points;
