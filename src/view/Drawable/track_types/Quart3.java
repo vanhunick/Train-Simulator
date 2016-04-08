@@ -72,19 +72,16 @@ public class Quart3 extends DefSection {
     }
 
     public double getNextX(double curX, double moveBy){
-        System.out.println("on 3 ");
         if(super.getDirection().equals("UP")){
             if(curX + moveBy > super.getStartX() + super.getLength() - 20){//
                 return -1;//No longer in this section TODO update later
             }
             else{
-                System.out.println("Moving x");
                 return curX + moveBy;
             }
         }
         else if(super.getDirection().equals("LEFT")){
             if(curX - moveBy < super.getStartX() - super.getLength()/2){
-                System.out.println("-1");
                 return -1;//No longer in this section TODO update later
             }
             else{
@@ -113,6 +110,74 @@ public class Quart3 extends DefSection {
             }
         }
         return -1;
+    }
+
+    /**
+     * Returns the next point to move to on the curve given the amount to move
+     * */
+    public Point getNextPoint(double curX, double  curY, int lastSubAngle, double moveBy){
+        double lengthOfQauter = lengthOfQuater();
+        double points = (int)(lengthOfQauter/moveBy);
+        double angle = 90;
+
+        lastSubAngle = (int)points - lastSubAngle;
+
+        double subAngle = (lastSubAngle/points)*Math.toRadians(angle);
+
+
+        double radius = ((super.getLength())/2 -  TRACK_WIDTH/2);
+
+        double x = super.getStartX() + super.getLength()/2;
+        double y = super.getStartY() + super.getLength() - TRACK_WIDTH/2;
+
+        double a = 1.57079632679;
+        a=a-angle*Math.PI/180;
+
+        double fx = Math.cos(a);
+        double fy = Math.sin(a);
+
+        double lx = -(Math.sin(a));
+        double ly = Math.cos(a);
+
+
+        double xi = x + radius*(Math.sin(subAngle)*fx + (1-Math.cos(subAngle))*(-lx));
+        double yi = y + radius*(Math.sin(subAngle)*fy + (1-Math.cos(subAngle))*(-ly));
+        return new Point((int)xi,(int)yi);
+    }
+
+    //Not tested yet
+    public boolean checkOnAfterUpdate(double lastSubAnle, double moveBy){
+        Point p = getNextPoint(0,0, (int)lastSubAnle, moveBy);
+
+        if(super.getDirection().equals("LEFT")){
+            if(p.getY() > super.getStartY() + super.getLength()){
+                System.out.println("False Y");
+                return false;//No longer in this section
+            }
+
+            if(p.getX() < super.getStartX() - super.getLength()/2){
+                System.out.println("False X");
+                return false;//No longer in this section
+            }
+        }
+        else if(super.getDirection().equals("UP")){
+            if(p.getX() < super.getStartX() - super.getLength()/2){
+                System.out.println("False up");
+                return false;//No longer in this section
+            }
+            if(p.getY() < super.getStartY() - super.getLength()){
+                System.out.println("False down");
+                return false;//No longer in this section
+            }
+
+        }
+        return true;
+    }
+
+    public double lengthOfQuater(){
+        double radius = (super.getLength()-TRACK_WIDTH/2)/2;
+        double circumference = 2 * Math.PI * radius;
+        return circumference/4;
     }
 
     public ArrayList<Point> getDrawPoints(){
@@ -166,9 +231,10 @@ public class Quart3 extends DefSection {
         double startY = super.getStartY();
         double length = super.getLength();
 
+        g.setFill(Color.BLUE);
         for(Point p : getDrawPoints()){
-//            System.out.println(p.getX() + " " + p.getY());
             g.fillOval(p.getX(),p.getY(),5,5);
+            g.setFill(Color.RED);
         }
         g.setFill(Color.WHITE);
 

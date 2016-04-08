@@ -76,7 +76,7 @@ public class StraightVert extends DefSection {
 
     public double getNextX(double curX, double moveBy){
         //Going down or up never changes x value
-        return curX + TRACK_WIDTH/2;
+        return curX;
     }
 
     public double getNextY(double curY, double moveBy){
@@ -89,7 +89,7 @@ public class StraightVert extends DefSection {
             }
         }
         else if(super.getDirection().equals("UP")){
-            if(curY - moveBy < super.getStartY() - 40){// 40 being the train size
+            if(curY - moveBy < super.getStartY()){// 40 being the train size
                 return -1;//No longer in this section TODO update later
             }
             else{

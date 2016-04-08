@@ -100,7 +100,6 @@ public class Quart1 extends DefSection {
 
     public double getNextY(double curY, double moveBy){
         if(super.getDirection().equals("DOWN")){
-            System.out.println(curY + moveBy  + " " + super.getStartY() + super.getLength()/2);
             if(curY + moveBy > super.getStartY() + super.getLength()/2){
                 return -1;//No longer in this section TODO update later
             }
@@ -110,7 +109,6 @@ public class Quart1 extends DefSection {
         }
         else if(super.getDirection().equals("RIGHT")){
             if(curY - moveBy < super.getStartY() - super.getLength()/2){
-                System.out.println("-1");
                 return -1;//No longer in this section TODO update later
             }
             else{
@@ -187,9 +185,67 @@ public class Quart1 extends DefSection {
         return points;
     }
 
+    /**
+     * Returns the next point to move to on the curve given the amount to move
+     * */
+    public Point getNextPoint(double curX, double  curY, int lastSubAngle, double moveBy){
+        double lengthOfQauter = lengthOfQuater();
+        double points = (int)(lengthOfQauter/moveBy);
+        double angle = 90;
+
+        lastSubAngle = (int)points - lastSubAngle;
+
+        double subAngle = (lastSubAngle/points)*Math.toRadians(angle);
+
+
+        double radius = ((super.getLength())/2 -  TRACK_WIDTH/2);
+
+        double x = super.getStartX() + super.getLength()/2;
+        double y = super.getStartY() + TRACK_WIDTH/2;
+
+        double a = 1.57079632679;
+        a=a+angle*Math.PI/180;
+
+        double fx = Math.cos(a);
+        double fy = Math.sin(a);
+
+        double lx = -(Math.sin(a));
+        double ly = Math.cos(a);
+
+
+        double xi = x + radius*(Math.sin(subAngle)*fx + (1-Math.cos(subAngle))*(-lx));
+        double yi = y + radius*(Math.sin(subAngle)*fy + (1-Math.cos(subAngle))*(-ly));
+        return new Point((int)xi,(int)yi);
+    }
+
+    //Not tested yet
+    public boolean checkOnAfterUpdate(double lastSubAnle, double moveBy){
+        Point p = getNextPoint(0,0, (int)lastSubAnle, moveBy);
+
+        if(super.getDirection().equals("DOWN")){
+            if(p.getY() > super.getStartY() + super.getLength()/2){
+                return false;//No longer in this section
+            }
+            if(p.getX()< super.getStartX() ){
+                return false;//No longer in this section
+            }
+        }
+        else if(super.getDirection().equals("RIGHT")){
+            if(p.getX() > super.getStartX() + super.getLength()/2 - 20){//
+                return false;//No longer in this section
+            }
+            if(p.getY() < super.getStartY() - super.getLength()/2){
+                return false;//No longer in this section
+            }
+        }
+        return true;
+    }
+
+
     public double lengthOfQuater(){
         double radius = (super.getLength()-TRACK_WIDTH/2)/2;
         double circumference = 2 * Math.PI * radius;
         return circumference/4;
     }
+
 }

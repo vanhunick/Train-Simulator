@@ -73,9 +73,35 @@ public class Visualisation implements MouseEvents {
 
         long curTime = System.currentTimeMillis();
         long timeChanged = curTime - lastUpdate;
+        timeChanged = 20;
         double pixelsToMove = (timeChanged/1000.0)*speed;
         lastUpdate = System.currentTimeMillis();
-        if(!curSection.checkOnSectionAfterMovement(t.getX(),t.getY(),pixelsToMove)){
+
+        //TEMP CODE
+        boolean q2 = true;
+        if(curSection instanceof Quart2){
+            Quart2 q = (Quart2)curSection;
+            q2 = q.checkOnAfterUpdate(t.lastPointOnCurve,pixelsToMove);
+        }
+
+        if(curSection instanceof Quart3){
+            Quart3 q = (Quart3)curSection;
+            q2 = q.checkOnAfterUpdate(t.lastPointOnCurve,pixelsToMove);
+        }
+
+        if(curSection instanceof Quart4){
+            Quart4 q = (Quart4)curSection;
+            q2 = q.checkOnAfterUpdate(t.lastPointOnCurve,pixelsToMove);
+        }
+
+        if(curSection instanceof Quart1){
+            Quart1 q = (Quart1)curSection;
+
+            q2 = q.checkOnAfterUpdate(t.lastPointOnCurve,pixelsToMove);
+        }
+
+
+        if(!q2 || !curSection.checkOnSectionAfterMovement(t.getX(),t.getY(),pixelsToMove)){
             System.out.println("Changing drawplace");
             for(int i = 0; i < railway.size(); i++){
 
@@ -134,18 +160,28 @@ public class Visualisation implements MouseEvents {
         VBox vBox = new VBox(8); // spacing = 8
         vBox.setPadding(new Insets(5,5,5,5));
         Button sim = new Button("Start Simulation");
-        Button clear = new Button("Clear Track");
+        Button stop = new Button("Stop");
+        Button pause = new Button("Pause");
 
         //Starts the simulation
         sim.setOnAction(e -> startSimulation());
+        stop.setOnAction(e -> stopSimulation());
+        pause.setOnAction(e -> pause());
         //TODO add some buttons later
-        vBox.getChildren().addAll(sim);
+        vBox.getChildren().addAll(sim,stop, pause);
 
         return vBox;
     }
 
+    public void stopSimulation(){
+        started = false;
+    }
+
+    public void pause(){
+        started = false;
+    }
+
     public void startSimulation(){
-        System.out.println("Starting");
         started = true;
 
         this.modelTrack = new ModelTrack(getTrains(), new TrackBuilder(null).linkUpSections(railway));
@@ -177,7 +213,7 @@ public class Visualisation implements MouseEvents {
         for(DefSection ds : railway){
             if(ds.getDrawID() == 0){
                 //Create the train
-                Train train = new Train(1,50,80,1,true);
+                Train train = new Train(1,50,120,1,true);
 
                 // Create the drawable train
                 DrawableTrain drawableTrain = new DrawableTrain(train, ds);

@@ -70,10 +70,7 @@ public class StraightHoriz extends DefSection {
 
     public double getNextX(double curX, double moveBy){
         if(super.getDirection().equals("RIGHT")){
-            System.out.println("FIrst part " + (curX + moveBy) + " Second part " + (super.getStartX() + super.getLength()));
-            System.out.println("Move by " + moveBy);
             if(curX + moveBy > (super.getStartX() + super.getLength())){
-                System.out.println("VERY TRUE");
                 return -1;//No longer in this section TODO update later
             }
             else{
@@ -109,7 +106,7 @@ public class StraightHoriz extends DefSection {
      * USed to put the train in the middle of the track when first drawn
      * */
     public double getInitialY(double trainWidth){
-        return super.getStartY() + TRACK_WIDTH/2 - trainWidth/2;
+        return super.getStartY() + TRACK_WIDTH/2;
     }
 
     public boolean checkOnSectionAfterMovement(double curX, double curY, double dist){

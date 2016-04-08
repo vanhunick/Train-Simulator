@@ -116,6 +116,8 @@ public class Quart2 extends DefSection {
         return true;
     }
 
+
+
     public boolean containsPoint(double x, double y){
         return x >= super.getStartX() + super.getLength()/2 && x <= super.getStartX() + super.getLength() &&
                 y >= super.getStartY() && y <= super.getStartY() + super.getLength()/2;
@@ -136,26 +138,21 @@ public class Quart2 extends DefSection {
         double y = super.getStartY() + super.getLength()/2;
         g.fillOval(x,y, 4,4);
         g.setFill(Color.BLUE);
-        for(Point p : getDrawPoints()){
-            g.fillOval(p.getX(),p.getY(), 4,4);
-            g.setFill(Color.RED);
-        }
-
 
         g.strokeArc(startX , startY, length, length, 360, 90, ArcType.OPEN);
         g.strokeArc(startX + TRACK_WIDTH, startY + TRACK_WIDTH, length - (TRACK_WIDTH*2), length - (TRACK_WIDTH*2), 360, 90, ArcType.OPEN);
     }
 
 
-
+    /**
+     * Returns the next point to move to on the curve given the amount to move
+     * */
     public Point getNextPoint(double curX, double  curY, int lastSubAngle, double moveBy){
         double lengthOfQauter = lengthOfQuater();
         double points = (int)(lengthOfQauter/moveBy);
-        points = 40;
         double angle = 90;
 
         lastSubAngle = (int)points - lastSubAngle;
-
 
         double subAngle = (lastSubAngle/points)*Math.toRadians(angle);
 
@@ -177,41 +174,30 @@ public class Quart2 extends DefSection {
 
         double xi = x + radius*(Math.sin(subAngle)*fx + (1-Math.cos(subAngle))*(-lx));
         double yi = y + radius*(Math.sin(subAngle)*fy + (1-Math.cos(subAngle))*(-ly));
-        System.out.println("x " + xi + " y " + yi + " Last sub angle " + lastSubAngle);
-        System.out.println(x + " " + y);
-        return new Point((int)xi-20,(int)yi-20);
+
+        return new Point((int)xi,(int)yi);
     }
 
-    public ArrayList<Point> getDrawPoints(){
-        ArrayList<Point> points = new ArrayList<>();
+    public boolean checkOnAfterUpdate(double lastSubAnle, double moveBy){
+        Point p = getNextPoint(0,0, (int)lastSubAnle, moveBy);
 
-        double angle = 90;
-        double radius = ((super.getLength())/2 -  TRACK_WIDTH/2);
-
-        double x = super.getStartX() + super.getLength() - TRACK_WIDTH/2;
-        double y = super.getStartY() + super.getLength()/2;
-
-        double a = 1.57079632679;
-        a=a+angle*Math.PI/90;
-
-        double fx = Math.cos(a);
-        double fy = Math.sin(a);
-
-        double lx = -(Math.sin(a));
-        double ly = Math.cos(a);
-
-
-        for(double i = 0; i < 15; i++){
-            double subAngle = (i/15)*Math.toRadians(angle);
-
-
-            double xi = x + radius*(Math.sin(subAngle)*fx + (1-Math.cos(subAngle))*(-lx));
-            double yi = y + radius*(Math.sin(subAngle)*fy + (1-Math.cos(subAngle))*(-ly));
-            points.add(new Point((int)xi,(int)yi));
-            //System.out.println("DrawPint " + i + " x " + xi + " y " + yi);
+        if(super.getDirection().equals("DOWN")){
+            if(p.getY() > super.getStartY() + super.getLength()/2){
+                return false;
+            }
+            if(p.getX() > super.getStartX() + super.getLength()){//Not so important in this case Y matters more
+                return false;
+            }
         }
-
-        return points;
+        else if(super.getDirection().equals("LEFT")){
+            if(p.getY() < super.getStartY() - super.getLength()/2){
+                return false;
+            }
+            if(p.getX() < super.getStartX() + super.getLength()/2) {// X is important in this case
+                return false;
+            }
+        }
+        return true;
     }
 
     public double lengthOfQuater(){
