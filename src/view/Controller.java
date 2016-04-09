@@ -84,15 +84,15 @@ public class Controller implements MouseEvents {
         visualisation.setTrains(trains);
         trackBuilder.removeUIElementsFromLayout(borderPane);
         visualisation.addUIElementsToLayout(borderPane);
-
+        setMode(VISUALISATION_MODE);
     }
 
 
     public void setBuilderMode(){
         this.trackBuilder = new TrackBuilder(this);// Pass the controller to the builder
-
         visualisation.removeUIElementsFromLayout(borderPane);
         trackBuilder.addUIElementsToLayout(borderPane);
+        setMode(BUILDER_MODE);
     }
 
     @Override
@@ -123,12 +123,10 @@ public class Controller implements MouseEvents {
     public void setBorderPane(BorderPane borderPane){this.borderPane = borderPane;}
 
     public double getCanvasWidth(){
-        System.out.println(borderPane.getCenter().getLayoutBounds().getWidth());
         return borderPane.getCenter().getLayoutBounds().getWidth();
     }
 
     public double getCanvasHeight(){
-        System.out.println(borderPane.getCenter().getLayoutBounds().getHeight());
         return borderPane.getCenter().getLayoutBounds().getHeight();
     }
 }

@@ -137,6 +137,8 @@ public class Visualisation implements MouseEvents {
 
         this.modelTrack = new ModelTrack(getTrains(), new TrackBuilder(null).linkUpSections(railway));
         lastUpdate = System.currentTimeMillis();
+        System.out.println(railway.size());
+        System.out.println(trains.size());
     }
 
     public List<Train> getTrains(){

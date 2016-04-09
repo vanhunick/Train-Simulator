@@ -98,7 +98,10 @@ public class Quart4 extends DefSection {
         double points = (int)(lengthOfQauter/moveBy);
         double angle = 90;
 
-        lastSubAngle = (int)points - lastSubAngle;
+
+        if(super.getDirection().equals("UP")){
+            lastSubAngle = (int)points - lastSubAngle;
+        }
 
         double subAngle = (lastSubAngle/points)*Math.toRadians(angle);
 

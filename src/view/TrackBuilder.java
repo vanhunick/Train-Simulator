@@ -186,7 +186,7 @@ public class TrackBuilder implements MouseEvents{
             if(s.getSection().getID() == td.getStartId()){//section the train should start on
 
                 //Create the train
-                Train train = new Train(td.getId(),td.getLength(),0,td.getStartId(),true);
+                Train train = new Train(td.getId(),td.getLength(),80,td.getStartId(),true);
 
                 // Create the drawable train
                 DrawableTrain drawableTrain = new DrawableTrain(train, s);

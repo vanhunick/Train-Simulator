@@ -52,11 +52,8 @@ public class DrawableTrain implements Drawable{
         long timeChanged = curTime - lastUpdate;
         timeChanged = 20;
         double pixelsToMove = (timeChanged/1000.0)*speed;
-
         this.curentLocation = curSection.getNextPoint(curentLocation, lastPointOnCurve,pixelsToMove);
         lastPointOnCurve++;
-
-//        lastUpdate = curTime;
     }
 
 

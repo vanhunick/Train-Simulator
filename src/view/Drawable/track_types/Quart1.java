@@ -39,8 +39,8 @@ public class Quart1 extends DefSection {
             super.setDirection("RIGHT");
 
             if(from.getDrawID() == 3){
-                startX = from.getStartX();
-                startY = from.getStartY() + from.getLength() - TRACK_WIDTH;
+                startX = from.getStartX() + from.getLength() - TRACK_WIDTH;
+                startY = from.getStartY();
             }
             else if(from.getDrawID() == 4){
                 startX = from.getStartX();
@@ -106,7 +106,12 @@ public class Quart1 extends DefSection {
         double points = (int)(lengthOfQauter/moveBy);
         double angle = 90;
 
-        lastSubAngle = (int)points - lastSubAngle;
+
+        if(super.getDirection().equals("RIGHT")){
+            lastSubAngle = (int)points - lastSubAngle;
+        }
+
+
 
         double subAngle = (lastSubAngle/points)*Math.toRadians(angle);
 
