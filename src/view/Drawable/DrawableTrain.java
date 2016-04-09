@@ -1,5 +1,6 @@
 package view.Drawable;
 
+import java.awt.*;
 import java.util.List;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -20,9 +21,10 @@ public class DrawableTrain implements Drawable{
     private long lastUpdate;
     private DefSection curSection;
 
+    private Point curentLocation;
+
     //Drawing along curve fields
     public int lastPointOnCurve = 0;
-    public double angleGone = 0;
 
     public DrawableTrain(Train train, DefSection curSection){
         this.train = train;
@@ -30,12 +32,14 @@ public class DrawableTrain implements Drawable{
 
         this.curX = curSection.getInitialX(width);
         this.curY = curSection.getInitialY(width);
+
+        this.curentLocation = new Point((int)curSection.getInitialX(width),(int)curSection.getInitialY(width));
     }
 
     @Override
     public void draw(GraphicsContext g){
         g.setFill(Color.RED);
-        g.fillRect(curX - width/2, curY - width/2, width, width);
+        g.fillRect(curentLocation.getX() - width/2, curentLocation.getY() - width/2, width, width);
     }
 
     public void update(){
@@ -49,19 +53,10 @@ public class DrawableTrain implements Drawable{
         timeChanged = 20;
         double pixelsToMove = (timeChanged/1000.0)*speed;
 
+        this.curentLocation = curSection.getNextPoint(curentLocation, lastPointOnCurve,pixelsToMove);
+        lastPointOnCurve++;
 
-
-        if(curSection instanceof Quart2 || curSection instanceof Quart3 || curSection instanceof Quart4 || curSection instanceof Quart1){
-            this.curX = curSection.getNextPoint(curX,curY,lastPointOnCurve, pixelsToMove).getX();
-            this.curY = curSection.getNextPoint(curX,curY,lastPointOnCurve, pixelsToMove).getY();
-            lastPointOnCurve++;
-        }
-        else{
-            this.curX = curSection.getNextX(curX,pixelsToMove);
-            this.curY = curSection.getNextY(curY,pixelsToMove);
-        }
-
-        lastUpdate = curTime;
+//        lastUpdate = curTime;
     }
 
 
@@ -79,9 +74,15 @@ public class DrawableTrain implements Drawable{
     }
 
     public double getX(){
-        return this.curX;
+        return this.curentLocation.getX();
     }
     public double getY(){
-        return  this.curY;
+        return  this.curentLocation.getY();
+    }
+
+    public Point getCurPoint(){return this.curentLocation;}
+
+    public Point getCurentLocation(){
+        return  this.curentLocation;
     }
 }

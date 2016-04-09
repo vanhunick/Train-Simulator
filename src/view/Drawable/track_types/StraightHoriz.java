@@ -4,6 +4,8 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import model.Section;
 
+import java.awt.*;
+
 
 /**
  * Created by Nicky on 25/03/2016.
@@ -68,6 +70,12 @@ public class StraightHoriz extends DefSection {
                 y >= super.getStartY() && y <= super.getStartY() + TRACK_WIDTH;
     }
 
+
+    public Point getNextPoint(Point cur, int lastSubAngle, double moveBy){
+        cur.setLocation(getNextX(cur.getX(),moveBy),getNextY(cur.getY(),moveBy));
+        return cur;
+    }
+
     public double getNextX(double curX, double moveBy){
         if(super.getDirection().equals("RIGHT")){
             if(curX + moveBy > (super.getStartX() + super.getLength())){
@@ -109,11 +117,13 @@ public class StraightHoriz extends DefSection {
         return super.getStartY() + TRACK_WIDTH/2;
     }
 
-    public boolean checkOnSectionAfterMovement(double curX, double curY, double dist){
-        if(getNextX(curX,dist) == -1 )return false;
-        if(getNextY(curY,dist) == -1 )return false;// TODO dont need this
+    public boolean checkOnAfterUpdate(Point curPoint, double lastSubAnle, double dist){
+        if(getNextX(curPoint.getX(),dist) == -1 )return false;
+        if(getNextY(curPoint.getY(),dist) == -1 )return false;
         return true;
     }
+
+
 
 
     public void draw(GraphicsContext g) {

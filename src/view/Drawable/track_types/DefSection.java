@@ -32,8 +32,8 @@ public abstract class DefSection {
         this.length = length;
         this.section = section;
         this.drawID = drawID;
-
     }
+
     /**
      * Constructor for the starting piece
      * */
@@ -48,27 +48,27 @@ public abstract class DefSection {
         this.direction = direction;
     }
 
-    public void draw(GraphicsContext g){
+    public void draw(GraphicsContext g){System.out.println("Should be implemented in subclass");}
+//
+//    public boolean checkOnSectionAfterMovement(double curX, double curY, double dist){
+//        System.out.println("Should be implemented in subclass");
+//        return false;
+//    }
 
-
-    }
-
-    public boolean checkOnSectionAfterMovement(double curX, double curY, double dist){
+    public boolean checkOnAfterUpdate(Point curPoint,double lastSubAnle, double moveBy){
         System.out.println("Should be implemented in subclass");
-        return false;
+        return true;
     }
 
 
 
-
-    public void setStart(DefSection from){
+        public void setStart(DefSection from){
         System.out.println("Should be implemented in subclass");
     }
 
     public int getDrawID() {
         return drawID;
     }
-
 
     public String getDirection() {
         return direction;
@@ -110,13 +110,12 @@ public abstract class DefSection {
         this.mouseOn = on;
     }
 
-    public Point getNextPoint(double curX, double  curY, int lastSubAngle, double moveBy){
+    public Point getNextPoint(Point cur, int lastSubAngle, double moveBy){
         return null;
     }
 
     public double getNextX(double curX, double moveBy){
         System.out.println("Should be implemented in subclass");
-
         return 0;
     }
 
@@ -137,7 +136,6 @@ public abstract class DefSection {
 
     public double getNextY(double curY, double moveBy){
         System.out.println("Should be implemented in subclass");
-
         return 0;
     }
 

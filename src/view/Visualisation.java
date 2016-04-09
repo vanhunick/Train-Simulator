@@ -77,31 +77,9 @@ public class Visualisation implements MouseEvents {
         double pixelsToMove = (timeChanged/1000.0)*speed;
         lastUpdate = System.currentTimeMillis();
 
-        //TEMP CODE
-        boolean q2 = true;
-        if(curSection instanceof Quart2){
-            Quart2 q = (Quart2)curSection;
-            q2 = q.checkOnAfterUpdate(t.lastPointOnCurve,pixelsToMove);
-        }
+        // Checks if the train will still be on the same track after moving if not update the current track
+        if(!curSection.checkOnAfterUpdate(t.getCurentLocation(),t.lastPointOnCurve,pixelsToMove)){
 
-        if(curSection instanceof Quart3){
-            Quart3 q = (Quart3)curSection;
-            q2 = q.checkOnAfterUpdate(t.lastPointOnCurve,pixelsToMove);
-        }
-
-        if(curSection instanceof Quart4){
-            Quart4 q = (Quart4)curSection;
-            q2 = q.checkOnAfterUpdate(t.lastPointOnCurve,pixelsToMove);
-        }
-
-        if(curSection instanceof Quart1){
-            Quart1 q = (Quart1)curSection;
-
-            q2 = q.checkOnAfterUpdate(t.lastPointOnCurve,pixelsToMove);
-        }
-
-
-        if(!q2 || !curSection.checkOnSectionAfterMovement(t.getX(),t.getY(),pixelsToMove)){
             System.out.println("Changing drawplace");
             for(int i = 0; i < railway.size(); i++){
 
@@ -119,37 +97,10 @@ public class Visualisation implements MouseEvents {
 
     }
 
-    @Override
-    public void mousePressed(double x, double y, MouseEvent e) {
 
-    }
-
-    @Override
-    public void mouseReleased(double x, double y, MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseClicked(double x, double y, MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseMoved(double x, double y, MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseDragged(double x, double y, MouseEvent e) {
-
-    }
 
     public void setRailway(List<DefSection> rail){
         this.railway = rail;
-    }
-
-    public void addTrain(DrawableTrain train){
-        this.trains.add(train);
     }
 
     public void setTrains(List<DrawableTrain> trains){
@@ -167,7 +118,7 @@ public class Visualisation implements MouseEvents {
         sim.setOnAction(e -> startSimulation());
         stop.setOnAction(e -> stopSimulation());
         pause.setOnAction(e -> pause());
-        //TODO add some buttons later
+
         vBox.getChildren().addAll(sim,stop, pause);
 
         return vBox;
@@ -206,9 +157,10 @@ public class Visualisation implements MouseEvents {
     }
 
 
-
+    /**
+     * Adds a train to the starting track
+     * */
     public void testMovement(){
-
         // Add a train to the track
         for(DefSection ds : railway){
             if(ds.getDrawID() == 0){
@@ -224,6 +176,20 @@ public class Visualisation implements MouseEvents {
     }
 
 
+    @Override
+    public void mousePressed(double x, double y, MouseEvent e) {}
+
+    @Override
+    public void mouseReleased(double x, double y, MouseEvent e) {}
+
+    @Override
+    public void mouseClicked(double x, double y, MouseEvent e) {}
+
+    @Override
+    public void mouseMoved(double x, double y, MouseEvent e) {}
+
+    @Override
+    public void mouseDragged(double x, double y, MouseEvent e) {}
 
     public ArrayList<DefSection> createBasicTrack(){
         ArrayList<DefSection> sections = new ArrayList<>();

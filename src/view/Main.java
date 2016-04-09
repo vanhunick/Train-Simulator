@@ -6,18 +6,11 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.ContentDisplay;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
-
 import javafx.stage.Stage;
-import view.Drawable.DrawableTrain;
-import view.Drawable.track_types.*;
 import view.Panes.TopMenuBar;
-
 import java.util.ArrayList;
-import java.util.List;
-
 
 public class Main extends Application {
 
@@ -25,17 +18,11 @@ public class Main extends Application {
     public static final  int SCREEN_WIDTH = 1200;
     public static final  int SCREEN_HEIGHT = 800;
 
-    // Screen sizes
-    public static int canvasWidth;
-    public static int canvasHeight;
-
-
-
     private ArrayList<String> input = new ArrayList<>();
     private static BorderPane bl;
 
     // Fps counter fields
-    public boolean debug;
+    public boolean debug = true;
     private final long ONE_SECOND = 1000000000;
     private long currentTime = 0;
     private long lastTime = 0;
@@ -70,9 +57,7 @@ public class Main extends Application {
         canvas.setOnMouseMoved(e -> controller.mouseMoved(e.getX(), e.getY(),e));
         canvas.setOnMouseDragged(e -> controller.mouseDragged(e.getX(), e.getY(),e));
 
-
         setupGUI(primaryStage, scene, root,canvas);
-
         controller.setDefMode(bl);
     }
 
@@ -82,7 +67,6 @@ public class Main extends Application {
 
         bl = new BorderPane();
         controller.setBorderPane(bl);
-
 
         TopMenuBar topMenuBar = new TopMenuBar(controller);
 
