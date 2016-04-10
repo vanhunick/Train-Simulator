@@ -29,7 +29,7 @@ public class Quart3 extends DefSection {
     }
 
     /**
-     * Workds out where to start drawing the piece based on the piece it came from
+     * Works out where to start drawing the piece based on the piece it came from
      * */
     public void setStart(DefSection from){
         double startX = 0;
@@ -39,8 +39,8 @@ public class Quart3 extends DefSection {
             super.setDirection("LEFT");
 
             if(from.getDrawID() == 1){
-                startX = from.getStartX() - super.getLength()/2;
-                startY = from.getStartY() + from.getLength()/2 + super.getLength();
+                startX = from.getStartX() - super.getLength() + TRACK_WIDTH;
+                startY = from.getStartY() + from.getLength()/2 - super.getLength()/2;
             }
             else if(from.getDrawID() == 2){
                 startX = from.getStartX() + from.getLength()/2 -super.getLength()/2;
@@ -66,7 +66,6 @@ public class Quart3 extends DefSection {
                 startY = from.getStartY();
             }
         }
-
         super.setStartX(startX);
         super.setStartY(startY);
     }
@@ -123,10 +122,10 @@ public class Quart3 extends DefSection {
             }
         }
         else if(super.getDirection().equals("UP")){
-            if(p.getX() < super.getStartX() - super.getLength()/2){
+            if(p.getX() > super.getStartX() + super.getLength()){
                 return false;//No longer in this section
             }
-            if(p.getY() < super.getStartY() - super.getLength()){
+            if(p.getY() < super.getStartY() + super.getLength()/2){
                 return false;//No longer in this section
             }
 

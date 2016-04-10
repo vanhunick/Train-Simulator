@@ -131,7 +131,7 @@ public class Quart4 extends DefSection {
         Point p = getNextPoint(curPoint, (int)lastSubAnle, moveBy);
 
         if(super.getDirection().equals("RIGHT")){
-            if(p.getY() > super.getStartY() + super.getLength()/2){
+            if(p.getY() > super.getStartY() + super.getLength()){
                 return false;
             }
             if(p.getX() > super.getStartX() + super.getLength()/2){

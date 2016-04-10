@@ -325,23 +325,23 @@ public class TrackBuilder implements MouseEvents{
             sectionsForTrack.add(ds0);
         }
         else if(selectedBox == 1){
-            DefSection ds0 = new Quart1(new Section(curId, 100, null, null, null),(int)trackStartX,(int)trackStartY, (int)pieceSize,1, "RIGHT");
+            DefSection ds0 = new Quart1(new Section(curId, 200, null, null, null),(int)trackStartX,(int)trackStartY, (int)pieceSize*2,1, "RIGHT");
             sectionsForTrack.add(ds0);
         }
         else if(selectedBox == 2){
-            DefSection ds0 = new Quart2(new Section(curId, 100, null, null, null),(int)trackStartX,(int)trackStartY, (int)pieceSize,2, "DOWN");
+            DefSection ds0 = new Quart2(new Section(curId, 200, null, null, null),(int)trackStartX,(int)trackStartY, (int)pieceSize*2,2, "DOWN");
             sectionsForTrack.add(ds0);
         }
         else if(selectedBox == 3){
-            DefSection ds0 = new Quart3(new Section(curId, 100, null, null, null),(int)trackStartX,(int)trackStartY, (int)pieceSize,3, "LEFT");
+            DefSection ds0 = new Quart3(new Section(curId, 200, null, null, null),(int)trackStartX,(int)trackStartY, (int)pieceSize*2,3, "LEFT");
             sectionsForTrack.add(ds0);
         }
         else if(selectedBox == 4){
-            DefSection ds0 = new Quart4(new Section(curId, 100, null, null, null),(int)trackStartX,(int)trackStartY, (int)pieceSize,4, "UP");
+            DefSection ds0 = new Quart4(new Section(curId, 200, null, null, null),(int)trackStartX,(int)trackStartY, (int)pieceSize*2,4, "UP");
             sectionsForTrack.add(ds0);
         }
         else if(selectedBox == 5){
-            DefSection ds0 = new StraightVert(new Section(curId, 100, null, null, null),(int)trackStartX,(int)trackStartY, (int)pieceSize,5, "DOWN");
+            DefSection ds0 = new StraightVert(new Section(curId, 100, null, null, null),(int)trackStartX,(int)trackStartY, (int)pieceSize*2,5, "DOWN");
             sectionsForTrack.add(ds0);
         }
     }
@@ -358,22 +358,22 @@ public class TrackBuilder implements MouseEvents{
             sectionsForTrack.add(ds1);
         }
         else if(selectedBox == 1){
-            DefSection ds1 = new Quart1(new Section(curId, 100, null, null, null), (int)pieceSize,1);
+            DefSection ds1 = new Quart1(new Section(curId, 200, null, null, null), (int)pieceSize*2,1);
             ds1.setStart(sectionsForTrack.get(sectionsForTrack.size()-1));
             sectionsForTrack.add(ds1);
         }
         else if(selectedBox == 2){
-            DefSection ds1 = new Quart2(new Section(curId, 100, null, null, null), (int)pieceSize,2);
+            DefSection ds1 = new Quart2(new Section(curId, 200, null, null, null), (int)pieceSize*2,2);
             ds1.setStart(sectionsForTrack.get(sectionsForTrack.size()-1));
             sectionsForTrack.add(ds1);
         }
         else if(selectedBox == 3){
-            DefSection ds1 = new Quart3(new Section(curId, 100, null, null, null), (int)pieceSize,3);
+            DefSection ds1 = new Quart3(new Section(curId, 200, null, null, null), (int)pieceSize*2,3);
             ds1.setStart(sectionsForTrack.get(sectionsForTrack.size()-1));
             sectionsForTrack.add(ds1);
         }
         else if(selectedBox == 4){
-            DefSection ds1 = new Quart4(new Section(curId, 100, null, null, null), (int)pieceSize,4);
+            DefSection ds1 = new Quart4(new Section(curId, 200, null, null, null), (int)pieceSize*2,4);
             ds1.setStart(sectionsForTrack.get(sectionsForTrack.size()-1));
             sectionsForTrack.add(ds1);
         }
