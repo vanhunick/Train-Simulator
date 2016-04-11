@@ -13,6 +13,7 @@ import model.Section;
 import model.Train;
 import view.Drawable.DrawableTrain;
 import view.Drawable.track_types.*;
+import view.Panes.EventGen;
 import view.Panes.EventLog;
 
 import java.util.ArrayList;
@@ -130,16 +131,22 @@ public class Visualisation implements MouseEvents {
         Button sim = new Button("Start Simulation");
         Button stop = new Button("Stop");
         Button pause = new Button("Pause");
+        Button event = new Button("Event");
 
         //Starts the simulation
         sim.setOnAction(e -> startSimulation());
         stop.setOnAction(e -> stopSimulation());
         pause.setOnAction(e -> pause());
+        event.setOnAction(e -> startEventDialog());
 
-        vBox.getChildren().addAll(sim,stop, pause);
+        vBox.getChildren().addAll(sim,stop, pause,event);
         vBox.setPrefWidth(WIDTH);
 
         return vBox;
+    }
+
+    public void startEventDialog(){
+        new EventGen(modelTrack);
     }
 
     public void stopSimulation(){
@@ -186,15 +193,23 @@ public class Visualisation implements MouseEvents {
      * */
     public void testMovement(){
         // Add a train to the track
-        for(DefSection ds : railway){
-            if(ds.getDrawID() == 0){
+        for(DefSection ds : railway) {
+            if (ds.getSection().getID() == 2) {
                 //Create the train
-                Train train = new Train(1,50,120,1,true);
+                Train train = new Train(1, 50, 120, 1, true);
 
                 // Create the drawable train
                 DrawableTrain drawableTrain = new DrawableTrain(train, ds);
                 trains.add(drawableTrain);
-                return;
+            }
+
+            if (ds.getSection().getID() == 1) {
+                //Create the train
+                Train train = new Train(2, 50, 120, 1, true);
+
+                // Create the drawable train
+                DrawableTrain drawableTrain = new DrawableTrain(train, ds);
+                trains.add(drawableTrain);
             }
         }
     }

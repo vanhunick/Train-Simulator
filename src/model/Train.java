@@ -27,7 +27,7 @@ public class Train {
         this.speed = speed;
     }
 
-    public double getId() {
+    public int  getId() {
         return id;
     }
 

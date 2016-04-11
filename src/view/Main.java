@@ -114,7 +114,7 @@ public class Main extends Application {
 
                 // Clear the screen
                 gc.setStroke(Color.BLACK);
-                gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+                gc.clearRect(0, 0, primaryStage.getWidth(), primaryStage.getHeight());
                 gc.setStroke(Color.WHITE);
 
 
