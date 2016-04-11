@@ -13,6 +13,7 @@ import model.Section;
 import model.Train;
 import view.Drawable.DrawableTrain;
 import view.Drawable.track_types.*;
+import view.Panes.EventLog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,8 +24,11 @@ import java.util.List;
  */
 public class Visualisation implements MouseEvents {
 
+    public static final int WIDTH = 150;
+
     private ModelTrack modelTrack;
     private boolean started = false;
+    private  EventLog eventLog;
 
     private List<DrawableTrain> trains;
     private List<DefSection> railway;
@@ -35,6 +39,8 @@ public class Visualisation implements MouseEvents {
 
     public Visualisation(){
         this.vBox = getBuilderButtons();
+        this.eventLog = new EventLog();
+
         //Just the default track
         this.trains = new ArrayList<>();
         this.railway = createBasicTrack();
@@ -80,16 +86,27 @@ public class Visualisation implements MouseEvents {
         // Checks if the train will still be on the same track after moving if not update the current track
         if(!curSection.checkOnAfterUpdate(t.getCurentLocation(),t.lastPointOnCurve,pixelsToMove)){
 
-            System.out.println("Changing drawplace");
             for(int i = 0; i < railway.size(); i++){
 
                 // Check if the current track
                 if(railway.get(i).getSection().getID() == curSection.getSection().getID()){
-                    if(i == railway.size() -1)t.setCurSection(railway.get(0));// The cur section is the last in the track so set the next to be the start section
+                    modelTrack.sectionChanged(curSection.getSection().getID());
+                    if(i == railway.size() -1){
+
+
+                        modelTrack.sectionChanged(railway.get(0).getSection().getID());
+                        eventLog.appendText(modelTrack.updateTrainOnSection(t.getTrain(),railway.get(0).getSection(),curSection.getSection()));
+                        t.setCurSection(railway.get(0));// The cur section is the last in the track so set the next to be the start section
+
+
+                    }
                     else {
+                        modelTrack.sectionChanged(railway.get(i+1).getSection().getID());
+                        eventLog.appendText(modelTrack.updateTrainOnSection(t.getTrain(),railway.get(i+1).getSection(),curSection.getSection()));
                         t.setCurSection(railway.get(i+1));
                         //make the model generate an event
                     }
+
                     return;
                 }
             }
@@ -120,6 +137,7 @@ public class Visualisation implements MouseEvents {
         pause.setOnAction(e -> pause());
 
         vBox.getChildren().addAll(sim,stop, pause);
+        vBox.setPrefWidth(WIDTH);
 
         return vBox;
     }
@@ -150,11 +168,15 @@ public class Visualisation implements MouseEvents {
         return trains;
     }
 
+
+
     public void addUIElementsToLayout(BorderPane bp){
+        bp.setRight(eventLog);
         bp.setLeft(vBox);
     }
 
     public void removeUIElementsFromLayout(BorderPane bp){
+        bp.getChildren().remove(eventLog);
         bp.getChildren().remove(vBox);
     }
 

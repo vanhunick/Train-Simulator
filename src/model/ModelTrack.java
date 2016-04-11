@@ -17,16 +17,17 @@ public class ModelTrack implements Events{
 
     @Override
     public void sectionChanged(int id) {
-        for(Section t : sections){
-            if(t.containsSection(id)){
+        for(Section s : sections){
+            if(s.getID() == id){
                 //update the section status
-                t.getSection(id).toggleStatus();
+                s.setTrainOn(!s.getTrainOn());//TODO most likely change to toggle
             }
         }
     }
 
-    public void updateTrainOnSection(Train t, Section newSection, Section prevSection){
-        System.out.println(("Train " + t + " Changed from " + prevSection + " To section " + newSection));
+    public String updateTrainOnSection(Train t, Section newSection, Section prevSection){
+
+        return ("Train ID:" + t.getId() + " Changed from ID:" + prevSection.getID() + " To section ID:" + newSection.getID() + "\n \n");
     }
 
 

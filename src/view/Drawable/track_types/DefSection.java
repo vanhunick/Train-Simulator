@@ -46,9 +46,16 @@ public abstract class DefSection {
         this.drawID = drawID;
         this.startPiece = true;
         this.direction = direction;
+        this.getSection().setTrainOn(true);
     }
 
-    public void draw(GraphicsContext g){System.out.println("Should be implemented in subclass");}
+    public void draw(GraphicsContext g){System.out.println("Should be implemented in subclass");
+
+        if(getSection().getTrainOn()){
+            g.setStroke(Color.GREEN);
+        }
+
+    }
 //
 //    public boolean checkOnSectionAfterMovement(double curX, double curY, double dist){
 //        System.out.println("Should be implemented in subclass");

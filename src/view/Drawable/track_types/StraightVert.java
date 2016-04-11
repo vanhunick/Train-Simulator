@@ -115,7 +115,7 @@ public class StraightVert extends DefSection {
 
 
     public void draw(GraphicsContext g) {
-        if(super.getMouseOn()){
+        if(super.getMouseOn() || super.getSection().getTrainOn()){
             g.setStroke(Color.GREEN);
         }
 
@@ -125,5 +125,7 @@ public class StraightVert extends DefSection {
 
         g.strokeLine(startX, startY, startX, startY + length);
         g.strokeLine(startX - TRACK_WIDTH, startY, startX - TRACK_WIDTH, startY + length);
+
+        g.setStroke(Color.WHITE);
     }
 }

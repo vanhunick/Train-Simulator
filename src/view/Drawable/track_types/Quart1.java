@@ -85,7 +85,7 @@ public class Quart1 extends DefSection {
     }
 
     public void draw(GraphicsContext g) {
-        if(super.getMouseOn()){
+        if(super.getMouseOn() || super.getSection().getTrainOn()){
             g.setStroke(Color.GREEN);
         }
 
@@ -95,6 +95,8 @@ public class Quart1 extends DefSection {
 
         g.strokeArc(startX, startY, length, length, 90, 90, ArcType.OPEN);
         g.strokeArc(startX + TRACK_WIDTH, startY + TRACK_WIDTH, length - (TRACK_WIDTH * 2), length - (TRACK_WIDTH * 2), 90, 90, ArcType.OPEN);
+
+        g.setStroke(Color.WHITE);
     }
 
 

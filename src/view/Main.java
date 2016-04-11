@@ -9,14 +9,15 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import view.Panes.EventLog;
 import view.Panes.TopMenuBar;
 import java.util.ArrayList;
 
 public class Main extends Application {
 
     // Screen sizes
-    public static final  int SCREEN_WIDTH = 1200;
-    public static final  int SCREEN_HEIGHT = 800;
+    public static final  int SCREEN_WIDTH = 1400;
+    public static final  int SCREEN_HEIGHT = 1000;
 
     private ArrayList<String> input = new ArrayList<>();
     private static BorderPane bl;
@@ -78,13 +79,14 @@ public class Main extends Application {
 
 
         // bind the dimensions when the user resizes the window.
-        canvas.widthProperty().bind(primaryStage.widthProperty());
+        //canvas.widthProperty().bind(primaryStage.widthProperty());
+        canvas.setWidth(SCREEN_WIDTH- EventLog.WIDTH - Visualisation.WIDTH);//TODO do better later
         canvas.heightProperty().bind(primaryStage.heightProperty());
 
         lastTime = System.nanoTime();
         setupAnimationTimer(primaryStage,canvas);
 
-        // Add the layout to the root
+        // Add the layout to the roocssEditorFldt
         root.getChildren().add(bl);
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -112,7 +114,7 @@ public class Main extends Application {
 
                 // Clear the screen
                 gc.setStroke(Color.BLACK);
-                gc.clearRect(0, 0, primaryStage.getWidth(), primaryStage.getHeight());
+                gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
                 gc.setStroke(Color.WHITE);
 
 

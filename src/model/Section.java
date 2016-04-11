@@ -10,6 +10,7 @@ public class Section {
     private Section to;
     private Track[] tracks;
     private int id;
+    private boolean trainOn;
 
     public Section(int id, double length, Section from, Section to, Track[] tracks){
         this.id = id;
@@ -23,7 +24,7 @@ public class Section {
      * Returns the given section matching the id
      * null if it does not have it
      * */
-    public Track getSection(int id){
+    public Track getTrack(int id){
         for(Track s : tracks){
             if(s.getId() == id){
                 return s;
@@ -35,7 +36,7 @@ public class Section {
     /**
      * Returns if a section is contained within this track
      * */
-    public boolean containsSection(int id){
+    public boolean containsTrack(int id){
         for(Track s : tracks){
             if(s.getId() == id){
                 return true;
@@ -54,6 +55,14 @@ public class Section {
     public Section getFrom() {return from;}
 
     public Section getTo() {return to;}
+
+    public boolean getTrainOn(){
+        return this.trainOn;
+    }
+
+    public void setTrainOn(boolean on){
+        this.trainOn = on;
+    }
 
     public int getID() {return id;}
 
