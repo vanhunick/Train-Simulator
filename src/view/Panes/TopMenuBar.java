@@ -1,20 +1,18 @@
 package view.Panes;
 
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
-import view.Controller;
-import view.Main;
+import view.ProgramController;
 
 /**
  * Created by Nicky on 2/04/2016.
  */
 public class TopMenuBar extends MenuBar {
-    private Controller controller;
+    private ProgramController controller;
 
-    public TopMenuBar(Controller controller){
+    public TopMenuBar(ProgramController controller){
         super();
 
         this.controller = controller;
@@ -44,11 +42,11 @@ public class TopMenuBar extends MenuBar {
     }
 
     public void handleNewTrackPressed(ActionEvent e){
-        controller.setMode(Controller.BUILDER_MODE);
+        controller.setMode(ProgramController.BUILDER_MODE);
     }
 
     public void handleSimulatePressed(ActionEvent e){
-        controller.setMode(Controller.VISUALISATION_MODE);
+        controller.setMode(ProgramController.VISUALISATION_MODE);
     }
 
     // TODO implement

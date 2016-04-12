@@ -1,6 +1,5 @@
 package view.Panes;
 
-import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -11,7 +10,6 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Modality;
 import model.ModelTrack;
 import model.Train;
-import view.Controller;
 
 import java.util.ArrayList;
 import java.util.List;

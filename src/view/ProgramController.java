@@ -8,33 +8,43 @@ import view.Drawable.track_types.DefSection;
 
 import java.util.List;
 
-public class Controller implements MouseEvents {
+public class ProgramController implements MouseEvents {
 
+    // The possible modes in the program
     public static final String VISUALISATION_MODE = "visualisation_mode";
     public static final String BUILDER_MODE = "builder_mode";
 
+    // The current mode
     private String mode;
 
+    // The modes
     private Visualisation visualisation;
     private TrackBuilder trackBuilder;
+
+    // The place to send the mouse events to
     private MouseEvents curMode;
 
+    // Used for adding and removing the UI elements for different modes
     private BorderPane borderPane;
 
-    public Controller (){
 
-
-    }
-
+    /**
+     * The default mode is the visualisation mode with it default track and trains
+     * */
     public void setDefMode(BorderPane borderPane){
-        visualisation = new Visualisation();// Since by default it starts in this mode
+        visualisation = new Visualisation();
         visualisation.addUIElementsToLayout(borderPane);
 
-        // By default add one train
-        visualisation.testMovement();
-        setMode(Controller.VISUALISATION_MODE);
+        visualisation.addDefaultTrains();
+        setMode(ProgramController.VISUALISATION_MODE);
     }
 
+
+    /**
+     * Sets the current mode of the program
+     *
+     * @param  modeToSet the mode to change to
+     * */
     public void setMode(String modeToSet){
         if(modeToSet.equals(mode))return;//mode passed in already set
 
@@ -52,6 +62,7 @@ public class Controller implements MouseEvents {
             //Error invalid mode
         }
     }
+
 
     /**
      * Updates the part of the program that is in focus
@@ -78,6 +89,10 @@ public class Controller implements MouseEvents {
         }
     }
 
+
+    /**
+     * Sets the mode of the program by removing UI elements from other mode and adding it's own.
+     * */
     public void setVisualisationMode(List<DefSection> track, List<DrawableTrain> trains){
         visualisation = new Visualisation();
         visualisation.setRailway(track);
@@ -88,6 +103,9 @@ public class Controller implements MouseEvents {
     }
 
 
+    /**
+     * Sets the mode of the program by removing UI elements from other mode and adding it's own.
+     * */
     public void setBuilderMode(){
         this.trackBuilder = new TrackBuilder(this);// Pass the controller to the builder
         visualisation.removeUIElementsFromLayout(borderPane);

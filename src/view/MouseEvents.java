@@ -31,6 +31,4 @@ public interface MouseEvents {
      * Called when the mouse button mouse is dragged
      * */
     public void mouseDragged(double x, double y, MouseEvent e );
-
-
 }

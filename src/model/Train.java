@@ -12,7 +12,7 @@ public class Train {
     private  double speed;
 
 
-    //TODO work out how to represent this, on the track or section or location on the section or track
+    // The id of the section it is on
     private int position;
 
     public Train(int id, double length,double speed, int position, boolean orientation){
@@ -39,11 +39,11 @@ public class Train {
         return speed;
     }
 
-    public boolean isOrientation() {
+    public boolean orientation() {
         return orientation;
     }
 
-    public double getPosition() {
+    public int getPosition() {
         return position;
     }
 }

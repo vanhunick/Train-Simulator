@@ -12,7 +12,10 @@ public class Section {
     private int id;
     private boolean trainOn;
 
+    private boolean canDetect;
+
     public Section(int id, double length, Section from, Section to, Track[] tracks){
+        this.canDetect = false;
         this.id = id;
         this.length = length;
         this.from = from;
@@ -67,6 +70,14 @@ public class Section {
     public int getID() {return id;}
 
     public String toString(){
-        return "Length " + length + " From " + from.getID() + " To " + to.getID();
+        return "Length " + length + " From " + from.getID() + " To " + to.getID() + " Can Detect " + canDetect;
+    }
+
+    public void setCandetect(boolean canDetect){
+        this.canDetect = canDetect;
+    }
+
+    public boolean canDetect(){
+        return this.canDetect;
     }
 }

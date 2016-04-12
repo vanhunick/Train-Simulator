@@ -33,13 +33,13 @@ public class Main extends Application {
 
 
     // Controls the flow of the program
-    private Controller controller;
+    private ProgramController controller;
 
     @Override
     public void start(final Stage primaryStage) {
 
         // Initialises the control that will control the flow of the program
-        this.controller = new Controller();
+        this.controller = new ProgramController();
 
         Group root = new Group();
         Scene scene = new Scene(root, SCREEN_WIDTH, SCREEN_HEIGHT, Color.rgb(0, 0, 0));
