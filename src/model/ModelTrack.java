@@ -31,10 +31,6 @@ public class ModelTrack implements Events{
     }
 
 
-    public void sendOutSectionEvent(){
-
-    }
-
     @Override
     public void setSpeed(int trainID, double speed) {
         for(Train t : trains){

@@ -23,64 +23,82 @@ import java.util.List;
  * Created by User on 26/03/2016.
  */
 public class TrackBuilder implements MouseEvents{
+
+    // The number of possible different track pieces you can create
     public static final int NUMB_PIECES = 6;
 
+    // Represents the currently selected track piece
     private int selectedBox;
+
+    // The size of the box to draw
     private double boxSize;
 
-
+    // The location and size of the piece to place on the canvas
     private double pieceSize = 100;
     private double trackStartX = 300;
     private double trackStartY = 80;
 
-
+    // Start of the piece selection panel
     private double shownPanelStartX;
 
+    // Screen dimensions
     private double screenWidth;
     private double screenHeight;
 
+    // The sections drawn to select from
     private List<DefSection> sections;
+
+    // The section that represent the track
     private List<DefSection> sectionsForTrack;
+
+    // The added trains to the track
     private List<DrawableTrain> trains;
 
+    // Space between pieces in selection panel
     private double boxGap = 10;
 
+    // The buttons for the builder
     private VBox vBox;
 
+    // The program controller
     private ProgramController controller;
+
+    // The current ID of the tracks will be incremented with each piece added
     private int curId = 0;
 
+    // Set if every time you add new piece it alternates between detection and non detection sections
     private boolean alternate = true;
 
+    /**
+     * Constructs a new TrackBuilder object
+     *
+     * @param controller the controller of the program
+     * */
     public TrackBuilder(ProgramController controller){
         this.controller = controller;
-        this.vBox = getBuilderButtons();
-
+        this.vBox = createBuilderButtons();
         this.sectionsForTrack = new ArrayList<>();
         this.trains = new ArrayList<>();
-
-        this.shownPanelStartX = screenWidth - boxSize - boxGap*2;
-
-        this.shownPanelStartX = screenWidth - (boxSize - (boxGap*2));
-        this.boxSize = ((screenHeight - 50 - ((NUMB_PIECES*boxGap)+boxGap))/NUMB_PIECES);
         this.sections = setUpDrawPieces();
     }
+
 
     public void updateSize(){
         this.screenWidth = controller.getCanvasWidth();
         this.screenHeight = controller.getCanvasHeight();
-
         this.shownPanelStartX = screenWidth - boxSize - boxGap*2;
-
         shownPanelStartX = screenWidth - (boxSize - (boxGap*2));
         this.boxSize = ((screenHeight - 50 - ((NUMB_PIECES*boxGap)+boxGap))/NUMB_PIECES);
         this.sections = setUpDrawPieces();
     }
 
-    public void update(){
+    public void update(){}
 
-    }
-
+    /**
+     * Called to redraw all of the elements on the screen
+     *
+     * @param gc the graphics context to draw on
+     * */
     public void refresh(GraphicsContext gc){
 
         //Draw the currently created track
@@ -89,16 +107,24 @@ public class TrackBuilder implements MouseEvents{
             d.draw(gc);
         }
 
+        // Set the sizes
         this.boxSize = ((screenHeight - 50 - ((NUMB_PIECES*boxGap)+boxGap))/NUMB_PIECES);
         this.shownPanelStartX = screenWidth - (boxSize + (boxGap*2));
 
+        // Draw the piece selection panel
         drawShownPanel(gc);
+
+        // Draw the trains
         for(DrawableTrain dt : trains){
             dt.draw(gc);
         }
     }
 
-
+    /**
+     * Draws the panel where you select pieces of track from
+     *
+     * @param gc the graphics context to draw on
+     * */
     public void drawShownPanel(GraphicsContext gc){
         gc.setFill(Color.WHITE);
 
@@ -124,31 +150,33 @@ public class TrackBuilder implements MouseEvents{
         gc.setLineWidth(1);
     }
 
-    public void setScreenHeightAndWidth(double width, double height){
-        if(screenWidth != width || screenHeight != height){
-            this.screenHeight = height;
-            this.screenWidth = width;
-
-            this.shownPanelStartX = screenWidth - boxSize - boxGap*2;
-
-            shownPanelStartX = screenWidth - (boxSize - (boxGap*2));
-            this.boxSize = ((screenHeight - 50 - ((NUMB_PIECES*boxGap)+boxGap))/NUMB_PIECES);
-            this.sections = setUpDrawPieces();
-        }
-    }
-
+    /**
+     * Adds the appropriate UI elements for the builder to the border pane
+     *
+     * @param bp the border pane to add elements to
+     * */
     public void addUIElementsToLayout(BorderPane bp){
         bp.setLeft(vBox);
     }
 
+
+    /**
+     * Removes the appropriate UI elements for the builder to the border pane
+     *
+     * @param bp the border pane to add elements to
+     * */
     public void removeUIElementsFromLayout(BorderPane bp){
         bp.getChildren().remove(vBox);
     }
 
 
-    private VBox getBuilderButtons(){
-        VBox vBox = new VBox(8); // spacing = 8
+    /**
+     * Creates the buttons for the track builder and sets of action listeners for them
+     * */
+    private VBox createBuilderButtons(){
+        VBox vBox = new VBox(8);
         vBox.setPadding(new Insets(5,5,5,5));
+
         Button sim = new Button("Simulate Track");
         Button clear = new Button("Clear Track");
         Button undo = new Button("Undo Track");
@@ -157,7 +185,6 @@ public class TrackBuilder implements MouseEvents{
         CheckBox alternate = new CheckBox("Alternate");
         alternate.setSelected(true);
         alternate.setOnAction(e -> alternateCheckBoxEvent(alternate));
-        alternate.setStyle("-fx-text-inner-color: white;");//TODO not working
 
         addTrainMenu.setOnAction(e -> showAddTrainMenu());
         undo.setOnAction(e -> undo());
@@ -169,22 +196,34 @@ public class TrackBuilder implements MouseEvents{
     }
 
 
-
+    /**
+     * Toggle the checkbox for alternating sections
+     * */
     public void alternateCheckBoxEvent(CheckBox alternate){
         alternate.setSelected(!this.alternate);
         this.alternate = !this.alternate;
     }
 
+
+    /**
+     * Start the simulation by changing the mode in the controller and passing in
+     * the created track and trains
+     * */
     public void simulateTrack(){
         if(sectionsForTrack.size() == 0 || trains.size() == 0){
             new ErrorDialog("No track or trains to simulate", "Error");
             return;
         }
 
-        linkUpSections(sectionsForTrack);//must link of the sections inside the drawing sections for the simulation
+        //must link of the sections inside the drawing sections for the simulation
+        linkUpSections(sectionsForTrack);
         controller.setVisualisationMode(sectionsForTrack, trains);
     }
 
+
+    /**
+     * Undoes and addition of a track piece
+     * */
     public void undo(){
         if(sectionsForTrack.size() > 0){
             this.sectionsForTrack.remove(sectionsForTrack.size()-1);
@@ -192,14 +231,52 @@ public class TrackBuilder implements MouseEvents{
         }
     }
 
+
+    /**
+     * Removes all added tracks from the list
+     * */
     public void clear(){
         sectionsForTrack.clear();
     }
 
 
+    /**
+     * Returns true if a train can be created with the id false otherwise
+     *
+     * @param id to check if exists
+     * */
+    public boolean validTrainID(int id){
+        for(DrawableTrain t : trains){
+            if(t.getTrain().getId() == id)return false;
+        }
+        return true;
+    }
+
+    /**
+     * Returns weather adding a train to a certain location is valid or not
+     *
+     * @param trackStartID the id of the track to start on
+     * */
+    public boolean validTrainStartLocation(int trackStartID){
+        for(DefSection s : sectionsForTrack){
+            if(s.getSection().getID() == trackStartID){
+                for(DrawableTrain t : trains){
+                    if(t.getCurSection().getSection().getID() == trackStartID){
+                        return false;// Track does exist but there is already a train on it
+                    }
+                    return true;
+                }
+            }
+        }
+        //no track with that ID exists
+        return false;
+    }
+
+    /**
+     *
+     * */
     public void showAddTrainMenu(){
-        TrainDialog td = new TrainDialog();
-        //TODO do some checks
+        TrainDialog td = new TrainDialog(this);
 
 
         for(DefSection s : sectionsForTrack){

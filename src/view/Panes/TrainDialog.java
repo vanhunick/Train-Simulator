@@ -7,6 +7,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Modality;
 import javafx.util.Pair;
+import view.TrackBuilder;
 
 import java.util.Optional;
 
@@ -24,8 +25,11 @@ public class TrainDialog {
     // The length of train in pixels
     private double length;
 
+    private TrackBuilder trackBuilder;
 
-    public TrainDialog() {
+    public TrainDialog(TrackBuilder trackBuilder) {
+        this.trackBuilder = trackBuilder;
+
         Dialog dialog = new Dialog<>();
         dialog.initModality(Modality.WINDOW_MODAL);
         dialog.setTitle("Add Train");
@@ -59,7 +63,10 @@ public class TrainDialog {
 
         // Do some validation (using the Java 8 lambda syntax).
         id.textProperty().addListener((observable, oldValue, newValue) -> {
-            id.setDisable(newValue.trim().isEmpty());
+//            id.setDisable(newValue.trim().isEmpty());
+
+
+
         });
 
         // Do some validation (using the Java 8 lambda syntax).

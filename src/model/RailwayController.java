@@ -1,5 +1,8 @@
 package model;
 
+import view.Drawable.track_types.DefSection;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -8,13 +11,13 @@ import java.util.List;
 public class RailwayController {
 
     private List<Train> trains;
-    private List<Section> tracks;
+    private List<ControlSection> tracks;
 
     private ModelTrack model;
 
     public RailwayController(List<Train> trains, List<Section> tracks, ModelTrack model){
         this.trains = trains;
-        this.tracks = tracks;
+        this.tracks = createControlTracks(tracks);
         this.model = model;
     }
 
@@ -23,24 +26,55 @@ public class RailwayController {
             if(t.getPosition() == sectionID){
 
                 // Grab the section
-                Section s = getSection(sectionID);
+                int nextSectionID = getNextSection(sectionID);
 
-                if(s.getTrainOn()){//TODO not sure if should be after it has changed or before
-                    // Not there is a train
-                }
+
+
             }
         }
     }
 
-
-
-    public Section getSection(int id){
-        for(Section s : tracks){
-            if(s.getID() == id){
-                return s;
-            }
+    public int getNextSection(int curSection){
+        for(ControlSection cs : tracks){
+            if(cs.getId() == curSection)return cs.getTo();
         }
-        return null;//Throw error
+        return -1;// Should never get here
+    }
+
+    public boolean checkTrainOnSection(int sectionID){
+        for(Train t : trains){
+            if(t.getPosition() == sectionID)return true;
+        }
+        return false;
+    }
+
+    public List<ControlSection> createControlTracks(List<Section> track){
+        List<ControlSection> sections = new ArrayList<>();
+
+        for(Section s : track){
+            sections.add(new ControlSection(s.getID(),s.getFrom().getID(),s.getTo().getID()));
+        }
+        return sections;
+    }
+
+
+
+
+    private class ControlSection{
+        private int id;
+        private int from;
+        private int to;
+
+        public ControlSection(int id, int from, int to){
+            this.id = id;
+            this.from = from;
+            this.to = to;
+        }
+
+        public int getId(){return this.id;}
+        public int getFrom(){return this.from;}
+        public int getTo(){return this.to;}
+
     }
 }
 
