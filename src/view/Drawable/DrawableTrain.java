@@ -1,12 +1,18 @@
 package view.Drawable;
 
+
 import java.awt.*;
 import java.util.List;
+
+import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import model.Section;
 import model.Train;
 import view.Drawable.track_types.*;
+
 
 
 /**
@@ -20,6 +26,9 @@ public class DrawableTrain implements Drawable{
     private Train train;
     private long lastUpdate;
     private DefSection curSection;
+    private Image trainImage;
+
+    private ImageView trainImageView;
 
     private Point curentLocation;
 
@@ -29,7 +38,13 @@ public class DrawableTrain implements Drawable{
     public DrawableTrain(Train train, DefSection curSection){
         this.train = train;
         this.curSection = curSection;
-
+        this.trainImage= new Image("file:src/res/train.gif", 50, 179, false, false);
+        this.trainImageView = new ImageView(trainImage);
+        trainImageView.setRotate(30);
+        SnapshotParameters params = new SnapshotParameters();
+        params.setFill(Color.TRANSPARENT);
+        Image rotatedImage = trainImageView.snapshot(params, null);
+        trainImage = rotatedImage;
         this.curX = curSection.getInitialX(width);
         this.curY = curSection.getInitialY(width);
 
@@ -38,6 +53,9 @@ public class DrawableTrain implements Drawable{
 
     @Override
     public void draw(GraphicsContext g){
+
+
+        g.drawImage(trainImage,100,100);
         g.setFill(Color.RED);
         g.fillRect(curentLocation.getX() - width/2, curentLocation.getY() - width/2, width, width);
     }

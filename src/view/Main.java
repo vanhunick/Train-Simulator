@@ -78,6 +78,8 @@ public class Main extends Application {
         bl.setCenter(canvas);
 
 
+
+
         // bind the dimensions when the user resizes the window.
         //canvas.widthProperty().bind(primaryStage.widthProperty());
         canvas.setWidth(SCREEN_WIDTH- EventLog.WIDTH - Visualisation.WIDTH);//TODO do better later
