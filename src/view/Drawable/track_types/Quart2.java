@@ -90,6 +90,34 @@ public class Quart2 extends DefSection {
     }
 
 
+    public double getNextRotation(Point newPoint, double oldX, double oldY){
+        double deltaX = newPoint.getX() - oldX;
+        double deltaY = newPoint.getY() - oldY;
+        double degree = ((Math.atan2(deltaY, deltaX)));
+        double angle = degree * 180 / Math.PI;
+
+        if(angle<0)
+        {
+            angle = 360+angle;
+        }
+        return angle;
+    }
+
+    public double getNextRotation(double curRotation, double speed){
+        double l = lengthOfQuater();
+
+        double updates = l/speed;
+
+        double rotateCHange = 90/updates;
+
+        if(super.getDirection().equals("DOWN")){
+            return curRotation + rotateCHange;
+        }
+        else {
+            return curRotation - rotateCHange;
+        }
+    }
+
     /**
      * Returns the next point to move to on the curve given the amount to move
      * */

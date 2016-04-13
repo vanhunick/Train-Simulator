@@ -76,6 +76,30 @@ public class StraightVert extends DefSection {
                 y >= super.getStartY() && y <= super.getStartY() + super.getLength();
     }
 
+    public double getNextRotation(Point newPoint, double oldX, double oldY){
+        if(super.getDirection().equals("UP")){
+            return 0;
+        }
+        else if(super.getDirection().equals("DOWN")){
+            return 180;
+        }
+        // Error
+        return 0;
+    }
+
+
+    public double getNextRotation(double curRotation, double speed){
+        if(super.getDirection().equals("UP")){
+            return 0;
+        }
+        else if(super.getDirection().equals("DOWN")){
+            return 180;
+        }
+        // Error
+        return 0;
+    }
+
+
     public Point getNextPoint(Point cur, int lastSubAngle, double moveBy){
         cur.setLocation(getNextX(cur.getX(),moveBy),getNextY(cur.getY(),moveBy));
         return cur;

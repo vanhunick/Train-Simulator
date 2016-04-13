@@ -106,7 +106,29 @@ public class StraightHoriz extends DefSection {
     }
 
     public double getInitialX(double trainWidth){
-        return super.getStartX();
+        return super.getStartX() + super.getLength()/2;//place it in the middle of the track
+    }
+
+    public double getNextRotation(Point newPoint, double oldX, double oldY){
+        if(super.getDirection().equals("RIGHT")){
+            return 0;
+        }
+        else if(super.getDirection().equals("LEFT")){
+            return 180;
+        }
+        // Error
+        return 0;
+    }
+
+    public double getNextRotation(double curRotation, double speed){
+        if(super.getDirection().equals("RIGHT")){
+            return 90;
+        }
+        else if(super.getDirection().equals("LEFT")){
+            return 270;
+        }
+        // Error
+        return 0;
     }
 
 

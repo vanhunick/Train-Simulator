@@ -126,6 +126,16 @@ public abstract class DefSection {
         return 0;
     }
 
+    public double getNextRotation(Point newPoint, double oldX, double oldY){
+        System.out.println("Should be implemented in subclass");
+        return 90;
+    }
+
+    public double getNextRotation(double curRotation, double speed){
+        System.out.println("Should be implemented in subclass");
+        return 90;
+    }
+
     public double getInitialX(double trainWidth){
         System.out.println("Should be implemented in subclass");
         return 0;

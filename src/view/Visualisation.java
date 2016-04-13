@@ -287,43 +287,44 @@ public class Visualisation implements MouseEvents {
      * */
     public ArrayList<DefSection> createBasicTrack(){
         ArrayList<DefSection> sections = new ArrayList<>();
+        int trackLength = 150;
 
-        DefSection ds1 = new StraightHoriz(new Section(1, 100, null, null, null), 200, 100, 100,0, "RIGHT");
-        DefSection ds2 = new StraightHoriz(new Section(2, 100, null, null, null), 100,0);
+        DefSection ds1 = new StraightHoriz(new Section(1, 100, null, null, null), 300, 100, trackLength,0, "RIGHT");
+        DefSection ds2 = new StraightHoriz(new Section(2, 100, null, null, null), trackLength,0);
         ds1.getSection().setCandetect(true);
         ds2.getSection().setCandetect(false);
         ds2.setStart(ds1);
 
 
-        DefSection ds3 = new Quart2(new Section(3, 100, null, null, null), 200,2);
+        DefSection ds3 = new Quart2(new Section(3, 100, null, null, null), trackLength*4,2);
         ds3.getSection().setCandetect(true);
         ds3.setStart(ds2);
 
-        DefSection ds4 = new StraightVert(new Section(4, 100, null, null, null), 100,5);
+        DefSection ds4 = new StraightVert(new Section(4, 100, null, null, null), trackLength,5);
         ds4.getSection().setCandetect(false);
         ds4.setStart(ds3);
 
-        DefSection ds5 = new Quart3(new Section(5, 100, null, null, null), 200,3);
+        DefSection ds5 = new Quart3(new Section(5, 100, null, null, null), trackLength*4,3);
         ds5.getSection().setCandetect(true);
         ds5.setStart(ds4);
 
-        DefSection ds6 = new StraightHoriz(new Section(6, 100, null, null, null), 100,0);
+        DefSection ds6 = new StraightHoriz(new Section(6, 100, null, null, null), trackLength,0);
         ds6.getSection().setCandetect(false);
         ds6.setStart(ds5);
 
-        DefSection ds7 = new StraightHoriz(new Section(7, 100, null, null, null), 100,0);
+        DefSection ds7 = new StraightHoriz(new Section(7, 100, null, null, null), trackLength,0);
         ds7.getSection().setCandetect(true);
         ds7.setStart(ds6);
 
-        DefSection ds8 = new Quart4(new Section(8, 100, null, null, null), 200,4);
+        DefSection ds8 = new Quart4(new Section(8, 100, null, null, null), trackLength*4,4);
         ds8.getSection().setCandetect(false);
         ds8.setStart(ds7);
 
-        DefSection ds9 = new StraightVert(new Section(9, 100, null, null, null), 100,5);
+        DefSection ds9 = new StraightVert(new Section(9, 100, null, null, null), trackLength,5);
         ds9.getSection().setCandetect(true);
         ds9.setStart(ds8);
 
-        DefSection ds10 = new Quart1(new Section(10, 100, null, null, null), 200,1);
+        DefSection ds10 = new Quart1(new Section(10, 100, null, null, null), trackLength*4,1);
         ds10.getSection().setCandetect(false);
         ds10.setStart(ds9);
 
