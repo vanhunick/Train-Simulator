@@ -89,8 +89,14 @@ public class TrackMenu {
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == addButton) {
                 //set the fields to return
-                this.id = Integer.parseInt(id.getText());
-//                this.length = Double.parseDouble(length.getText());
+
+                if(!id.getText().equals("")){
+                    this.id = Integer.parseInt(id.getText());
+                }
+                if(!length.getText().equals("")){
+                    this.length = Double.parseDouble(length.getText());
+                }
+
                 this.canDetect = Boolean.parseBoolean(curDetectSelection);
             }
             return null;

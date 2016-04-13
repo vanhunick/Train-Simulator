@@ -324,52 +324,7 @@ public class TrackBuilder implements MouseEvents{
     }
 
 
-    public List<DefSection> setUpDrawPieces(){
-        List<DefSection> sections = new ArrayList<>();
 
-        double middleX = (screenWidth - boxSize - boxGap) + (boxSize/2);//Start of the box to refresh in
-        double middleY = 10 + boxGap + (boxSize/2);
-
-        double size = boxSize - (boxGap);
-        double y = middleY - DefSection.TRACK_WIDTH/2;
-        double x = middleX - (size/2);
-
-        DefSection ds0 = new StraightHoriz(new Section(2, 100, null, null, null),(int)x,(int)y, (int)size,0, "LEFT");
-
-        x = middleX - size/4;
-        y = middleY + boxSize + boxGap - (size/2) + size/4;
-
-        DefSection ds1 = new Quart1(new Section(2, 100, null, null, null),(int)(x) ,(int)y, (int)size,1, "RIGHT");
-
-        y += boxSize + boxGap;
-        x = middleX - size/2 - size/4;
-
-        DefSection ds2 = new Quart2(new Section(2, 100, null, null, null),(int)(x),(int)y, (int)(size),2, "RIGHT");
-
-        x = middleX - size/2 - size/4;
-        y += boxSize + boxGap - size/2;
-
-        DefSection ds3 = new Quart3(new Section(2, 100, null, null, null),(int)(x),(int)y, (int)(size),3, "RIGHT");
-
-        y += boxSize + boxGap;
-        x = middleX - size/2 + size/4 ;
-
-        DefSection ds4 = new Quart4(new Section(2, 100, null, null, null),(int)(x),(int)y, (int)(size),4, "RIGHT");
-
-        x = middleX - DefSection.TRACK_WIDTH /2 + size/4;
-        y+= boxSize + boxGap + size/4;
-
-        DefSection ds5 = new StraightVert(new Section(2, 100, null, null, null),(int)(x),(int)y, (int)(size),5, "RIGHT");
-
-        sections.add(ds0);
-        sections.add(ds1);
-        sections.add(ds2);
-        sections.add(ds3);
-        sections.add(ds4);
-        sections.add(ds5);
-
-        return sections;
-    }
 
     public DefSection getTrack(double x, double y){
         for(DefSection s : sectionsForTrack){
@@ -382,6 +337,8 @@ public class TrackBuilder implements MouseEvents{
 
     public void showTrackMenu(DefSection ds){
         TrackMenu tm = new TrackMenu(ds);
+
+        ds.setLength(tm.getLength());
 
 
     }
@@ -547,6 +504,53 @@ public class TrackBuilder implements MouseEvents{
 
     public List<DefSection> getCreatedTrack(){
         return sectionsForTrack;
+    }
+
+    public List<DefSection> setUpDrawPieces(){
+        List<DefSection> sections = new ArrayList<>();
+
+        double middleX = (screenWidth - boxSize - boxGap) + (boxSize/2);//Start of the box to refresh in
+        double middleY = 10 + boxGap + (boxSize/2);
+
+        double size = boxSize - (boxGap);
+        double y = middleY - DefSection.TRACK_WIDTH/2;
+        double x = middleX - (size/2);
+
+        DefSection ds0 = new StraightHoriz(new Section(2, 100, null, null, null),(int)x,(int)y, (int)size,0, "LEFT");
+
+        x = middleX - size/4;
+        y = middleY + boxSize + boxGap - (size/2) + size/4;
+
+        DefSection ds1 = new Quart1(new Section(2, 100, null, null, null),(int)(x) ,(int)y, (int)size,1, "RIGHT");
+
+        y += boxSize + boxGap;
+        x = middleX - size/2 - size/4;
+
+        DefSection ds2 = new Quart2(new Section(2, 100, null, null, null),(int)(x),(int)y, (int)(size),2, "RIGHT");
+
+        x = middleX - size/2 - size/4;
+        y += boxSize + boxGap - size/2;
+
+        DefSection ds3 = new Quart3(new Section(2, 100, null, null, null),(int)(x),(int)y, (int)(size),3, "RIGHT");
+
+        y += boxSize + boxGap;
+        x = middleX - size/2 + size/4 ;
+
+        DefSection ds4 = new Quart4(new Section(2, 100, null, null, null),(int)(x),(int)y, (int)(size),4, "RIGHT");
+
+        x = middleX - DefSection.TRACK_WIDTH /2 + size/4;
+        y+= boxSize + boxGap + size/4;
+
+        DefSection ds5 = new StraightVert(new Section(2, 100, null, null, null),(int)(x),(int)y, (int)(size),5, "RIGHT");
+
+        sections.add(ds0);
+        sections.add(ds1);
+        sections.add(ds2);
+        sections.add(ds3);
+        sections.add(ds4);
+        sections.add(ds5);
+
+        return sections;
     }
 
 }

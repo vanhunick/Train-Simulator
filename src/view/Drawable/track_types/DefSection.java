@@ -15,7 +15,7 @@ public abstract class DefSection {
     public static final int TRACK_WIDTH = 30;
     private double startX;
     private double startY;
-    private double length;//TODO might just use the train length
+    private double length;
     private Section section;
     private boolean startPiece;
     private String direction;
@@ -120,6 +120,8 @@ public abstract class DefSection {
     public Point getNextPoint(Point cur, int lastSubAngle, double moveBy){
         return null;
     }
+
+    public void setLength(double length){this.length = length;}
 
     public double getNextX(double curX, double moveBy){
         System.out.println("Should be implemented in subclass");
