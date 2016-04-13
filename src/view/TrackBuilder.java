@@ -23,6 +23,7 @@ import java.util.List;
  * Created by User on 26/03/2016.
  */
 public class TrackBuilder implements MouseEvents{
+    public static final int WIDTH = 150;
 
     // The number of possible different track pieces you can create
     public static final int NUMB_PIECES = 6;
@@ -128,18 +129,19 @@ public class TrackBuilder implements MouseEvents{
     public void drawShownPanel(GraphicsContext gc){
         gc.setFill(Color.WHITE);
 
-        gc.fillRect(shownPanelStartX, 20, screenWidth - shownPanelStartX, ((boxSize+boxGap)*NUMB_PIECES)+boxGap);
-        gc.strokeRect(shownPanelStartX, 20, screenWidth - shownPanelStartX, ((boxSize + boxGap) * NUMB_PIECES) + boxGap);
+        gc.fillRect(shownPanelStartX, 10, screenWidth - shownPanelStartX, ((boxSize+boxGap)*NUMB_PIECES)+boxGap/2);
+        gc.strokeRect(shownPanelStartX, 10, screenWidth - shownPanelStartX, ((boxSize + boxGap) * NUMB_PIECES) + boxGap/2);
 
-        double curY = 20 + boxGap;
+        double curY = 10 + boxGap;
         for(int i = 0; i < NUMB_PIECES; i++){
             if(selectedBox == i){
                 gc.setStroke(Color.BLUE);
                 gc.setLineWidth(3);
             }
+            gc.setStroke(Color.BLACK);
             gc.strokeRect(shownPanelStartX + boxGap, curY, boxSize-boxGap/2, boxSize - boxGap/2);
             gc.setLineWidth(1);
-            gc.setStroke(Color.BLACK);
+
             curY+= boxGap + boxSize;
         }
 
@@ -192,6 +194,7 @@ public class TrackBuilder implements MouseEvents{
         clear.setOnAction(e -> clear());
 
         vBox.getChildren().addAll(sim,clear,undo,addTrainMenu,alternate);
+        vBox.setPrefWidth(WIDTH);
         return vBox;
     }
 
@@ -325,7 +328,7 @@ public class TrackBuilder implements MouseEvents{
         List<DefSection> sections = new ArrayList<>();
 
         double middleX = (screenWidth - boxSize - boxGap) + (boxSize/2);//Start of the box to refresh in
-        double middleY = 20 + boxGap + (boxSize/2);
+        double middleY = 10 + boxGap + (boxSize/2);
 
         double size = boxSize - (boxGap);
         double y = middleY - DefSection.TRACK_WIDTH/2;

@@ -12,10 +12,13 @@ import view.ProgramController;
 public class TopMenuBar extends MenuBar {
     private ProgramController controller;
 
+    public static final int HEIGHT= 20;
+
     public TopMenuBar(ProgramController controller){
         super();
 
         this.controller = controller;
+        this.setPrefHeight(HEIGHT);
 
         //Menu items
         Menu menuFile = new Menu("File");
@@ -32,10 +35,19 @@ public class TopMenuBar extends MenuBar {
         loadTrackItem.setOnAction(e -> handleLoadTrackPressed(e));
         simulateItem.setOnAction(e -> handleSimulatePressed(e));
 
+        // List for View
+        MenuItem log = new MenuItem("Log view");
+
+        // Actions for view items
+        log.setOnAction(e -> logToggled(e));
+
         //Add file items
         menuFile.getItems().add(newTrackItem);
         menuFile.getItems().add(loadTrackItem);
         menuFile.getItems().add(simulateItem);
+
+        // Add the view items
+        menuView.getItems().add(log);
 
         //Add to the menu bar
         this.getMenus().addAll(menuFile, menuEdit, menuView);
@@ -44,6 +56,8 @@ public class TopMenuBar extends MenuBar {
     public void handleNewTrackPressed(ActionEvent e){
         controller.setMode(ProgramController.BUILDER_MODE);
     }
+
+    public void logToggled(ActionEvent e){controller.toggleLogView();}
 
     public void handleSimulatePressed(ActionEvent e){
         controller.setMode(ProgramController.VISUALISATION_MODE);

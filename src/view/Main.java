@@ -16,8 +16,8 @@ import java.util.ArrayList;
 public class Main extends Application {
 
     // Screen sizes
-    public static final  int SCREEN_WIDTH = 1400;
-    public static final  int SCREEN_HEIGHT = 1000;
+    public static final  int SCREEN_WIDTH = 1600;
+    public static final  int SCREEN_HEIGHT = (SCREEN_WIDTH/16) * 9;
 
     private ArrayList<String> input = new ArrayList<>();
     private static BorderPane bl;
@@ -59,7 +59,7 @@ public class Main extends Application {
         canvas.setOnMouseDragged(e -> controller.mouseDragged(e.getX(), e.getY(),e));
 
         setupGUI(primaryStage, scene, root,canvas);
-        controller.setDefMode(bl);
+        controller.setDefMode(bl,canvas);
     }
 
 
@@ -80,16 +80,16 @@ public class Main extends Application {
 
 
 
-        // bind the dimensions when the user resizes the window.
-        //canvas.widthProperty().bind(primaryStage.widthProperty());
         canvas.setWidth(SCREEN_WIDTH- EventLog.WIDTH - Visualisation.WIDTH);//TODO do better later
-        canvas.heightProperty().bind(primaryStage.heightProperty());
+        canvas.setHeight(SCREEN_HEIGHT - TopMenuBar.HEIGHT);
+
 
         lastTime = System.nanoTime();
         setupAnimationTimer(primaryStage,canvas);
 
         // Add the layout to the roocssEditorFldt
         root.getChildren().add(bl);
+        primaryStage.setResizable(false);
         primaryStage.setScene(scene);
         primaryStage.show();
     }

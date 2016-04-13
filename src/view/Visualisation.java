@@ -43,11 +43,15 @@ public class Visualisation implements MouseEvents {
     // Last time the logic was updated
     private long lastUpdate;
 
+    // Is the log currently shows on by def
+    private boolean logShown;
+
 
     /**
      * Constructs a new visualisation object with a default track and trains
      * */
     public Visualisation(){
+        this.logShown = true;
         this.vBox = getVisualisationButtons();
         this.eventLog = new EventLog();
 
@@ -178,9 +182,6 @@ public class Visualisation implements MouseEvents {
      * */
     public void startSimulation(){
         started = true;
-        for(DefSection d : railway){
-            System.out.println("Section " + d.getSection());
-        }
         this.modelTrack = new ModelTrack(getTrains(), new TrackBuilder(null).linkUpSections(railway));
         lastUpdate = System.currentTimeMillis();
     }
@@ -216,6 +217,19 @@ public class Visualisation implements MouseEvents {
     }
 
 
+
+    public void toggleLog(BorderPane bp){
+        if(logShown){
+            bp.getChildren().remove(eventLog);
+            logShown = !logShown;
+        }
+        else {
+            bp.setRight(eventLog);
+            logShown = !logShown;
+        }
+    }
+
+
     /**
      * Adds some default trains train to the starting track
      * */
@@ -240,6 +254,10 @@ public class Visualisation implements MouseEvents {
                 trains.add(drawableTrain);
             }
         }
+    }
+
+    public boolean logShowing(){
+        return this.logShown;
     }
 
 

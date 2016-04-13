@@ -1,10 +1,12 @@
 package view;
 
+import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.input.MouseEvent;
 import view.Drawable.DrawableTrain;
 import view.Drawable.track_types.DefSection;
+import view.Panes.EventLog;
 
 import java.util.List;
 
@@ -28,11 +30,14 @@ public class ProgramController implements MouseEvents {
     private BorderPane borderPane;
 
 
+    // Canvas
+    private Canvas canvas;
     /**
      * The default mode is the visualisation mode with it default track and trains
      * */
-    public void setDefMode(BorderPane borderPane){
+    public void setDefMode(BorderPane borderPane, Canvas canvas){
         visualisation = new Visualisation();
+        this.canvas = canvas;
         visualisation.addUIElementsToLayout(borderPane);
 
         visualisation.addDefaultTrains();
@@ -94,6 +99,8 @@ public class ProgramController implements MouseEvents {
      * Sets the mode of the program by removing UI elements from other mode and adding it's own.
      * */
     public void setVisualisationMode(List<DefSection> track, List<DrawableTrain> trains){
+        canvas.setWidth(canvas.getWidth() - EventLog.WIDTH);
+
         visualisation = new Visualisation();
         visualisation.setRailway(track);
         visualisation.setTrains(trains);
@@ -110,6 +117,12 @@ public class ProgramController implements MouseEvents {
         this.trackBuilder = new TrackBuilder(this);// Pass the controller to the builder
         visualisation.removeUIElementsFromLayout(borderPane);
         trackBuilder.addUIElementsToLayout(borderPane);
+
+        if(visualisation.logShowing()){
+            canvas.setWidth(canvas.getWidth() + EventLog.WIDTH);// WHY 20?????
+        }
+
+
         setMode(BUILDER_MODE);
     }
 
@@ -140,6 +153,22 @@ public class ProgramController implements MouseEvents {
 
     public void setBorderPane(BorderPane borderPane){this.borderPane = borderPane;}
 
+    public void toggleLogView(){
+        if(mode.equals(VISUALISATION_MODE)){
+            visualisation.toggleLog(borderPane);
+
+            if(visualisation.logShowing()){
+                canvas.setWidth(canvas.getWidth() - EventLog.WIDTH);
+            }
+            else {
+                canvas.setWidth(canvas.getWidth() + EventLog.WIDTH);
+            }
+
+        }
+    }
+
+    public  BorderPane getBorderPane(){return this.borderPane;}
+
     public double getCanvasWidth(){
         return borderPane.getCenter().getLayoutBounds().getWidth();
     }
@@ -147,4 +176,6 @@ public class ProgramController implements MouseEvents {
     public double getCanvasHeight(){
         return borderPane.getCenter().getLayoutBounds().getHeight();
     }
+
+    public Visualisation getVisualisation(){return this.visualisation;}
 }
