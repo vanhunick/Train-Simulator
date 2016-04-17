@@ -1,7 +1,5 @@
 package model;
 
-import view.Drawable.track_types.DefSection;
-
 import java.util.ArrayList;
 import java.util.List;
 

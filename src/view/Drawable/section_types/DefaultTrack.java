@@ -1,75 +1,65 @@
-package view.Drawable.track_types;
+package view.Drawable.section_types;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import model.Section;
+import view.Drawable.track_types.Track;
 
 import java.awt.*;
 
 /**
  * Created by Nicky on 25/03/2016.
  */
-public abstract class DefSection {
+public abstract class DefaultTrack {
     private boolean mouseOn;
 
     public static final int TRACK_WIDTH = 30;
     private double startX;
     private double startY;
     private double length;
-    private Section section;
     private boolean startPiece;
     private String direction;
+
+    private DefaultTrack to;
 
 
     // 0 is straight line 1 to 4 represent the section of a ring 5 is down straight piece
     private int drawID;
 
+    private int id;
+
     /**
      * Constructor for a piece that connects to another piece
      * */
-    public DefSection(Section section, int length, int drawID){
-        this.section = section;
+    public DefaultTrack(int length, int drawID, int id){
         this.length = length;
-        this.section = section;
         this.drawID = drawID;
+        this.id = id;
     }
 
     /**
      * Constructor for the starting piece
      * */
-    public DefSection(Section section, int startX, int startY, int length, int drawID, String direction){
-        this.section = section;
+    public DefaultTrack(int startX, int startY, int length, int drawID,int id, String direction){
         this.startX = startX;
         this.startY = startY;
         this.length = length;
-        this.section = section;
         this.drawID = drawID;
+        this.id = id;
         this.startPiece = true;
         this.direction = direction;
-        this.getSection().setTrainOn(true);
     }
 
-    public void draw(GraphicsContext g){System.out.println("Should be implemented in subclass");
-
-        if(getSection().getTrainOn()){
-            g.setStroke(Color.GREEN);
-        }
-
+    public void draw(GraphicsContext g){
+        System.out.println("Should be implemented in subclass");
     }
-//
-//    public boolean checkOnSectionAfterMovement(double curX, double curY, double dist){
-//        System.out.println("Should be implemented in subclass");
-//        return false;
-//    }
 
     public boolean checkOnAfterUpdate(Point curPoint,double lastSubAnle, double moveBy){
         System.out.println("Should be implemented in subclass");
         return true;
     }
 
-
-
-        public void setStart(DefSection from){
+    public void setStart(DefaultTrack from){
         System.out.println("Should be implemented in subclass");
     }
 
@@ -85,9 +75,6 @@ public abstract class DefSection {
         return startPiece;
     }
 
-    public Section getSection() {
-        return section;
-    }
 
     public double getLength() {
         return length;
@@ -122,6 +109,14 @@ public abstract class DefSection {
     }
 
     public void setLength(double length){this.length = length;}
+
+    public DefaultTrack getTo(){return this.to;}
+
+    public void setTo(DefaultTrack to){this.to = to;}
+
+    public int getId(){return this.id;}
+
+
 
     public double getNextX(double curX, double moveBy){
         System.out.println("Should be implemented in subclass");
@@ -161,9 +156,9 @@ public abstract class DefSection {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof DefSection)) return false;
+        if (!(o instanceof DefaultTrack)) return false;
 
-        DefSection that = (DefSection) o;
+        DefaultTrack that = (DefaultTrack) o;
 
         if (getMouseOn() != that.getMouseOn()) return false;
         if (Double.compare(that.getStartX(), getStartX()) != 0) return false;
@@ -171,7 +166,6 @@ public abstract class DefSection {
         if (Double.compare(that.getLength(), getLength()) != 0) return false;
         if (isStartPiece() != that.isStartPiece()) return false;
         if (getDrawID() != that.getDrawID()) return false;
-        if (!getSection().equals(that.getSection())) return false;
         return getDirection().equals(that.getDirection());
 
     }
@@ -187,7 +181,6 @@ public abstract class DefSection {
         result = 31 * result + (int) (temp ^ (temp >>> 32));
         temp = Double.doubleToLongBits(getLength());
         result = 31 * result + (int) (temp ^ (temp >>> 32));
-        result = 31 * result + getSection().hashCode();
         result = 31 * result + (isStartPiece() ? 1 : 0);
         result = 31 * result + getDirection().hashCode();
         result = 31 * result + getDrawID();

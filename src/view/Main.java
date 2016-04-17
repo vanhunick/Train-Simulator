@@ -58,6 +58,7 @@ public class Main extends Application {
         canvas.setOnMouseMoved(e -> controller.mouseMoved(e.getX(), e.getY(),e));
         canvas.setOnMouseDragged(e -> controller.mouseDragged(e.getX(), e.getY(),e));
 
+
         setupGUI(primaryStage, scene, root,canvas);
         controller.setDefMode(bl,canvas);
     }
@@ -77,12 +78,8 @@ public class Main extends Application {
         bl.setTop(topMenuBar);//Need to add first as it is being used to calculate offset
         bl.setCenter(canvas);
 
-
-
-
         canvas.setWidth(SCREEN_WIDTH- EventLog.WIDTH - Visualisation.WIDTH);//TODO do better later
         canvas.setHeight(SCREEN_HEIGHT - TopMenuBar.HEIGHT);
-
 
         lastTime = System.nanoTime();
         setupAnimationTimer(primaryStage,canvas);

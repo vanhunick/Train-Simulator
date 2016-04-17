@@ -26,8 +26,8 @@ public class TopMenuBar extends MenuBar {
         Menu menuView = new Menu("View");
 
         //List for file
-        MenuItem newTrackItem = new MenuItem("New Track");
-        MenuItem loadTrackItem = new MenuItem("Load Track");
+        MenuItem newTrackItem = new MenuItem("New StraightTrack");
+        MenuItem loadTrackItem = new MenuItem("Load StraightTrack");
         MenuItem simulateItem= new MenuItem("Simulate");
 
         //Handle file events
@@ -65,7 +65,7 @@ public class TopMenuBar extends MenuBar {
 
     // TODO implement
     public void handleLoadTrackPressed(ActionEvent e){
-        System.out.println("Load Track Pressed");
+        System.out.println("Load StraightTrack Pressed");
     }
 
 

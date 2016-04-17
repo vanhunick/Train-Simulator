@@ -1,8 +1,9 @@
-package view.Drawable.track_types;
+package view.Drawable.section_types;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import model.Section;
+import view.Drawable.track_types.Track;
 
 import java.awt.*;
 
@@ -10,24 +11,24 @@ import java.awt.*;
 /**
  * Created by Nicky on 25/03/2016.
  */
-public class StraightHoriz extends DefSection {
+public class StraightHoriz extends DefaultTrack {
     private static final int TRACK_WIDTH = 30;
 
     /**
      * Constructor for a piece that connects to another piece
      * */
-    public StraightHoriz(Section section, int length, int drawID){
-        super(section,length, drawID);
+    public StraightHoriz(int length, int drawID, int id){
+        super(length, drawID,id);
    }
 
     /**
      * Constructor for the starting piece
      * */
-    public StraightHoriz(Section section, int startX,  int startY, int length, int drawID, String direction){
-        super(section,startX,startY,length,drawID, direction);
+    public StraightHoriz(int startX,  int startY, int length, int drawID,int id, String direction){
+        super(startX,startY,length,drawID, id, direction);
     }
 
-    public void setStart(DefSection from){
+    public void setStart(DefaultTrack from){
         double startX = 0;
         double startY = 0;
 
@@ -49,7 +50,7 @@ public class StraightHoriz extends DefSection {
         else if(from.getDirection().equals("LEFT")){
             super.setDirection("LEFT");
             if(from.getDrawID() == 0){
-                startX =from.getStartX() - super.getLength();
+                startX = from.getStartX() - super.getLength();
                 startY = from.getStartY();
             }
             else if(from.getDrawID() == 2){
@@ -149,13 +150,14 @@ public class StraightHoriz extends DefSection {
 
 
     public void draw(GraphicsContext g) {
-        if(super.getMouseOn() || super.getSection().getTrainOn()){
+        if(super.getMouseOn() ){//|| super.getSection().getTrainOn()
             g.setStroke(Color.GREEN);
         }
 
+
+
         g.strokeLine(super.getStartX(), super.getStartY(), super.getStartX() + super.getLength(), super.getStartY());
         g.strokeLine(super.getStartX(), super.getStartY() + TRACK_WIDTH, super.getStartX() + super.getLength(), super.getStartY()+ TRACK_WIDTH);
-
         g.setStroke(Color.WHITE);
     }
 

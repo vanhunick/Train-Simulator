@@ -9,7 +9,7 @@ import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Modality;
-import view.Drawable.track_types.DefSection;
+import view.Drawable.section_types.DefaultTrack;
 
 
 /**
@@ -26,14 +26,14 @@ public class TrackMenu {
     private boolean canDetect;
     private String curDetectSelection;
 
-    private DefSection section;
+    private DefaultTrack section;
 
-    public TrackMenu(DefSection section) {
+    public TrackMenu(DefaultTrack section) {
         this.section = section;
 
         Dialog dialog = new Dialog<>();
         dialog.initModality(Modality.WINDOW_MODAL);
-        dialog.setTitle("Edit Track");
+        dialog.setTitle("Edit StraightTrack");
 
         dialog.setHeaderText("Enter track details");
 

@@ -1,4 +1,4 @@
-package view.Drawable.track_types;
+package view.Drawable.section_types;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -9,27 +9,27 @@ import java.awt.*;
 /**
  * Created by Nicky on 25/03/2016.
  */
-public class StraightVert extends DefSection {
+public class StraightVert extends DefaultTrack {
     private static final int TRACK_WIDTH = 30;
 
     /**
      * Constructor for a piece that connects to another piece
      * */
-    public StraightVert(Section section, int length, int drawID){
-        super(section,length, drawID);
+    public StraightVert(int length, int drawID, int id){
+        super(length, drawID, id);
     }
 
     /**
      * Constructor for the starting piece
      * */
-    public StraightVert(Section section, int startX, int startY, int length, int drawID, String direction){
-        super(section,startX,startY,length,drawID, direction);
+    public StraightVert(int startX, int startY, int length, int drawID, String direction, int id){
+        super(startX,startY,length,drawID,id, direction );
     }
 
     /**
      * Workds out where to start drawing the piece based on the piece it came from
      * */
-    public void setStart(DefSection from){
+    public void setStart(DefaultTrack from){
         double startX = 0;
         double startY = 0;
 
@@ -139,7 +139,7 @@ public class StraightVert extends DefSection {
 
 
     public void draw(GraphicsContext g) {
-        if(super.getMouseOn() || super.getSection().getTrainOn()){
+        if(super.getMouseOn() ){//|| super.getSection().getTrainOn()
             g.setStroke(Color.GREEN);
         }
 

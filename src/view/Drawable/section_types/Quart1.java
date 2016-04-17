@@ -1,4 +1,4 @@
-package view.Drawable.track_types;
+package view.Drawable.section_types;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -6,32 +6,31 @@ import javafx.scene.shape.ArcType;
 import model.Section;
 
 import java.awt.*;
-import java.util.ArrayList;
 
 /**
  * Created by Nicky on 25/03/2016.
  */
-public class Quart1 extends DefSection {
+public class Quart1 extends DefaultTrack {
     private static final int TRACK_WIDTH = 30;
 
     /**
      * Constructor for a piece that connects to another piece
      * */
-    public Quart1(Section section, int length, int drawID){
-        super(section,length, drawID);
+    public Quart1(int length, int drawID, int id){
+        super(length, drawID, id);
     }
 
     /**
      * Constructor for the starting piece
      * */
-    public Quart1(Section section, int startX, int startY, int length, int drawID, String direction){
-        super(section,startX,startY,length,drawID, direction);
+    public Quart1(int startX, int startY, int length, int drawID, String direction, int id){
+        super(startX,startY,length,drawID,id, direction );
     }
 
     /**
      * Works out where to start drawing the piece based on the piece it came from
      * */
-    public void setStart(DefSection from){
+    public void setStart(DefaultTrack from){
         double startX = 0;
         double startY = 0;
 
@@ -85,7 +84,7 @@ public class Quart1 extends DefSection {
     }
 
     public void draw(GraphicsContext g) {
-        if(super.getMouseOn() || super.getSection().getTrainOn()){
+        if(super.getMouseOn()){// ||super.getSection().getTrainOn()
             g.setStroke(Color.GREEN);
         }
 
@@ -103,11 +102,10 @@ public class Quart1 extends DefSection {
         double deltaX = newPoint.getX() - oldX;
         double deltaY = newPoint.getY() - oldY;
         double degree = ((Math.atan2(deltaY, deltaX)));
-        double angle = degree * 180 / 3.14;
+        double angle = degree * 180 / Math.PI;
 
-        if(angle<0)
-        {
-            return angle = 360+angle;
+        if(angle<0) {
+            return 360+angle;
         }
         return angle;
     }

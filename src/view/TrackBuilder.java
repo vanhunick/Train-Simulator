@@ -12,7 +12,7 @@ import javafx.scene.paint.Color;
 import model.Section;
 import model.Train;
 import view.Drawable.DrawableTrain;
-import view.Drawable.track_types.*;
+import view.Drawable.section_types.*;
 import view.Panes.ErrorDialog;
 import view.Panes.TrackMenu;
 import view.Panes.TrainDialog;
@@ -47,10 +47,10 @@ public class TrackBuilder implements MouseEvents{
     private double screenHeight;
 
     // The sections drawn to select from
-    private List<DefSection> sections;
+    private List<DefaultTrack> sections;
 
     // The section that represent the track
-    private List<DefSection> sectionsForTrack;
+    private List<DefaultTrack> sectionsForTrack;
 
     // The added trains to the track
     private List<DrawableTrain> trains;
@@ -80,7 +80,7 @@ public class TrackBuilder implements MouseEvents{
         this.vBox = createBuilderButtons();
         this.sectionsForTrack = new ArrayList<>();
         this.trains = new ArrayList<>();
-        this.sections = setUpDrawPieces();
+//        this.sections = setUpDrawPieces();
     }
 
 
@@ -90,7 +90,7 @@ public class TrackBuilder implements MouseEvents{
         this.shownPanelStartX = screenWidth - boxSize - boxGap*2;
         shownPanelStartX = screenWidth - (boxSize - (boxGap*2));
         this.boxSize = ((screenHeight - 50 - ((NUMB_PIECES*boxGap)+boxGap))/NUMB_PIECES);
-        this.sections = setUpDrawPieces();
+//        this.sections = setUpDrawPieces();
     }
 
     public void update(){}
@@ -103,7 +103,7 @@ public class TrackBuilder implements MouseEvents{
     public void refresh(GraphicsContext gc){
 
         //Draw the currently created track
-        for(DefSection d : sectionsForTrack){
+        for(DefaultTrack d : sectionsForTrack){
             gc.setStroke(Color.WHITE);
             d.draw(gc);
         }
@@ -146,7 +146,7 @@ public class TrackBuilder implements MouseEvents{
         }
 
         gc.setLineWidth(5);
-        for(DefSection ds : sections){
+        for(DefaultTrack ds : sections){
             ds.draw(gc);
         }
         gc.setLineWidth(1);
@@ -179,9 +179,9 @@ public class TrackBuilder implements MouseEvents{
         VBox vBox = new VBox(8);
         vBox.setPadding(new Insets(5,5,5,5));
 
-        Button sim = new Button("Simulate Track");
-        Button clear = new Button("Clear Track");
-        Button undo = new Button("Undo Track");
+        Button sim = new Button("Simulate StraightTrack");
+        Button clear = new Button("Clear StraightTrack");
+        Button undo = new Button("Undo StraightTrack");
         Button addTrainMenu = new Button("Add Train");
 
         CheckBox alternate = new CheckBox("Alternate");
@@ -219,8 +219,8 @@ public class TrackBuilder implements MouseEvents{
         }
 
         //must link of the sections inside the drawing sections for the simulation
-        linkUpSections(sectionsForTrack);
-        controller.setVisualisationMode(sectionsForTrack, trains);
+//        linkUpSections(sectionsForTrack);
+//        controller.setVisualisationMode(sectionsForTrack, trains);
     }
 
 
@@ -260,20 +260,20 @@ public class TrackBuilder implements MouseEvents{
      *
      * @param trackStartID the id of the track to start on
      * */
-    public boolean validTrainStartLocation(int trackStartID){
-        for(DefSection s : sectionsForTrack){
-            if(s.getSection().getID() == trackStartID){
-                for(DrawableTrain t : trains){
-                    if(t.getCurSection().getSection().getID() == trackStartID){
-                        return false;// Track does exist but there is already a train on it
-                    }
-                    return true;
-                }
-            }
-        }
-        //no track with that ID exists
-        return false;
-    }
+//    public boolean validTrainStartLocation(int trackStartID){
+//        for(DefaultTrack s : sectionsForTrack){
+//            if(s.getSection().getID() == trackStartID){
+//                for(DrawableTrain t : trains){
+//                    if(t.getCurTrack().getSection().getID() == trackStartID){
+//                        return false;// StraightTrack does exist but there is already a train on it
+//                    }
+//                    return true;
+//                }
+//            }
+//        }
+//        //no track with that ID exists
+//        return false;
+//    }
 
     /**
      *
@@ -282,52 +282,57 @@ public class TrackBuilder implements MouseEvents{
         TrainDialog td = new TrainDialog(this);
 
 
-        for(DefSection s : sectionsForTrack){
-            if(s.getSection().getID() == td.getStartId()){//section the train should start on
+        for(DefaultTrack s : sectionsForTrack){
+//            if(s.getSection().getID() == td.getStartId()){//section the train should start on
 
                 //Create the train
                 Train train = new Train(td.getId(),td.getLength(),80,td.getStartId(),true);
 
                 // Create the drawable train
-                DrawableTrain drawableTrain = new DrawableTrain(train, s);
-                trains.add(drawableTrain);
+//                DrawableTrain drawableTrain = new DrawableTrain(train, s,s.getSection());
+//                trains.add(drawableTrain);
             }
-        }
+//        }
     }
 
     /**
      * Creates a very basic railway with one track per section
      * */
-    public Section[] linkUpSections(List<DefSection> sections){
-        Section[] railway = new Section[sections.size()];
+//    public Section[] linkUpSections(List<DefaultTrack> sections){
+//        Section[] railway = new Section[sections.size()];
+//
+//        Section start = sections.get(0).getSection();
+//        railway[0] = start;
+//        for(int i = 1; i < sections.size(); i++){
+//            Section s = sections.get(i).getSection();
+//            s.setFrom(railway[i-1]);
+//            railway[i] = s;
+//        }
+//
+//        for(int i = 0; i < sections.size()-1; i++){
+//            railway[i].setTo(railway[i+1]);
+//        }
+//
+//        //link the last one to the start
+//        railway[railway.length-1].setTo(railway[0]);
+//        railway[0].setFrom(railway[sections.size()-1]);
+//
+//        for(Section s : railway){
+//        }
+//
+//        return railway;
+//    }
 
-        Section start = sections.get(0).getSection();
-        railway[0] = start;
-        for(int i = 1; i < sections.size(); i++){
-            Section s = sections.get(i).getSection();
-            s.setFrom(railway[i-1]);
-            railway[i] = s;
-        }
-
-        for(int i = 0; i < sections.size()-1; i++){
-            railway[i].setTo(railway[i+1]);
-        }
-
-        //link the last one to the start
-        railway[railway.length-1].setTo(railway[0]);
-        railway[0].setFrom(railway[sections.size()-1]);
-
-        for(Section s : railway){
-        }
-
-        return railway;
+    public Section[] linkUpDrawSections(List<DrawableSection> sections){
+        //TODO
+        return null;
     }
 
 
 
 
-    public DefSection getTrack(double x, double y){
-        for(DefSection s : sectionsForTrack){
+    public DefaultTrack getTrack(double x, double y){
+        for(DefaultTrack s : sectionsForTrack){
             if(s.containsPoint(x,y)){
                 return s;
             }
@@ -335,7 +340,7 @@ public class TrackBuilder implements MouseEvents{
         return null;
     }
 
-    public void showTrackMenu(DefSection ds){
+    public void showTrackMenu(DefaultTrack ds){
         TrackMenu tm = new TrackMenu(ds);
 
         ds.setLength(tm.getLength());
@@ -355,7 +360,7 @@ public class TrackBuilder implements MouseEvents{
 
         if(e.getButton().equals(MouseButton.PRIMARY)){
             if(e.getClickCount() == 2){
-                DefSection s = getTrack(x,y);
+                DefaultTrack s = getTrack(x,y);
                 if(s != null){
                     showTrackMenu(s);
                 }
@@ -372,7 +377,7 @@ public class TrackBuilder implements MouseEvents{
         }
 
         if(sectionsForTrack.size() < numbSections){
-            curId--;//Track was removed can free vup ID
+            curId--;//StraightTrack was removed can free vup ID
         }
         else if(sectionsForTrack.size() > numbSections){
             curId++;//Added a track need to increment the ID
@@ -381,7 +386,7 @@ public class TrackBuilder implements MouseEvents{
 
     @Override
     public void mouseMoved(double x, double y, MouseEvent e){
-        for(DefSection d : sectionsForTrack){
+        for(DefaultTrack d : sectionsForTrack){
             if(d.containsPoint(x,y)){
                 d.setMouseOn(true);
             }
@@ -397,86 +402,86 @@ public class TrackBuilder implements MouseEvents{
     }
 
 
-
-    public void addFirstPiece(){
-
-        DefSection ds0 = null;
-        if(selectedBox == 0){
-            ds0 = new StraightHoriz(new Section(curId, 100, null, null, null),(int)trackStartX,(int)trackStartY, (int)pieceSize,0, "RIGHT");
-
-        }
-        else if(selectedBox == 1){
-            ds0 = new Quart1(new Section(curId, 200, null, null, null),(int)trackStartX,(int)trackStartY, (int)pieceSize*2,1, "RIGHT");
-        }
-        else if(selectedBox == 2){
-            ds0 = new Quart2(new Section(curId, 200, null, null, null),(int)trackStartX,(int)trackStartY, (int)pieceSize*2,2, "DOWN");
-        }
-        else if(selectedBox == 3){
-            ds0 = new Quart3(new Section(curId, 200, null, null, null),(int)trackStartX,(int)trackStartY, (int)pieceSize*2,3, "LEFT");
-        }
-        else if(selectedBox == 4){
-            ds0 = new Quart4(new Section(curId, 200, null, null, null),(int)trackStartX,(int)trackStartY, (int)pieceSize*2,4, "UP");
-        }
-        else if(selectedBox == 5){
-            ds0 = new StraightVert(new Section(curId, 100, null, null, null),(int)trackStartX,(int)trackStartY, (int)pieceSize*2,5, "DOWN");
-        }
-        else{
-            // No boxes were selected so don't add null
-            return;
-        }
-        if(alternate){
-            if(shouldDetect){
-                ds0.getSection().setCandetect(true);
-            }
-            else{
-                ds0.getSection().setCandetect(false);
-            }
-            shouldDetect = !shouldDetect;
-        }
-
-        sectionsForTrack.add(ds0);
-    }
+//
+//    public void addFirstPiece(){
+//
+//        DefaultTrack ds0 = null;
+//        if(selectedBox == 0){
+//            ds0 = new StraightHoriz(new Section(curId, 100, null, null, null),(int)trackStartX,(int)trackStartY, (int)pieceSize,0, "RIGHT");
+//
+//        }
+//        else if(selectedBox == 1){
+//            ds0 = new Quart1(new Section(curId, 200, null, null, null),(int)trackStartX,(int)trackStartY, (int)pieceSize*2,1, "RIGHT");
+//        }
+//        else if(selectedBox == 2){
+//            ds0 = new Quart2(new Section(curId, 200, null, null, null),(int)trackStartX,(int)trackStartY, (int)pieceSize*2,2, "DOWN");
+//        }
+//        else if(selectedBox == 3){
+//            ds0 = new Quart3(new Section(curId, 200, null, null, null),(int)trackStartX,(int)trackStartY, (int)pieceSize*2,3, "LEFT");
+//        }
+//        else if(selectedBox == 4){
+//            ds0 = new Quart4(new Section(curId, 200, null, null, null),(int)trackStartX,(int)trackStartY, (int)pieceSize*2,4, "UP");
+//        }
+//        else if(selectedBox == 5){
+//            ds0 = new StraightVert(new Section(curId, 100, null, null, null),(int)trackStartX,(int)trackStartY, (int)pieceSize*2,5, "DOWN");
+//        }
+//        else{
+//            // No boxes were selected so don't add null
+//            return;
+//        }
+//        if(alternate){
+//            if(shouldDetect){
+//                ds0.getSection().setCandetect(true);
+//            }
+//            else{
+//                ds0.getSection().setCandetect(false);
+//            }
+//            shouldDetect = !shouldDetect;
+//        }
+//
+//        sectionsForTrack.add(ds0);
+//    }
 
     private boolean shouldDetect = true;
 
 
     public void addPiece(){
         if(sectionsForTrack.size() == 0){
-            addFirstPiece();
+//            addFirstPiece();
             return;
         }
 
-        DefSection ds1 = null;
+        DefaultTrack ds1 = null;
 
-        if(selectedBox == 0){
-            ds1 = new StraightHoriz(new Section(curId, 100, null, null, null), (int)pieceSize,0);
-
-        }
-        else if(selectedBox == 1){
-            ds1 = new Quart1(new Section(curId, 200, null, null, null), (int)pieceSize*2,1);
-        }
-        else if(selectedBox == 2){
-            ds1 = new Quart2(new Section(curId, 200, null, null, null), (int)pieceSize*2,2);
-        }
-        else if(selectedBox == 3){
-            ds1 = new Quart3(new Section(curId, 200, null, null, null), (int)pieceSize*2,3);
-        }
-        else if(selectedBox == 4){
-            ds1 = new Quart4(new Section(curId, 200, null, null, null), (int)pieceSize*2,4);
-        }
-        else if(selectedBox == 5){
-            ds1 = new StraightVert(new Section(curId, 100, null, null, null), (int)pieceSize,5);
-        }
-        else {
-            return; // No box selected
-        }
+//        if(selectedBox == 0){
+//            ds1 = new StraightHoriz(new Section(curId, 100, null, null, null), (int)pieceSize,0);
+//
+//        }
+//        else if(selectedBox == 1){
+//            ds1 = new Quart1(new Section(curId, 200, null, null, null), (int)pieceSize*2,1);
+//        }
+//        else if(selectedBox == 2){
+//            ds1 = new Quart2(new Section(curId, 200, null, null, null), (int)pieceSize*2,2);
+//        }
+//        else if(selectedBox == 3){
+//            ds1 = new Quart3(new Section(curId, 200, null, null, null), (int)pieceSize*2,3);
+//        }
+//        else if(selectedBox == 4){
+//            ds1 = new Quart4(new Section(curId, 200, null, null, null), (int)pieceSize*2,4);
+//        }
+//        else if(selectedBox == 5){
+//            ds1 = new StraightVert(new Section(curId, 100, null, null, null), (int)pieceSize,5);
+//        }
+//        else {
+//            return; // No box selected
+//        }
 
         if(alternate){
             if(shouldDetect){
-                ds1.getSection().setCandetect(true);
+//                ds1.getSection().setCandetect(true);
             }
             else{
-                ds1.getSection().setCandetect(false);
+//                ds1.getSection().setCandetect(false);
             }
             shouldDetect = !shouldDetect;
         }
@@ -502,56 +507,56 @@ public class TrackBuilder implements MouseEvents{
         return false;
     }
 
-    public List<DefSection> getCreatedTrack(){
+    public List<DefaultTrack> getCreatedTrack(){
         return sectionsForTrack;
     }
 
-    public List<DefSection> setUpDrawPieces(){
-        List<DefSection> sections = new ArrayList<>();
-
-        double middleX = (screenWidth - boxSize - boxGap) + (boxSize/2);//Start of the box to refresh in
-        double middleY = 10 + boxGap + (boxSize/2);
-
-        double size = boxSize - (boxGap);
-        double y = middleY - DefSection.TRACK_WIDTH/2;
-        double x = middleX - (size/2);
-
-        DefSection ds0 = new StraightHoriz(new Section(2, 100, null, null, null),(int)x,(int)y, (int)size,0, "LEFT");
-
-        x = middleX - size/4;
-        y = middleY + boxSize + boxGap - (size/2) + size/4;
-
-        DefSection ds1 = new Quart1(new Section(2, 100, null, null, null),(int)(x) ,(int)y, (int)size,1, "RIGHT");
-
-        y += boxSize + boxGap;
-        x = middleX - size/2 - size/4;
-
-        DefSection ds2 = new Quart2(new Section(2, 100, null, null, null),(int)(x),(int)y, (int)(size),2, "RIGHT");
-
-        x = middleX - size/2 - size/4;
-        y += boxSize + boxGap - size/2;
-
-        DefSection ds3 = new Quart3(new Section(2, 100, null, null, null),(int)(x),(int)y, (int)(size),3, "RIGHT");
-
-        y += boxSize + boxGap;
-        x = middleX - size/2 + size/4 ;
-
-        DefSection ds4 = new Quart4(new Section(2, 100, null, null, null),(int)(x),(int)y, (int)(size),4, "RIGHT");
-
-        x = middleX - DefSection.TRACK_WIDTH /2 + size/4;
-        y+= boxSize + boxGap + size/4;
-
-        DefSection ds5 = new StraightVert(new Section(2, 100, null, null, null),(int)(x),(int)y, (int)(size),5, "RIGHT");
-
-        sections.add(ds0);
-        sections.add(ds1);
-        sections.add(ds2);
-        sections.add(ds3);
-        sections.add(ds4);
-        sections.add(ds5);
-
-        return sections;
-    }
+//    public List<DefaultTrack> setUpDrawPieces(){
+//        List<DefaultTrack> sections = new ArrayList<>();
+//
+//        double middleX = (screenWidth - boxSize - boxGap) + (boxSize/2);//Start of the box to refresh in
+//        double middleY = 10 + boxGap + (boxSize/2);
+//
+//        double size = boxSize - (boxGap);
+//        double y = middleY - DefaultTrack.TRACK_WIDTH/2;
+//        double x = middleX - (size/2);
+//
+//        DefaultTrack ds0 = new StraightHoriz(new Section(2, 100, null, null, null),(int)x,(int)y, (int)size,0, "LEFT");
+//
+//        x = middleX - size/4;
+//        y = middleY + boxSize + boxGap - (size/2) + size/4;
+//
+//        DefaultTrack ds1 = new Quart1(new Section(2, 100, null, null, null),(int)(x) ,(int)y, (int)size,1, "RIGHT");
+//
+//        y += boxSize + boxGap;
+//        x = middleX - size/2 - size/4;
+//
+//        DefaultTrack ds2 = new Quart2(new Section(2, 100, null, null, null),(int)(x),(int)y, (int)(size),2, "RIGHT");
+//
+//        x = middleX - size/2 - size/4;
+//        y += boxSize + boxGap - size/2;
+//
+//        DefaultTrack ds3 = new Quart3(new Section(2, 100, null, null, null),(int)(x),(int)y, (int)(size),3, "RIGHT");
+//
+//        y += boxSize + boxGap;
+//        x = middleX - size/2 + size/4 ;
+//
+//        DefaultTrack ds4 = new Quart4(new Section(2, 100, null, null, null),(int)(x),(int)y, (int)(size),4, "RIGHT");
+//
+//        x = middleX - DefaultTrack.TRACK_WIDTH /2 + size/4;
+//        y+= boxSize + boxGap + size/4;
+//
+//        DefaultTrack ds5 = new StraightVert(new Section(2, 100, null, null, null),(int)(x),(int)y, (int)(size),5, "RIGHT");
+//
+//        sections.add(ds0);
+//        sections.add(ds1);
+//        sections.add(ds2);
+//        sections.add(ds3);
+//        sections.add(ds4);
+//        sections.add(ds5);
+//
+//        return sections;
+//    }
 
 }
 

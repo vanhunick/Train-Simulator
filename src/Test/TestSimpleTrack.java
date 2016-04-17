@@ -1,7 +1,7 @@
 package Test;
 
 import model.Section;
-import model.Track;
+import view.Drawable.section_types.StraightTrack;
 import model.Train;
 
 /**
@@ -40,7 +40,7 @@ public class TestSimpleTrack {
         return railway;
     }
 
-    public Track createTrack(String type, int id){
+    public StraightTrack createTrack(String type, int id){
         return null;
     }
 

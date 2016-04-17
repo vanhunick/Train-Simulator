@@ -1,5 +1,9 @@
 package model;
 
+import view.Drawable.section_types.DefaultTrack;
+import view.Drawable.section_types.StraightTrack;
+import view.Drawable.track_types.Track;
+
 /**
  * Created by vanhunick on 22/03/16.
  */
@@ -8,13 +12,13 @@ public class Section {
     private double length;
     private Section from;
     private Section to;
-    private Track[] tracks;
+    private DefaultTrack[] tracks;
     private int id;
     private boolean trainOn;
 
     private boolean canDetect;
 
-    public Section(int id, double length, Section from, Section to, Track[] tracks){
+    public Section(int id, double length, Section from, Section to, DefaultTrack[] tracks){
         this.canDetect = false;
         this.id = id;
         this.length = length;
@@ -23,14 +27,22 @@ public class Section {
         this.tracks = tracks;
     }
 
+    public Section(int id, double length, DefaultTrack[] tracks){
+        this.canDetect = false;
+        this.id = id;
+        this.length = length;
+        this.tracks = tracks;
+    }
+
+    //TODO needed?
     /**
      * Returns the given section matching the id
      * null if it does not have it
      * */
-    public Track getTrack(int id){
-        for(Track s : tracks){
-            if(s.getId() == id){
-                return s;
+    public StraightTrack getTrack(DefaultTrack dt){
+        for(DefaultTrack t : tracks){
+            if(t.equals(dt)){
+//                return
             }
         }
         return null;
@@ -40,7 +52,7 @@ public class Section {
      * Returns if a section is contained within this track
      * */
     public boolean containsTrack(int id){
-        for(Track s : tracks){
+        for(DefaultTrack s : tracks){
             if(s.getId() == id){
                 return true;
             }
@@ -48,6 +60,7 @@ public class Section {
         return false;
     }
 
+    public DefaultTrack[] getTracks(){return this.tracks;}
 
     public void setFrom(Section from){this.from = from;}
 

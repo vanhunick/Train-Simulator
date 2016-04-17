@@ -5,7 +5,8 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.input.MouseEvent;
 import view.Drawable.DrawableTrain;
-import view.Drawable.track_types.DefSection;
+import view.Drawable.section_types.DefaultTrack;
+import view.Drawable.section_types.DrawableSection;
 import view.Panes.EventLog;
 
 import java.util.List;
@@ -53,6 +54,7 @@ public class ProgramController implements MouseEvents {
     public void setMode(String modeToSet){
         if(modeToSet.equals(mode))return;//mode passed in already set
 
+
         if(modeToSet.equals(VISUALISATION_MODE)){
             this.mode = VISUALISATION_MODE;
             curMode = visualisation;
@@ -73,6 +75,7 @@ public class ProgramController implements MouseEvents {
      * Updates the part of the program that is in focus
      * */
     public void update(){
+        System.out.println(mode);
         if(mode.equals(VISUALISATION_MODE)){
             visualisation.update();
         }
@@ -98,7 +101,7 @@ public class ProgramController implements MouseEvents {
     /**
      * Sets the mode of the program by removing UI elements from other mode and adding it's own.
      * */
-    public void setVisualisationMode(List<DefSection> track, List<DrawableTrain> trains){
+    public void setVisualisationMode(List<DrawableSection> track, List<DrawableTrain> trains){
         canvas.setWidth(canvas.getWidth() - EventLog.WIDTH);
 
         visualisation = new Visualisation();
