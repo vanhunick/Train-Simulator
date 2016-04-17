@@ -98,81 +98,6 @@ public class Visualisation implements MouseEvents {
      * Checks if a drawable train is on a track given after it has moved a certain amount based on its speed
      * changes the trains track is no longer on the same track and send this information to the controller.
      * */
-//    public void onSectionCheck(DrawableTrain t){
-//        DefaultTrack curTrack = t.getCurTrack();
-//        double speed = t.getTrain().getSpeed();
-//
-//        if(lastUpdate == 0){
-//            lastUpdate = System.currentTimeMillis();
-//        }
-//
-//        boolean boundryCheck = false;
-//
-//        if(t.getDrawableSection().isBoundryTrack(curTrack.getSection().getID())){
-//            boundryCheck = true;
-//        }
-//
-//        long curTime = System.currentTimeMillis();
-//        long timeChanged = curTime - lastUpdate;
-//        timeChanged = 20;
-//        double pixelsToMove = (timeChanged/1000.0)*speed;
-//        lastUpdate = System.currentTimeMillis();
-//
-//        // Checks if the train will still be on the same track after moving if not update the current track
-//        if(!curTrack.checkOnAfterUpdate(t.getCurentLocation(),t.lastPointOnCurve,pixelsToMove)){
-//
-//            for(int i = 0; i < railway.size(); i++){
-//
-//                // Check if the current track
-//                if(railway.get(i).getSection().getID() == curTrack.getSection().getID()){
-//
-//                    // Notifies the model the section has changed state
-//                    if(curTrack.getSection().canDetect() && boundryCheck){
-//                        System.out.println(curTrack.getSection());
-//                        modelTrack.sectionChanged(curTrack.getSection().getID());
-//                    }
-//
-//                    // Check if the current railway is the last in the list
-//                    if(i == railway.size() -1){
-//
-//                        // Tell the first section in the railway it has changed
-//                        if(railway.get(0).getSection().canDetect() && boundryCheck){
-//                            eventLog.appendText(modelTrack.updateTrainOnSection(t.getTrain(),railway.get(0).getSection(),curTrack.getSection()));
-//                            modelTrack.sectionChanged(railway.get(0).getSection().getID());
-//                        }
-//
-//                        //Set the current track for the train
-//                        t.setCurTrack(curTrack.getTo());
-//
-//                        if(boundryCheck){
-//                            // Grab the string representing the event and sent to event log
-//
-//                            t.setCurSection(railway.get(0));//TODO check direction of train if
-//                        }
-//                    }
-//                    else {
-//                        // The current section is not the last in the list so just increment section TODO check direction decrement if false increment if true
-//                        if(railway.get(i+1).getSection().canDetect()){
-//                            eventLog.appendText(modelTrack.updateTrainOnSection(t.getTrain(), railway.get(i + 1).getSection(),curTrack.getSection()));
-//                            modelTrack.sectionChanged(railway.get(i+1).getSection().getID());
-//                        }
-//
-//                        //Update the track the train is on
-//                        t.setCurTrack(curTrack.getTo());
-//
-//                        // Update the section only if it the last track which means the section has changed
-//                        if(boundryCheck){
-//
-//                            t.setCurSection(railway.get(i+1));
-//                        }
-//                    }
-//                    return;
-//                }
-//            }
-//        }
-//
-//    }
-
     public void onSectionCheck(DrawableTrain t){
         DrawableSection curSection = t.getCurSection();
         DefaultTrack curTrack = t.getCurTrack();
@@ -236,7 +161,7 @@ public class Visualisation implements MouseEvents {
      * */
     public void startSimulation(){
         started = true;
-        this.modelTrack = new ModelTrack(getTrains(), new TrackBuilder(null).linkUpDrawSections(railway));
+//        this.modelTrack = new ModelTrack(getTrains(), new TrackBuilder(null).linkUpDrawSections(railway));
         lastUpdate = System.currentTimeMillis();
     }
 
@@ -304,7 +229,6 @@ public class Visualisation implements MouseEvents {
     public boolean logShowing(){
         return this.logShown;
     }
-
 
     /**
      * Sets the railway to draw

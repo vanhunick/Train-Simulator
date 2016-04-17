@@ -50,10 +50,21 @@ public class TrackBuilder implements MouseEvents{
     private List<DefaultTrack> sections;
 
     // The section that represent the track
-    private List<DefaultTrack> sectionsForTrack;
+    private List<DefaultTrack> tracksInTrack;
 
     // The added trains to the track
     private List<DrawableTrain> trains;
+
+    // The sections the incapsulate the tracks
+    private List<DrawableSection> sectionsForTrack;
+
+    // All the tracks that have been created
+    private List<DefaultTrack> allTracks;
+
+    private DrawableSection curentSection;
+
+    // ID for section
+    private  int curSectionID;
 
     // Space between pieces in selection panel
     private double boxGap = 10;
@@ -78,7 +89,7 @@ public class TrackBuilder implements MouseEvents{
     public TrackBuilder(ProgramController controller){
         this.controller = controller;
         this.vBox = createBuilderButtons();
-        this.sectionsForTrack = new ArrayList<>();
+        this.tracksInTrack = new ArrayList<>();
         this.trains = new ArrayList<>();
 //        this.sections = setUpDrawPieces();
     }
@@ -90,7 +101,7 @@ public class TrackBuilder implements MouseEvents{
         this.shownPanelStartX = screenWidth - boxSize - boxGap*2;
         shownPanelStartX = screenWidth - (boxSize - (boxGap*2));
         this.boxSize = ((screenHeight - 50 - ((NUMB_PIECES*boxGap)+boxGap))/NUMB_PIECES);
-//        this.sections = setUpDrawPieces();
+        this.sections = setUpDrawPieces();
     }
 
     public void update(){}
@@ -103,7 +114,7 @@ public class TrackBuilder implements MouseEvents{
     public void refresh(GraphicsContext gc){
 
         //Draw the currently created track
-        for(DefaultTrack d : sectionsForTrack){
+        for(DefaultTrack d : tracksInTrack){
             gc.setStroke(Color.WHITE);
             d.draw(gc);
         }
@@ -183,6 +194,7 @@ public class TrackBuilder implements MouseEvents{
         Button clear = new Button("Clear StraightTrack");
         Button undo = new Button("Undo StraightTrack");
         Button addTrainMenu = new Button("Add Train");
+        Button completeSection = new Button("New Section");
 
         CheckBox alternate = new CheckBox("Alternate");
         alternate.setSelected(true);
@@ -192,11 +204,27 @@ public class TrackBuilder implements MouseEvents{
         undo.setOnAction(e -> undo());
         sim.setOnAction(e -> simulateTrack());
         clear.setOnAction(e -> clear());
+        completeSection.setOnAction(e -> newSection());
 
         vBox.getChildren().addAll(sim,clear,undo,addTrainMenu,alternate);
         vBox.setPrefWidth(WIDTH);
         return vBox;
     }
+
+
+    public void newSection(){
+        DefaultTrack[] defaultTracks = new DefaultTrack[tracksInTrack.size()];
+
+        for(int i = 0; i < defaultTracks.length; i++){
+            defaultTracks[i] = tracksInTrack.get(i);
+        }
+
+        sectionsForTrack.add(new DrawableSection(new Section(curSectionID,100.0,defaultTracks)));
+        curSectionID++;
+        tracksInTrack.clear();//new Section so clear the list
+    }
+
+
 
 
     /**
@@ -213,14 +241,24 @@ public class TrackBuilder implements MouseEvents{
      * the created track and trains
      * */
     public void simulateTrack(){
-        if(sectionsForTrack.size() == 0 || trains.size() == 0){
+        if(tracksInTrack.size() == 0 || trains.size() == 0){
             new ErrorDialog("No track or trains to simulate", "Error");
             return;
         }
 
         //must link of the sections inside the drawing sections for the simulation
-//        linkUpSections(sectionsForTrack);
-//        controller.setVisualisationMode(sectionsForTrack, trains);
+//        linkUpSections(tracksInTrack);
+
+        controller.setVisualisationMode(makeSections(tracksInTrack), trains);
+    }
+
+    public List<DrawableSection> makeSections(List<DefaultTrack> tracks){
+        List<DrawableSection> sections = new ArrayList<>();
+
+        //Could just make a new section for each track
+
+
+        return sections;
     }
 
 
@@ -228,8 +266,8 @@ public class TrackBuilder implements MouseEvents{
      * Undoes and addition of a track piece
      * */
     public void undo(){
-        if(sectionsForTrack.size() > 0){
-            this.sectionsForTrack.remove(sectionsForTrack.size()-1);
+        if(tracksInTrack.size() > 0){
+            this.tracksInTrack.remove(tracksInTrack.size()-1);
             this.shouldDetect = !shouldDetect;//reverse it
         }
     }
@@ -239,7 +277,7 @@ public class TrackBuilder implements MouseEvents{
      * Removes all added tracks from the list
      * */
     public void clear(){
-        sectionsForTrack.clear();
+        tracksInTrack.clear();
     }
 
 
@@ -260,20 +298,20 @@ public class TrackBuilder implements MouseEvents{
      *
      * @param trackStartID the id of the track to start on
      * */
-//    public boolean validTrainStartLocation(int trackStartID){
-//        for(DefaultTrack s : sectionsForTrack){
-//            if(s.getSection().getID() == trackStartID){
-//                for(DrawableTrain t : trains){
-//                    if(t.getCurTrack().getSection().getID() == trackStartID){
-//                        return false;// StraightTrack does exist but there is already a train on it
-//                    }
-//                    return true;
-//                }
-//            }
-//        }
-//        //no track with that ID exists
-//        return false;
-//    }
+    public boolean validTrainStartLocation(int trackStartID){
+        for(DefaultTrack s : allTracks){
+            if(s.getId() == trackStartID){
+                for(DrawableTrain t : trains){
+                    if(t.getCurTrack().getId() == trackStartID){
+                        return false;// StraightTrack does exist but there is already a train on it
+                    }
+                    return true;
+                }
+            }
+        }
+        //no track with that ID exists
+        return false;
+    }
 
     /**
      *
@@ -282,17 +320,17 @@ public class TrackBuilder implements MouseEvents{
         TrainDialog td = new TrainDialog(this);
 
 
-        for(DefaultTrack s : sectionsForTrack){
-//            if(s.getSection().getID() == td.getStartId()){//section the train should start on
+        for(DefaultTrack s : tracksInTrack){
+            if(s.getId() == td.getStartId()){//section the train should start on
 
                 //Create the train
                 Train train = new Train(td.getId(),td.getLength(),80,td.getStartId(),true);
 
                 // Create the drawable train
-//                DrawableTrain drawableTrain = new DrawableTrain(train, s,s.getSection());
+//                DrawableTrain drawableTrain = new DrawableTrain(train, s,s.getSection());//TODO make sections first
 //                trains.add(drawableTrain);
             }
-//        }
+        }
     }
 
     /**
@@ -323,16 +361,10 @@ public class TrackBuilder implements MouseEvents{
 //        return railway;
 //    }
 
-    public Section[] linkUpDrawSections(List<DrawableSection> sections){
-        //TODO
-        return null;
-    }
-
-
 
 
     public DefaultTrack getTrack(double x, double y){
-        for(DefaultTrack s : sectionsForTrack){
+        for(DefaultTrack s : tracksInTrack){
             if(s.containsPoint(x,y)){
                 return s;
             }
@@ -344,8 +376,6 @@ public class TrackBuilder implements MouseEvents{
         TrackMenu tm = new TrackMenu(ds);
 
         ds.setLength(tm.getLength());
-
-
     }
 
     @Override
@@ -356,7 +386,7 @@ public class TrackBuilder implements MouseEvents{
 
     @Override
     public void mouseClicked(double x, double y, MouseEvent e){
-        int numbSections = sectionsForTrack.size();
+        int numbSections = tracksInTrack.size();
 
         if(e.getButton().equals(MouseButton.PRIMARY)){
             if(e.getClickCount() == 2){
@@ -376,17 +406,17 @@ public class TrackBuilder implements MouseEvents{
             }
         }
 
-        if(sectionsForTrack.size() < numbSections){
+        if(tracksInTrack.size() < numbSections){
             curId--;//StraightTrack was removed can free vup ID
         }
-        else if(sectionsForTrack.size() > numbSections){
+        else if(tracksInTrack.size() > numbSections){
             curId++;//Added a track need to increment the ID
         }
     }
 
     @Override
     public void mouseMoved(double x, double y, MouseEvent e){
-        for(DefaultTrack d : sectionsForTrack){
+        for(DefaultTrack d : tracksInTrack){
             if(d.containsPoint(x,y)){
                 d.setMouseOn(true);
             }
@@ -401,52 +431,54 @@ public class TrackBuilder implements MouseEvents{
 
     }
 
+    public void linkUpDrawSections(List<DrSection> railway){
 
-//
-//    public void addFirstPiece(){
-//
-//        DefaultTrack ds0 = null;
-//        if(selectedBox == 0){
-//            ds0 = new StraightHoriz(new Section(curId, 100, null, null, null),(int)trackStartX,(int)trackStartY, (int)pieceSize,0, "RIGHT");
-//
-//        }
-//        else if(selectedBox == 1){
-//            ds0 = new Quart1(new Section(curId, 200, null, null, null),(int)trackStartX,(int)trackStartY, (int)pieceSize*2,1, "RIGHT");
-//        }
-//        else if(selectedBox == 2){
-//            ds0 = new Quart2(new Section(curId, 200, null, null, null),(int)trackStartX,(int)trackStartY, (int)pieceSize*2,2, "DOWN");
-//        }
-//        else if(selectedBox == 3){
-//            ds0 = new Quart3(new Section(curId, 200, null, null, null),(int)trackStartX,(int)trackStartY, (int)pieceSize*2,3, "LEFT");
-//        }
-//        else if(selectedBox == 4){
-//            ds0 = new Quart4(new Section(curId, 200, null, null, null),(int)trackStartX,(int)trackStartY, (int)pieceSize*2,4, "UP");
-//        }
-//        else if(selectedBox == 5){
-//            ds0 = new StraightVert(new Section(curId, 100, null, null, null),(int)trackStartX,(int)trackStartY, (int)pieceSize*2,5, "DOWN");
-//        }
-//        else{
-//            // No boxes were selected so don't add null
-//            return;
-//        }
-//        if(alternate){
-//            if(shouldDetect){
-//                ds0.getSection().setCandetect(true);
-//            }
-//            else{
+    }
+
+    public void addFirstPiece(){
+
+        DefaultTrack ds0 = null;
+        if(selectedBox == 0){
+            ds0 = new StraightHoriz((int)trackStartX,(int)trackStartY, (int)pieceSize,0,curId, "RIGHT");
+        }
+        else if(selectedBox == 1){
+            ds0 = new Quart1((int)trackStartX,(int)trackStartY, (int)pieceSize*2,1, "RIGHT", curId);
+
+        }
+        else if(selectedBox == 2){
+            ds0 = new Quart2((int)trackStartX,(int)trackStartY, (int)pieceSize*2,2, "DOWN", curId);
+        }
+        else if(selectedBox == 3){
+            ds0 = new Quart3((int)trackStartX,(int)trackStartY, (int)pieceSize*2,3, "DOWN", curId);
+        }
+        else if(selectedBox == 4){
+            ds0 = new Quart4((int)trackStartX,(int)trackStartY, (int)pieceSize*2,4, "UP", curId);
+        }
+        else if(selectedBox == 5){
+            ds0 = new StraightVert((int)trackStartX,(int)trackStartY, (int)pieceSize,5, "DOWN",curId);
+        }
+        else{
+            // No boxes were selected so don't add null
+            return;
+        }
+        if(alternate){
+            if(shouldDetect){
+//                ds0.getSection().setCandetect(true);//TODO make into dection
+            }
+            else{
 //                ds0.getSection().setCandetect(false);
-//            }
-//            shouldDetect = !shouldDetect;
-//        }
-//
-//        sectionsForTrack.add(ds0);
-//    }
+            }
+            shouldDetect = !shouldDetect;
+        }
+
+        tracksInTrack.add(ds0);
+    }
 
     private boolean shouldDetect = true;
 
 
     public void addPiece(){
-        if(sectionsForTrack.size() == 0){
+        if(tracksInTrack.size() == 0){
 //            addFirstPiece();
             return;
         }
@@ -486,8 +518,8 @@ public class TrackBuilder implements MouseEvents{
             shouldDetect = !shouldDetect;
         }
 
-        ds1.setStart(sectionsForTrack.get(sectionsForTrack.size()-1));
-        sectionsForTrack.add(ds1);
+        ds1.setStart(tracksInTrack.get(tracksInTrack.size()-1));
+        tracksInTrack.add(ds1);
     }
 
     public void selectPiece(double x, double y){
@@ -508,7 +540,7 @@ public class TrackBuilder implements MouseEvents{
     }
 
     public List<DefaultTrack> getCreatedTrack(){
-        return sectionsForTrack;
+        return tracksInTrack;
     }
 
 //    public List<DefaultTrack> setUpDrawPieces(){
