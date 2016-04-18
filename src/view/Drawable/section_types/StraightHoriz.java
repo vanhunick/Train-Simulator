@@ -46,6 +46,10 @@ public class StraightHoriz extends DefaultTrack {
                 startX = from.getStartX() + from.getLength()/2;
                 startY = from.getStartY() + from.getLength() - TRACK_WIDTH;
             }
+            else if(from.getDrawID() == 6){
+                startX = from.getStartX() + from.getLength() - TRACK_WIDTH + from.getLength()/2;
+                startY = from.getStartY();
+            }
         }
         else if(from.getDirection().equals("LEFT")){
             super.setDirection("LEFT");

@@ -101,7 +101,7 @@ public class TrackBuilder implements MouseEvents{
         this.shownPanelStartX = screenWidth - boxSize - boxGap*2;
         shownPanelStartX = screenWidth - (boxSize - (boxGap*2));
         this.boxSize = ((screenHeight - 50 - ((NUMB_PIECES*boxGap)+boxGap))/NUMB_PIECES);
-        this.sections = setUpDrawPieces();
+//        this.sections = setUpDrawPieces();
     }
 
     public void update(){}
@@ -431,7 +431,7 @@ public class TrackBuilder implements MouseEvents{
 
     }
 
-    public void linkUpDrawSections(List<DrSection> railway){
+    public void linkUpDrawSections(List<DrawableSection> railway){
 
     }
 

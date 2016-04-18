@@ -256,17 +256,31 @@ public class Visualisation implements MouseEvents {
         Button stop = new Button("Stop");
         Button pause = new Button("Pause");
         Button event = new Button("Event");
+        Button toggleJunc = new Button("Toggle Junction");
+
 
         //Starts the simulation
         sim.setOnAction(e -> startSimulation());
         stop.setOnAction(e -> stopSimulation());
         pause.setOnAction(e -> pause());
         event.setOnAction(e -> startEventDialog());
+        toggleJunc.setOnAction(e -> toggleJunction());
 
-        vBox.getChildren().addAll(sim,stop, pause,event);
+        vBox.getChildren().addAll(sim,stop, pause,event,toggleJunc);
         vBox.setPrefWidth(WIDTH);
 
         return vBox;
+    }
+
+    public void toggleJunction(){
+        for(DrawableSection ds : railway){
+            for(DefaultTrack dt : ds.getTracks()){
+                if(dt instanceof JunctionTrack){
+                    JunctionTrack junk = (JunctionTrack)dt;
+                    junk.setThrown(!junk.getThrown());
+                }
+            }
+        }
     }
 
 
