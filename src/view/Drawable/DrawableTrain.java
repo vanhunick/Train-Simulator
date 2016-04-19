@@ -53,7 +53,7 @@ public class DrawableTrain implements Drawable{
         this.trainImageView = new ImageView(trainImage);
         this.params = new SnapshotParameters();
         params.setFill(Color.TRANSPARENT);
-        if(train.getOrientation()){
+        if(train.getOrientation() || !train.getDirection()){
             this.curRotation = 90;
         }
         else{
@@ -81,9 +81,9 @@ public class DrawableTrain implements Drawable{
         timeChanged = 20;
         double pixelsToMove = (timeChanged/1000.0)*speed;
 
-        this.currentLocation = curTrack.getNextPoint(currentLocation, lastPointOnCurve,pixelsToMove, train.getOrientation());
+        this.currentLocation = curTrack.getNextPoint(currentLocation, lastPointOnCurve,pixelsToMove, train.getOrientation(),train.getDirection());
 
-        curRotation = curTrack.getNextRotation(curRotation,pixelsToMove, train.getOrientation());
+        curRotation = curTrack.getNextRotation(curRotation,pixelsToMove, train.getOrientation(),train.getDirection());
         lastPointOnCurve++;
     }
 

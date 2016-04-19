@@ -98,19 +98,19 @@ public abstract class DefaultTrack {
 
     public int getId(){return this.id;}
 
-    public Point getNextPoint(Point cur, int lastSubAngle, double moveBy, boolean nat){System.out.println("Should be implemented in subclass");return null;}
+    public Point getNextPoint(Point cur, int lastSubAngle, double moveBy, boolean nat, boolean direction){System.out.println("Should be implemented in subclass");return null;}
 
     public void draw(GraphicsContext g){
         System.out.println("Should be implemented in subclass");
     }
 
-    public boolean checkOnAfterUpdate(Point curPoint,double lastSubAnle, double moveBy, boolean nat){System.out.println("Should be implemented in subclass");return true;}
+    public boolean checkOnAfterUpdate(Point curPoint,double lastSubAnle, double moveBy, boolean nat, boolean direction){System.out.println("Should be implemented in subclass");return true;}
 
     public void setStart(DefaultTrack from){System.out.println("Should be implemented in subclass");}
 
     public void setFrom(int from){this.from = from;}
 
-    public double getNextRotation(double curRotation, double speed, boolean nat){System.out.println("Should be implemented in subclass");return 90;}
+    public double getNextRotation(double curRotation, double speed, boolean nat, boolean direction){System.out.println("Should be implemented in subclass");return 90;}
 
     public double getInitialX(double trainWidth){System.out.println("Should be implemented in subclass");return 0;}
 

@@ -83,7 +83,7 @@ public class JunctionTrack extends DefaultTrack {
 
     private boolean onFirstSec = true;
 
-    public Point getNextPoint(Point cur, int lastSubAngle, double moveBy, boolean nat){
+    public Point getNextPoint(Point cur, int lastSubAngle, double moveBy, boolean nat, boolean forward){
         if(onFirstSec){
             double lengthOfQauter = lengthOfQuater();
             double points = (int)(lengthOfQauter/moveBy);
@@ -152,7 +152,7 @@ public class JunctionTrack extends DefaultTrack {
         }
     }
 
-    public double getNextRotation(double curRotation, double speed){
+    public double getNextRotation(double curRotation, double speed, boolean nat, boolean forward){
         if(onFirstSec){
             double l = lengthOfQuater();
 
@@ -185,9 +185,9 @@ public class JunctionTrack extends DefaultTrack {
 
     private String firstDirection = "UP";
 
-    public boolean checkOnAfterUpdate(Point curPoint, double lastSubAnle, double moveBy, boolean nat){
+    public boolean checkOnAfterUpdate(Point curPoint, double lastSubAnle, double moveBy, boolean nat, boolean forward){
         if(!thrown)return false;//since it just moves onto the next track
-        Point p = getNextPoint(curPoint, (int)lastSubAnle, moveBy, nat);
+        Point p = getNextPoint(curPoint, (int)lastSubAnle, moveBy, nat, forward);
 
         if(onFirstSec){
 

@@ -69,14 +69,14 @@ public class Quart3 extends DefaultTrack {
     }
 
 
-    public double getNextRotation(double curRotation, double speed, boolean nat){
+    public double getNextRotation(double curRotation, double speed, boolean nat, boolean forward){
         double l = lengthOfQuater();
 
         double updates = l/speed;
 
         double rotateCHange = 90/updates;
 
-        if(super.getDirection().equals("LEFT")){
+        if(super.getDirection().equals("LEFT") || !nat){
             return curRotation + rotateCHange;
         }
         else {
@@ -87,12 +87,12 @@ public class Quart3 extends DefaultTrack {
     /**
      * Returns the next point to move to on the curve given the amount to move
      * */
-    public Point getNextPoint(Point curPoint, int lastSubAngle, double moveBy, boolean nat){
+    public Point getNextPoint(Point curPoint, int lastSubAngle, double moveBy, boolean nat, boolean forward){
         double lengthOfQauter = lengthOfQuater();
         double points = (int)(lengthOfQauter/moveBy);
         double angle = 90;
 
-        if(super.getDirection().equals("LEFT")){
+        if(super.getDirection().equals("LEFT") || !nat){
             lastSubAngle = (int)points - lastSubAngle;
         }
 
@@ -121,25 +121,50 @@ public class Quart3 extends DefaultTrack {
     }
 
     //Not tested yet
-    public boolean checkOnAfterUpdate(Point curPoint, double lastSubAnle, double moveBy, boolean nat){
-        Point p = getNextPoint(curPoint, (int)lastSubAnle, moveBy, nat);
+    public boolean checkOnAfterUpdate(Point curPoint, double lastSubAnle, double moveBy, boolean nat, boolean forward){
+        Point p = getNextPoint(curPoint, (int)lastSubAnle, moveBy, nat, forward);
 
         if(super.getDirection().equals("LEFT")){
-            if(p.getY() > super.getStartY() + super.getLength()){
-                return false;//No longer in this section
+            if(nat){
+                if(p.getY() > super.getStartY() + super.getLength()){
+                    return false;//No longer in this section
+                }
+
+                if(p.getX() < super.getStartX() + super.getLength()/2){
+                    return false;//No longer in this section
+                }
+            }
+            else {
+                if(p.getY() > super.getStartY() + super.getLength()){
+                    return false;//No longer in this section
+                }
+
+                if(p.getX() < super.getStartX() + super.getLength()/2){
+                    return false;//No longer in this section
+                }
             }
 
-            if(p.getX() < super.getStartX() + super.getLength()/2){
-                return false;//No longer in this section
-            }
         }
         else if(super.getDirection().equals("UP")){
-            if(p.getX() > super.getStartX() + super.getLength()){
-                return false;//No longer in this section
+            if(nat){
+                if(p.getX() > super.getStartX() + super.getLength()){
+                    return false;//No longer in this section
+                }
+                if(p.getY() < super.getStartY() + super.getLength()/2){
+                    return false;//No longer in this section
+                }
             }
-            if(p.getY() < super.getStartY() + super.getLength()/2){
-                return false;//No longer in this section
+            else {
+                System.out.println("Checking");
+                if(p.getY() > super.getStartY() + super.getLength()){
+                    return false;//No longer in this section
+                }
+
+                if(p.getX() < super.getStartX() + super.getLength()/2){
+                    return false;//No longer in this section
+                }
             }
+
 
         }
         return true;

@@ -22,7 +22,7 @@ public class StraightHoriz extends DefaultTrack {
      * Constructor for the starting piece
      * */
     public StraightHoriz(int startX,  int startY, int length, int drawID,int id, String direction){
-        super(startX,startY,length,drawID, id, direction);
+        super(startX, startY, length, drawID, id, direction);
     }
 
     public void setStart(DefaultTrack from){
@@ -73,15 +73,15 @@ public class StraightHoriz extends DefaultTrack {
     }
 
 
-    public Point getNextPoint(Point cur, int lastSubAngle, double moveBy, boolean nat){
-        cur.setLocation(getNextX(cur.getX(),moveBy,nat),getNextY(cur.getY(),moveBy,nat));
+    public Point getNextPoint(Point cur, int lastSubAngle, double moveBy, boolean nat, boolean forward){
+        cur.setLocation(getNextX(cur.getX(),moveBy,nat, forward),getNextY(cur.getY(),moveBy,nat));
         return cur;
     }
 
-    public double getNextX(double curX, double moveBy, boolean nat){
+    public double getNextX(double curX, double moveBy, boolean nat, boolean forward){
 
         if(super.getDirection().equals("RIGHT")){
-            if(nat){
+            if(nat && forward){
                 if(curX + moveBy > (super.getStartX() + super.getLength())){
                     return -1;//No longer in this section TODO update later
                 }
@@ -100,7 +100,7 @@ public class StraightHoriz extends DefaultTrack {
 
         }
         else if(super.getDirection().equals("LEFT")){
-            if(nat){
+            if(nat && forward){
                 if(curX - moveBy < super.getStartX()){
                     return -1;//No longer in this section TODO update later
                 }
@@ -132,18 +132,15 @@ public class StraightHoriz extends DefaultTrack {
         return super.getStartX() + super.getLength()/2;//place it in the middle of the track
     }
 
-    public double getNextRotation(double curRotation, double speed, boolean nat){
+    public double getNextRotation(double curRotation, double speed, boolean nat, boolean forward){
         if(super.getDirection().equals("RIGHT")){
-            if(nat){
+            if(nat || !forward){
                 return 90;
             }
-            else {
-                return 270;
-            }
-
+            return 270;
         }
         else if(super.getDirection().equals("LEFT")){
-            if(nat){
+            if(nat || !forward){
                 return 270;
             }
             else{
@@ -161,8 +158,8 @@ public class StraightHoriz extends DefaultTrack {
         return super.getStartY() + TRACK_WIDTH/2;
     }
 
-    public boolean checkOnAfterUpdate(Point curPoint, double lastSubAnle, double dist, boolean nat){
-        if(getNextX(curPoint.getX(),dist, nat) == -1 )return false;
+    public boolean checkOnAfterUpdate(Point curPoint, double lastSubAnle, double dist, boolean nat, boolean forward){
+        if(getNextX(curPoint.getX(),dist, nat, forward) == -1 )return false;
         if(getNextY(curPoint.getY(),dist, nat) == -1 )return false;
         return true;
     }

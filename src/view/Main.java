@@ -38,7 +38,10 @@ public class Main extends Application {
     @Override
     public void start(final Stage primaryStage) {
 
-        // Initialises the control that will control the flow of the program
+        System.out.println(Byte.MAX_VALUE*Byte.MAX_VALUE*Byte.MAX_VALUE*Byte.MAX_VALUE);
+        System.out.println(Integer.MAX_VALUE);
+
+                // Initialises the control that will control the flow of the program
         this.controller = new ProgramController();
 
         Group root = new Group();

@@ -27,6 +27,8 @@ public class EventGen {
 
     private boolean direction;
 
+    private String curDerSelection = "Forward";
+
     public EventGen(ModelTrack model) {
         this.model = model;
 
@@ -73,6 +75,21 @@ public class EventGen {
         TextField speed = new TextField();
         speed.setPromptText("Speed");
 
+        // Create an option box for the trains
+        ObservableList<String> optionsDirection = FXCollections.observableArrayList("Forward","Reverse");
+        curDerSelection = "Forward";
+
+        ComboBox trainComboBoxDir = new ComboBox(optionsDirection);
+
+        trainComboBoxDir.setValue("Forward");
+
+        trainComboBoxDir.valueProperty().addListener(new ChangeListener<String>() {
+            @Override public void changed(ObservableValue ov, String t, String t1) {
+                valChangedDir(ov, t, t1);
+            }
+        });
+
+
 
         grid.add(trainComboBox,0,0);
         grid.add(new Label("Train ID:"), 0, 1);
@@ -87,6 +104,14 @@ public class EventGen {
                 int id = Integer.parseInt(trainId);
                 double speedValue = Double.parseDouble(speed.getText());
 
+                boolean dir = true;
+                if(curDerSelection.equals("Forward")){
+                    dir = true;
+                }
+                else {
+                    dir = false;
+                }
+
                 model.setSpeed(id,speedValue);
 
             }
@@ -94,6 +119,10 @@ public class EventGen {
         });
 
         dialog.showAndWait();
+    }
+
+    public void valChangedDir(ObservableValue ov, String t, String t1){
+        this.curDerSelection = t1;
     }
 
     public void valChanged(ObservableValue ov, String t, String t1){

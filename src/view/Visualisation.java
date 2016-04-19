@@ -115,7 +115,7 @@ public class Visualisation implements MouseEvents {
         lastUpdate = System.currentTimeMillis();
 
 
-        if(!curTrack.checkOnAfterUpdate(t.getCurrentLocation(),t.lastPointOnCurve,pixelsToMove,t.getTrain().getOrientation())){
+        if(!curTrack.checkOnAfterUpdate(t.getCurrentLocation(),t.lastPointOnCurve,pixelsToMove,t.getTrain().getOrientation(),t.getTrain().getDirection())){
             DefaultTrack destinationTrack = null;
             if(t.getTrain().getOrientation()){
                 System.out.println("Getting to");
@@ -207,7 +207,7 @@ public class Visualisation implements MouseEvents {
         for(DrawableSection ds : railway) {
             if (ds.getSection().getID() == 99) {
                 //Create the train
-                Train train = new Train(1, 50, 120, 1, true,false);
+                Train train = new Train(1, 50, 120, 1, true,true);
 
                 // Create the drawable train
                 DrawableTrain drawableTrain = new DrawableTrain(train, ds,ds.getTracks()[0]);

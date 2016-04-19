@@ -23,7 +23,7 @@ public class Quart2 extends DefaultTrack {
      * Constructor for the starting piece
      * */
     public Quart2(int startX, int startY, int length, int drawID, String direction, int id){
-        super(startX,startY,length,drawID,id, direction );
+        super(startX, startY, length, drawID, id, direction);
     }
 
     /**
@@ -87,14 +87,14 @@ public class Quart2 extends DefaultTrack {
         g.setStroke(Color.WHITE);
     }
 
-    public double getNextRotation(double curRotation, double speed){
+    public double getNextRotation(double curRotation, double speed, boolean nat, boolean forward){
         double l = lengthOfQuater();
 
         double updates = l/speed;
 
         double rotateCHange = 90/updates;
 
-        if(super.getDirection().equals("DOWN")){
+        if(super.getDirection().equals("DOWN") || !nat){
             return curRotation + rotateCHange;
         }
         else {
@@ -105,14 +105,14 @@ public class Quart2 extends DefaultTrack {
     /**
      * Returns the next point to move to on the curve given the amount to move
      * */
-    public Point getNextPoint(Point cur, int lastSubAngle, double moveBy, boolean nat){
+    public Point getNextPoint(Point cur, int lastSubAngle, double moveBy, boolean nat, boolean forward){
         double lengthOfQauter = lengthOfQuater();
         double points = (int)(lengthOfQauter/moveBy);
         double angle = 90;
 
 
 
-        if(super.getDirection().equals("DOWN")){
+        if(super.getDirection().equals("DOWN") || !nat){
             lastSubAngle = (int)points - lastSubAngle;
         }
 
@@ -140,24 +140,46 @@ public class Quart2 extends DefaultTrack {
         return new Point((int)xi,(int)yi);
     }
 
-    public boolean checkOnAfterUpdate(Point curPoint, double lastSubAnle, double moveBy, boolean nat){
-        Point p = getNextPoint(curPoint, (int)lastSubAnle, moveBy, nat);
+    public boolean checkOnAfterUpdate(Point curPoint, double lastSubAnle, double moveBy, boolean nat, boolean forward){
+        Point p = getNextPoint(curPoint, (int)lastSubAnle, moveBy, nat, forward);
 
         if(super.getDirection().equals("DOWN")){
-            if(p.getY() > super.getStartY() + super.getLength()/2){
-                return false;
+            if(nat){
+                if(p.getY() > super.getStartY() + super.getLength()/2){
+                    return false;
+                }
+                if(p.getX() > super.getStartX() + super.getLength()){//Not so important in this case Y matters more
+                    return false;
+                }
             }
-            if(p.getX() > super.getStartX() + super.getLength()){//Not so important in this case Y matters more
-                return false;
+            else{
+                if(p.getY() < super.getStartY() - super.getLength()/2){
+                    return false;
+                }
+                if(p.getX() < super.getStartX() + super.getLength()/2) {// X is important in this case
+                    return false;
+                }
             }
+
         }
         else if(super.getDirection().equals("LEFT")){
-            if(p.getY() < super.getStartY() - super.getLength()/2){
-                return false;
+            if(nat){
+                if(p.getY() < super.getStartY() - super.getLength()/2){
+                    return false;
+                }
+                if(p.getX() < super.getStartX() + super.getLength()/2) {// X is important in this case
+                    return false;
+                }
             }
-            if(p.getX() < super.getStartX() + super.getLength()/2) {// X is important in this case
-                return false;
+            else {
+                if(p.getY() > super.getStartY() + super.getLength()/2){
+                    return false;
+                }
+                if(p.getX() > super.getStartX() + super.getLength()){//Not so important in this case Y matters more
+                    return false;
+                }
             }
+
         }
         return true;
     }

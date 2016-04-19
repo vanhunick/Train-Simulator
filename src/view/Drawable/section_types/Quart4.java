@@ -24,7 +24,7 @@ public class Quart4 extends DefaultTrack {
      * Constructor for the starting piece
      * */
     public Quart4(int startX, int startY, int length, int drawID, String direction, int id){
-        super(startX,startY,length,drawID,id, direction );
+        super(startX, startY, length, drawID, id, direction);
     }
 
     /**
@@ -91,7 +91,7 @@ public class Quart4 extends DefaultTrack {
         g.setStroke(Color.WHITE);
     }
 
-    public double getNextRotation(double curRotation, double speed,boolean nat){
+    public double getNextRotation(double curRotation, double speed,boolean nat, boolean forward){
         double l = lengthOfQuater();
 
         double updates = l/speed;
@@ -110,7 +110,7 @@ public class Quart4 extends DefaultTrack {
     /**
      * Returns the next point to move to on the curve given the amount to move
      * */
-    public Point getNextPoint(Point curPoint, int lastSubAngle, double moveBy, boolean nat){
+    public Point getNextPoint(Point curPoint, int lastSubAngle, double moveBy, boolean nat, boolean forward){
         double lengthOfQauter = lengthOfQuater();
         double points = (int)(lengthOfQauter/moveBy);
         double angle = 90;
@@ -144,23 +144,43 @@ public class Quart4 extends DefaultTrack {
     }
 
     //Not tested yet
-    public boolean checkOnAfterUpdate(Point curPoint, double lastSubAnle, double moveBy, boolean nat){
-        Point p = getNextPoint(curPoint, (int)lastSubAnle, moveBy, nat);
+    public boolean checkOnAfterUpdate(Point curPoint, double lastSubAnle, double moveBy, boolean nat, boolean forward){
+        Point p = getNextPoint(curPoint, (int)lastSubAnle, moveBy, nat, forward);
 
         if(super.getDirection().equals("RIGHT") && nat){
-            if(p.getY() > super.getStartY() + super.getLength()){
-                return false;
+            if(nat){
+                if(p.getY() > super.getStartY() + super.getLength()){
+                    return false;
+                }
+                if(p.getX() > super.getStartX() + super.getLength()/2){
+                    return false;//No longer in this section
+                }
             }
-            if(p.getX() > super.getStartX() + super.getLength()/2){
-                return false;//No longer in this section
+            else{
+                if(p.getY() < super.getStartY() + super.getLength()/2){
+                    return false;//No longer in this section
+                }
+                if(p.getX() < super.getStartX() ){
+                    return false;//No longer in this section
+                }
             }
         }
         else if(super.getDirection().equals("UP") || !nat){
-            if(p.getY() < super.getStartY() + super.getLength()/2){
-                return false;//No longer in this section
+            if(!nat){
+                if(p.getY() < super.getStartY() + super.getLength()/2){
+                    return false;//No longer in this section
+                }
+                if(p.getX() < super.getStartX() ){
+                    return false;//No longer in this section
+                }
             }
-            if(p.getX() < super.getStartX() ){
-                return false;//No longer in this section
+            else{
+                if(p.getY() > super.getStartY() + super.getLength()){
+                    return false;
+                }
+                if(p.getX() > super.getStartX() + super.getLength()/2){
+                    return false;//No longer in this section
+                }
             }
         }
         return true;

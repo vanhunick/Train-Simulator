@@ -85,8 +85,13 @@ public class CustomTracks {
         tracks[7].setFrom(6);
 
         tracks[6].setFrom(5);
-
-
+        tracks[6].setFrom(5);
+        tracks[5].setFrom(4);
+        tracks[4].setFrom(3);
+        tracks[3].setFrom(2);
+        tracks[2].setFrom(1);
+        tracks[1].setFrom(0);
+        tracks[8].setFrom(7);
         // Set junction
         JunctionTrack jt = (JunctionTrack)tracks[8];
         jt.setToNotThrownTrack(0);
