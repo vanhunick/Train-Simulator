@@ -94,6 +94,8 @@ public abstract class DefaultTrack {
 
     public void setTo(int to){this.to = to;}
 
+    public int getFrom(){return this.from;}
+
     public int getId(){return this.id;}
 
     public Point getNextPoint(Point cur, int lastSubAngle, double moveBy, boolean nat){System.out.println("Should be implemented in subclass");return null;}
@@ -108,7 +110,7 @@ public abstract class DefaultTrack {
 
     public void setFrom(int from){this.from = from;}
 
-    public double getNextRotation(double curRotation, double speed){System.out.println("Should be implemented in subclass");return 90;}
+    public double getNextRotation(double curRotation, double speed, boolean nat){System.out.println("Should be implemented in subclass");return 90;}
 
     public double getInitialX(double trainWidth){System.out.println("Should be implemented in subclass");return 0;}
 

@@ -83,7 +83,7 @@ public class DrawableTrain implements Drawable{
 
         this.currentLocation = curTrack.getNextPoint(currentLocation, lastPointOnCurve,pixelsToMove, train.getOrientation());
 
-        curRotation = curTrack.getNextRotation(curRotation,pixelsToMove);
+        curRotation = curTrack.getNextRotation(curRotation,pixelsToMove, train.getOrientation());
         lastPointOnCurve++;
     }
 

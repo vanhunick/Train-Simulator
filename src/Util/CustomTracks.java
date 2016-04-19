@@ -45,6 +45,7 @@ public class CustomTracks {
         // First turn
         railway[1] =  new DrawableSection(new Section(curID++,300,new DefaultTrack[]{tracks[2]}));
         tracks[2].setStart(tracks[1]);
+        railway[1].getSection().setCandetect(true);
 
         // Second turn
         railway[2] =  new DrawableSection(new Section(curID++,300,new DefaultTrack[]{tracks[3]}));
@@ -54,6 +55,9 @@ public class CustomTracks {
         railway[3] =  new DrawableSection(new Section(curID++,200,new DefaultTrack[]{tracks[4],tracks[5]}));
         tracks[4].setStart(tracks[3]);
         tracks[5].setStart(tracks[4]);
+
+        // Make it be able to detect
+        railway[3].getSection().setCandetect(true);
 
         // Third turn
         railway[4] =  new DrawableSection(new Section(curID++,300,new DefaultTrack[]{tracks[6]}));
@@ -76,6 +80,12 @@ public class CustomTracks {
         tracks[5].setTo(6);
         tracks[6].setTo(7);
         tracks[7].setTo(8);
+
+        tracks[0].setFrom(7);
+        tracks[7].setFrom(6);
+
+        tracks[6].setFrom(5);
+
 
         // Set junction
         JunctionTrack jt = (JunctionTrack)tracks[8];

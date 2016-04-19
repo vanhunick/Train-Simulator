@@ -69,7 +69,7 @@ public class Quart3 extends DefaultTrack {
     }
 
 
-    public double getNextRotation(double curRotation, double speed){
+    public double getNextRotation(double curRotation, double speed, boolean nat){
         double l = lengthOfQuater();
 
         double updates = l/speed;

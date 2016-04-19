@@ -76,7 +76,7 @@ public class StraightVert extends DefaultTrack {
     }
 
 
-    public double getNextRotation(double curRotation, double speed){
+    public double getNextRotation(double curRotation, double speed, boolean nat){
         if(super.getDirection().equals("UP")){
             return 0;
         }

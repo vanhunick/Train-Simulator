@@ -79,25 +79,47 @@ public class StraightHoriz extends DefaultTrack {
     }
 
     public double getNextX(double curX, double moveBy, boolean nat){
+
         if(super.getDirection().equals("RIGHT")){
-            if(curX + moveBy > (super.getStartX() + super.getLength())){
-                return -1;//No longer in this section TODO update later
+            if(nat){
+                if(curX + moveBy > (super.getStartX() + super.getLength())){
+                    return -1;//No longer in this section TODO update later
+                }
+                else{
+                    return curX + moveBy;
+                }
             }
             else{
-                return curX + moveBy;
+                if(curX - moveBy < super.getStartX()){
+                    return -1;//No longer in this section TODO update later
+                }
+                else{
+                    return curX - moveBy;
+                }
             }
+
         }
         else if(super.getDirection().equals("LEFT")){
-            if(curX - moveBy < super.getStartX()){
-                return -1;//No longer in this section TODO update later
+            if(nat){
+                if(curX - moveBy < super.getStartX()){
+                    return -1;//No longer in this section TODO update later
+                }
+                else{
+                    return curX - moveBy;
+                }
             }
             else{
-                return curX - moveBy;
+                if(curX + moveBy > (super.getStartX() + super.getLength())){
+                    return -1;//No longer in this section TODO update later
+                }
+                else{
+                    return curX + moveBy;
+                }
             }
         }
-
         return -1;
     }
+
 
     /**
      * Return the y value in the middle of the track
@@ -110,12 +132,23 @@ public class StraightHoriz extends DefaultTrack {
         return super.getStartX() + super.getLength()/2;//place it in the middle of the track
     }
 
-    public double getNextRotation(double curRotation, double speed){
+    public double getNextRotation(double curRotation, double speed, boolean nat){
         if(super.getDirection().equals("RIGHT")){
-            return 90;
+            if(nat){
+                return 90;
+            }
+            else {
+                return 270;
+            }
+
         }
         else if(super.getDirection().equals("LEFT")){
-            return 270;
+            if(nat){
+                return 270;
+            }
+            else{
+                return 90;
+            }
         }
         // Error
         return 0;

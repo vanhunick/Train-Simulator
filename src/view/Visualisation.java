@@ -10,6 +10,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import model.ModelTrack;
+import model.Section;
 import model.Train;
 import view.Drawable.DrawableTrain;
 import view.Drawable.section_types.*;
@@ -115,7 +116,16 @@ public class Visualisation implements MouseEvents {
 
 
         if(!curTrack.checkOnAfterUpdate(t.getCurrentLocation(),t.lastPointOnCurve,pixelsToMove,t.getTrain().getOrientation())){
-            DefaultTrack destinationTrack = tracks[curTrack.getTo()];
+            DefaultTrack destinationTrack = null;
+            if(t.getTrain().getOrientation()){
+                System.out.println("Getting to");
+                destinationTrack = tracks[curTrack.getTo()];
+            }
+            else {
+                System.out.println("Getting from " + curTrack.getFrom());
+                destinationTrack = tracks[curTrack.getFrom()];
+            }
+
 
             // Sets the next track
             t.setCurTrack(destinationTrack);
@@ -165,10 +175,17 @@ public class Visualisation implements MouseEvents {
      * */
     public void startSimulation(){
         started = true;
-//        this.modelTrack = new ModelTrack(getTrains(), new TrackBuilder(null).linkUpDrawSections(railway));
+        this.modelTrack = new ModelTrack(getTrains(), getSections());
         lastUpdate = System.currentTimeMillis();
     }
 
+    public Section[] getSections(){
+        Section[] sections = new Section[railway.length];
+        for(int i =0; i < railway.length; i++){
+            sections[i] = railway[i].getSection();
+        }
+        return sections;
+    }
 
     /**
      * Returns the list of trains on the track
