@@ -8,7 +8,6 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
-import model.Section;
 import model.Train;
 import view.Drawable.section_types.*;
 
@@ -20,45 +19,46 @@ import view.Drawable.section_types.*;
 public class DrawableTrain implements Drawable{
     private double width = 40;
 
-    private double curX;
-    private double curY;
+
     private Train train;
+
     private long lastUpdate;
 
-
-
+    // The current track it is on
     private DefaultTrack curTrack;
 
+    // The current section it is on
     private DrawableSection curSection;
 
+    // Drawing fields
     private Image trainImage;
-
     private ImageView trainImageView;
     private double curRotation = 90;
-
-    private Point curentLocation;
-
-    //Drawing along curve fields
+    private Point currentLocation;
     public int lastPointOnCurve = 0;
-
     private SnapshotParameters params;
 
 
+    /**
+     * Creates a new drawable train object
+     * */
     public DrawableTrain(Train train,DrawableSection curSection, DefaultTrack curTrack){
         this.curSection = curSection;
         this.train = train;
         this.curTrack = curTrack;
-
-        this.curX = curTrack.getInitialX(width);
-        this.curY = curTrack.getInitialY(width);
-        this.curentLocation = new Point((int) curTrack.getInitialX(width),(int) curTrack.getInitialY(width));
+        this.currentLocation = new Point((int) curTrack.getInitialX(width),(int) curTrack.getInitialY(width));
 
         //Image setup
         this.trainImage= new Image("file:src/res/train.gif", 40, 143, false, false);
         this.trainImageView = new ImageView(trainImage);
         this.params = new SnapshotParameters();
         params.setFill(Color.TRANSPARENT);
-        this.curRotation = 90;
+        if(train.getOrientation()){
+            this.curRotation = 90;
+        }
+        else{
+            this.curRotation = 270;
+        }
     }
 
     @Override
@@ -67,7 +67,7 @@ public class DrawableTrain implements Drawable{
         Image rotatedImage = trainImageView.snapshot(params, null);
         trainImage = rotatedImage;
 
-        g.drawImage(trainImage,curentLocation.getX() - trainImage.getWidth()/2,curentLocation.getY() - trainImage.getHeight()/2);
+        g.drawImage(trainImage, currentLocation.getX() - trainImage.getWidth()/2, currentLocation.getY() - trainImage.getHeight()/2);
     }
 
     public void update(){
@@ -81,7 +81,7 @@ public class DrawableTrain implements Drawable{
         timeChanged = 20;
         double pixelsToMove = (timeChanged/1000.0)*speed;
 
-        this.curentLocation = curTrack.getNextPoint(curentLocation, lastPointOnCurve,pixelsToMove);
+        this.currentLocation = curTrack.getNextPoint(currentLocation, lastPointOnCurve,pixelsToMove, train.getOrientation());
 
         curRotation = curTrack.getNextRotation(curRotation,pixelsToMove);
         lastPointOnCurve++;
@@ -110,17 +110,17 @@ public class DrawableTrain implements Drawable{
     }
 
     public double getX(){
-        return this.curentLocation.getX();
+        return this.currentLocation.getX();
     }
     public double getY(){
-        return  this.curentLocation.getY();
+        return  this.currentLocation.getY();
     }
 
-    public Point getCurPoint(){return this.curentLocation;}
+    public Point getCurPoint(){return this.currentLocation;}
 
     public DrawableSection getDrawableSection(){return this.curSection;}
 
-    public Point getCurentLocation(){
-        return  this.curentLocation;
+    public Point getCurrentLocation(){
+        return  this.currentLocation;
     }
 }

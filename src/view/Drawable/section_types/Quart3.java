@@ -11,7 +11,6 @@ import java.awt.*;
  * Created by Nicky on 25/03/2016.
  */
 public class Quart3 extends DefaultTrack {
-    private static final int TRACK_WIDTH = 30;
 
     /**
      * Constructor for a piece that connects to another piece
@@ -69,18 +68,6 @@ public class Quart3 extends DefaultTrack {
         super.setStartY(startY);
     }
 
-    public double getNextRotation(Point newPoint, double oldX, double oldY){
-        double deltaX = newPoint.getX() - oldX;
-        double deltaY = newPoint.getY() - oldY;
-        double degree = ((Math.atan2(deltaY, deltaX)));
-        double angle = degree * 180 / 3.14;
-
-        if(angle<0)
-        {
-            angle = 360+angle;
-        }
-        return angle;
-    }
 
     public double getNextRotation(double curRotation, double speed){
         double l = lengthOfQuater();
@@ -100,7 +87,7 @@ public class Quart3 extends DefaultTrack {
     /**
      * Returns the next point to move to on the curve given the amount to move
      * */
-    public Point getNextPoint(Point curPoint, int lastSubAngle, double moveBy){
+    public Point getNextPoint(Point curPoint, int lastSubAngle, double moveBy, boolean nat){
         double lengthOfQauter = lengthOfQuater();
         double points = (int)(lengthOfQauter/moveBy);
         double angle = 90;
@@ -134,8 +121,8 @@ public class Quart3 extends DefaultTrack {
     }
 
     //Not tested yet
-    public boolean checkOnAfterUpdate(Point curPoint, double lastSubAnle, double moveBy){
-        Point p = getNextPoint(curPoint, (int)lastSubAnle, moveBy);
+    public boolean checkOnAfterUpdate(Point curPoint, double lastSubAnle, double moveBy, boolean nat){
+        Point p = getNextPoint(curPoint, (int)lastSubAnle, moveBy, nat);
 
         if(super.getDirection().equals("LEFT")){
             if(p.getY() > super.getStartY() + super.getLength()){
@@ -162,14 +149,6 @@ public class Quart3 extends DefaultTrack {
         double radius = (super.getLength()-TRACK_WIDTH/2)/2;
         double circumference = 2 * Math.PI * radius;
         return circumference/4;
-    }
-
-
-
-    public boolean checkOnSectionAfterMovement(double curX, double curY, double dist){
-        if(getNextX(curX,dist) == -1 )return false;
-        if(getNextY(curY,dist) == -1 )return false;// TODO dont need this
-        return true;
     }
 
     public boolean containsPoint(double x, double y){

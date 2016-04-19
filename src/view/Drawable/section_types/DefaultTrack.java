@@ -1,9 +1,6 @@
 package view.Drawable.section_types;
 
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
-import model.Section;
-import view.Drawable.track_types.Track;
 
 import java.awt.*;
 
@@ -13,21 +10,20 @@ import java.awt.*;
 public abstract class DefaultTrack {
     private boolean mouseOn;
 
-    public static final int TRACK_WIDTH = 30;
+    public static final int TRACK_WIDTH = 10;
     private double startX;
     private double startY;
     private double length;
     private boolean startPiece;
     private String direction;
 
-
-    private DefaultTrack to;
-
+    private int to;
+    private int from;
 
     // 0 is straight line 1 to 4 represent the section of a ring 5 is down straight piece
     private int drawID;
-
     private int id;
+
 
     /**
      * Constructor for a piece that connects to another piece
@@ -51,18 +47,6 @@ public abstract class DefaultTrack {
         this.direction = direction;
     }
 
-    public void draw(GraphicsContext g){
-        System.out.println("Should be implemented in subclass");
-    }
-
-    public boolean checkOnAfterUpdate(Point curPoint,double lastSubAnle, double moveBy){
-        System.out.println("Should be implemented in subclass");
-        return true;
-    }
-
-    public void setStart(DefaultTrack from){
-        System.out.println("Should be implemented in subclass");
-    }
 
     public int getDrawID() {
         return drawID;
@@ -75,7 +59,6 @@ public abstract class DefaultTrack {
     public boolean isStartPiece() {
         return startPiece;
     }
-
 
     public double getLength() {
         return length;
@@ -105,54 +88,33 @@ public abstract class DefaultTrack {
         this.mouseOn = on;
     }
 
-    public Point getNextPoint(Point cur, int lastSubAngle, double moveBy){
-        return null;
-    }
-
     public void setLength(double length){this.length = length;}
 
-    public DefaultTrack getTo(){return this.to;}
+    public int getTo(){return this.to;}
 
-    public void setTo(DefaultTrack to){this.to = to;}
+    public void setTo(int to){this.to = to;}
 
     public int getId(){return this.id;}
 
+    public Point getNextPoint(Point cur, int lastSubAngle, double moveBy, boolean nat){System.out.println("Should be implemented in subclass");return null;}
 
-
-    public double getNextX(double curX, double moveBy){
+    public void draw(GraphicsContext g){
         System.out.println("Should be implemented in subclass");
-        return 0;
     }
 
-    public double getNextRotation(Point newPoint, double oldX, double oldY){
-        System.out.println("Should be implemented in subclass");
-        return 90;
-    }
+    public boolean checkOnAfterUpdate(Point curPoint,double lastSubAnle, double moveBy, boolean nat){System.out.println("Should be implemented in subclass");return true;}
 
-    public double getNextRotation(double curRotation, double speed){
-        System.out.println("Should be implemented in subclass");
-        return 90;
-    }
+    public void setStart(DefaultTrack from){System.out.println("Should be implemented in subclass");}
 
-    public double getInitialX(double trainWidth){
-        System.out.println("Should be implemented in subclass");
-        return 0;
-    }
+    public void setFrom(int from){this.from = from;}
 
+    public double getNextRotation(double curRotation, double speed){System.out.println("Should be implemented in subclass");return 90;}
 
-    public double getInitialY(double trainWidth){
-        System.out.println("Should be implemented in subclass");
-        return 0;
-    }
+    public double getInitialX(double trainWidth){System.out.println("Should be implemented in subclass");return 0;}
 
-    public boolean containsPoint(double x, double y){
-        return false;
-    }
+    public double getInitialY(double trainWidth){System.out.println("Should be implemented in subclass"); return 0;}
 
-    public double getNextY(double curY, double moveBy){
-        System.out.println("Should be implemented in subclass");
-        return 0;
-    }
+    public boolean containsPoint(double x, double y){System.out.println("Should be implemented in subclass");return false;}
 
     @Override
     public boolean equals(Object o) {

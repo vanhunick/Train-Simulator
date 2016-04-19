@@ -2,7 +2,6 @@ package view.Drawable.section_types;
 
 import javafx.scene.canvas.GraphicsContext;
 import model.Section;
-import view.Drawable.track_types.Track;
 
 /**
  * Created by vanhunick on 16/04/16.

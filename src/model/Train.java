@@ -8,15 +8,21 @@ import java.util.List;
 public class Train {
     private int id;
     private double length;
-    private boolean orientation;
-    private  double speed;
 
+    // Weather it is going with the natural orientation of the track or not
+    private boolean orientation;
+
+    // Reversing or going forward
+    private boolean direction;
+
+    private  double speed;
 
     // The id of the section it is on
     private int position;
 
-    public Train(int id, double length,double speed, int position, boolean orientation){
+    public Train(int id, double length,double speed, int position,  boolean direction,boolean orientation){
         this.id = id;
+        this.direction = direction;
         this.length = length;
         this.orientation = orientation;
         this.speed = speed;
@@ -39,11 +45,15 @@ public class Train {
         return speed;
     }
 
-    public boolean orientation() {
-        return orientation;
+    public boolean getOrientation() {
+        return this.orientation;
     }
 
     public int getPosition() {
         return position;
+    }
+
+    public boolean getDirection(){
+        return this.direction;
     }
 }

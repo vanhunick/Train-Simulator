@@ -75,7 +75,6 @@ public class ProgramController implements MouseEvents {
      * Updates the part of the program that is in focus
      * */
     public void update(){
-        System.out.println(mode);
         if(mode.equals(VISUALISATION_MODE)){
             visualisation.update();
         }
@@ -101,7 +100,7 @@ public class ProgramController implements MouseEvents {
     /**
      * Sets the mode of the program by removing UI elements from other mode and adding it's own.
      * */
-    public void setVisualisationMode(List<DrawableSection> track, List<DrawableTrain> trains){
+    public void setVisualisationMode(DrawableSection[] track, List<DrawableTrain> trains){
         canvas.setWidth(canvas.getWidth() - EventLog.WIDTH);
 
         visualisation = new Visualisation();

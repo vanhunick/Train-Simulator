@@ -11,7 +11,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import model.ModelTrack;
 import model.Train;
-import view.Drawable.Drawable;
 import view.Drawable.DrawableTrain;
 import view.Drawable.section_types.*;
 import view.Panes.EventGen;
@@ -38,7 +37,9 @@ public class Visualisation implements MouseEvents {
     private List<DrawableTrain> trains;
 //    private List<DefaultTrack> railway;
 
-    private List<DrawableSection> railway;
+    private DrawableSection[] railway;
+
+    private DefaultTrack tracks[];
 
     // buttons for visualisation
     private VBox vBox;
@@ -60,7 +61,10 @@ public class Visualisation implements MouseEvents {
 
         // Set the default track
         this.trains = new ArrayList<>();
-        this.railway = CustomTracks.createBasicDrawTrack();
+        CustomTracks ct = new CustomTracks("DEF");
+
+        this.tracks = ct.getTracks();
+        this.railway = ct.getSections();
     }
 
 
@@ -109,9 +113,9 @@ public class Visualisation implements MouseEvents {
         double pixelsToMove = (timeChanged/1000.0)*speed;
         lastUpdate = System.currentTimeMillis();
 
-        System.out.println(curTrack);
-        if(!curTrack.checkOnAfterUpdate(t.getCurentLocation(),t.lastPointOnCurve,pixelsToMove)){
-            DefaultTrack destinationTrack = curTrack.getTo();
+
+        if(!curTrack.checkOnAfterUpdate(t.getCurrentLocation(),t.lastPointOnCurve,pixelsToMove,t.getTrain().getOrientation())){
+            DefaultTrack destinationTrack = tracks[curTrack.getTo()];
 
             // Sets the next track
             t.setCurTrack(destinationTrack);
@@ -142,7 +146,7 @@ public class Visualisation implements MouseEvents {
         new EventGen(modelTrack);
     }
 
-    //TODO make it do what is says it does
+
     public void stopSimulation(){
         started = false;
     }
@@ -178,6 +182,57 @@ public class Visualisation implements MouseEvents {
         return trains;
     }
 
+    /**
+     * Adds some default trains train to the starting track
+     * */
+    public void addDefaultTrains(){
+        // Add a train to the track
+        for(DrawableSection ds : railway) {
+            if (ds.getSection().getID() == 99) {
+                //Create the train
+                Train train = new Train(1, 50, 120, 1, true,false);
+
+                // Create the drawable train
+                DrawableTrain drawableTrain = new DrawableTrain(train, ds,ds.getTracks()[0]);
+                trains.add(drawableTrain);
+            }
+        }
+    }
+
+    /**
+     * Toggles if the log is showing or not
+     * */
+    public void toggleLog(BorderPane bp){
+        if(logShown){
+            bp.getChildren().remove(eventLog);
+            logShown = !logShown;
+        }
+        else {
+            bp.setRight(eventLog);
+            logShown = !logShown;
+        }
+    }
+
+    /**
+     * Returns if the log is showing or not
+     * */
+    public boolean logShowing(){
+        return this.logShown;
+    }
+
+    /**
+     * Sets the railway to draw
+     * */
+    public void setRailway(DrawableSection[] rail){
+        this.railway = rail;
+    }
+
+    /**
+     * Sets the trains on the track
+     * */
+    public void setTrains(List<DrawableTrain> trains){
+        this.trains = trains;
+    }
 
     /**
      * Adds the UI elements for the visualisation from the pane. Used when switching mode
@@ -194,57 +249,6 @@ public class Visualisation implements MouseEvents {
         bp.getChildren().remove(eventLog);
         bp.getChildren().remove(vBox);
     }
-
-
-
-    public void toggleLog(BorderPane bp){
-        if(logShown){
-            bp.getChildren().remove(eventLog);
-            logShown = !logShown;
-        }
-        else {
-            bp.setRight(eventLog);
-            logShown = !logShown;
-        }
-    }
-
-
-    /**
-     * Adds some default trains train to the starting track
-     * */
-    public void addDefaultTrains(){
-        // Add a train to the track
-        for(DrawableSection ds : railway) {
-            if (ds.getSection().getID() == 99) {
-                //Create the train
-                Train train = new Train(1, 50, 120, 1, true);
-
-                // Create the drawable train
-                DrawableTrain drawableTrain = new DrawableTrain(train, ds,ds.getTracks()[0]);
-                trains.add(drawableTrain);
-            }
-        }
-    }
-
-    public boolean logShowing(){
-        return this.logShown;
-    }
-
-    /**
-     * Sets the railway to draw
-     * */
-    public void setRailway(List<DrawableSection> rail){
-        this.railway = rail;
-    }
-
-
-    /**
-     * Sets the trains on the track
-     * */
-    public void setTrains(List<DrawableTrain> trains){
-        this.trains = trains;
-    }
-
 
     /**
      * Creates the buttons for the visualisation and sets up the listners
@@ -282,7 +286,6 @@ public class Visualisation implements MouseEvents {
             }
         }
     }
-
 
 
     @Override

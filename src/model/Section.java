@@ -1,8 +1,6 @@
 package model;
 
 import view.Drawable.section_types.DefaultTrack;
-import view.Drawable.section_types.StraightTrack;
-import view.Drawable.track_types.Track;
 
 /**
  * Created by vanhunick on 22/03/16.
@@ -39,7 +37,7 @@ public class Section {
      * Returns the given section matching the id
      * null if it does not have it
      * */
-    public StraightTrack getTrack(DefaultTrack dt){
+    public DefaultTrack getTrack(DefaultTrack dt){
         for(DefaultTrack t : tracks){
             if(t.equals(dt)){
 //                return

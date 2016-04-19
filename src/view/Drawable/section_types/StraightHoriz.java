@@ -2,8 +2,6 @@ package view.Drawable.section_types;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import model.Section;
-import view.Drawable.track_types.Track;
 
 import java.awt.*;
 
@@ -12,7 +10,6 @@ import java.awt.*;
  * Created by Nicky on 25/03/2016.
  */
 public class StraightHoriz extends DefaultTrack {
-    private static final int TRACK_WIDTH = 30;
 
     /**
      * Constructor for a piece that connects to another piece
@@ -76,12 +73,12 @@ public class StraightHoriz extends DefaultTrack {
     }
 
 
-    public Point getNextPoint(Point cur, int lastSubAngle, double moveBy){
-        cur.setLocation(getNextX(cur.getX(),moveBy),getNextY(cur.getY(),moveBy));
+    public Point getNextPoint(Point cur, int lastSubAngle, double moveBy, boolean nat){
+        cur.setLocation(getNextX(cur.getX(),moveBy,nat),getNextY(cur.getY(),moveBy,nat));
         return cur;
     }
 
-    public double getNextX(double curX, double moveBy){
+    public double getNextX(double curX, double moveBy, boolean nat){
         if(super.getDirection().equals("RIGHT")){
             if(curX + moveBy > (super.getStartX() + super.getLength())){
                 return -1;//No longer in this section TODO update later
@@ -105,24 +102,12 @@ public class StraightHoriz extends DefaultTrack {
     /**
      * Return the y value in the middle of the track
      * */
-    public double getNextY(double curY, double moveBy){
-        //going straight y never changes on this section
+    public double getNextY(double curY, double moveBy, boolean nat){
         return curY;
     }
 
     public double getInitialX(double trainWidth){
         return super.getStartX() + super.getLength()/2;//place it in the middle of the track
-    }
-
-    public double getNextRotation(Point newPoint, double oldX, double oldY){
-        if(super.getDirection().equals("RIGHT")){
-            return 0;
-        }
-        else if(super.getDirection().equals("LEFT")){
-            return 180;
-        }
-        // Error
-        return 0;
     }
 
     public double getNextRotation(double curRotation, double speed){
@@ -136,7 +121,6 @@ public class StraightHoriz extends DefaultTrack {
         return 0;
     }
 
-
     /**
      * USed to put the train in the middle of the track when first drawn
      * */
@@ -144,21 +128,16 @@ public class StraightHoriz extends DefaultTrack {
         return super.getStartY() + TRACK_WIDTH/2;
     }
 
-    public boolean checkOnAfterUpdate(Point curPoint, double lastSubAnle, double dist){
-        if(getNextX(curPoint.getX(),dist) == -1 )return false;
-        if(getNextY(curPoint.getY(),dist) == -1 )return false;
+    public boolean checkOnAfterUpdate(Point curPoint, double lastSubAnle, double dist, boolean nat){
+        if(getNextX(curPoint.getX(),dist, nat) == -1 )return false;
+        if(getNextY(curPoint.getY(),dist, nat) == -1 )return false;
         return true;
     }
-
-
-
 
     public void draw(GraphicsContext g) {
         if(super.getMouseOn() ){//|| super.getSection().getTrainOn()
             g.setStroke(Color.GREEN);
         }
-
-
 
         g.strokeLine(super.getStartX(), super.getStartY(), super.getStartX() + super.getLength(), super.getStartY());
         g.strokeLine(super.getStartX(), super.getStartY() + TRACK_WIDTH, super.getStartX() + super.getLength(), super.getStartY()+ TRACK_WIDTH);

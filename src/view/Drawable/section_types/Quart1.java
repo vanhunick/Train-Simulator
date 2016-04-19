@@ -11,7 +11,6 @@ import java.awt.*;
  * Created by Nicky on 25/03/2016.
  */
 public class Quart1 extends DefaultTrack {
-    private static final int TRACK_WIDTH = 30;
 
     /**
      * Constructor for a piece that connects to another piece
@@ -75,14 +74,6 @@ public class Quart1 extends DefaultTrack {
                 y >= super.getStartY() && y <= super.getStartY() + super.getLength()/2;
     }
 
-
-    /**
-     * USed to put the train in the middle of the track when first drawn
-     * */
-    public double getInitialY(double trainWidth){
-        return super.getStartY() + TRACK_WIDTH/2 - trainWidth/2;
-    }
-
     public void draw(GraphicsContext g) {
         if(super.getMouseOn()){// ||super.getSection().getTrainOn()
             g.setStroke(Color.GREEN);
@@ -93,21 +84,9 @@ public class Quart1 extends DefaultTrack {
         double length = super.getLength();
 
         g.strokeArc(startX, startY, length, length, 90, 90, ArcType.OPEN);
-        g.strokeArc(startX + TRACK_WIDTH, startY + TRACK_WIDTH, length - (TRACK_WIDTH * 2), length - (TRACK_WIDTH * 2), 90, 90, ArcType.OPEN);
+        g.strokeArc(startX + TRACK_WIDTH, startY + TRACK_WIDTH, length - (TRACK_WIDTH* 2), length - (TRACK_WIDTH* 2), 90, 90, ArcType.OPEN);
 
         g.setStroke(Color.WHITE);
-    }
-
-    public double getNextRotation(Point newPoint, double oldX, double oldY){
-        double deltaX = newPoint.getX() - oldX;
-        double deltaY = newPoint.getY() - oldY;
-        double degree = ((Math.atan2(deltaY, deltaX)));
-        double angle = degree * 180 / Math.PI;
-
-        if(angle<0) {
-            return 360+angle;
-        }
-        return angle;
     }
 
     public double getNextRotation(double curRotation, double speed){
@@ -129,7 +108,7 @@ public class Quart1 extends DefaultTrack {
     /**
      * Returns the next point to move to on the curve given the amount to move
      * */
-    public Point getNextPoint(Point cur, int lastSubAngle, double moveBy){
+    public Point getNextPoint(Point cur, int lastSubAngle, double moveBy, boolean nat){
         double lengthOfQauter = lengthOfQuater();
         double points = (int)(lengthOfQauter/moveBy);
         double angle = 90;
@@ -139,12 +118,9 @@ public class Quart1 extends DefaultTrack {
             lastSubAngle = (int)points - lastSubAngle;
         }
 
-
-
         double subAngle = (lastSubAngle/points)*Math.toRadians(angle);
 
-
-        double radius = ((super.getLength())/2 -  TRACK_WIDTH/2);
+        double radius = ((super.getLength())/2 - TRACK_WIDTH/2);
 
         double x = super.getStartX() + super.getLength()/2;
         double y = super.getStartY() + TRACK_WIDTH/2;
@@ -164,9 +140,9 @@ public class Quart1 extends DefaultTrack {
         return new Point((int)xi,(int)yi);
     }
 
-    //Not tested yet
-    public boolean checkOnAfterUpdate(Point curPoint,double lastSubAnle, double moveBy){
-        Point p = getNextPoint(curPoint, (int)lastSubAnle, moveBy);
+
+    public boolean checkOnAfterUpdate(Point curPoint,double lastSubAnle, double moveBy, boolean nat){
+        Point p = getNextPoint(curPoint, (int)lastSubAnle, moveBy, nat);
 
         if(super.getDirection().equals("DOWN")){
             if(p.getY() > super.getStartY() + super.getLength()/2){

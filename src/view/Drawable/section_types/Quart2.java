@@ -11,7 +11,6 @@ import java.awt.*;
  * Created by Nicky on 25/03/2016.
  */
 public class Quart2 extends DefaultTrack {
-    private static final int TRACK_WIDTH = 30;
 
     /**
      * Constructor for a piece that connects to another piece
@@ -88,20 +87,6 @@ public class Quart2 extends DefaultTrack {
         g.setStroke(Color.WHITE);
     }
 
-
-    public double getNextRotation(Point newPoint, double oldX, double oldY){
-        double deltaX = newPoint.getX() - oldX;
-        double deltaY = newPoint.getY() - oldY;
-        double degree = ((Math.atan2(deltaY, deltaX)));
-        double angle = degree * 180 / Math.PI;
-
-        if(angle<0)
-        {
-            angle = 360+angle;
-        }
-        return angle;
-    }
-
     public double getNextRotation(double curRotation, double speed){
         double l = lengthOfQuater();
 
@@ -120,7 +105,7 @@ public class Quart2 extends DefaultTrack {
     /**
      * Returns the next point to move to on the curve given the amount to move
      * */
-    public Point getNextPoint(Point cur, int lastSubAngle, double moveBy){
+    public Point getNextPoint(Point cur, int lastSubAngle, double moveBy, boolean nat){
         double lengthOfQauter = lengthOfQuater();
         double points = (int)(lengthOfQauter/moveBy);
         double angle = 90;
@@ -155,8 +140,8 @@ public class Quart2 extends DefaultTrack {
         return new Point((int)xi,(int)yi);
     }
 
-    public boolean checkOnAfterUpdate(Point curPoint, double lastSubAnle, double moveBy){
-        Point p = getNextPoint(curPoint, (int)lastSubAnle, moveBy);
+    public boolean checkOnAfterUpdate(Point curPoint, double lastSubAnle, double moveBy, boolean nat){
+        Point p = getNextPoint(curPoint, (int)lastSubAnle, moveBy, nat);
 
         if(super.getDirection().equals("DOWN")){
             if(p.getY() > super.getStartY() + super.getLength()/2){

@@ -3,8 +3,6 @@ package view.Drawable.section_types;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
-import model.Section;
-import view.Drawable.track_types.Track;
 
 import java.awt.*;
 
@@ -13,11 +11,9 @@ import java.awt.*;
  */
 public class JunctionTrack extends DefaultTrack {
 
-    private static  final int TRACK_WIDTH = 30;
-
-    private DefaultTrack fromTrack;
-    private DefaultTrack toThrownTrack;
-    private DefaultTrack toNotThrownTrack;
+    private int fromTrack;
+    private int toThrownTrack;
+    private int toNotThrownTrack;
 
     private boolean thrown;
 
@@ -59,14 +55,6 @@ public class JunctionTrack extends DefaultTrack {
         return super.getLength();
     }
 
-    public DefaultTrack getFromTrack() {
-        return fromTrack;
-    }
-
-    public DefaultTrack getToThrownTrack() {
-        return toThrownTrack;
-    }
-
 
     @Override
     public void draw(GraphicsContext g){
@@ -95,7 +83,7 @@ public class JunctionTrack extends DefaultTrack {
 
     private boolean onFirstSec = true;
 
-    public Point getNextPoint(Point cur, int lastSubAngle, double moveBy){
+    public Point getNextPoint(Point cur, int lastSubAngle, double moveBy, boolean nat){
         if(onFirstSec){
             double lengthOfQauter = lengthOfQuater();
             double points = (int)(lengthOfQauter/moveBy);
@@ -197,9 +185,9 @@ public class JunctionTrack extends DefaultTrack {
 
     private String firstDirection = "UP";
 
-    public boolean checkOnAfterUpdate(Point curPoint, double lastSubAnle, double moveBy){
+    public boolean checkOnAfterUpdate(Point curPoint, double lastSubAnle, double moveBy, boolean nat){
         if(!thrown)return false;//since it just moves onto the next track
-        Point p = getNextPoint(curPoint, (int)lastSubAnle, moveBy);
+        Point p = getNextPoint(curPoint, (int)lastSubAnle, moveBy, nat);
 
         if(onFirstSec){
 
@@ -252,17 +240,17 @@ public class JunctionTrack extends DefaultTrack {
     }
 
 
-    public DefaultTrack getFrom() {
+    public int getFrom() {
         return fromTrack;
     }
 
 
-    public void setFrom(DefaultTrack from){
+    public void setFrom(int from){
         //even though from can be from multiple pieces it does not matter from this tracks perspective
         this.fromTrack = from;
     }
 
-    public DefaultTrack getTo() {
+    public int getTo() {
         if(thrown){
             return toThrownTrack;
         }
@@ -279,19 +267,19 @@ public class JunctionTrack extends DefaultTrack {
         return this.thrown;
     }
 
-    public DefaultTrack getToNotThrownTrack() {
+    public int getToNotThrownTrack() {
         return toNotThrownTrack;
     }
 
-    public void setToThrownTrack(DefaultTrack toThrownTrack) {
+    public void setToThrownTrack(int toThrownTrack) {
         this.toThrownTrack = toThrownTrack;
     }
 
-    public void setToNotThrownTrack(DefaultTrack toNotThrownTrack) {
+    public void setToNotThrownTrack(int toNotThrownTrack) {
         this.toNotThrownTrack = toNotThrownTrack;
     }
 
-    public void setFromTrack(DefaultTrack fromTrack) {
+    public void setFromTrack(int fromTrack) {
         this.fromTrack = fromTrack;
     }
 }

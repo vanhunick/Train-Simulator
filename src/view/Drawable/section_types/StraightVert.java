@@ -10,7 +10,6 @@ import java.awt.*;
  * Created by Nicky on 25/03/2016.
  */
 public class StraightVert extends DefaultTrack {
-    private static final int TRACK_WIDTH = 30;
 
     /**
      * Constructor for a piece that connects to another piece
@@ -76,17 +75,6 @@ public class StraightVert extends DefaultTrack {
                 y >= super.getStartY() && y <= super.getStartY() + super.getLength();
     }
 
-    public double getNextRotation(Point newPoint, double oldX, double oldY){
-        if(super.getDirection().equals("UP")){
-            return 0;
-        }
-        else if(super.getDirection().equals("DOWN")){
-            return 180;
-        }
-        // Error
-        return 0;
-    }
-
 
     public double getNextRotation(double curRotation, double speed){
         if(super.getDirection().equals("UP")){
@@ -100,7 +88,7 @@ public class StraightVert extends DefaultTrack {
     }
 
 
-    public Point getNextPoint(Point cur, int lastSubAngle, double moveBy){
+    public Point getNextPoint(Point cur, int lastSubAngle, double moveBy, boolean nat){
         cur.setLocation(getNextX(cur.getX(),moveBy),getNextY(cur.getY(),moveBy));
         return cur;
     }
@@ -130,12 +118,11 @@ public class StraightVert extends DefaultTrack {
         return -1;
     }
 
-    public boolean checkOnAfterUpdate(Point curPoint, double lastSubAnle, double dist){
+    public boolean checkOnAfterUpdate(Point curPoint, double lastSubAnle, double dist, boolean nat){
         if(getNextX(curPoint.getX(),dist) == -1 )return false;
         if(getNextY(curPoint.getY(),dist) == -1 )return false;
         return true;
     }
-
 
 
     public void draw(GraphicsContext g) {

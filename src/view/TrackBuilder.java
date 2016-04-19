@@ -246,10 +246,7 @@ public class TrackBuilder implements MouseEvents{
             return;
         }
 
-        //must link of the sections inside the drawing sections for the simulation
-//        linkUpSections(tracksInTrack);
-
-        controller.setVisualisationMode(makeSections(tracksInTrack), trains);
+//        controller.setVisualisationMode(makeSections(tracksInTrack), trains);
     }
 
     public List<DrawableSection> makeSections(List<DefaultTrack> tracks){
@@ -324,7 +321,7 @@ public class TrackBuilder implements MouseEvents{
             if(s.getId() == td.getStartId()){//section the train should start on
 
                 //Create the train
-                Train train = new Train(td.getId(),td.getLength(),80,td.getStartId(),true);
+                Train train = new Train(td.getId(),td.getLength(),80,td.getStartId(),true,false);
 
                 // Create the drawable train
 //                DrawableTrain drawableTrain = new DrawableTrain(train, s,s.getSection());//TODO make sections first
@@ -518,7 +515,7 @@ public class TrackBuilder implements MouseEvents{
             shouldDetect = !shouldDetect;
         }
 
-        ds1.setStart(tracksInTrack.get(tracksInTrack.size()-1));
+//        ds1.setStart(tracksInTrack.get(tracksInTrack.size()-1));
         tracksInTrack.add(ds1);
     }
 
