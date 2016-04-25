@@ -81,7 +81,7 @@ public class StraightHoriz extends DefaultTrack {
     public double getNextX(double curX, double moveBy, boolean nat, boolean forward){
 
         if(super.getDirection().equals("RIGHT")){
-            if(nat && forward){
+            if(nat && forward || !nat && !forward){
                 if(curX + moveBy > (super.getStartX() + super.getLength())){
                     return -1;//No longer in this section TODO update later
                 }
@@ -100,7 +100,7 @@ public class StraightHoriz extends DefaultTrack {
 
         }
         else if(super.getDirection().equals("LEFT")){
-            if(nat && forward){
+            if(nat && forward || !nat && !forward){
                 if(curX - moveBy < super.getStartX()){
                     return -1;//No longer in this section TODO update later
                 }
@@ -134,18 +134,12 @@ public class StraightHoriz extends DefaultTrack {
 
     public double getNextRotation(double curRotation, double speed, boolean nat, boolean forward){
         if(super.getDirection().equals("RIGHT")){
-            if(nat || !forward){
-                return 90;
-            }
+            if(nat)return 90;
             return 270;
         }
         else if(super.getDirection().equals("LEFT")){
-            if(nat || !forward){
-                return 270;
-            }
-            else{
-                return 90;
-            }
+            if(nat)return 270;
+            return 90;
         }
         // Error
         return 0;

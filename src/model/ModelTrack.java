@@ -1,5 +1,8 @@
 package model;
 
+import view.Drawable.section_types.DefaultTrack;
+import view.Drawable.section_types.JunctionTrack;
+
 import java.util.List;
 
 /**
@@ -25,12 +28,6 @@ public class ModelTrack implements Events{
         }
     }
 
-    public String updateTrainOnSection(Train t, Section newSection, Section prevSection){
-
-        return ("Train ID:" + t.getId() + " Changed from ID:" + prevSection.getID() + " To section ID:" + newSection.getID() + "\n \n");
-    }
-
-
     @Override
     public void setSpeed(int trainID, double speed) {
         for(Train t : trains){
@@ -40,9 +37,24 @@ public class ModelTrack implements Events{
         }
     }
 
+    public void setDirection(int trainID, boolean direction){
+        for(Train t : trains){
+            if(t.getId() == trainID){
+                t.setDirection(direction);
+            }
+        }
+    }
+
     @Override
     public void setJunction(int junctionID, boolean toggle) {
-        //TODO implement junctions
+        for(Section s : sections){
+            for(DefaultTrack dt : s.getTracks()){
+                if(dt.getId() == junctionID){
+                    JunctionTrack jt = (JunctionTrack)dt;//Should be a junction if not there was an incorrect config at the start
+                    jt.setThrown(!jt.getThrown());// Toggle the junction
+                }
+            }
+        }
     }
 
     public List<Train> getTrains() {

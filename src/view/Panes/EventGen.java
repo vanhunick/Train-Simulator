@@ -93,7 +93,9 @@ public class EventGen {
 
         grid.add(trainComboBox,0,0);
         grid.add(new Label("Train ID:"), 0, 1);
-        grid.add(speed, 1, 0);
+        grid.add(trainComboBoxDir,1,0);
+        grid.add(new Label("Train Direction:"), 1, 1);
+        grid.add(speed, 2, 0);
 
         dialog.getDialogPane().setContent(grid);
 
@@ -101,8 +103,13 @@ public class EventGen {
 
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == addButton) {
+
                 int id = Integer.parseInt(trainId);
-                double speedValue = Double.parseDouble(speed.getText());
+                if(!speed.getText().equals("")){
+                    double speedValue = Double.parseDouble(speed.getText());
+                    model.setSpeed(id,speedValue);
+                }
+
 
                 boolean dir = true;
                 if(curDerSelection.equals("Forward")){
@@ -111,9 +118,7 @@ public class EventGen {
                 else {
                     dir = false;
                 }
-
-                model.setSpeed(id,speedValue);
-
+                model.setDirection(id,dir);
             }
             return null;
         });

@@ -8,6 +8,9 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.CubicCurve;
+import javafx.scene.shape.CubicCurveBuilder;
+import javafx.scene.shape.StrokeType;
 import javafx.stage.Stage;
 import view.Panes.EventLog;
 import view.Panes.TopMenuBar;
@@ -87,7 +90,7 @@ public class Main extends Application {
         lastTime = System.nanoTime();
         setupAnimationTimer(primaryStage,canvas);
 
-        // Add the layout to the roocssEditorFldt
+
         root.getChildren().add(bl);
         primaryStage.setResizable(false);
         primaryStage.setScene(scene);

@@ -98,7 +98,7 @@ public class Quart4 extends DefaultTrack {
 
         double rotateCHange = 90/updates;
 
-        if(super.getDirection().equals("UP") || !nat){
+        if(super.getDirection().equals("UP") || (nat && !forward) || (!nat && forward)){
             return curRotation + rotateCHange;
         }
         else {
@@ -111,12 +111,13 @@ public class Quart4 extends DefaultTrack {
      * Returns the next point to move to on the curve given the amount to move
      * */
     public Point getNextPoint(Point curPoint, int lastSubAngle, double moveBy, boolean nat, boolean forward){
-        double lengthOfQauter = lengthOfQuater();
-        double points = (int)(lengthOfQauter/moveBy);
+        // need to put in prevmode by to work out how far we are along the curve
+        double points = (int)(lengthOfQuater()/moveBy);
+        System.out.println("Points sssss" + points);
         double angle = 90;
 
 
-        if(super.getDirection().equals("UP") || !nat){
+        if(super.getDirection().equals("UP") || (nat && !forward) || (!nat && forward)){
             lastSubAngle = (int)points - lastSubAngle;
         }
 
@@ -143,12 +144,16 @@ public class Quart4 extends DefaultTrack {
         return new Point((int)xi,(int)yi);
     }
 
+    public int getNumberOfPoints(double moveBy){
+        return (int)(lengthOfQuater()/moveBy);
+    }
+
     //Not tested yet
     public boolean checkOnAfterUpdate(Point curPoint, double lastSubAnle, double moveBy, boolean nat, boolean forward){
         Point p = getNextPoint(curPoint, (int)lastSubAnle, moveBy, nat, forward);
 
-        if(super.getDirection().equals("RIGHT") && nat){
-            if(nat){
+        if(super.getDirection().equals("RIGHT")){
+            if(nat && forward || !nat && !forward){
                 if(p.getY() > super.getStartY() + super.getLength()){
                     return false;
                 }
@@ -156,7 +161,7 @@ public class Quart4 extends DefaultTrack {
                     return false;//No longer in this section
                 }
             }
-            else{
+            else {
                 if(p.getY() < super.getStartY() + super.getLength()/2){
                     return false;//No longer in this section
                 }
@@ -165,8 +170,8 @@ public class Quart4 extends DefaultTrack {
                 }
             }
         }
-        else if(super.getDirection().equals("UP") || !nat){
-            if(!nat){
+        else if(super.getDirection().equals("UP")){
+            if(nat && forward || !nat && !forward){
                 if(p.getY() < super.getStartY() + super.getLength()/2){
                     return false;//No longer in this section
                 }

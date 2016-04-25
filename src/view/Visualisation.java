@@ -10,8 +10,11 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import model.ModelTrack;
+import model.RollingStock;
 import model.Section;
 import model.Train;
+import view.Drawable.Drawable;
+import view.Drawable.DrawableRollingStock;
 import view.Drawable.DrawableTrain;
 import view.Drawable.section_types.*;
 import view.Panes.EventGen;
@@ -26,20 +29,23 @@ import java.util.List;
  */
 public class Visualisation implements MouseEvents {
 
-    //Width of
+    //Width of buttons
     public static final int WIDTH = 150;
 
     // Model to send events to
     private ModelTrack modelTrack;
+
+    // Simulation state
     private boolean started = false;
+
+    // Gui pane to send events to for user
     private  EventLog eventLog;
 
-    // Train and track
+    // Trains and Sections
     private List<DrawableTrain> trains;
-//    private List<DefaultTrack> railway;
-
     private DrawableSection[] railway;
 
+    // The tracks
     private DefaultTrack tracks[];
 
     // buttons for visualisation
@@ -88,7 +94,7 @@ public class Visualisation implements MouseEvents {
     public void refresh(GraphicsContext g){
         g.setStroke(Color.WHITE);
 
-        // Draw the track
+        // Draw the sections which will draw the tracks
         for(DrawableSection d : railway){
             d.draw(g);
         }
@@ -96,8 +102,45 @@ public class Visualisation implements MouseEvents {
         //Draw the trains
         for(DrawableTrain t : trains){
             t.draw(g);
+            if(t.getRollingStockConnected() !=null){
+                t.getRollingStockConnected().refresh(g);
+            }
         }
     }
+
+    public void onSectionCheck(DrawableRollingStock rollingStock, double pixelsToMove){
+        DefaultTrack curTrack = rollingStock.getCurTrack();
+        DrawableTrain t = rollingStock.getConnectedToTrain();
+
+        if(rollingStock.getConToThis() !=null){
+            onSectionCheck(t.getRollingStockConnected(), pixelsToMove);
+        }
+
+        if(!curTrack.checkOnAfterUpdate(rollingStock.getCurrentLocation(),rollingStock.lastPointOnCurve,pixelsToMove,t.getTrain().getOrientation(),rollingStock.getDirection())){
+            DefaultTrack destinationTrack = null;
+
+            if(t.getTrain().getOrientation() && rollingStock.getDirection() || !t.getTrain().getOrientation() && !rollingStock.getDirection()){
+                destinationTrack = tracks[curTrack.getTo()];
+            }
+            else{
+                if(tracks[curTrack.getFrom()] instanceof JunctionTrack){
+                    JunctionTrack jt = (JunctionTrack)tracks[curTrack.getFrom()];
+                    if(curTrack.getId() == tracks[jt.getToNotThrownTrack()].getId()){
+                        destinationTrack = tracks[jt.getToNotThrownTrack()];
+                    }
+                    else{
+                        destinationTrack = tracks[jt.getThrownTrack()];
+                    }
+                }
+                else {
+                    destinationTrack = tracks[curTrack.getFrom()];
+                }
+            }
+            // Sets the next track
+            rollingStock.setCurTrack(destinationTrack);
+        }
+    }
+
 
     /**
      * Checks if a drawable train is on a track given after it has moved a certain amount based on its speed
@@ -114,18 +157,31 @@ public class Visualisation implements MouseEvents {
         double pixelsToMove = (timeChanged/1000.0)*speed;
         lastUpdate = System.currentTimeMillis();
 
+        if(t.getRollingStockConnected() !=null){
+            onSectionCheck(t.getRollingStockConnected(), pixelsToMove);
+        }
 
         if(!curTrack.checkOnAfterUpdate(t.getCurrentLocation(),t.lastPointOnCurve,pixelsToMove,t.getTrain().getOrientation(),t.getTrain().getDirection())){
+
             DefaultTrack destinationTrack = null;
-            if(t.getTrain().getOrientation()){
-                System.out.println("Getting to");
+
+            if(t.getTrain().getOrientation() && t.getTrain().getDirection() || !t.getTrain().getOrientation() && !t.getTrain().getDirection() ){
                 destinationTrack = tracks[curTrack.getTo()];
             }
-            else {
-                System.out.println("Getting from " + curTrack.getFrom());
-                destinationTrack = tracks[curTrack.getFrom()];
+            else{
+                if(tracks[curTrack.getFrom()] instanceof JunctionTrack){//TODO Not tested yet should decide where the train is coming from depending on the cur track
+                    JunctionTrack jt = (JunctionTrack)tracks[curTrack.getFrom()];
+                    if(curTrack.getId() == tracks[jt.getToNotThrownTrack()].getId()){
+                        destinationTrack = tracks[jt.getToNotThrownTrack()];
+                    }
+                    else{
+                        destinationTrack = tracks[jt.getThrownTrack()];
+                    }
+                }
+                else {
+                    destinationTrack = tracks[curTrack.getFrom()];
+                }
             }
-
 
             // Sets the next track
             t.setCurTrack(destinationTrack);
@@ -139,7 +195,7 @@ public class Visualisation implements MouseEvents {
                     if(ds.containsTrack(destinationTrack)){
                         t.setCurSection(ds);//have to do it this way since the destination is not always the same
                         if(ds.getSection().canDetect()){
-                            eventLog.appendText(modelTrack.updateTrainOnSection(t.getTrain(), ds.getSection(),curSection.getSection()));
+                            eventLog.appendText(updateTrainOnSection(t.getTrain(), ds.getSection(),curSection.getSection()));
                             modelTrack.sectionChanged(curSection.getSection().getID());
                         }
                     }
@@ -156,11 +212,12 @@ public class Visualisation implements MouseEvents {
         new EventGen(modelTrack);
     }
 
-
+    /**
+     * Stops the simulation
+     * */
     public void stopSimulation(){
         started = false;
     }
-
 
     /**
      * Pauses the simulation
@@ -168,7 +225,6 @@ public class Visualisation implements MouseEvents {
     public void pause(){
         started = false;
     }
-
 
     /**
      * Starts the simulation with the given track and trains
@@ -179,6 +235,9 @@ public class Visualisation implements MouseEvents {
         lastUpdate = System.currentTimeMillis();
     }
 
+    /**
+     * Returns the Sections from the drawable sections
+     * */
     public Section[] getSections(){
         Section[] sections = new Section[railway.length];
         for(int i =0; i < railway.length; i++){
@@ -209,8 +268,16 @@ public class Visualisation implements MouseEvents {
                 //Create the train
                 Train train = new Train(1, 50, 120, 1, true,true);
 
+                RollingStock rollingStock = new RollingStock(100,828282);
+
                 // Create the drawable train
                 DrawableTrain drawableTrain = new DrawableTrain(train, ds,ds.getTracks()[0]);
+
+                DrawableRollingStock drawableRollingStock = new DrawableRollingStock(rollingStock,drawableTrain,drawableTrain.getTrain().getDirection());
+                drawableRollingStock.setStart(drawableTrain.getCurrentLocation(),this);
+
+                drawableTrain.setRollingStockConnected(drawableRollingStock);
+
                 trains.add(drawableTrain);
             }
         }
@@ -304,6 +371,12 @@ public class Visualisation implements MouseEvents {
         }
     }
 
+
+    public String updateTrainOnSection(Train t, Section newSection, Section prevSection){
+        return ("Train ID:" + t.getId() + " Changed from ID:" + prevSection.getID() + " To section ID:" + newSection.getID() + "\n \n");
+    }
+
+    // Where mouse events will be generated might use later for something
 
     @Override
     public void mousePressed(double x, double y, MouseEvent e) {}

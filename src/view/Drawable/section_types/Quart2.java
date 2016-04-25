@@ -94,7 +94,7 @@ public class Quart2 extends DefaultTrack {
 
         double rotateCHange = 90/updates;
 
-        if(super.getDirection().equals("DOWN") || !nat){
+        if((super.getDirection().equals("DOWN") || !nat || !forward) && (!(!nat && !forward))){
             return curRotation + rotateCHange;
         }
         else {
@@ -112,7 +112,7 @@ public class Quart2 extends DefaultTrack {
 
 
 
-        if(super.getDirection().equals("DOWN") || !nat){
+        if((super.getDirection().equals("DOWN") || (nat && !forward) || (!nat && forward))){
             lastSubAngle = (int)points - lastSubAngle;
         }
 
@@ -144,7 +144,7 @@ public class Quart2 extends DefaultTrack {
         Point p = getNextPoint(curPoint, (int)lastSubAnle, moveBy, nat, forward);
 
         if(super.getDirection().equals("DOWN")){
-            if(nat){
+            if(nat && forward || !nat && !forward){
                 if(p.getY() > super.getStartY() + super.getLength()/2){
                     return false;
                 }
@@ -163,7 +163,7 @@ public class Quart2 extends DefaultTrack {
 
         }
         else if(super.getDirection().equals("LEFT")){
-            if(nat){
+            if(nat && forward || !nat && !forward){
                 if(p.getY() < super.getStartY() - super.getLength()/2){
                     return false;
                 }

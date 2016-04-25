@@ -118,6 +118,10 @@ public abstract class DefaultTrack {
 
     public boolean containsPoint(double x, double y){System.out.println("Should be implemented in subclass");return false;}
 
+    public int getNumberOfPoints(double moveBy){
+        return 0;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

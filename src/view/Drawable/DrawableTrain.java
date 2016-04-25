@@ -1,7 +1,7 @@
 package view.Drawable;
 
 
-import java.awt.*;
+
 
 import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.GraphicsContext;
@@ -11,6 +11,7 @@ import javafx.scene.paint.Color;
 import model.Train;
 import view.Drawable.section_types.*;
 
+import java.awt.*;
 
 
 /**
@@ -38,6 +39,7 @@ public class DrawableTrain implements Drawable{
     public int lastPointOnCurve = 0;
     private SnapshotParameters params;
 
+    private DrawableRollingStock rollingStockConnected;
 
     /**
      * Creates a new drawable train object
@@ -53,7 +55,7 @@ public class DrawableTrain implements Drawable{
         this.trainImageView = new ImageView(trainImage);
         this.params = new SnapshotParameters();
         params.setFill(Color.TRANSPARENT);
-        if(train.getOrientation() || !train.getDirection()){
+        if(train.getOrientation()){
             this.curRotation = 90;
         }
         else{
@@ -68,9 +70,11 @@ public class DrawableTrain implements Drawable{
         trainImage = rotatedImage;
 
         g.drawImage(trainImage, currentLocation.getX() - trainImage.getWidth()/2, currentLocation.getY() - trainImage.getHeight()/2);
+
     }
 
     public void update(){
+        System.out.println("Train " +lastPointOnCurve);
         if(lastUpdate == 0){
             lastUpdate = System.currentTimeMillis();
         }
@@ -85,6 +89,10 @@ public class DrawableTrain implements Drawable{
 
         curRotation = curTrack.getNextRotation(curRotation,pixelsToMove, train.getOrientation(),train.getDirection());
         lastPointOnCurve++;
+
+        if(rollingStockConnected != null){
+            rollingStockConnected.update(pixelsToMove);
+        }
     }
 
 
@@ -122,5 +130,13 @@ public class DrawableTrain implements Drawable{
 
     public Point getCurrentLocation(){
         return  this.currentLocation;
+    }
+
+    public DrawableRollingStock getRollingStockConnected(){
+        return this.rollingStockConnected;
+    }
+
+    public void setRollingStockConnected(DrawableRollingStock dr){
+        this.rollingStockConnected = dr;
     }
 }

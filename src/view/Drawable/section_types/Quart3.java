@@ -76,7 +76,7 @@ public class Quart3 extends DefaultTrack {
 
         double rotateCHange = 90/updates;
 
-        if(super.getDirection().equals("LEFT") || !nat){
+        if((super.getDirection().equals("LEFT") || (nat && !forward) || (!nat && forward))){
             return curRotation + rotateCHange;
         }
         else {
@@ -88,11 +88,12 @@ public class Quart3 extends DefaultTrack {
      * Returns the next point to move to on the curve given the amount to move
      * */
     public Point getNextPoint(Point curPoint, int lastSubAngle, double moveBy, boolean nat, boolean forward){
+
         double lengthOfQauter = lengthOfQuater();
         double points = (int)(lengthOfQauter/moveBy);
         double angle = 90;
 
-        if(super.getDirection().equals("LEFT") || !nat){
+        if((super.getDirection().equals("LEFT") || (nat && !forward) || (!nat && forward))){
             lastSubAngle = (int)points - lastSubAngle;
         }
 
@@ -124,8 +125,8 @@ public class Quart3 extends DefaultTrack {
     public boolean checkOnAfterUpdate(Point curPoint, double lastSubAnle, double moveBy, boolean nat, boolean forward){
         Point p = getNextPoint(curPoint, (int)lastSubAnle, moveBy, nat, forward);
 
-        if(super.getDirection().equals("LEFT")){
-            if(nat){
+        if(super.getDirection().equals("LEFT")){//TODO check
+            if(nat && forward || !nat && !forward){
                 if(p.getY() > super.getStartY() + super.getLength()){
                     return false;//No longer in this section
                 }
@@ -146,7 +147,7 @@ public class Quart3 extends DefaultTrack {
 
         }
         else if(super.getDirection().equals("UP")){
-            if(nat){
+            if(nat && forward || !nat && !forward){
                 if(p.getX() > super.getStartX() + super.getLength()){
                     return false;//No longer in this section
                 }
@@ -155,7 +156,6 @@ public class Quart3 extends DefaultTrack {
                 }
             }
             else {
-                System.out.println("Checking");
                 if(p.getY() > super.getStartY() + super.getLength()){
                     return false;//No longer in this section
                 }
@@ -164,8 +164,6 @@ public class Quart3 extends DefaultTrack {
                     return false;//No longer in this section
                 }
             }
-
-
         }
         return true;
     }

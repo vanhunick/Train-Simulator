@@ -56,4 +56,8 @@ public class Train {
     public boolean getDirection(){
         return this.direction;
     }
+
+    public void setDirection(boolean direction){
+        this.direction = direction;
+    }
 }

@@ -12,6 +12,7 @@ import java.awt.*;
 public class JunctionTrack extends DefaultTrack {
 
     private int fromTrack;
+
     private int toThrownTrack;
     private int toNotThrownTrack;
 
@@ -70,6 +71,24 @@ public class JunctionTrack extends DefaultTrack {
         else{
             g.setStroke(Color.GREEN);
         }
+
+
+//        xc1 - the X coordinate of first Bezier control point.
+//        yc1 - the Y coordinate of the first Bezier control point.
+//        xc2 - the X coordinate of the second Bezier control point.
+//        yc2 - the Y coordinate of the second Bezier control point.
+//        x1 - the X coordinate of the end point.
+//        y1 - the Y coordinate of the end point.
+
+//        g.stroke();
+        g.beginPath();
+        g.moveTo(101, 101);
+        g.bezierCurveTo(168, 110, 177, 57, 247, 65);
+//        g.quadraticCurveTo(200,300,350,400);
+        g.closePath();
+        g.setFill(Color.WHITE);
+        g.fill();
+
 
         g.strokeArc(startX , startY, length, length, -90, 90, ArcType.OPEN);
         g.strokeArc(startX + TRACK_WIDTH, startY + TRACK_WIDTH, length - (TRACK_WIDTH*2), length - (TRACK_WIDTH*2), -90, 90, ArcType.OPEN);
@@ -269,6 +288,10 @@ public class JunctionTrack extends DefaultTrack {
 
     public int getToNotThrownTrack() {
         return toNotThrownTrack;
+    }
+
+    public int getThrownTrack() {
+        return toThrownTrack;
     }
 
     public void setToThrownTrack(int toThrownTrack) {
