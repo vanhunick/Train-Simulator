@@ -107,13 +107,30 @@ public class Quart4 extends DefaultTrack {
     }
 
 
+    public int getCurPointAfterSpeedChange(double newSpeed, double oldSpeed, double curPointAlong){
+        double points = (int)(lengthOfQuater()/newSpeed);
+
+        double pointsPrev = (int)(lengthOfQuater()/oldSpeed);
+        double percentageThrough = curPointAlong/pointsPrev;
+//
+//        if(changedDirection){
+//            percentageThrough = 1-percentageThrough;
+//        }
+
+        curPointAlong = (int)(points*percentageThrough);
+
+        return (int)curPointAlong;
+    }
+
+
+
     /**
      * Returns the next point to move to on the curve given the amount to move
      * */
     public Point getNextPoint(Point curPoint, int lastSubAngle, double moveBy, boolean nat, boolean forward){
-        // need to put in prevmode by to work out how far we are along the curve
         double points = (int)(lengthOfQuater()/moveBy);
-        System.out.println("Points sssss" + points);
+
+
         double angle = 90;
 
 

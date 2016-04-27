@@ -122,6 +122,11 @@ public abstract class DefaultTrack {
         return 0;
     }
 
+    public int getCurPointAfterSpeedChange(double newSpeed, double oldSpeed, double curPointAlong){
+        System.out.println("Should be implemented in subclass");
+        return 0;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

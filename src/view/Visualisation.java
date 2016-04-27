@@ -13,7 +13,6 @@ import model.ModelTrack;
 import model.RollingStock;
 import model.Section;
 import model.Train;
-import view.Drawable.Drawable;
 import view.Drawable.DrawableRollingStock;
 import view.Drawable.DrawableTrain;
 import view.Drawable.section_types.*;
@@ -266,7 +265,7 @@ public class Visualisation implements MouseEvents {
         for(DrawableSection ds : railway) {
             if (ds.getSection().getID() == 99) {
                 //Create the train
-                Train train = new Train(1, 50, 120, 1, true,true);
+                Train train = new Train(1, 50, 120, true,true);
 
                 RollingStock rollingStock = new RollingStock(100,828282);
 

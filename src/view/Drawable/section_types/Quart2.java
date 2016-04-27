@@ -184,9 +184,29 @@ public class Quart2 extends DefaultTrack {
         return true;
     }
 
+
+    public int getCurPointAfterSpeedChange(double newSpeed, double oldSpeed, double curPointAlong){
+        double points = (int)(lengthOfQuater()/newSpeed);
+
+        double pointsPrev = (int)(lengthOfQuater()/oldSpeed);
+        double percentageThrough = curPointAlong/pointsPrev;
+//
+//        if(changedDirection){
+//            percentageThrough = 1-percentageThrough;
+//        }
+
+        curPointAlong = (int)(points*percentageThrough);
+
+        return (int)curPointAlong;
+    }
+
     public double lengthOfQuater(){
         double radius = (super.getLength()-TRACK_WIDTH/2)/2;
         double circumference = 2 * Math.PI * radius;
         return circumference/4;
+    }
+
+    public int getNumberOfPoints(double moveBy){
+        return (int)(lengthOfQuater()/moveBy);
     }
 }

@@ -174,6 +174,21 @@ public class Quart3 extends DefaultTrack {
         return circumference/4;
     }
 
+    public int getCurPointAfterSpeedChange(double newSpeed, double oldSpeed, double curPointAlong){
+        double points = (int)(lengthOfQuater()/newSpeed);
+
+        double pointsPrev = (int)(lengthOfQuater()/oldSpeed);
+        double percentageThrough = curPointAlong/pointsPrev;
+//
+//        if(changedDirection){
+//            percentageThrough = 1-percentageThrough;
+//        }
+
+        curPointAlong = (int)(points*percentageThrough);
+
+        return (int)curPointAlong;
+    }
+
     public boolean containsPoint(double x, double y){
         return x >= super.getStartX() + super.getLength()/2 && x <= super.getStartX() + super.getLength() &&
                 y >= super.getStartY() + super.getLength()/2 && y <= super.getStartY() + super.getLength();
@@ -195,5 +210,9 @@ public class Quart3 extends DefaultTrack {
         g.strokeArc(startX + TRACK_WIDTH, startY + TRACK_WIDTH, length - (TRACK_WIDTH*2), length - (TRACK_WIDTH*2), -90, 90, ArcType.OPEN);
 
         g.setStroke(Color.WHITE);
+    }
+
+    public int getNumberOfPoints(double moveBy){
+        return (int)(lengthOfQuater()/moveBy);
     }
 }

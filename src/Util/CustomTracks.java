@@ -9,16 +9,28 @@ import view.Drawable.section_types.JunctionTrack;
  */
 public class CustomTracks {
 
+    // Drawable section of the railway
     private DrawableSection[] sections;
+
+    // The tracks in the railway
     private DefaultTrack[] tracks;//tracks in the
 
+    /**
+     * Creates a new CustomTracks objects used to create some default tracks
+     *
+     * @param trackType the type of track to create
+     * */
     public CustomTracks(String trackType){
-        if(trackType.equals("DEF")){// the defualt track
+        if(trackType.equals("DEF")){
             this.tracks = getDefTracks();
             this.sections = createDefSections(tracks);
         }
     }
 
+
+    /**
+     * Creates the default tracks
+     * */
     public DefaultTrack[] getDefTracks(){
         int curID = 0;
         return  new DefaultTrack[]{
@@ -35,6 +47,9 @@ public class CustomTracks {
         };
     }
 
+    /**
+     * Creates the default Sections
+     * */
     public DrawableSection[] createDefSections(DefaultTrack[] tracks){
         DrawableSection[] railway = new DrawableSection[7];
         int curID = 0;
@@ -90,8 +105,7 @@ public class CustomTracks {
         tracks[3].setFrom(2);
         tracks[2].setFrom(1);
         tracks[1].setFrom(0);
-//        tracks[8].setFrom(7);
-        // Set junction
+
         JunctionTrack jt = (JunctionTrack)tracks[8];
         jt.setToNotThrownTrack(0);
         jt.setToThrownTrack(9);
@@ -99,10 +113,16 @@ public class CustomTracks {
         return railway;
     }
 
+    /**
+     * Returns the tracks
+     * */
     public DefaultTrack[] getTracks(){
         return this.tracks;
     }
 
+    /**
+     * Returns the sections
+     * */
     public DrawableSection[] getSections(){
         return this.sections;
     }

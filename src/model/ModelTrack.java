@@ -10,20 +10,56 @@ import java.util.List;
  */
 public class ModelTrack implements Events{
 
+    // List of trains on the railway
     private List<Train> trains;
+
+    // The sections that make up the railway
     private Section[] sections;
 
+    /**
+     * Created a ModelTrack object for sending and receiving events
+     *
+     * @param  trains the trains on the railway
+     *
+     *@param sections the section that make up the railway
+     * */
     public ModelTrack(List<Train> trains, Section[] sections){
         this.trains = trains;
         this.sections = sections;
     }
+
+
+    /**
+     * Return the trains on the railway
+     *
+     * @return the list of trains on the track
+     * */
+    public List<Train> getTrains() {
+        return trains;
+    }
+
+
+    /**
+     * Returns the train that matches the id
+     *
+     * @param id The id to match
+     *
+     * @return the train that matches the id
+     * */
+    public Section getSection(int id){
+        for(Section s : sections){
+            if(s.getID() == id)return s;
+        }
+        return null;
+    }
+
 
     @Override
     public void sectionChanged(int id) {
         for(Section s : sections){
             if(s.getID() == id){
                 //update the section status
-                s.setTrainOn(!s.getTrainOn());//TODO most likely change to toggle
+                s.setTrainOn(!s.getTrainOn());
             }
         }
     }
@@ -37,6 +73,7 @@ public class ModelTrack implements Events{
         }
     }
 
+    @Override
     public void setDirection(int trainID, boolean direction){
         for(Train t : trains){
             if(t.getId() == trainID){
@@ -55,42 +92,5 @@ public class ModelTrack implements Events{
                 }
             }
         }
-    }
-
-    public List<Train> getTrains() {
-        return trains;
-    }
-
-    public Section[] getSections() {
-        return sections;
-    }
-
-
-    /**
-     * Returns the train that matches the id
-     *
-     * @param id The id to match
-     *
-     * @return the train that matches the id
-     * */
-    public Section getSection(int id){
-        for(Section s : sections){
-            if(s.getID() == id)return s;
-        }
-        return null;
-    }
-
-    /**
-     * Returns the train that matches the id
-     *
-     * @param id The id to match
-     *
-     * @return the train that matches the id
-     * */
-    public Train getTrain(int id){
-        for(Train t : trains){
-            if(t.getId() == id)return t;
-        }
-        return null;
     }
 }
