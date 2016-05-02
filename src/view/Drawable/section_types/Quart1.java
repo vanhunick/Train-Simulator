@@ -167,7 +167,7 @@ public class Quart1 extends DefaultTrack {
                 if(p.getY() > super.getStartY() + super.getLength()/2){
                     return false;//No longer in this section
                 }
-                if(p.getX()< super.getStartX() ){
+                if(p.getX() > super.getStartX() + super.getLength()/2 ){//TODO just changed
                     return false;//No longer in this section
                 }
             }

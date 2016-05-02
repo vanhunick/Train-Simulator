@@ -31,6 +31,9 @@ public class DrawableTrain{
     // The current track it is on
     private DefaultTrack curTrack;
 
+    // Only used to work out which track it is on inside a junction track
+    private DefaultTrack juncTrack;// TODO not ideal
+
     // The current section it is on
     private DrawableSection curSection;
 
@@ -120,23 +123,29 @@ public class DrawableTrain{
         if(lastDirection != train.getDirection()){
             lastPointOnCurve = curTrack.getNumberOfPoints(pixelsToMove) - lastPointOnCurve;
             if(rollingStockConnected != null){
-                rollingStockConnected.setDirection(train.getDirection());
+                //rollingStockConnected.setDirection(train.getDirection());
             }
         }
         lastDirection = train.getDirection();
 
-        // Get the next point for the train
-        this.currentLocation = curTrack.getNextPoint(currentLocation, lastPointOnCurve,pixelsToMove, train.getOrientation(),train.getDirection());
-
-        // Get the next rotation for the train
-        curRotation = curTrack.getNextRotation(curRotation,pixelsToMove, train.getOrientation(),train.getDirection());
+        if(curTrack instanceof JunctionTrack){
+            JunctionTrack jt = (JunctionTrack)curTrack;
+            this.currentLocation = jt.getNextPoint(this,pixelsToMove);
+            this.curRotation = jt.getNextRotation(this, pixelsToMove);
+        }
+        else{
+            // Get the next point for the train
+            this.currentLocation = curTrack.getNextPoint(currentLocation, lastPointOnCurve,pixelsToMove, train.getOrientation(),train.getDirection());
+            // Get the next rotation for the train
+            this.curRotation = curTrack.getNextRotation(curRotation,pixelsToMove, train.getOrientation(),train.getDirection());
+        }
 
         // Increment the progress on the current track
-        lastPointOnCurve++;
+        lastPointOnCurve++;//TODO might only have to do it in the else c
 
         // Update the rolling stock if there is one connected
         if(rollingStockConnected != null){
-            rollingStockConnected.update(pixelsToMove);
+            //rollingStockConnected.update(pixelsToMove);
         }
     }
 
@@ -230,5 +239,13 @@ public class DrawableTrain{
      * */
     public void setRollingStockConnected(DrawableRollingStock dr){
         this.rollingStockConnected = dr;
+    }
+
+    public DefaultTrack getJuncTrack(){
+        return this.juncTrack;
+    }
+
+    public void setJuncTrack(DefaultTrack juncTrack){
+        this.juncTrack = juncTrack;
     }
 }

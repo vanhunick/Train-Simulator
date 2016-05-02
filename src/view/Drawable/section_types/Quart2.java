@@ -153,6 +153,7 @@ public class Quart2 extends DefaultTrack {
                 }
             }
             else{
+                System.out.println("In else");
                 if(p.getY() < super.getStartY() - super.getLength()/2){
                     return false;
                 }
@@ -163,7 +164,9 @@ public class Quart2 extends DefaultTrack {
 
         }
         else if(super.getDirection().equals("LEFT")){
+
             if(nat && forward || !nat && !forward){
+
                 if(p.getY() < super.getStartY() - super.getLength()/2){
                     return false;
                 }
@@ -190,10 +193,7 @@ public class Quart2 extends DefaultTrack {
 
         double pointsPrev = (int)(lengthOfQuater()/oldSpeed);
         double percentageThrough = curPointAlong/pointsPrev;
-//
-//        if(changedDirection){
-//            percentageThrough = 1-percentageThrough;
-//        }
+
 
         curPointAlong = (int)(points*percentageThrough);
 

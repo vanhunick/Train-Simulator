@@ -104,7 +104,7 @@ public abstract class DefaultTrack {
         System.out.println("Should be implemented in subclass");
     }
 
-    public boolean checkOnAfterUpdate(Point curPoint,double lastSubAnle, double moveBy, boolean nat, boolean direction){System.out.println("Should be implemented in subclass");return true;}
+    public boolean checkOnAfterUpdate(Point curPoint,double lastSubAnle, double moveBy, boolean nat, boolean direction){System.out.println("Should be implemented in subclass CheckOnAfterUpdate");return true;}
 
     public void setStart(DefaultTrack from){System.out.println("Should be implemented in subclass");}
 

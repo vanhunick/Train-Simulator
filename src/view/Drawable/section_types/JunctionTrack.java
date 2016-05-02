@@ -3,6 +3,7 @@ package view.Drawable.section_types;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
+import view.Drawable.DrawableTrain;
 
 import java.awt.*;
 
@@ -11,19 +12,50 @@ import java.awt.*;
  */
 public class JunctionTrack extends DefaultTrack {
 
-    private int fromTrack;
 
-    private int toThrownTrack;
-    private int toNotThrownTrack;
+    // Inbound Fields
+    private int inboundFromThrown;
+    private int inboundFromStraight;
+    private int inboundTo;
 
+    // Outbound Fields
+    private int outboundToThrown;
+    private int outBoundTotraight;
+    private int outboundFrom;
+
+
+    // If the junction is thrown
     private boolean thrown;
+
+    // If the junction is inbound or outbound
+    private boolean inbound;
+
+    // The straight track in the junction
+    private StraightHoriz straightTrack;
+
+    // Outbound tracks
+    private Quart3 outUpTrack;
+    private Quart1 outRightTrack;
+
+    // Inbound tracks
+    private Quart2 inDown;
+    private Quart4 inRight;
+
 
     /**
      * Constructor for a piece that connects to another piece
      * */
-    public JunctionTrack(int length, int drawID, int id,boolean thrown){
+    public JunctionTrack(int length, int drawID, int id,boolean thrown, boolean inbound){
         super(length, drawID,id);
         this.thrown = thrown;
+        this.inbound = inbound;
+
+
+        straightTrack = new StraightHoriz(length,0,1);
+        outRightTrack = new Quart1(length+(TRACK_WIDTH/2),1,1);//TODO possibly length/2
+        inDown = new Quart2(length+(TRACK_WIDTH/2),2,1);
+        outUpTrack = new Quart3(length+(TRACK_WIDTH/2),3,1);
+        inRight = new Quart4(length+(TRACK_WIDTH/2),4,1);
     }
 
     /**
@@ -35,246 +67,268 @@ public class JunctionTrack extends DefaultTrack {
     }
 
     public void setStart(DefaultTrack from){
-        double startX = 0;
-        double startY = 0;
-
         if(from.getDirection().equals("RIGHT")){
             super.setDirection("RIGHT");
+            straightTrack.setDirection("RIGHT");
+            straightTrack.setStart(from);
 
-            if(from.getDrawID() == 4){
-                startX = from.getStartX() + from.getLength()/2 - super.getLength()/2;
-                startY = from.getStartY() + from.getLength() - super.getLength();
+            if(inbound){
+                inRight.setStartX(straightTrack.getStartX() + straightTrack.getLength() - ((inRight.getLength()-TRACK_WIDTH/2)/2) - TRACK_WIDTH);
+                inRight.setStartY(straightTrack.getStartY() - inRight.getLength() + TRACK_WIDTH);
+
+                inRight.setDirection("UP");// Direction not actually left but it means we can use the method to connect the next peice
+                inDown.setStart(inRight);
+                inDown.setDirection("DOWN");
+                inRight.setDirection("RIGHT");// Change the direction back to what it is supposed to be
+            }
+            else{
+                outUpTrack.setStartX(straightTrack.getStartX() - ((outUpTrack.getLength()-TRACK_WIDTH/2)/2));
+                outUpTrack.setStartY(straightTrack.getStartY() - outUpTrack.getLength() + TRACK_WIDTH);
+                outUpTrack.setDirection("UP");
+
+                outRightTrack.setStart(outUpTrack);
+            }
+        }
+        else if(from.getDirection().equals("LEFT")){
+            super.setDirection("LEFT");
+            straightTrack.setDirection("LEFT");
+            straightTrack.setStart(from);
+
+            if(inbound){
+                outUpTrack.setStartX(straightTrack.getStartX() - outUpTrack.getLength()/2);
+                outUpTrack.setStartY(straightTrack.getStartY() - outUpTrack.getLength() + TRACK_WIDTH);
+                outUpTrack.setDirection("UP");
+
+                outRightTrack.setStart(outUpTrack);
+            }
+            else{
+                inRight.setStartX(straightTrack.getStartX() + straightTrack.getLength() - inRight.getLength()/2);
+                inRight.setStartY(straightTrack.getStartY() - inRight.getLength() + TRACK_WIDTH);
+
+                inRight.setDirection("UP");// Direction not actually left but it means we can use the method to connect the next peice
+                inDown.setStart(inRight);
+                inRight.setDirection("RIGHT");// Change the direction back to what it is supposed to be
             }
         }
 
-        super.setStartX(startX);
-        super.setStartY(startY);
+        super.setStartX(straightTrack.getStartX());
+        super.setStartY(straightTrack.getStartY());
     }
-
 
     public double getLength() {
         return super.getLength();
     }
 
-
-    @Override
     public void draw(GraphicsContext g){
-        double startX = super.getStartX();
-        double startY = super.getStartY();
-        double length = super.getLength();
-
-        g.setFill(Color.WHITE);
-
+        straightTrack.draw(g);
         if(thrown){
-            g.setStroke(Color.ORANGE);
-        }
-        else{
-            g.setStroke(Color.GREEN);
+            g.setStroke(Color.BLUE);
         }
 
-
-//        xc1 - the X coordinate of first Bezier control point.
-//        yc1 - the Y coordinate of the first Bezier control point.
-//        xc2 - the X coordinate of the second Bezier control point.
-//        yc2 - the Y coordinate of the second Bezier control point.
-//        x1 - the X coordinate of the end point.
-//        y1 - the Y coordinate of the end point.
-
-//        g.stroke();
-        g.beginPath();
-        g.moveTo(101, 101);
-        g.bezierCurveTo(168, 110, 177, 57, 247, 65);
-//        g.quadraticCurveTo(200,300,350,400);
-        g.closePath();
-        g.setFill(Color.WHITE);
-        g.fill();
-
-
-        g.strokeArc(startX , startY, length, length, -90, 90, ArcType.OPEN);
-        g.strokeArc(startX + TRACK_WIDTH, startY + TRACK_WIDTH, length - (TRACK_WIDTH*2), length - (TRACK_WIDTH*2), -90, 90, ArcType.OPEN);
-
-        g.strokeArc(startX + length - TRACK_WIDTH, startY, length, length, 90, 90, ArcType.OPEN);
-        g.strokeArc(startX + length, startY + TRACK_WIDTH, length - (TRACK_WIDTH * 2), length - (TRACK_WIDTH * 2), 90, 90, ArcType.OPEN);
-
-
-        g.setStroke(Color.WHITE);
-    }
-
-    private boolean onFirstSec = true;
-
-    public Point getNextPoint(Point cur, int lastSubAngle, double moveBy, boolean nat, boolean forward){
-        if(onFirstSec){
-            double lengthOfQauter = lengthOfQuater();
-            double points = (int)(lengthOfQauter/moveBy);
-            double angle = 90;
-
-            if(super.getDirection().equals("LEFT")){
-                lastSubAngle = (int)points - lastSubAngle;
+        if(super.getDirection().equals("RIGHT")){
+            if(inbound){
+                inDown.draw(g);
+                inRight.draw(g);
             }
-
-
-            double subAngle = (lastSubAngle/points)*Math.toRadians(angle);
-
-
-            double radius = ((super.getLength())/2 -  TRACK_WIDTH/2);
-
-            double x = super.getStartX() + super.getLength()/2;
-            double y = super.getStartY() + super.getLength() - TRACK_WIDTH/2;
-
-            double a = 1.57079632679;
-            a=a-angle*Math.PI/180;
-
-            double fx = Math.cos(a);
-            double fy = Math.sin(a);
-
-            double lx = -(Math.sin(a));
-            double ly = Math.cos(a);
-
-
-            double xi = x + radius*(Math.sin(subAngle)*fx + (1-Math.cos(subAngle))*(-lx));
-            double yi = y + radius*(Math.sin(subAngle)*fy + (1-Math.cos(subAngle))*(-ly));
-            return new Point((int)xi,(int)yi);
-        }
-        else{
-            double lengthOfQauter = lengthOfQuater();
-            double points = (int)(lengthOfQauter/moveBy);
-            double angle = 90;
-
-
-            if(super.getDirection().equals("RIGHT")){
-                lastSubAngle = (int)points - lastSubAngle;
+            else{
+                outUpTrack.draw(g);
+                outRightTrack.draw(g);
             }
-
-
-
-            double subAngle = (lastSubAngle/points)*Math.toRadians(angle);
-
-
-            double radius = ((super.getLength())/2 -  TRACK_WIDTH/2);
-
-            double x = super.getStartX() + super.getLength()/2;
-            double y = super.getStartY() + TRACK_WIDTH/2;
-
-            double a = 1.57079632679;
-            a=a+angle*Math.PI/180;
-
-            double fx = Math.cos(a);
-            double fy = Math.sin(a);
-
-            double lx = -(Math.sin(a));
-            double ly = Math.cos(a);
-
-
-            double xi = x + radius*(Math.sin(subAngle)*fx + (1-Math.cos(subAngle))*(-lx));
-            double yi = y + radius*(Math.sin(subAngle)*fy + (1-Math.cos(subAngle))*(-ly));
-            return new Point((int)xi,(int)yi);
+        }
+        else if(super.getDirection().equals("LEFT")){
+            if(inbound){
+                outUpTrack.draw(g);
+                outRightTrack.draw(g);
+            }
+            else{
+                inDown.draw(g);
+                inRight.draw(g);
+            }
         }
     }
 
-    public double getNextRotation(double curRotation, double speed, boolean nat, boolean forward){
-        if(onFirstSec){
-            double l = lengthOfQuater();
+    public Point getNextPoint(DrawableTrain dt, double moveBy){
+        return dt.getJuncTrack().getNextPoint(dt.getCurrentLocation(),dt.lastPointOnCurve,moveBy,dt.getTrain().getOrientation(),dt.getTrain().getDirection());
+    }
 
-            double updates = l/speed;
+    public double getNextRotation(DrawableTrain dt, double speed){
+        return dt.getJuncTrack().getNextRotation(dt.lastPointOnCurve,speed,dt.getTrain().getOrientation(),dt.getTrain().getDirection());
+    }
 
-            double rotateCHange = 90/updates;
+    /**
+     * Junctions tracks need to be able to change the lastsubable and need to be able to change the orientation
+     * */
+    public boolean checkOnAfterUpdate(DrawableTrain dt, double moveBy){
+        if(dt.getJuncTrack().checkOnAfterUpdate(dt.getCurrentLocation(), dt.lastPointOnCurve, moveBy, dt.getTrain().getOrientation(), dt.getTrain().getDirection())){
+            System.out.println("Still on");
+            return true;
+        }
 
-            if(super.getDirection().equals("LEFT")){
-                return curRotation + rotateCHange;
+        boolean nat = false;
+        if(dt.getTrain().getOrientation() && dt.getTrain().getDirection() || !dt.getTrain().getOrientation() && !dt.getTrain().getDirection() ){
+            nat = true;
+        }
+
+        // Not on the current section anymore
+        if(dt.getJuncTrack().getDrawID() == 0){
+            dt.setJuncTrack(null);
+            return false;// No longer on the straight track so it is not on the junction
+        }
+        else if(dt.getJuncTrack().getDrawID() == 1){
+            if(nat){
+                dt.setJuncTrack(null);
+                return false;
+            }
+            else{
+                dt.lastPointOnCurve = 0;
+                dt.setJuncTrack(outUpTrack);
+                return true;
+            }
+        }
+        else if(dt.getJuncTrack().getDrawID() == 2){
+            if(nat){
+                dt.lastPointOnCurve = 0;
+                dt.setJuncTrack(inRight);
+                return true;
             }
             else {
-                return curRotation - rotateCHange;
+                dt.setJuncTrack(null);
+                return false;
+            }
+        }
+        else if(dt.getJuncTrack().getDrawID() == 3){
+            if(nat){
+                dt.lastPointOnCurve = 0;
+                dt.setJuncTrack(outRightTrack);
+                return true;
+            }
+            else {
+                dt.setJuncTrack(null);
+                return false;
+            }
+        }
+        else if(dt.getJuncTrack().getDrawID() == 4){
+            if(nat){
+                dt.setJuncTrack(null);
+                return false;
+            }
+            else {
+                dt.lastPointOnCurve = 0;
+                dt.setJuncTrack(inDown);
+                return true;
+            }
+        }
+
+        // Should never get here
+        return false;
+    }
+
+    public int getToOutbound(){
+        if(thrown){
+            return outboundToThrown;
+        }
+        else{
+            return outBoundTotraight;
+        }
+    }
+
+    public int getInboundFrom(){
+        if(thrown){
+            return inboundFromThrown;
+        }
+        else{
+            return inboundFromStraight;
+        }
+    }
+
+
+    public int getInboundFromThrown() {
+        return inboundFromThrown;
+    }
+
+    public void setInboundFromThrown(int inboundFromThrown) {
+        this.inboundFromThrown = inboundFromThrown;
+    }
+
+    public int getInboundFromStraight() {
+        return inboundFromStraight;
+    }
+
+    public void setInboundFromStraight(int inboundFromStraight) {
+        this.inboundFromStraight = inboundFromStraight;
+    }
+
+    public int getInboundTo() {
+        return inboundTo;
+    }
+
+    public void setInboundTo(int inboundTo) {
+        this.inboundTo = inboundTo;
+    }
+
+    public int getOutboundToThrown() {
+        return outboundToThrown;
+    }
+
+    public void setOutboundToThrown(int outboundToThrown) {
+        this.outboundToThrown = outboundToThrown;
+    }
+
+    public int getOutBoundTotraight() {
+        return outBoundTotraight;
+    }
+
+    public void setOutBoundTotraight(int outBoundTotraight) {
+        this.outBoundTotraight = outBoundTotraight;
+    }
+
+    public int getOutboundFrom() {
+        return outboundFrom;
+    }
+
+    public void setOutboundFrom(int outboundFrom) {
+        this.outboundFrom = outboundFrom;
+    }
+
+    /**
+     * Used for figuring out where to go inside the junction track
+     * */
+    public DefaultTrack getToTrack(){
+        if(inbound){
+            return straightTrack;
+        }
+
+        if(thrown){
+            return outUpTrack;
+        }
+        else {
+            return straightTrack;
+        }
+    }
+
+    /**
+     * Used for figuring out where to go inside the junction track
+     * */
+    public DefaultTrack getFromTrack(){
+        if(inbound){
+            if(thrown){
+                return inRight;
+            }
+            else{
+                return straightTrack;
             }
         }
         else {
-            double l = lengthOfQuater();
-
-            double updates = l/speed;
-
-            double rotateCHange = 90/updates;
-
-            if(super.getDirection().equals("LEFT")){
-                return curRotation + rotateCHange;
-            }
-            else {
-                return curRotation - rotateCHange;
-            }
+            return straightTrack;
         }
     }
 
-    private String firstDirection = "UP";
-
-    public boolean checkOnAfterUpdate(Point curPoint, double lastSubAnle, double moveBy, boolean nat, boolean forward){
-        if(!thrown)return false;//since it just moves onto the next track
-        Point p = getNextPoint(curPoint, (int)lastSubAnle, moveBy, nat, forward);
-
-        if(onFirstSec){
-
-            if(firstDirection.equals("LEFT")){
-                if(p.getY() > super.getStartY() + super.getLength()){
-                    onFirstSec = false;
-                }
-
-                if(p.getX() < super.getStartX() + super.getLength()/2){
-                    onFirstSec = false;
-                }
-            }
-            else if(firstDirection.equals("UP")){
-                if(p.getX() > super.getStartX() + super.getLength()){
-                    onFirstSec = false;
-                }
-                if(p.getY() < super.getStartY() + super.getLength()/2){
-                    onFirstSec = false;
-                }
-
-            }
-            return true;
-        }
-        else{
-            if(super.getDirection().equals("DOWN")){
-                if(p.getY() > super.getStartY() + super.getLength()/2){
-                    return false;//No longer in this section
-                }
-                if(p.getX()< super.getStartX() ){
-                    return false;//No longer in this section
-                }
-            }
-            else if(super.getDirection().equals("RIGHT")){
-                if(p.getX() > super.getStartX() + super.getLength()/2 - 20){//
-                    return false;//No longer in this section
-                }
-                if(p.getY() < super.getStartY() - super.getLength()/2){
-                    return false;//No longer in this section
-                }
-            }
-            return true;
-        }
-    }
-
-
-    public double lengthOfQuater(){
-        double radius = (super.getLength()-TRACK_WIDTH/2)/2;
-        double circumference = 2 * Math.PI * radius;
-        return circumference/4;
-    }
-
-
-    public int getFrom() {
-        return fromTrack;
-    }
-
-
-    public void setFrom(int from){
-        //even though from can be from multiple pieces it does not matter from this tracks perspective
-        this.fromTrack = from;
-    }
-
-    public int getTo() {
-        if(thrown){
-            return toThrownTrack;
+    public boolean containsPoint(double x, double y){
+        if(inbound){
+            return straightTrack.containsPoint(x,y) || inDown.containsPoint(x,y) || inRight.containsPoint(x,y);
         }
         else {
-            return toNotThrownTrack;
+            return straightTrack.containsPoint(x,y) || outUpTrack.containsPoint(x,y) || outRightTrack.containsPoint(x,y);
         }
     }
 
@@ -286,23 +340,23 @@ public class JunctionTrack extends DefaultTrack {
         return this.thrown;
     }
 
-    public int getToNotThrownTrack() {
-        return toNotThrownTrack;
+    public DefaultTrack getTrackThrown(){
+        if(inBound()){
+            return this.inRight;
+        }
+        else{
+            return outRightTrack;
+        }
     }
 
-    public int getThrownTrack() {
-        return toThrownTrack;
+    public DefaultTrack getStraightTrack(){return this.straightTrack;}
+
+    public boolean inBound(){
+        return this.inbound;
     }
 
-    public void setToThrownTrack(int toThrownTrack) {
-        this.toThrownTrack = toThrownTrack;
-    }
-
-    public void setToNotThrownTrack(int toNotThrownTrack) {
-        this.toNotThrownTrack = toNotThrownTrack;
-    }
-
-    public void setFromTrack(int fromTrack) {
-        this.fromTrack = fromTrack;
+    @Override
+    public String getDirection(){
+        return straightTrack.getDirection();
     }
 }

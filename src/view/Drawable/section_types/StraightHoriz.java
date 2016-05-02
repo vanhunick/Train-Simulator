@@ -44,7 +44,8 @@ public class StraightHoriz extends DefaultTrack {
                 startY = from.getStartY() + from.getLength() - TRACK_WIDTH;
             }
             else if(from.getDrawID() == 6){
-                startX = from.getStartX() + from.getLength() - TRACK_WIDTH + from.getLength()/2;
+                System.out.println("Setting from junction");
+                startX = from.getStartX() + from.getLength();
                 startY = from.getStartY();
             }
         }
@@ -61,6 +62,10 @@ public class StraightHoriz extends DefaultTrack {
             else if(from.getDrawID() == 3){
                 startX = from.getStartX() + from.getLength()/2 - super.getLength();
                 startY = from.getStartY() + from.getLength() - TRACK_WIDTH;
+            }
+            else if(from.getDrawID() == 6){
+                startX = from.getStartX() - super.getLength();
+                startY = from.getStartY();
             }
         }
         super.setStartX(startX);
