@@ -2,6 +2,8 @@ package view.Drawable.section_types;
 
 import javafx.scene.canvas.GraphicsContext;
 
+import javafx.scene.paint.Color;
+
 import java.awt.*;
 
 /**
@@ -9,6 +11,7 @@ import java.awt.*;
  */
 public abstract class DefaultTrack {
     private boolean mouseOn;
+    private Color color = Color.WHITE;
 
     public static final int TRACK_WIDTH = 10;
     private double startX;
@@ -19,6 +22,9 @@ public abstract class DefaultTrack {
 
     private int to;
     private int from;
+
+    private int juncFrom;
+    private int juncTo;
 
     // 0 is straight line 1 to 4 represent the section of a ring 5 is down straight piece
     private int drawID;
@@ -32,6 +38,9 @@ public abstract class DefaultTrack {
         this.length = length;
         this.drawID = drawID;
         this.id = id;
+        this.juncFrom = -1;
+        this.juncTo = -1;
+
     }
 
     /**
@@ -45,8 +54,17 @@ public abstract class DefaultTrack {
         this.id = id;
         this.startPiece = true;
         this.direction = direction;
+        this.juncFrom = -1;
+        this.juncTo = -1;
     }
 
+    public Color getColor(){
+        return this.color;
+    }
+
+    public void setColor(Color color){
+        this.color = color;
+    }
 
     public int getDrawID() {
         return drawID;
@@ -125,6 +143,22 @@ public abstract class DefaultTrack {
     public int getCurPointAfterSpeedChange(double newSpeed, double oldSpeed, double curPointAlong){
         System.out.println("Should be implemented in subclass");
         return 0;
+    }
+
+    public int getJuncFrom(){
+        return this.juncFrom;
+    }
+
+    public int getJuncTo(){
+        return this.juncTo;
+    }
+
+    public void setJuncTo(int juncTo){
+        this.juncTo = juncTo;
+    }
+
+    public void setJuncFrom(int juncFrom){
+        this.juncFrom = juncFrom;
     }
 
     @Override

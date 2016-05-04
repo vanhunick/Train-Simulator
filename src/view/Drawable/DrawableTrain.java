@@ -72,7 +72,7 @@ public class DrawableTrain{
         this.lastDirection = train.getDirection();
 
         //Image setup
-        this.trainImage= new Image("file:src/res/train.gif", 40, 143, false, false);
+        this.trainImage= new Image("file:src/res/train.gif", 20, 80, false, false);
         this.trainImageView = new ImageView(trainImage);
         this.params = new SnapshotParameters();
         params.setFill(Color.TRANSPARENT);
@@ -141,12 +141,16 @@ public class DrawableTrain{
         }
 
         // Increment the progress on the current track
-        lastPointOnCurve++;//TODO might only have to do it in the else c
+        lastPointOnCurve++;
 
         // Update the rolling stock if there is one connected
         if(rollingStockConnected != null){
             //rollingStockConnected.update(pixelsToMove);
         }
+    }
+
+    public double getCurRotation(){
+        return this.curRotation;
     }
 
 
@@ -173,9 +177,9 @@ public class DrawableTrain{
      *
      * @param section sets the current track
      * */
-    public void setCurTrack(DefaultTrack section){
+    public void setCurTrack(DefaultTrack track){
         lastPointOnCurve = 0;
-        this.curTrack = section;
+        this.curTrack = track;
     }
 
     /**
@@ -246,6 +250,7 @@ public class DrawableTrain{
     }
 
     public void setJuncTrack(DefaultTrack juncTrack){
+        lastPointOnCurve = 0;
         this.juncTrack = juncTrack;
     }
 }

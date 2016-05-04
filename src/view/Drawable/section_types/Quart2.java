@@ -73,6 +73,7 @@ public class Quart2 extends DefaultTrack {
     }
 
     public void draw(GraphicsContext g) {
+        g.setStroke(super.getColor());
         if(super.getMouseOn() ){//|| super.getSection().getTrainOn()
             g.setStroke(Color.GREEN);
         }
@@ -94,7 +95,10 @@ public class Quart2 extends DefaultTrack {
 
         double rotateCHange = 90/updates;
 
-        if((super.getDirection().equals("DOWN") || !nat || !forward) && (!(!nat && !forward))){
+        if((super.getDirection().equals("DOWN") && ((nat && forward || !nat && !forward)))){//  ||
+            return curRotation + rotateCHange;
+        }
+        else if(super.getDirection().equals("LEFT") && (nat && !forward) || (!nat && forward)){
             return curRotation + rotateCHange;
         }
         else {
@@ -110,9 +114,12 @@ public class Quart2 extends DefaultTrack {
         double points = (int)(lengthOfQauter/moveBy);
         double angle = 90;
 
+        //TODO I think this is where the problem lies
+        if((super.getDirection().equals("DOWN") && ((nat && forward || !nat && !forward)))){
+            lastSubAngle = (int)points - lastSubAngle;
+        }
 
-
-        if((super.getDirection().equals("DOWN") || (nat && !forward) || (!nat && forward))){
+        if(super.getDirection().equals("LEFT") && (nat && !forward) || (!nat && forward)){
             lastSubAngle = (int)points - lastSubAngle;
         }
 
@@ -153,7 +160,6 @@ public class Quart2 extends DefaultTrack {
                 }
             }
             else{
-                System.out.println("In else");
                 if(p.getY() < super.getStartY() - super.getLength()/2){
                     return false;
                 }
@@ -164,9 +170,7 @@ public class Quart2 extends DefaultTrack {
 
         }
         else if(super.getDirection().equals("LEFT")){
-
             if(nat && forward || !nat && !forward){
-
                 if(p.getY() < super.getStartY() - super.getLength()/2){
                     return false;
                 }

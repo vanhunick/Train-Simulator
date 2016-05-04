@@ -11,7 +11,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import model.ModelTrack;
-import model.RollingStock;
 import model.Section;
 import model.Train;
 import view.Drawable.DrawableRollingStock;
@@ -109,7 +108,7 @@ public class Visualisation implements MouseEvents {
     }
     public void onSectionCheckJunction(DrawableTrain t, double pixelsToMove, JunctionTrack jt){
         if(t.getJuncTrack() == null){
-            if(t.getTrain().getOrientation() && t.getTrain().getDirection() || !t.getTrain().getOrientation() && !t.getTrain().getDirection() ){
+            if(forwardWithTrack(t)){
                 t.setJuncTrack(jt.getToTrack());
             }
             else {
@@ -122,7 +121,7 @@ public class Visualisation implements MouseEvents {
             DefaultTrack destinationTrack = null;
 
             // Check if the train is going along the nat track orientation
-            if(t.getTrain().getOrientation() && t.getTrain().getDirection() || !t.getTrain().getOrientation() && !t.getTrain().getDirection() ){
+            if(forwardWithTrack(t)){
                 if(jt.inBound()){
                     destinationTrack = tracks[jt.getInboundTo()];
                 }
@@ -144,39 +143,16 @@ public class Visualisation implements MouseEvents {
         }
     }
 
-    public void onSectionCheck(DrawableRollingStock rollingStock, double pixelsToMove){
-        DefaultTrack curTrack = rollingStock.getCurTrack();
-        DrawableTrain t = rollingStock.getConnectedToTrain();
 
-        if(rollingStock.getConToThis() !=null){
-            onSectionCheck(t.getRollingStockConnected(), pixelsToMove);
+    public DefaultTrack getJunctionTrack(int junctionID){
+        for(DefaultTrack t : tracks){
+            if(t instanceof JunctionTrack && t.getId() == junctionID){
+                return t;
+            }
         }
 
-        if(!curTrack.checkOnAfterUpdate(rollingStock.getCurrentLocation(),rollingStock.lastPointOnCurve,pixelsToMove,t.getTrain().getOrientation(),rollingStock.getDirection())){
-            DefaultTrack destinationTrack = null;
-
-            if(t.getTrain().getOrientation() && rollingStock.getDirection() || !t.getTrain().getOrientation() && !rollingStock.getDirection()){
-                destinationTrack = tracks[curTrack.getTo()];
-            }
-            else{
-                if(tracks[curTrack.getFrom()] instanceof JunctionTrack){
-                    JunctionTrack jt = (JunctionTrack)tracks[curTrack.getFrom()];
-//                    if(curTrack.getId() == tracks[jt.getToNotThrownTrack()].getId()){
-//                        destinationTrack = tracks[jt.getToNotThrownTrack()];
-//                    }
-//                    else{
-//                        destinationTrack = tracks[jt.getThrownTrack()];
-//                    }
-                }
-                else {
-                    destinationTrack = tracks[curTrack.getFrom()];
-                }
-            }
-            // Sets the next track
-            rollingStock.setCurTrack(destinationTrack);
-        }
+        return null;//Should not happen
     }
-
 
     /**
      * Checks if a drawable train is on a track given after it has moved a certain amount based on its speed
@@ -206,30 +182,93 @@ public class Visualisation implements MouseEvents {
 
             DefaultTrack destinationTrack = null;
 
-            if(t.getTrain().getOrientation() && t.getTrain().getDirection() || !t.getTrain().getOrientation() && !t.getTrain().getDirection() ){
-                destinationTrack = tracks[curTrack.getTo()];
+            if(forwardWithTrack(t)){
+                if(curTrack.getJuncTo() != -1){
+                    JunctionTrack juncTrack = (JunctionTrack)tracks[curTrack.getJuncTo()];
+
+                    if(juncTrack.getThrown()){
+                        destinationTrack = tracks[curTrack.getJuncTo()];
+                    }
+                    else{
+                        destinationTrack = tracks[curTrack.getTo()];
+                    }
+                }
+                else {
+                    destinationTrack = tracks[curTrack.getTo()];
+                }
             }
             else{
-                destinationTrack = tracks[curTrack.getFrom()];
+                if(curTrack.getJuncFrom() != -1){
+                    JunctionTrack juncTrack = (JunctionTrack)tracks[curTrack.getJuncFrom()];
+                    if(juncTrack.getThrown()){
+                        destinationTrack = tracks[curTrack.getJuncFrom()];
+                    }
+                    else {
+                        destinationTrack = tracks[curTrack.getFrom()];// The junc is not thrown so go to normal track
+                    }
+                }
+                else {
+                    destinationTrack = tracks[curTrack.getFrom()];// There is only one track coming from it
+                }
             }
 
             // Sets the next track
+            int prevTrack = curTrack.getId();
+
             t.setCurTrack(destinationTrack);
 
             if(destinationTrack instanceof JunctionTrack){
                 JunctionTrack jt = (JunctionTrack)destinationTrack;
-                if(t.getTrain().getOrientation() && t.getTrain().getDirection() || !t.getTrain().getOrientation() && !t.getTrain().getDirection() ){
-                    t.setJuncTrack(jt.getToTrack());
+
+                // Train going along the track orientation
+                if(forwardWithTrack(t)){
+                    if(jt.inBound()){
+                        if(prevTrack == jt.getInboundFromThrown()){
+                            t.setJuncTrack(jt.getInboundThrownJuncTrack());
+                        }
+                        else {
+                            t.setJuncTrack(jt.getStraightTrack());
+                        }
+                    }
+                    // Not inbound
+                    else {
+                        if(jt.getThrown()){
+                            t.setJuncTrack(jt.getOutBoundThrownJuncTrack());
+                        }
+                        else{
+                            t.setJuncTrack(jt.getStraightTrack());
+                        }
+                    }
                 }
-                else {
-                    System.out.println("Not going forward " + jt.getFromTrack());
-                    t.setJuncTrack(jt.getFromTrack());
+                else {// Not going a along with track
+                     if(jt.inBound()){
+
+                         if(jt.getThrown()){
+                             t.setJuncTrack(jt.getInboundThrownNotNatJuncTrack());
+                         }
+                         else {
+                             t.setJuncTrack(jt.getStraightTrack());
+                         }
+                     }
+                    else {// Not inbound
+                         if(prevTrack == jt.getOutboundToThrown()){
+                             t.setJuncTrack(jt.getOutBoundNotNatThrownJuncTrack());
+                         }
+                         else {
+
+                             t.setJuncTrack(jt.getStraightTrack());
+                         }
+                     }
                 }
             }
 
             // Check if the track it moves to is in a different section
             checkSectionChangedEvent(t,curSection,destinationTrack);
         }
+    }
+
+    public boolean forwardWithTrack(DrawableTrain t){
+        return t.getTrain().getOrientation() && t.getTrain().getDirection() || !t.getTrain().getOrientation() && !t.getTrain().getDirection();
     }
 
     public void checkSectionChangedEvent(DrawableTrain t,DrawableSection curSection, DefaultTrack destinationTrack){
@@ -251,6 +290,38 @@ public class Visualisation implements MouseEvents {
         }
     }
 
+    public void onSectionCheck(DrawableRollingStock rollingStock, double pixelsToMove){
+        DefaultTrack curTrack = rollingStock.getCurTrack();
+        DrawableTrain t = rollingStock.getConnectedToTrain();
+
+        if(rollingStock.getConToThis() !=null){
+            onSectionCheck(t.getRollingStockConnected(), pixelsToMove);
+        }
+
+        if(!curTrack.checkOnAfterUpdate(rollingStock.getCurrentLocation(), rollingStock.lastPointOnCurve, pixelsToMove, t.getTrain().getOrientation(), rollingStock.getDirection())){
+            DefaultTrack destinationTrack = null;
+
+            if(forwardWithTrack(t)){
+                destinationTrack = tracks[curTrack.getTo()];
+            }
+            else{
+                if(tracks[curTrack.getFrom()] instanceof JunctionTrack){
+                    JunctionTrack jt = (JunctionTrack)tracks[curTrack.getFrom()];
+//                    if(curTrack.getId() == tracks[jt.getToNotThrownTrack()].getId()){
+//                        destinationTrack = tracks[jt.getToNotThrownTrack()];
+//                    }
+//                    else{
+//                        destinationTrack = tracks[jt.getThrownTrack()];
+//                    }
+                }
+                else {
+                    destinationTrack = tracks[curTrack.getFrom()];
+                }
+            }
+            // Sets the next track
+            rollingStock.setCurTrack(destinationTrack);
+        }
+    }
 
     /**
      * Called when user presses the event button the send an event to a train
@@ -423,7 +494,6 @@ public class Visualisation implements MouseEvents {
             if(t.containsPoint(x,y)){
                 if(t instanceof JunctionTrack){
                     ((JunctionTrack) t).setThrown(!((JunctionTrack) t).getThrown());
-                    System.out.println("Toggling");
                 }
             }
         }

@@ -76,7 +76,10 @@ public class Quart3 extends DefaultTrack {
 
         double rotateCHange = 90/updates;
 
-        if((super.getDirection().equals("LEFT") || (nat && !forward) || (!nat && forward))){
+        if((super.getDirection().equals("LEFT") && ((nat && forward || !nat && !forward)))){
+            return curRotation + rotateCHange;
+        }
+        else if((super.getDirection().equals("UP") && (nat && !forward) || (!nat && forward))){
             return curRotation + rotateCHange;
         }
         else {
@@ -93,10 +96,14 @@ public class Quart3 extends DefaultTrack {
         double points = (int)(lengthOfQauter/moveBy);
         double angle = 90;
 
-        if((super.getDirection().equals("LEFT") || (nat && !forward) || (!nat && forward))){
+        if((super.getDirection().equals("LEFT") && ((nat && forward || !nat && !forward)))){
             lastSubAngle = (int)points - lastSubAngle;
         }
 
+
+        if((super.getDirection().equals("UP") && (nat && !forward) || (!nat && forward))){
+            lastSubAngle = (int)points - lastSubAngle;
+        }
 
         double subAngle = (lastSubAngle/points)*Math.toRadians(angle);
 
@@ -195,6 +202,7 @@ public class Quart3 extends DefaultTrack {
     }
 
     public void draw(GraphicsContext g) {
+        g.setStroke(super.getColor());
         if(super.getMouseOn() ){//|| super.getSection().getTrainOn()
             g.setStroke(Color.GREEN);
         }

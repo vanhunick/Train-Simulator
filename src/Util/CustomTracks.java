@@ -174,9 +174,6 @@ public class CustomTracks {
         tracks[1].setFrom(0);
         tracks[1].setTo(2);
 
-        // First junction
-//        tracks[2].setFrom(3);// Since it is inbound to is from
-
         // Outer First corner
         tracks[3].setFrom(2);
         tracks[3].setTo(4);
@@ -201,16 +198,16 @@ public class CustomTracks {
         tracks[8].setFrom(7);
         tracks[8].setTo(9);
 
-        // Third junction from outer fourth corner
-//        tracks[9].setFrom(8);
 
         // First inner straight
-        tracks[10].setFrom(9);//TODO check if it could be multiple tracks
+        tracks[10].setFrom(19);//TODO check if it could be multiple tracks fourth junction
+        tracks[10].setJuncFrom(9);//Second Junction
         tracks[10].setTo(11);
 
         // Second inner straight
         tracks[11].setFrom(10);
         tracks[11].setTo(12);
+        tracks[11].setJuncTo(2);
 
         // Third junction track inbound so from is to
 //        tracks[12].setFrom(13);
@@ -402,8 +399,6 @@ public class CustomTracks {
         tracks[11].setStart(tracks[9]);
         tracks[11].setFrom(9);
         JunctionTrack jtIn = (JunctionTrack)tracks[11];
-//        jtIn.setToNotThrownTrack(1);
-//        jtIn.setToThrownTrack(9);
 
 
         return railway;

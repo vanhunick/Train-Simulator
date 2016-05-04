@@ -3,7 +3,6 @@ package view.Drawable.section_types;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
-import model.Section;
 
 import java.awt.*;
 
@@ -75,6 +74,8 @@ public class Quart1 extends DefaultTrack {
     }
 
     public void draw(GraphicsContext g) {
+        g.setStroke(super.getColor());
+
         if(super.getMouseOn()){// ||super.getSection().getTrainOn()
             g.setStroke(Color.GREEN);
         }
@@ -96,7 +97,10 @@ public class Quart1 extends DefaultTrack {
 
         double rotateCHange = 90/updates;
 
-        if(super.getDirection().equals("RIGHT") || (nat && !forward) || (!nat && forward)){
+        if((super.getDirection().equals("RIGHT") && ((nat && forward || !nat && !forward)))){
+            return curRotation + rotateCHange;
+        }
+        else if((super.getDirection().equals("DOWN") && (nat && !forward) || (!nat && forward))){
             return curRotation + rotateCHange;
         }
         else {
@@ -114,7 +118,11 @@ public class Quart1 extends DefaultTrack {
         double angle = 90;
 
 
-        if(super.getDirection().equals("RIGHT") || (nat && !forward) || (!nat && forward)){
+        if((super.getDirection().equals("RIGHT") && ((nat && forward || !nat && !forward)))){
+            lastSubAngle = (int)points - lastSubAngle;
+        }
+
+        if((super.getDirection().equals("DOWN") && (nat && !forward) || (!nat && forward))){
             lastSubAngle = (int)points - lastSubAngle;
         }
 
@@ -171,11 +179,11 @@ public class Quart1 extends DefaultTrack {
                     return false;//No longer in this section
                 }
             }
-            else if(!nat){
+            else {
                 if(p.getX() > super.getStartX() + super.getLength()/2){//TODO
                     return false;//No longer in this section
                 }
-                if(p.getY() < super.getStartY() - super.getLength()/2){
+                if(p.getY() > super.getStartY() + super.getLength()/2){
                     return false;//No longer in this section
                 }
             }
@@ -190,10 +198,6 @@ public class Quart1 extends DefaultTrack {
 
         double pointsPrev = (int)(lengthOfQuater()/oldSpeed);
         double percentageThrough = curPointAlong/pointsPrev;
-//
-//        if(changedDirection){
-//            percentageThrough = 1-percentageThrough;
-//        }
 
         curPointAlong = (int)(points*percentageThrough);
 

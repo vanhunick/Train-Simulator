@@ -76,6 +76,7 @@ public class Quart4 extends DefaultTrack {
     }
 
     public void draw(GraphicsContext g) {
+        g.setStroke(super.getColor());
         if(super.getMouseOn() ){//|| super.getSection().getTrainOn()
             g.setStroke(Color.GREEN);
         }
