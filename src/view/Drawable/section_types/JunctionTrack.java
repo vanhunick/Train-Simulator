@@ -175,7 +175,6 @@ public class JunctionTrack extends DefaultTrack {
      * */
     public boolean checkOnAfterUpdate(DrawableTrain dt, double moveBy){
         if(dt.getJuncTrack().checkOnAfterUpdate(dt.getCurrentLocation(), dt.lastPointOnCurve, moveBy, dt.getTrain().getOrientation(), dt.getTrain().getDirection())){
-            System.out.println("Still on ");
             return true;
         }
 
