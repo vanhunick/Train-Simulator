@@ -46,6 +46,8 @@ public class DrawableTrain{
     // The previous direction
     private boolean lastDirection;
 
+    private boolean crashed;
+
     // Drawing fields
     private Image trainImage;
     private ImageView trainImageView;
@@ -65,6 +67,7 @@ public class DrawableTrain{
      * @param curTrack the track it is on
      * */
     public DrawableTrain(Train train,DrawableSection curSection, DefaultTrack curTrack){
+        this.crashed = false;
         this.curSection = curSection;
         this.train = train;
         this.curTrack = curTrack;
@@ -77,10 +80,17 @@ public class DrawableTrain{
         this.params = new SnapshotParameters();
         params.setFill(Color.TRANSPARENT);
         if(train.getOrientation()){
-            this.curRotation = 90;// Going forwards
+            System.out.println("Nat");
+            if(curTrack.getDirection().equals("LEFT")){
+                this.curRotation = 270;// Not nat orientation
+            }
+            else {
+                this.curRotation = 90;// Nat orientation
+            }
+
         }
-        else{
-            this.curRotation = 270;// Going backwards
+        else{//TODO check if need to consider other direction here too
+            this.curRotation = 270;// Not nat orientation
         }
     }
 
@@ -96,14 +106,19 @@ public class DrawableTrain{
         Image rotatedImage = trainImageView.snapshot(params, null);
         trainImage = rotatedImage;
 
+
         // Draw the image
         g.drawImage(trainImage, currentLocation.getX() - trainImage.getWidth()/2, currentLocation.getY() - trainImage.getHeight()/2);
     }
+
 
     /**
      * Updates the location of the train
      * */
     public void update(){
+        if(crashed)return;
+
+
         if(lastUpdate == 0){
             lastUpdate = System.currentTimeMillis();
         }
@@ -175,7 +190,7 @@ public class DrawableTrain{
     /**
      * Sets the current track and resets the progress along the curve field
      *
-     * @param section sets the current track
+     * @param track the current track
      * */
     public void setCurTrack(DefaultTrack track){
         lastPointOnCurve = 0;
@@ -248,6 +263,30 @@ public class DrawableTrain{
     public DefaultTrack getJuncTrack(){
         return this.juncTrack;
     }
+
+    public void setCrashed(boolean crashed){
+        this.crashed = crashed;
+    }
+
+    public boolean isCrashed(){
+        return this.crashed;
+    }
+
+    public boolean containsPoint(double x, double y){
+
+        double startX = currentLocation.getX() - trainImage.getWidth()/2;
+        double startY = currentLocation.getY() - trainImage.getHeight()/2;
+
+        if(x >= startX && x <= startX + trainImage.getWidth() && y > startY && y < startY + trainImage.getHeight())return true;
+
+        if(rollingStockConnected != null){
+            return rollingStockConnected.containsPoint(x,y);
+        }
+
+        // The point is not on the train or any of it's rolling stock
+        return false;
+    }
+
 
     public void setJuncTrack(DefaultTrack juncTrack){
         lastPointOnCurve = 0;

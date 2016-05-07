@@ -80,6 +80,7 @@ public class Visualisation implements MouseEvents {
     public void update(){
         if(started){
             for(DrawableTrain t : trains){
+                checkCollision();
                 onSectionCheck(t);
                 t.update();
             }
@@ -107,14 +108,6 @@ public class Visualisation implements MouseEvents {
         }
     }
     public void onSectionCheckJunction(DrawableTrain t, double pixelsToMove, JunctionTrack jt){
-//        if(t.getJuncTrack() == null){
-//            if(forwardWithTrack(t)){
-//                t.setJuncTrack(jt.getToTrack());
-//            }
-//            else {
-//                t.setJuncTrack(jt.getFromTrack());
-//            }
-//        }
 
         // Check if it will be on the junction after it moves
         if(!jt.checkOnAfterUpdate(t,pixelsToMove)){// Can update the cur junction track
@@ -144,11 +137,34 @@ public class Visualisation implements MouseEvents {
     }
 
 
+    public void checkCollision(){
+
+        for(int i = 0; i < trains.size(); i++){
+//            double frontX = trains.get(i).getCurrentLocation().getX() + trains.get(i).getTrain().getLength();
+//            double frontY = trains.get(i).getCurrentLocation().getY();
+
+            double frontX = trains.get(i).getCurrentLocation().getX() + ((trains.get(i).getTrain().getLength()/2) * (Math.cos(Math.toRadians(trains.get(i).getCurRotation()-90))));
+            double frontY = trains.get(i).getCurrentLocation().getY() + ((trains.get(i).getTrain().getLength()/2) * (Math.sin(Math.toRadians(trains.get(i).getCurRotation()-90))));
+
+
+            for(int j = 0; j < trains.size(); j++){
+                if(j !=i){
+                    if(trains.get(j).containsPoint(frontX,frontY)){
+                        trains.get(i).setCrashed(true);
+                        trains.get(j).setCrashed(true);
+                    }
+                }
+            }
+        }
+    }
+
     /**
      * Checks if a drawable train is on a track given after it has moved a certain amount based on its speed
      * changes the trains track is no longer on the same track and send this information to the controller.
      * */
     public void onSectionCheck(DrawableTrain t){
+        if(t.isCrashed())return;
+
         DrawableSection curSection = t.getCurSection();
         DefaultTrack curTrack = t.getCurTrack();
 
@@ -354,12 +370,14 @@ public class Visualisation implements MouseEvents {
         for(DrawableSection ds : railway) {
             if (ds.getSection().getID() == 99) {
                 //Create the train
-                Train train = new Train(1, 50, 120, true,true);
+                Train train = new Train(1, 80, 120, true,true);
+
 
                 //RollingStock rollingStock = new RollingStock(100,828282);
 
                 // Create the drawable train
                 DrawableTrain drawableTrain = new DrawableTrain(train, ds,ds.getTracks()[0]);
+
 
                // DrawableRollingStock drawableRollingStock = new DrawableRollingStock(rollingStock,drawableTrain,drawableTrain.getTrain().getDirection());
                 //drawableRollingStock.setStart(drawableTrain.getCurrentLocation(),this);
@@ -367,6 +385,11 @@ public class Visualisation implements MouseEvents {
                 //drawableTrain.setRollingStockConnected(drawableRollingStock);
 
                 trains.add(drawableTrain);
+            }
+            if(ds.getSection().getID() == 101){
+                Train train1 = new Train(2, 80, 120, true,true);
+                DrawableTrain drawableTrain1 = new DrawableTrain(train1, ds,ds.getTracks()[0]);
+                trains.add(drawableTrain1);
             }
         }
     }

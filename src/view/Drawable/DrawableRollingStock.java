@@ -243,4 +243,18 @@ public class DrawableRollingStock{
     public DrawableRollingStock getConToThis(){
         return this.conToThis;
     }
+
+    public boolean containsPoint(double x, double y) {
+
+        double startX = currentLocation.getX() - rollingStockImage.getWidth()/2;
+        double startY = currentLocation.getY() - rollingStockImage.getHeight()/2;
+
+        if(x >= startX && x <= startX + rollingStockImage.getWidth() && y > startY && y < startY + rollingStockImage.getHeight())return true;
+
+        if(conToThis != null){
+            return conToThis.containsPoint(x,y);
+        }
+        return false;
+    }
+
 }
