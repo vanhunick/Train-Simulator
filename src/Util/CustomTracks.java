@@ -92,7 +92,7 @@ public class CustomTracks {
         railway[2] =  new DrawableSection(new Section(curID++,300,new DefaultTrack[]{tracks[2],tracks[3]}));
         railway[3] =  new DrawableSection(new Section(curID++,300,new DefaultTrack[]{tracks[4]}));
         railway[4] =  new DrawableSection(new Section(curID++,300,new DefaultTrack[]{tracks[5]}));
-        railway[5] =  new DrawableSection(new Section(curID++,300,new DefaultTrack[]{tracks[6]}));
+        railway[5] =  new DrawableSection(new Section(101,300,new DefaultTrack[]{tracks[6]}));
         railway[6] =  new DrawableSection(new Section(curID++,300,new DefaultTrack[]{tracks[7]}));
         railway[7] =  new DrawableSection(new Section(curID++,300,new DefaultTrack[]{tracks[8],tracks[9]}));
         railway[8] =  new DrawableSection(new Section(curID++,300,new DefaultTrack[]{tracks[10]}));
