@@ -107,6 +107,16 @@ public class CustomTracks {
         railway[17] =  new DrawableSection(new Section(curID++,300,new DefaultTrack[]{tracks[21]}));
 
 
+        railway[0].getSection().setCandetect(true);
+        railway[2].getSection().setCandetect(true);
+        railway[4].getSection().setCandetect(true);
+        railway[6].getSection().setCandetect(true);
+        railway[8].getSection().setCandetect(true);
+        railway[10].getSection().setCandetect(true);
+        railway[12].getSection().setCandetect(true);
+        railway[14].getSection().setCandetect(true);
+        railway[16].getSection().setCandetect(true);
+
         // Set up the drawing of the sections
         tracks[1].setStart(tracks[0]);
 
