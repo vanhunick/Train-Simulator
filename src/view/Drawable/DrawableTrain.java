@@ -17,7 +17,7 @@ import java.awt.*;
 /**
  * Created by vanhunick on 22/03/16.
  */
-public class DrawableTrain{
+public class DrawableTrain implements Movable{
 
     // The width of the train
     private double width = 40;
@@ -80,7 +80,6 @@ public class DrawableTrain{
         this.params = new SnapshotParameters();
         params.setFill(Color.TRANSPARENT);
         if(train.getOrientation()){
-            System.out.println("Nat");
             if(curTrack.getDirection().equals("LEFT")){
                 this.curRotation = 270;// Not nat orientation
             }
@@ -138,7 +137,7 @@ public class DrawableTrain{
         if(lastDirection != train.getDirection()){
             lastPointOnCurve = curTrack.getNumberOfPoints(pixelsToMove) - lastPointOnCurve;
             if(rollingStockConnected != null){
-                //rollingStockConnected.setDirection(train.getDirection());
+                rollingStockConnected.setDirection(train.getDirection());
             }
         }
         lastDirection = train.getDirection();
@@ -160,7 +159,7 @@ public class DrawableTrain{
 
         // Update the rolling stock if there is one connected
         if(rollingStockConnected != null){
-            //rollingStockConnected.update(pixelsToMove);
+            rollingStockConnected.update(pixelsToMove);
         }
     }
 
@@ -238,8 +237,19 @@ public class DrawableTrain{
      *
      * @return current location
      * */
+    @Override
     public Point getCurrentLocation(){
         return  this.currentLocation;
+    }
+
+    @Override
+    public boolean getOrientation() {
+        return this.getTrain().getOrientation();
+    }
+
+    @Override
+    public int getLastPointOnCurve() {
+        return lastPointOnCurve;
     }
 
     /**
@@ -260,8 +270,14 @@ public class DrawableTrain{
         this.rollingStockConnected = dr;
     }
 
+    @Override
     public DefaultTrack getJuncTrack(){
         return this.juncTrack;
+    }
+
+    @Override
+    public void setLastPointOnCurve(int point) {
+        this.lastPointOnCurve = point;
     }
 
     public void setCrashed(boolean crashed){
@@ -270,6 +286,11 @@ public class DrawableTrain{
 
     public boolean isCrashed(){
         return this.crashed;
+    }
+
+    @Override
+    public boolean getDirection() {
+        return this.getTrain().getDirection();
     }
 
     public boolean containsPoint(double x, double y){

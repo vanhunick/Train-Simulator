@@ -6,6 +6,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import model.RollingStock;
 import view.Drawable.section_types.DefaultTrack;
+import view.Drawable.section_types.DrawableSection;
+import view.Drawable.section_types.JunctionTrack;
 import view.Visualisation;
 
 import java.awt.*;
@@ -13,7 +15,7 @@ import java.awt.*;
 /**
  * Created by vanhunick on 21/04/16.
  */
-public class DrawableRollingStock{
+public class DrawableRollingStock implements Movable{
 
     // The rolling stock it represents
     private RollingStock rollingStock;
@@ -53,6 +55,10 @@ public class DrawableRollingStock{
 
     // The direction the rolling stock is traveling
     private boolean direction;
+
+    private DefaultTrack juncTrack;
+
+    private boolean isCrashed;
 
 
     /**
@@ -110,8 +116,18 @@ public class DrawableRollingStock{
         // While we have not moved back enough to account for our length keep updating
         while(total < len){
             vis.onSectionCheck(this,increment);
-            this.currentLocation = curTrack.getNextPoint(currentLocation, lastPointOnCurve,increment, connectedToTrain.getTrain().getOrientation(),this.getDirection());
-            curRotation = curTrack.getNextRotation(curRotation,increment, connectedToTrain.getTrain().getOrientation(),this.getDirection());
+
+            if(curTrack instanceof JunctionTrack){
+                JunctionTrack jt = (JunctionTrack)curTrack;
+                this.currentLocation = jt.getNextPoint(this,increment);
+                this.curRotation = jt.getNextRotation(this, increment);
+            }
+            else{
+                // Get the next point for the train
+                this.currentLocation = curTrack.getNextPoint(currentLocation, lastPointOnCurve,increment, connectedToTrain.getOrientation(),this.getDirection());
+                // Get the next rotation for the train
+                this.curRotation = curTrack.getNextRotation(curRotation,increment, connectedToTrain.getOrientation(),this.getDirection());
+            }
             lastPointOnCurve++;
             total+=increment;
         }
@@ -123,15 +139,35 @@ public class DrawableRollingStock{
         setDirection(!this.direction);
     }
 
+    @Override
+    public  void setCrashed(boolean crashed){
+        this.isCrashed = crashed;
+    }
 
-    /**
-     * Returns the direction of the rolling stock
-     *
-     * @return direction
-     * */
+    @Override
+    public int getLastPointOnCurve(){
+        return lastPointOnCurve;
+    }
+
+    @Override
+    public boolean isCrashed(){
+        return this.isCrashed;
+    }
+
+    @Override
     public boolean getDirection(){
         return this.direction;
     }
+
+    @Override
+    public void setJuncTrack(DefaultTrack jt) {
+        this.juncTrack = jt;
+    }
+
+    public double getCurRotation(){
+        return  this.curRotation;
+    }
+
 
 
     /**
@@ -162,11 +198,17 @@ public class DrawableRollingStock{
             start = !start;
         }
 
-        // Get the next point for the rolling stock
-        this.currentLocation = curTrack.getNextPoint(currentLocation, lastPointOnCurve,pixels, connectedToTrain.getTrain().getOrientation(),this.getDirection());
-
-        // Get the next rotation of the rolling stock
-        curRotation = curTrack.getNextRotation(curRotation,pixels, connectedToTrain.getTrain().getOrientation(),this.getDirection());
+        if(curTrack instanceof JunctionTrack){
+            JunctionTrack jt = (JunctionTrack)curTrack;
+            this.currentLocation = jt.getNextPoint(this,pixels);
+            this.curRotation = jt.getNextRotation(this, pixels);
+        }
+        else{
+            // Get the next point for the train
+            this.currentLocation = curTrack.getNextPoint(currentLocation, lastPointOnCurve,pixels, connectedToTrain.getOrientation(),this.getDirection());
+            // Get the next rotation for the train
+            this.curRotation = curTrack.getNextRotation(curRotation,pixels, connectedToTrain.getOrientation(),this.getDirection());
+        }
 
         // Increment the progress down the curve
         lastPointOnCurve++;
@@ -208,20 +250,23 @@ public class DrawableRollingStock{
     }
 
 
-    /**
-     * Returns out current location
-     *
-     * @return location
-     * */
-    public Point getCurrentLocation(){return  this.currentLocation;}
+    @Override
+    public Point getCurrentLocation(){
+        return  this.currentLocation;
+    }
 
+    @Override
+    public boolean getOrientation() {
+        return connectedToTrain.getTrain().getOrientation();
+    }
 
-    /**
-     * Returns the current track it is on
-     *
-     * @return track
-     * */
+    @Override
     public DefaultTrack getCurTrack(){return this.curTrack;}
+
+    @Override
+    public DrawableRollingStock getRollingStockConnected() {
+        return conToThis;
+    }
 
 
     /**
@@ -229,32 +274,28 @@ public class DrawableRollingStock{
      *
      * @param curTrack the track it is on
      * */
+    @Override
     public void setCurTrack(DefaultTrack curTrack){
         lastPointOnCurve = 0;
         this.curTrack = curTrack;
     }
 
+    @Override
+    public DefaultTrack getJuncTrack() {
+        return juncTrack;
+    }
 
-    /**
-     * Return the rolling stock connected to this rolling stock
-     *
-     * @return rolling stock
-     * */
-    public DrawableRollingStock getConToThis(){
-        return this.conToThis;
+    @Override
+    public void setLastPointOnCurve(int point) {
+        this.lastPointOnCurve = point;
     }
 
     public boolean containsPoint(double x, double y) {
-
         double startX = currentLocation.getX() - rollingStockImage.getWidth()/2;
         double startY = currentLocation.getY() - rollingStockImage.getHeight()/2;
 
         if(x >= startX && x <= startX + rollingStockImage.getWidth() && y > startY && y < startY + rollingStockImage.getHeight())return true;
 
-        if(conToThis != null){
-            return conToThis.containsPoint(x,y);
-        }
         return false;
     }
-
 }

@@ -4,6 +4,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
 import view.Drawable.DrawableTrain;
+import view.Drawable.Movable;
 
 import java.awt.*;
 
@@ -162,24 +163,33 @@ public class JunctionTrack extends DefaultTrack {
         }
     }
 
-    public Point getNextPoint(DrawableTrain dt, double moveBy){
-        return dt.getJuncTrack().getNextPoint(dt.getCurrentLocation(),dt.lastPointOnCurve,moveBy,dt.getTrain().getOrientation(),dt.getTrain().getDirection());
+//    public Point getNextPoint(DrawableTrain dt, double moveBy){
+//        return dt.getJuncTrack().getNextPoint(dt.getCurrentLocation(),dt.lastPointOnCurve,moveBy,dt.getTrain().getOrientation(),dt.getTrain().getDirection());
+//    }
+
+    public Point getNextPoint(Movable dt, double moveBy){
+        return dt.getJuncTrack().getNextPoint(dt.getCurrentLocation(),dt.getLastPointOnCurve(),moveBy,dt.getOrientation(),dt.getDirection());
     }
 
-    public double getNextRotation(DrawableTrain dt, double speed){
-        return dt.getJuncTrack().getNextRotation(dt.getCurRotation(),speed,dt.getTrain().getOrientation(),dt.getTrain().getDirection());
+//    public double getNextRotation(DrawableTrain dt, double speed){
+//        return dt.getJuncTrack().getNextRotation(dt.getCurRotation(),speed,dt.getTrain().getOrientation(),dt.getTrain().getDirection());
+//    }
+
+    public double getNextRotation(Movable dt, double speed){
+        return dt.getJuncTrack().getNextRotation(dt.getCurRotation(), speed, dt.getOrientation(), dt.getDirection());
     }
 
     /**
      * Junctions tracks need to be able to change the lastsubable and need to be able to change the orientation
      * */
-    public boolean checkOnAfterUpdate(DrawableTrain dt, double moveBy){
-        if(dt.getJuncTrack().checkOnAfterUpdate(dt.getCurrentLocation(), dt.lastPointOnCurve, moveBy, dt.getTrain().getOrientation(), dt.getTrain().getDirection())){
+    public boolean checkOnAfterUpdate(Movable dt, double moveBy){
+
+        if(dt.getJuncTrack().checkOnAfterUpdate(dt.getCurrentLocation(), dt.getLastPointOnCurve(), moveBy, dt.getOrientation(), dt.getDirection())){
             return true;
         }
 
         boolean nat = false;
-        if(dt.getTrain().getOrientation() && dt.getTrain().getDirection() || !dt.getTrain().getOrientation() && !dt.getTrain().getDirection() ){
+        if(dt.getOrientation() && dt.getDirection() || !dt.getOrientation() && !dt.getDirection() ){
             nat = true;
         }
 
@@ -194,14 +204,14 @@ public class JunctionTrack extends DefaultTrack {
                 return false;
             }
             else{
-                dt.lastPointOnCurve = 0;
+                dt.setLastPointOnCurve(0);
                 dt.setJuncTrack(outUpTrack);
                 return true;
             }
         }
         else if(dt.getJuncTrack().getDrawID() == 2){
             if(nat){
-                dt.lastPointOnCurve = 0;
+                dt.setLastPointOnCurve(0);
                 dt.setJuncTrack(inRight);
                 return true;
             }
@@ -212,7 +222,7 @@ public class JunctionTrack extends DefaultTrack {
         }
         else if(dt.getJuncTrack().getDrawID() == 3){
             if(nat){
-                dt.lastPointOnCurve = 0;
+                dt.setLastPointOnCurve(0);
                 dt.setJuncTrack(outRightTrack);
                 return true;
             }
@@ -227,7 +237,7 @@ public class JunctionTrack extends DefaultTrack {
                 return false;
             }
             else {
-                dt.lastPointOnCurve = 0;
+                dt.setLastPointOnCurve(0);
                 dt.setJuncTrack(inDown);
                 return true;
             }
