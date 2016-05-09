@@ -4,13 +4,13 @@ import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.paint.*;
 import model.RollingStock;
 import view.Drawable.section_types.DefaultTrack;
-import view.Drawable.section_types.DrawableSection;
 import view.Drawable.section_types.JunctionTrack;
 import view.Visualisation;
 
-import java.awt.*;
+import java.awt.Point;
 
 /**
  * Created by vanhunick on 21/04/16.
@@ -58,6 +58,7 @@ public class DrawableRollingStock implements Movable{
 
     private DefaultTrack juncTrack;
 
+    // The state of the rolling stock
     private boolean isCrashed;
 
 
@@ -80,7 +81,7 @@ public class DrawableRollingStock implements Movable{
 
 
         //Image setup
-        this.rollingStockImage = new Image("file:src/res/rolling_stock.png", 30, 100, false, false);
+        this.rollingStockImage = new Image("file:src/res/rolling_stock.png", 20, 80, false, false);
         this.trainImageView = new ImageView(rollingStockImage);
         this.params = new SnapshotParameters();
         params.setFill(javafx.scene.paint.Color.TRANSPARENT);
@@ -139,36 +140,6 @@ public class DrawableRollingStock implements Movable{
         setDirection(!this.direction);
     }
 
-    @Override
-    public  void setCrashed(boolean crashed){
-        this.isCrashed = crashed;
-    }
-
-    @Override
-    public int getLastPointOnCurve(){
-        return lastPointOnCurve;
-    }
-
-    @Override
-    public boolean isCrashed(){
-        return this.isCrashed;
-    }
-
-    @Override
-    public boolean getDirection(){
-        return this.direction;
-    }
-
-    @Override
-    public void setJuncTrack(DefaultTrack jt) {
-        this.juncTrack = jt;
-    }
-
-    public double getCurRotation(){
-        return  this.curRotation;
-    }
-
-
 
     /**
      * Sets the direction of the rolling stock
@@ -192,11 +163,13 @@ public class DrawableRollingStock implements Movable{
      * @param pixels the number of pixels to move by
      * */
     public void update(double pixels){
+        this.speed = pixels;
         // If it is the start we need to update the speed to match the train speed
         if(start){
             updateSpeed(pixels);
             start = !start;
         }
+
 
         if(curTrack instanceof JunctionTrack){
             JunctionTrack jt = (JunctionTrack)curTrack;
@@ -235,20 +208,50 @@ public class DrawableRollingStock implements Movable{
         Image rotatedImage = trainImageView.snapshot(params, null);
         rollingStockImage = rotatedImage;
 
+
+        // Find the back of the train
+        double backX = connectedToTrain.getCurrentLocation().getX() + ((connectedToTrain.getTrain().getLength()/2) * (Math.cos(Math.toRadians(connectedToTrain.getCurRotation()-90+180))));
+        double backY = connectedToTrain.getCurrentLocation().getY() + ((connectedToTrain.getTrain().getLength()/2) * (Math.sin(Math.toRadians(connectedToTrain.getCurRotation()-90+180))));
+
+        // Find the front of the rolling stock
+        double frontX = currentLocation.getX() + ((80/2) * (Math.cos(Math.toRadians(curRotation-90))));
+        double frontY = currentLocation.getY() + ((80/2) * (Math.sin(Math.toRadians(curRotation-90))));
+
+        g.setStroke(Color.GREEN);
+        g.strokeLine(frontX, frontY,backX,backY);
+
         // Draw the image
         g.drawImage(rollingStockImage, currentLocation.getX() - rollingStockImage.getWidth()/2, currentLocation.getY() - rollingStockImage.getHeight()/2);
     }
 
 
     /**
-     * Returns the train we are connected to
+     * Returns if the point at x,y is on the rolling stock
      *
-     * @return train
+     * @param x the x location to check
+     *
+     * @param y the y location to check
      * */
-    public DrawableTrain getConnectedToTrain(){
-        return this.connectedToTrain;
+    public boolean containsPoint(double x, double y) {
+        double startX = currentLocation.getX() - rollingStockImage.getWidth()/2;
+        double startY = currentLocation.getY() - rollingStockImage.getHeight()/2;
+
+        if(x >= startX && x <= startX + rollingStockImage.getWidth() && y > startY && y < startY + rollingStockImage.getHeight())return true;
+
+        return false;
     }
 
+
+    @Override
+    public void setCurTrack(DefaultTrack curTrack){
+        lastPointOnCurve = 0;
+        this.curTrack = curTrack;
+    }
+
+    @Override
+    public void setLastPointOnCurve(int point) {
+        this.lastPointOnCurve = point;
+    }
 
     @Override
     public Point getCurrentLocation(){
@@ -268,16 +271,34 @@ public class DrawableRollingStock implements Movable{
         return conToThis;
     }
 
-
-    /**
-     * Sets the track it is on
-     *
-     * @param curTrack the track it is on
-     * */
     @Override
-    public void setCurTrack(DefaultTrack curTrack){
-        lastPointOnCurve = 0;
-        this.curTrack = curTrack;
+    public  void setCrashed(boolean crashed){
+        this.isCrashed = crashed;
+    }
+
+    @Override
+    public int getLastPointOnCurve(){
+        return lastPointOnCurve;
+    }
+
+    @Override
+    public boolean isCrashed(){
+        return this.isCrashed;
+    }
+
+    @Override
+    public boolean getDirection(){
+        return this.direction;
+    }
+
+    @Override
+    public void setJuncTrack(DefaultTrack jt) {
+        this.juncTrack = jt;
+    }
+
+    @Override
+    public double getCurRotation(){
+        return  this.curRotation;
     }
 
     @Override
@@ -285,17 +306,4 @@ public class DrawableRollingStock implements Movable{
         return juncTrack;
     }
 
-    @Override
-    public void setLastPointOnCurve(int point) {
-        this.lastPointOnCurve = point;
-    }
-
-    public boolean containsPoint(double x, double y) {
-        double startX = currentLocation.getX() - rollingStockImage.getWidth()/2;
-        double startY = currentLocation.getY() - rollingStockImage.getHeight()/2;
-
-        if(x >= startX && x <= startX + rollingStockImage.getWidth() && y > startY && y < startY + rollingStockImage.getHeight())return true;
-
-        return false;
-    }
 }

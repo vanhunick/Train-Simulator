@@ -105,7 +105,6 @@ public class DrawableTrain implements Movable{
         Image rotatedImage = trainImageView.snapshot(params, null);
         trainImage = rotatedImage;
 
-
         // Draw the image
         g.drawImage(trainImage, currentLocation.getX() - trainImage.getWidth()/2, currentLocation.getY() - trainImage.getHeight()/2);
     }
@@ -116,7 +115,6 @@ public class DrawableTrain implements Movable{
      * */
     public void update(){
         if(crashed)return;
-
 
         if(lastUpdate == 0){
             lastUpdate = System.currentTimeMillis();
@@ -163,10 +161,26 @@ public class DrawableTrain implements Movable{
         }
     }
 
-    public double getCurRotation(){
-        return this.curRotation;
-    }
+    /**
+     * Returns if the point at x,y is on the train
+     *
+     * @param x the x location to check
+     *
+     * @param y the y location to check
+     * */
+    public boolean containsPoint(double x, double y){
+        double startX = currentLocation.getX() - trainImage.getWidth()/2;
+        double startY = currentLocation.getY() - trainImage.getHeight()/2;
 
+        if(x >= startX && x <= startX + trainImage.getWidth() && y > startY && y < startY + trainImage.getHeight())return true;
+
+        if(rollingStockConnected != null){
+            return rollingStockConnected.containsPoint(x,y);
+        }
+
+        // The point is not on the train or any of it's rolling stock
+        return false;
+    }
 
     /**
      * Returns the train it represents
@@ -175,25 +189,6 @@ public class DrawableTrain implements Movable{
      * */
     public Train getTrain(){
         return this.train;
-    }
-
-    /**
-     * Returns the current track the train is on
-     *
-     * @return current track
-     * */
-    public DefaultTrack getCurTrack(){
-        return this.curTrack;
-    }
-
-    /**
-     * Sets the current track and resets the progress along the curve field
-     *
-     * @param track the current track
-     * */
-    public void setCurTrack(DefaultTrack track){
-        lastPointOnCurve = 0;
-        this.curTrack = track;
     }
 
     /**
@@ -232,11 +227,68 @@ public class DrawableTrain implements Movable{
         return  this.currentLocation.getY();
     }
 
+
     /**
-     * Returns a point representing the current location
+     * Sets the rolling stock connected
      *
-     * @return current location
+     * @param dr the rolling stock that should be connected to this train
      * */
+    public void setRollingStockConnected(DrawableRollingStock dr){
+        this.rollingStockConnected = dr;
+    }
+
+    @Override
+    public void setJuncTrack(DefaultTrack juncTrack){
+        lastPointOnCurve = 0;
+        this.juncTrack = juncTrack;
+    }
+
+    @Override
+    public DefaultTrack getCurTrack(){
+        return this.curTrack;
+    }
+
+    @Override
+    public void setCurTrack(DefaultTrack track){
+        lastPointOnCurve = 0;
+        this.curTrack = track;
+    }
+
+    @Override
+    public DrawableRollingStock getRollingStockConnected(){
+        return this.rollingStockConnected;
+    }
+
+    @Override
+    public DefaultTrack getJuncTrack(){
+        return this.juncTrack;
+    }
+
+    @Override
+    public void setLastPointOnCurve(int point) {
+        this.lastPointOnCurve = point;
+    }
+
+    @Override
+    public void setCrashed(boolean crashed){
+        this.crashed = crashed;
+    }
+
+    @Override
+    public boolean isCrashed(){
+        return this.crashed;
+    }
+
+    @Override
+    public double getCurRotation(){
+        return this.curRotation;
+    }
+
+    @Override
+    public boolean getDirection() {
+        return this.getTrain().getDirection();
+    }
+
     @Override
     public Point getCurrentLocation(){
         return  this.currentLocation;
@@ -250,67 +302,5 @@ public class DrawableTrain implements Movable{
     @Override
     public int getLastPointOnCurve() {
         return lastPointOnCurve;
-    }
-
-    /**
-     * Returns the connected rolling stock
-     *
-     * @return rolling stock connected
-     * */
-    public DrawableRollingStock getRollingStockConnected(){
-        return this.rollingStockConnected;
-    }
-
-    /**
-     * Sets the rolling stock connected
-     *
-     * @param dr the rolling stock that should be connected to this train
-     * */
-    public void setRollingStockConnected(DrawableRollingStock dr){
-        this.rollingStockConnected = dr;
-    }
-
-    @Override
-    public DefaultTrack getJuncTrack(){
-        return this.juncTrack;
-    }
-
-    @Override
-    public void setLastPointOnCurve(int point) {
-        this.lastPointOnCurve = point;
-    }
-
-    public void setCrashed(boolean crashed){
-        this.crashed = crashed;
-    }
-
-    public boolean isCrashed(){
-        return this.crashed;
-    }
-
-    @Override
-    public boolean getDirection() {
-        return this.getTrain().getDirection();
-    }
-
-    public boolean containsPoint(double x, double y){
-
-        double startX = currentLocation.getX() - trainImage.getWidth()/2;
-        double startY = currentLocation.getY() - trainImage.getHeight()/2;
-
-        if(x >= startX && x <= startX + trainImage.getWidth() && y > startY && y < startY + trainImage.getHeight())return true;
-
-        if(rollingStockConnected != null){
-            return rollingStockConnected.containsPoint(x,y);
-        }
-
-        // The point is not on the train or any of it's rolling stock
-        return false;
-    }
-
-
-    public void setJuncTrack(DefaultTrack juncTrack){
-        lastPointOnCurve = 0;
-        this.juncTrack = juncTrack;
     }
 }

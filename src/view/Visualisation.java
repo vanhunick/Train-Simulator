@@ -144,7 +144,10 @@ public class Visualisation implements MouseEvents {
         }
     }
 
-
+    /**
+     * Check if any of the trains or rolling stocks crash into each other.
+     * If they are set the trains involved to crashed
+     * */
     public void checkCollision(){
 
         for(int i = 0; i < trains.size(); i++){
@@ -153,10 +156,13 @@ public class Visualisation implements MouseEvents {
             double frontX = trains.get(i).getCurrentLocation().getX() + ((trains.get(i).getTrain().getLength()/2) * (Math.cos(Math.toRadians(trains.get(i).getCurRotation()-90))));
             double frontY = trains.get(i).getCurrentLocation().getY() + ((trains.get(i).getTrain().getLength()/2) * (Math.sin(Math.toRadians(trains.get(i).getCurRotation()-90))));
 
+            // Find the back of the train
+            double backX = trains.get(i).getCurrentLocation().getX() + ((trains.get(i).getTrain().getLength()/2) * (Math.cos(Math.toRadians(trains.get(i).getCurRotation()-90+180))));
+            double backY = trains.get(i).getCurrentLocation().getY() + ((trains.get(i).getTrain().getLength()/2) * (Math.sin(Math.toRadians(trains.get(i).getCurRotation()-90+180))));
 
             for(int j = 0; j < trains.size(); j++){
                 if(j !=i){
-                    if(trains.get(j).containsPoint(frontX,frontY)){
+                    if(trains.get(j).containsPoint(frontX,frontY) || trains.get(j).containsPoint(backX,backY)){
                         trains.get(i).setCrashed(true);
                         trains.get(j).setCrashed(true);
                     }
@@ -176,6 +182,10 @@ public class Visualisation implements MouseEvents {
         return t.getOrientation() && t.getDirection() || !t.getOrientation() && !t.getDirection();
     }
 
+    /**
+     * Checks if the new track the train have moved into is in the current section if not send out an
+     * event for a section change to the model track and for the event log
+     * */
     public void checkSectionChangedEvent(DrawableTrain t,DrawableSection curSection, DefaultTrack destinationTrack){
 
         // Check if the current section contains the new track to move to
@@ -213,7 +223,6 @@ public class Visualisation implements MouseEvents {
         if(t.isCrashed())return;
 
         DrawableSection curSection = null;
-
         if(t instanceof DrawableTrain){
             DrawableTrain dt = (DrawableTrain)t;
             curSection = dt.getCurSection();
@@ -224,13 +233,13 @@ public class Visualisation implements MouseEvents {
         }
 
 
-        DefaultTrack curTrack = t.getCurTrack();
+
 
         if(t.getRollingStockConnected() !=null){
-
             onSectionCheck(t.getRollingStockConnected(), pixelsToMove);
         }
 
+        DefaultTrack curTrack = t.getCurTrack();
         if(curTrack instanceof JunctionTrack){
             onSectionCheckJunction(t,pixelsToMove,(JunctionTrack)curTrack);
             return;
@@ -364,16 +373,13 @@ public class Visualisation implements MouseEvents {
         // Add a train to the track
         for(DrawableSection ds : railway) {
             if (ds.getSection().getID() == 99) {
+
                 //Create the train
                 Train train = new Train(1, 80, 120, true,true);
-
-
-                RollingStock rollingStock = new RollingStock(100,828282);
-
-                // Create the drawable train
                 DrawableTrain drawableTrain = new DrawableTrain(train, ds,ds.getTracks()[0]);
 
 
+                RollingStock rollingStock = new RollingStock(80,828282);
                 DrawableRollingStock drawableRollingStock = new DrawableRollingStock(rollingStock,drawableTrain,drawableTrain.getTrain().getDirection());
                 drawableRollingStock.setStart(drawableTrain.getCurrentLocation(),this);
 
@@ -384,6 +390,14 @@ public class Visualisation implements MouseEvents {
             if(ds.getSection().getID() == 101){
                 Train train1 = new Train(2, 80, 120, true,true);
                 DrawableTrain drawableTrain1 = new DrawableTrain(train1, ds,ds.getTracks()[0]);
+
+
+                RollingStock rollingStock1 = new RollingStock(80,847584578);
+                DrawableRollingStock drawableRollingStock1 = new DrawableRollingStock(rollingStock1,drawableTrain1,drawableTrain1.getTrain().getDirection());
+                drawableRollingStock1.setStart(drawableTrain1.getCurrentLocation(),this);
+
+                drawableTrain1.setRollingStockConnected(drawableRollingStock1);
+
                 trains.add(drawableTrain1);
             }
         }
