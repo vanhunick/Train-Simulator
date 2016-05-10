@@ -210,15 +210,27 @@ public class DrawableRollingStock implements Movable{
 
 
         // Find the back of the train
-        double backX = connectedToTrain.getCurrentLocation().getX() + ((connectedToTrain.getTrain().getLength()/2) * (Math.cos(Math.toRadians(connectedToTrain.getCurRotation()-90+180))));
-        double backY = connectedToTrain.getCurrentLocation().getY() + ((connectedToTrain.getTrain().getLength()/2) * (Math.sin(Math.toRadians(connectedToTrain.getCurRotation()-90+180))));
+        double conX = 0;
+        double conY = 0;
+
+        // Check if we are connected to a train
+        if(connectedToTrain != null){
+            conX = connectedToTrain.getCurrentLocation().getX() + ((connectedToTrain.getTrain().getLength()/2) * (Math.cos(Math.toRadians(connectedToTrain.getCurRotation()-90+180))));
+            conY = connectedToTrain.getCurrentLocation().getY() + ((connectedToTrain.getTrain().getLength()/2) * (Math.sin(Math.toRadians(connectedToTrain.getCurRotation()-90+180))));
+        }
+
+        // Meaning we are connected to a rollingstock
+        if(conToThis != null){
+            conX = conToThis.getCurrentLocation().getX() + ((connectedToTrain.getTrain().getLength()/2) * (Math.cos(Math.toRadians(connectedToTrain.getCurRotation()-90+180))));
+            conY = conToThis.getCurrentLocation().getY() + ((connectedToTrain.getTrain().getLength()/2) * (Math.sin(Math.toRadians(connectedToTrain.getCurRotation()-90+180))));
+        }
 
         // Find the front of the rolling stock
         double frontX = currentLocation.getX() + ((80/2) * (Math.cos(Math.toRadians(curRotation-90))));
         double frontY = currentLocation.getY() + ((80/2) * (Math.sin(Math.toRadians(curRotation-90))));
 
         g.setStroke(Color.GREEN);
-        g.strokeLine(frontX, frontY,backX,backY);
+        g.strokeLine(frontX, frontY,conX,conY);
 
         // Draw the image
         g.drawImage(rollingStockImage, currentLocation.getX() - rollingStockImage.getWidth()/2, currentLocation.getY() - rollingStockImage.getHeight()/2);

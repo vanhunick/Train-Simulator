@@ -323,8 +323,13 @@ public class Visualisation implements MouseEvents {
     /**
      * Stops the simulation
      * */
-    public void stopSimulation(){
+    public void restartSimulation(){
+        trains.clear();
+        addDefaultTrains();
+
         started = false;
+        this.modelTrack = new ModelTrack(getTrains(), getSections());
+        lastUpdate = System.currentTimeMillis();
     }
 
     /**
@@ -461,7 +466,7 @@ public class Visualisation implements MouseEvents {
         VBox vBox = new VBox(8);
         vBox.setPadding(new Insets(5,5,5,5));
         Button sim = new Button("Start Simulation");
-        Button stop = new Button("Stop");
+        Button restart = new Button("Restart");
         Button pause = new Button("Pause");
         Button event = new Button("Event");
         Button toggleJunc = new Button("Toggle Junction");
@@ -469,12 +474,12 @@ public class Visualisation implements MouseEvents {
 
         //Starts the simulation
         sim.setOnAction(e -> startSimulation());
-        stop.setOnAction(e -> stopSimulation());
+        restart.setOnAction(e -> restartSimulation());
         pause.setOnAction(e -> pause());
         event.setOnAction(e -> startEventDialog());
         toggleJunc.setOnAction(e -> toggleJunction());
 
-        vBox.getChildren().addAll(sim,stop, pause,event,toggleJunc);
+        vBox.getChildren().addAll(sim,restart, pause,event,toggleJunc);
         vBox.setPrefWidth(WIDTH);
 
         return vBox;
