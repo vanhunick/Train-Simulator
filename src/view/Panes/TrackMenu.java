@@ -25,6 +25,9 @@ public class TrackMenu {
 
     private boolean canDetect;
     private String curDetectSelection;
+    private String curTrainSelection;
+
+    private CheckBox addTrain;
 
     private DefaultTrack section;
 
@@ -48,6 +51,17 @@ public class TrackMenu {
         grid.setPadding(new Insets(20, 150, 10, 10));
 
 
+        ObservableList<String> trainOptions = FXCollections.observableArrayList("British Rail Class 25","British Rail Class 108 (DMU)","British Rail Class 101 (DMU)");
+
+        ComboBox trainSelectComboBox = new ComboBox(trainOptions);
+        trainSelectComboBox.setValue("British Rail Class 25");
+        curTrainSelection = "British Rail Class 25";
+
+        trainSelectComboBox.valueProperty().addListener(new ChangeListener<String>() {
+            @Override public void changed(ObservableValue ov, String t, String t1) {
+                valChangedTrain(ov, t, t1);
+            }
+        });
 
         // Create an option box for the trains
         ObservableList<String> options = FXCollections.observableArrayList("Yes","No");
@@ -63,6 +77,10 @@ public class TrackMenu {
             }
         });
 
+
+        // Create checkbox for adding a train
+        addTrain = new CheckBox("Add train");
+        addTrain.setIndeterminate(false);
 
 
         grid.add(new Label("Can Detect:"), 0, 0);
@@ -80,6 +98,10 @@ public class TrackMenu {
         grid.add(new Label("Length:"), 0, 2);
         grid.add(length, 1, 2);
 
+        grid.add(new Label("Add Train:"), 0, 3);
+        grid.add(trainSelectComboBox,1,3);
+
+        grid.add(addTrain,1,4);
 
         dialog.getDialogPane().setContent(grid);
 
@@ -109,6 +131,14 @@ public class TrackMenu {
         this.curDetectSelection = t1;
     }
 
+    public void valChangedTrain(ObservableValue ov, String t, String t1){
+        this.curTrainSelection = t1;
+    }
+
+    public boolean addTrain(){
+        return addTrain.isSelected();
+    }
+
     public int getId(){
         return this.id;
     }
@@ -116,6 +146,8 @@ public class TrackMenu {
     public boolean canDetect(){
         return this.canDetect;
     }
+
+    public String getCurTrainSelection(){return this.curTrainSelection;}
 
     public double getLength(){
         return this.length;

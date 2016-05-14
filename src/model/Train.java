@@ -20,6 +20,10 @@ public class Train {
     // Speed of the train
     private  double speed;
 
+    private double maxSpeed;
+
+    private double acceleration;
+
     /**
      * Creates a new Train object
      *

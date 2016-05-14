@@ -56,6 +56,10 @@ public class DrawableTrain implements Movable{
     public int lastPointOnCurve = 0;
     private SnapshotParameters params;
 
+    //
+    private double currentSpeed;
+    private double targetSpeed;
+
 
     /**
      * Creates a new drawable train object

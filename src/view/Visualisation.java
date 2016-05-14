@@ -524,10 +524,37 @@ public class Visualisation implements MouseEvents {
                 clickTogleJunction(x,y);
                 if(getOnTrack(x,y) != null){
                     DefaultTrack dt = getOnTrack(x,y);
-                    new TrackMenu(dt);
+                    showTrackMenu(dt);
                 }
             }
         }
+    }
+
+    public void showTrackMenu(DefaultTrack dt){
+        TrackMenu menu = new TrackMenu(dt);
+
+        if(menu.addTrain()){
+            String selectedTrain = menu.getCurTrainSelection();
+            if(selectedTrain.equals("British Rail Class 25")){
+                Train train1 = new Train(getNextTrainID(), 80, 120, true,true);
+                DrawableTrain drawableTrain1 = new DrawableTrain(train1, getSection(dt),dt);
+
+                trains.add(drawableTrain1);
+            }
+            else if(selectedTrain.equals("British Rail Class 108 (DMU)")){
+
+            }
+            else if(selectedTrain.equals("British Rail Class 101 (DMU)")){
+
+            }
+        }
+    }
+
+    public DrawableSection getSection(DefaultTrack dt){
+        for(DrawableSection ds : railway){
+            if(ds.containsTrack(dt))return ds;
+        }
+        return null;
     }
 
     public DefaultTrack getOnTrack(double x, double y){
@@ -539,6 +566,15 @@ public class Visualisation implements MouseEvents {
         return null;
     }
 
+    public int getNextTrainID(){
+        int maxID = 0;
+        for(DrawableTrain t : trains){
+            if(t.getTrain().getId() > maxID){
+               maxID = t.getTrain().getId();
+            }
+        }
+        return maxID++;
+    }
 
     @Override
     public void mouseMoved(double x, double y, MouseEvent e) {
