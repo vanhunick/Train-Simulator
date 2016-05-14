@@ -20,6 +20,7 @@ import view.Drawable.Movable;
 import view.Drawable.section_types.*;
 import view.Panes.EventGen;
 import view.Panes.EventLog;
+import view.Panes.TrackMenu;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -232,9 +233,6 @@ public class Visualisation implements MouseEvents {
             }
         }
 
-
-
-
         if(t.getRollingStockConnected() !=null){
             onSectionCheck(t.getRollingStockConnected(), pixelsToMove);
         }
@@ -393,17 +391,17 @@ public class Visualisation implements MouseEvents {
                 trains.add(drawableTrain);
             }
             if(ds.getSection().getID() == 101){
-                Train train1 = new Train(2, 80, 120, true,true);
-                DrawableTrain drawableTrain1 = new DrawableTrain(train1, ds,ds.getTracks()[0]);
-
-
-                RollingStock rollingStock1 = new RollingStock(80,847584578);
-                DrawableRollingStock drawableRollingStock1 = new DrawableRollingStock(rollingStock1,drawableTrain1,drawableTrain1.getTrain().getDirection());
-                drawableRollingStock1.setStart(drawableTrain1.getCurrentLocation(),this);
-
-                drawableTrain1.setRollingStockConnected(drawableRollingStock1);
-
-                trains.add(drawableTrain1);
+//                Train train1 = new Train(2, 80, 120, true,true);
+//                DrawableTrain drawableTrain1 = new DrawableTrain(train1, ds,ds.getTracks()[0]);
+//
+//
+//                RollingStock rollingStock1 = new RollingStock(80,847584578);
+//                DrawableRollingStock drawableRollingStock1 = new DrawableRollingStock(rollingStock1,drawableTrain1,drawableTrain1.getTrain().getDirection());
+//                drawableRollingStock1.setStart(drawableTrain1.getCurrentLocation(),this);
+//
+//                drawableTrain1.setRollingStockConnected(drawableRollingStock1);
+//
+//                trains.add(drawableTrain1);
             }
         }
     }
@@ -472,6 +470,7 @@ public class Visualisation implements MouseEvents {
         Button toggleJunc = new Button("Toggle Junction");
 
 
+
         //Starts the simulation
         sim.setOnAction(e -> startSimulation());
         restart.setOnAction(e -> restartSimulation());
@@ -523,13 +522,35 @@ public class Visualisation implements MouseEvents {
         if(e.getButton().equals(MouseButton.PRIMARY)){
             if(e.getClickCount() == 2){
                 clickTogleJunction(x,y);
+                if(getOnTrack(x,y) != null){
+                    DefaultTrack dt = getOnTrack(x,y);
+                    new TrackMenu(dt);
+                }
             }
         }
     }
 
+    public DefaultTrack getOnTrack(double x, double y){
+        for(DefaultTrack dt : tracks){
+            if(dt.containsPoint(x,y)){
+                return dt;
+            }
+        }
+        return null;
+    }
+
 
     @Override
-    public void mouseMoved(double x, double y, MouseEvent e) {}
+    public void mouseMoved(double x, double y, MouseEvent e) {
+        for(DefaultTrack track : tracks){
+            if(track.containsPoint(x,y)){
+                track.setColor(Color.GREEN);
+            }
+            else {
+                track.setColor(Color.WHITE);
+            }
+        }
+    }
 
     @Override
     public void mouseDragged(double x, double y, MouseEvent e) {}

@@ -58,6 +58,7 @@ public class ModelTrack implements Events{
     public void sectionChanged(int id) {
         for(Section s : sections){
             if(s.getID() == id){
+                System.out.println("Section changing");
                 //update the section status
                 s.setTrainOn(!s.getTrainOn());
             }

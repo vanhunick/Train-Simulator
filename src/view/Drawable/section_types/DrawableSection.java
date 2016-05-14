@@ -1,6 +1,7 @@
 package view.Drawable.section_types;
 
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 import model.Section;
 
 /**
@@ -17,6 +18,8 @@ public class DrawableSection {
 
     public void draw(GraphicsContext g){
         for(DefaultTrack track : section.getTracks()){
+            if(section.getTrainOn())track.setColor(Color.BLUE);
+            else track.setColor(Color.WHITE);
             track.draw(g);
         }
     }
