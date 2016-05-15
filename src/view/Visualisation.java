@@ -207,7 +207,7 @@ public class Visualisation implements MouseEvents {
     }
 
     public double getDistanceToMoveFromTrain(DrawableTrain drawableTrain){
-        double speed = drawableTrain.getTrain().getSpeed();
+        double speed = drawableTrain.getCurrentSpeed();
         long curTime = System.currentTimeMillis();
         long timeChanged = curTime - lastUpdate;
         timeChanged = 20;
@@ -378,9 +378,9 @@ public class Visualisation implements MouseEvents {
             if (ds.getSection().getID() == 99) {
 
                 //Create the train
-                Train train = new Train(1, 80, 120, true,true);
+                Train train = new Train(1, 80, 500, true,true,0.2);
                 DrawableTrain drawableTrain = new DrawableTrain(train, ds,ds.getTracks()[0]);
-
+                drawableTrain.setTargetSpeed(400);
 
                 RollingStock rollingStock = new RollingStock(80,828282);
                 DrawableRollingStock drawableRollingStock = new DrawableRollingStock(rollingStock,drawableTrain,drawableTrain.getTrain().getDirection());
@@ -536,7 +536,7 @@ public class Visualisation implements MouseEvents {
         if(menu.addTrain()){
             String selectedTrain = menu.getCurTrainSelection();
             if(selectedTrain.equals("British Rail Class 25")){
-                Train train1 = new Train(getNextTrainID(), 80, 120, true,true);
+                Train train1 = new Train(getNextTrainID(), 80, 120, true,true, 0.8);
                 DrawableTrain drawableTrain1 = new DrawableTrain(train1, getSection(dt),dt);
 
                 trains.add(drawableTrain1);
@@ -556,6 +556,7 @@ public class Visualisation implements MouseEvents {
         }
         return null;
     }
+
 
     public DefaultTrack getOnTrack(double x, double y){
         for(DefaultTrack dt : tracks){

@@ -18,9 +18,7 @@ public class Train {
     private boolean direction;
 
     // Speed of the train
-    private  double speed;
-
-    private double maxSpeed;
+    private  double maxSpeed;
 
     private double acceleration;
 
@@ -31,27 +29,28 @@ public class Train {
      *
      * @param length the length of the train
      *
-     * @param speed the speed of the train
+     * @param maxSpeed the maxSpeed of the train
      *
      * @param direction if it is going forwards or backwards
      *
      * @param orientation if it is starting with or again the natural orientation of the track
      * */
-    public Train(int id, double length,double speed,  boolean direction,boolean orientation){
+    public Train(int id, double length,double maxSpeed,  boolean direction,boolean orientation, double acceleration){
         this.id = id;
         this.direction = direction;
         this.length = length;
         this.orientation = orientation;
-        this.speed = speed;
+        this.maxSpeed = maxSpeed;
+        this.acceleration = acceleration;
     }
 
     /**
-     * Sets the speed of the train
+     * Sets the maxSpeed of the train
      *
-     * @param speed the speed the train should be
+     * @param maxSpeed the maxSpeed the train should be
      * */
-    public void setSpeed(double speed){
-        this.speed = speed;
+    public void setMaxSpeed(double maxSpeed){
+        this.maxSpeed = maxSpeed;
     }
 
     /**
@@ -73,12 +72,12 @@ public class Train {
     }
 
     /**
-     * Get the speed of the train
+     * Get the maxSpeed of the train
      *
-     * @return speed
+     * @return maxSpeed
      * */
-    public double getSpeed() {
-        return speed;
+    public double getMaxSpeed() {
+        return maxSpeed;
     }
 
     /**
@@ -107,4 +106,9 @@ public class Train {
     public void setDirection(boolean direction){
         this.direction = direction;
     }
+
+    /**
+     * Gets the acceleration of the train
+     * */
+    public double getAcceleration(){return this.acceleration;}
 }

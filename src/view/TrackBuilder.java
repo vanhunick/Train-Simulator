@@ -323,7 +323,7 @@ public class TrackBuilder implements MouseEvents{
                 //td.getStartId()
 
                 //Create the train
-                Train train = new Train(td.getId(),td.getLength(),80,true,false);
+                Train train = new Train(td.getId(),td.getLength(),80,true,false, 0.8);
 
                 // Create the drawable train
 //                DrawableTrain drawableTrain = new DrawableTrain(train, s,s.getSection());//TODO make sections first

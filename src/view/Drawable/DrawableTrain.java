@@ -77,6 +77,7 @@ public class DrawableTrain implements Movable{
         this.curTrack = curTrack;
         this.currentLocation = new Point((int) curTrack.getInitialX(width),(int) curTrack.getInitialY(width));
         this.lastDirection = train.getDirection();
+        this.currentSpeed = 0;
 
         //Image setup
         this.trainImage= new Image("file:src/res/train.gif", 20, 80, false, false);
@@ -120,6 +121,11 @@ public class DrawableTrain implements Movable{
     public void update(){
         if(crashed)return;
 
+        // Check if the train is still accelerating and the current speed is less than the max speed
+        if(currentSpeed < targetSpeed && currentSpeed < train.getMaxSpeed()){
+            applyAcceleration();
+        }
+
         if(lastUpdate == 0){
             lastUpdate = System.currentTimeMillis();
         }
@@ -127,7 +133,7 @@ public class DrawableTrain implements Movable{
 
         long timeChanged = curTime - lastUpdate;
         timeChanged = 20;
-        double pixelsToMove = (timeChanged/1000.0)*train.getSpeed();
+        double pixelsToMove = (timeChanged/1000.0)*currentSpeed;
 
         // Check if the speed have changed
         if(lastSpeed != pixelsToMove && lastPointOnCurve != 0){
@@ -163,6 +169,12 @@ public class DrawableTrain implements Movable{
         if(rollingStockConnected != null){
             rollingStockConnected.update(pixelsToMove);
         }
+    }
+
+    public void applyAcceleration(){
+        double timeChanged = 20;// ms
+        this.currentSpeed += train.getAcceleration()*(1000/timeChanged);
+        System.out.println("Speed " + currentSpeed);
     }
 
     /**
@@ -232,6 +244,10 @@ public class DrawableTrain implements Movable{
     }
 
 
+    public double getCurrentSpeed(){
+        return this.currentSpeed;
+    }
+
     /**
      * Sets the rolling stock connected
      *
@@ -239,6 +255,10 @@ public class DrawableTrain implements Movable{
      * */
     public void setRollingStockConnected(DrawableRollingStock dr){
         this.rollingStockConnected = dr;
+    }
+
+    public void setTargetSpeed(double speed){
+        this.targetSpeed = speed;
     }
 
     @Override
