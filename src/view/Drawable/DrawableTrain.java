@@ -248,6 +248,10 @@ public class DrawableTrain implements Movable{
         return this.currentSpeed;
     }
 
+    public double getLength(){
+        return train.getLength();//TODO need to decide on where to store full length including rolling stock or not to
+    }
+
     /**
      * Sets the rolling stock connected
      *

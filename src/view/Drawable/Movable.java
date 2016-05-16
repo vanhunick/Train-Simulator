@@ -50,4 +50,8 @@ public interface Movable {
     public DefaultTrack getJuncTrack();
 
     public void setLastPointOnCurve(int point);
+
+    public boolean containsPoint(double x, double y);
+
+    public double getLength();
 }

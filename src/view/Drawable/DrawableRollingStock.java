@@ -319,6 +319,10 @@ public class DrawableRollingStock implements Movable{
         return lastPointOnCurve;
     }
 
+    public double getLength(){
+        return rollingStock.getLength();//TODO decide if to store here or in rolling stock
+    }
+
     @Override
     public boolean isCrashed(){
         return this.isCrashed;

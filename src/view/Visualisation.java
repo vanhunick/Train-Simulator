@@ -22,6 +22,7 @@ import view.Panes.EventGen;
 import view.Panes.EventLog;
 import view.Panes.TrackMenu;
 
+import javax.swing.plaf.basic.BasicInternalFrameTitlePane;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,6 +48,7 @@ public class Visualisation implements MouseEvents {
     private List<DrawableTrain> trains;
     private List<DrawableRollingStock> drawableRollingStocks;
     private DrawableSection[] railway;
+    private List<Movable> movable;
 
     // The tracks
     private DefaultTrack tracks[];
@@ -72,6 +74,7 @@ public class Visualisation implements MouseEvents {
         // Set the default track
         this.trains = new ArrayList<>();
         this.drawableRollingStocks = new ArrayList<>();
+        this.movable = new ArrayList<>();
         CustomTracks ct = new CustomTracks("FULL");
 
         this.tracks = ct.getTracks();
@@ -166,28 +169,41 @@ public class Visualisation implements MouseEvents {
      * If they are set the trains involved to crashed
      * */
     public void checkCollision(){
-
-        for(int i = 0; i < trains.size(); i++){
+        System.out.println("Checking collisions");
+        for(int i = 0; i < movable.size(); i++){
 
             // Find the front of the train
-            double frontX = trains.get(i).getCurrentLocation().getX() + ((trains.get(i).getTrain().getLength()/2) * (Math.cos(Math.toRadians(trains.get(i).getCurRotation()-90))));
-            double frontY = trains.get(i).getCurrentLocation().getY() + ((trains.get(i).getTrain().getLength()/2) * (Math.sin(Math.toRadians(trains.get(i).getCurRotation()-90))));
+            double frontX = movable.get(i).getCurrentLocation().getX() + ((movable.get(i).getLength()/2) * (Math.cos(Math.toRadians(movable.get(i).getCurRotation()-90))));
+            double frontY = movable.get(i).getCurrentLocation().getY() + ((movable.get(i).getLength()/2) * (Math.sin(Math.toRadians(movable.get(i).getCurRotation()-90))));
 
             // Find the back of the train
-            double backX = trains.get(i).getCurrentLocation().getX() + ((trains.get(i).getTrain().getLength()/2) * (Math.cos(Math.toRadians(trains.get(i).getCurRotation()-90+180))));
-            double backY = trains.get(i).getCurrentLocation().getY() + ((trains.get(i).getTrain().getLength()/2) * (Math.sin(Math.toRadians(trains.get(i).getCurRotation()-90+180))));
+            double backX = movable.get(i).getCurrentLocation().getX() + ((movable.get(i).getLength()/2) * (Math.cos(Math.toRadians(movable.get(i).getCurRotation()-90+180))));
+            double backY = movable.get(i).getCurrentLocation().getY() + ((movable.get(i).getLength()/2) * (Math.sin(Math.toRadians(movable.get(i).getCurRotation()-90+180))));
 
-            for(int j = 0; j < trains.size(); j++){
+            for(int j = 0; j < movable.size(); j++){
                 if(j !=i){
-                    if(trains.get(j).containsPoint(frontX,frontY) || trains.get(j).containsPoint(backX,backY)){
-                        trains.get(i).setCrashed(true);
-                        trains.get(j).setCrashed(true);
+                    if((movable.get(j).containsPoint(frontX,frontY) || movable.get(j).containsPoint(backX,backY)) && notConnected(movable.get(i), movable.get(j))){
+                        System.out.println(movable.get(i));
+                        System.out.println(movable.get(j));
+                        movable.get(i).setCrashed(true);
+                        movable.get(j).setCrashed(true);
                     }
                 }
             }
         }
     }
 
+    //TODO CHANGE THIS LATER IT'S VERY BAD
+    public boolean notConnected(Movable m1, Movable m2){
+        if(m1 instanceof DrawableTrain && m2 instanceof DrawableTrain)return false;
+        if(m2.getRollingStockConnected() != null){
+            if(m2.getRollingStockConnected().equals(m1))return false;
+        }
+        if(m1.getRollingStockConnected() != null){
+            if(m1.getRollingStockConnected().equals(m2))return false;
+        }
+        return true;// they are connected
+    }
 
 
     /**
@@ -406,6 +422,8 @@ public class Visualisation implements MouseEvents {
 
                 drawableRollingStocks.add(drawableRollingStock);
                 trains.add(drawableTrain);
+                movable.add(drawableTrain);
+                movable.add(drawableRollingStock);
             }
             if(ds.getSection().getID() == 101){
 //                Train train1 = new Train(2, 80, 120, true,true);
@@ -558,6 +576,7 @@ public class Visualisation implements MouseEvents {
 
 
                 trains.add(drawableTrain1);
+                movable.add(drawableTrain1);
             }
             else if(selectedTrain.equals("British Rail Class 108 (DMU)")){
 
@@ -568,10 +587,11 @@ public class Visualisation implements MouseEvents {
         }
 
         if(menu.addRollingStocl()){
-            RollingStock rollingStock = new RollingStock(100,100);//TODO check if id required
+            RollingStock rollingStock = new RollingStock(80,100);//TODO check if id required
             DrawableRollingStock drawableRollingStock = new DrawableRollingStock(rollingStock);
             drawableRollingStock.setStartNotConnected(dt);
             drawableRollingStocks.add(drawableRollingStock);
+            movable.add(drawableRollingStock);
         }
     }
 
