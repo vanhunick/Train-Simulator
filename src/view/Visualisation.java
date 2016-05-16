@@ -45,6 +45,7 @@ public class Visualisation implements MouseEvents {
 
     // Trains and Sections
     private List<DrawableTrain> trains;
+    private List<DrawableRollingStock> drawableRollingStocks;
     private DrawableSection[] railway;
 
     // The tracks
@@ -70,6 +71,7 @@ public class Visualisation implements MouseEvents {
 
         // Set the default track
         this.trains = new ArrayList<>();
+        this.drawableRollingStocks = new ArrayList<>();
         CustomTracks ct = new CustomTracks("FULL");
 
         this.tracks = ct.getTracks();
@@ -86,6 +88,12 @@ public class Visualisation implements MouseEvents {
                 checkCollision();
                 onSectionCheck(t,0);
                 t.update();
+            }
+            // Update the rolling stocks not connected
+            for(DrawableRollingStock drs : drawableRollingStocks){
+                if(!drs.isConnected()){
+                    drs.update(0);//TODO make seperate method later
+                }
             }
         }
     }
@@ -109,6 +117,14 @@ public class Visualisation implements MouseEvents {
                 t.getRollingStockConnected().refresh(g);
             }
         }
+
+        // Update all the rolling stocks
+        for(DrawableRollingStock drs : drawableRollingStocks){
+            if(!drs.isConnected()){
+                drs.refresh(g);
+            }
+        }
+
     }
 
 
@@ -388,6 +404,7 @@ public class Visualisation implements MouseEvents {
 
                 drawableTrain.setRollingStockConnected(drawableRollingStock);
 
+                drawableRollingStocks.add(drawableRollingStock);
                 trains.add(drawableTrain);
             }
             if(ds.getSection().getID() == 101){
@@ -539,6 +556,7 @@ public class Visualisation implements MouseEvents {
                 Train train1 = new Train(getNextTrainID(), 80, 120, true,true, 0.8);
                 DrawableTrain drawableTrain1 = new DrawableTrain(train1, getSection(dt),dt);
 
+
                 trains.add(drawableTrain1);
             }
             else if(selectedTrain.equals("British Rail Class 108 (DMU)")){
@@ -547,6 +565,13 @@ public class Visualisation implements MouseEvents {
             else if(selectedTrain.equals("British Rail Class 101 (DMU)")){
 
             }
+        }
+
+        if(menu.addRollingStocl()){
+            RollingStock rollingStock = new RollingStock(100,100);//TODO check if id required
+            DrawableRollingStock drawableRollingStock = new DrawableRollingStock(rollingStock);
+            drawableRollingStock.setStartNotConnected(dt);
+            drawableRollingStocks.add(drawableRollingStock);
         }
     }
 

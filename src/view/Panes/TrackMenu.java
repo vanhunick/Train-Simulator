@@ -28,6 +28,7 @@ public class TrackMenu {
     private String curTrainSelection;
 
     private CheckBox addTrain;
+    private CheckBox addRollingstock;
 
     private DefaultTrack section;
 
@@ -82,6 +83,10 @@ public class TrackMenu {
         addTrain = new CheckBox("Add train");
         addTrain.setIndeterminate(false);
 
+        // Create a checkbox for adding a rollingstock
+        addRollingstock = new CheckBox("Add Rolling stock");
+        addRollingstock.setIndeterminate(false);
+
 
         grid.add(new Label("Can Detect:"), 0, 0);
         grid.add(trainComboBox,1,0);
@@ -102,6 +107,7 @@ public class TrackMenu {
         grid.add(trainSelectComboBox,1,3);
 
         grid.add(addTrain,1,4);
+        grid.add(addRollingstock,1,5);
 
         dialog.getDialogPane().setContent(grid);
 
@@ -137,6 +143,9 @@ public class TrackMenu {
 
     public boolean addTrain(){
         return addTrain.isSelected();
+    }
+    public boolean addRollingStocl(){
+        return addRollingstock.isSelected();
     }
 
     public int getId(){

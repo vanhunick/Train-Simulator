@@ -61,6 +61,8 @@ public class DrawableRollingStock implements Movable{
     // The state of the rolling stock
     private boolean isCrashed;
 
+    // Is connected to a train
+    private boolean connected;
 
     /**
      * Creates a new drawable rolling stock object
@@ -72,6 +74,7 @@ public class DrawableRollingStock implements Movable{
      * @param direction the direction it is traveling
      * */
     public DrawableRollingStock(RollingStock rollingStock, DrawableTrain connectedToTrain, boolean direction){
+        this.connected = true;
         this.rollingStock = rollingStock;
         this.connectedToTrain = connectedToTrain;
         this.direction = direction;
@@ -79,14 +82,31 @@ public class DrawableRollingStock implements Movable{
         this.lastPointOnCurve = 0;
         this.start = true;
 
+        setUpImage();
+    }
 
-        //Image setup
+
+    /**
+     * Constructor for a Rollingstock not connected to a train
+     * */
+    public DrawableRollingStock(RollingStock rollingStock){
+        this.connected = false;
+        this.rollingStock = rollingStock;
+        this.curRotation = 90;
+        setUpImage();
+    }
+
+    public void setUpImage(){
         this.rollingStockImage = new Image("file:src/res/rolling_stock.png", 20, 80, false, false);
         this.trainImageView = new ImageView(rollingStockImage);
         this.params = new SnapshotParameters();
         params.setFill(javafx.scene.paint.Color.TRANSPARENT);
     }
 
+    public void setStartNotConnected(DefaultTrack startingTrack){
+        this.curTrack = startingTrack;
+        this.currentLocation = new Point((int) curTrack.getInitialX(20),(int) curTrack.getInitialY(20));
+    }
 
     /**
      * Sets the start of the train. The way it does it is by placing the rolling stock on top
@@ -163,6 +183,7 @@ public class DrawableRollingStock implements Movable{
      * @param pixels the number of pixels to move by
      * */
     public void update(double pixels){
+        if(!connected)return;
         this.speed = pixels;
         // If it is the start we need to update the speed to match the train speed
         if(start){
@@ -226,11 +247,16 @@ public class DrawableRollingStock implements Movable{
         }
 
         // Find the front of the rolling stock
+
         double frontX = currentLocation.getX() + ((80/2) * (Math.cos(Math.toRadians(curRotation-90))));
         double frontY = currentLocation.getY() + ((80/2) * (Math.sin(Math.toRadians(curRotation-90))));
 
-        g.setStroke(Color.GREEN);
-        g.strokeLine(frontX, frontY,conX,conY);
+        // Only draw the line if the train is connected to something
+        if(connected){
+            g.setStroke(Color.GREEN);
+            g.strokeLine(frontX, frontY,conX,conY);
+        }
+
 
         // Draw the image
         g.drawImage(rollingStockImage, currentLocation.getX() - rollingStockImage.getWidth()/2, currentLocation.getY() - rollingStockImage.getHeight()/2);
@@ -317,5 +343,7 @@ public class DrawableRollingStock implements Movable{
     public DefaultTrack getJuncTrack() {
         return juncTrack;
     }
+
+    public boolean isConnected(){return this.connected;}
 
 }
