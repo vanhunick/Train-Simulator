@@ -69,7 +69,7 @@ public class ModelTrack implements Events{
     public void setSpeed(int trainID, double speed) {
         for(Train t : trains){
             if(t.getId() == trainID){
-                t.setMaxSpeed(speed);
+                t.targetSpeed(speed);
             }
         }
     }

@@ -20,6 +20,8 @@ public class Train {
     // Speed of the train
     private  double maxSpeed;
 
+    private double targetSpeed;
+
     private double acceleration;
 
     /**
@@ -111,4 +113,8 @@ public class Train {
      * Gets the acceleration of the train
      * */
     public double getAcceleration(){return this.acceleration;}
+
+    public void setTargetSpeed(double speed){
+        this.targetSpeed = speed;
+    }
 }

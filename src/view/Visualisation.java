@@ -169,7 +169,6 @@ public class Visualisation implements MouseEvents {
      * If they are set the trains involved to crashed
      * */
     public void checkCollision(){
-        System.out.println("Checking collisions");
         for(int i = 0; i < movable.size(); i++){
 
             // Find the front of the train
@@ -195,7 +194,7 @@ public class Visualisation implements MouseEvents {
 
     //TODO CHANGE THIS LATER IT'S VERY BAD
     public boolean notConnected(Movable m1, Movable m2){
-        if(m1 instanceof DrawableTrain && m2 instanceof DrawableTrain)return false;
+        if(m1 instanceof DrawableTrain && m2 instanceof DrawableTrain)return true;
         if(m2.getRollingStockConnected() != null){
             if(m2.getRollingStockConnected().equals(m1))return false;
         }
@@ -355,9 +354,11 @@ public class Visualisation implements MouseEvents {
      * */
     public void restartSimulation(){
         trains.clear();
+        movable.clear();
         addDefaultTrains();
 
         started = false;
+        this.drawableRollingStocks.clear();
         this.modelTrack = new ModelTrack(getTrains(), getSections());
         lastUpdate = System.currentTimeMillis();
     }
@@ -571,12 +572,13 @@ public class Visualisation implements MouseEvents {
         if(menu.addTrain()){
             String selectedTrain = menu.getCurTrainSelection();
             if(selectedTrain.equals("British Rail Class 25")){
-                Train train1 = new Train(getNextTrainID(), 80, 120, true,true, 0.8);
+                Train train1 = new Train(getNextTrainID(), 80, 500, true,true, 0.2);
                 DrawableTrain drawableTrain1 = new DrawableTrain(train1, getSection(dt),dt);
-
+                drawableTrain1.setTargetSpeed(400);
 
                 trains.add(drawableTrain1);
                 movable.add(drawableTrain1);
+
             }
             else if(selectedTrain.equals("British Rail Class 108 (DMU)")){
 
@@ -619,7 +621,8 @@ public class Visualisation implements MouseEvents {
                maxID = t.getTrain().getId();
             }
         }
-        return maxID++;
+        maxID+=1;
+        return maxID;
     }
 
     @Override
