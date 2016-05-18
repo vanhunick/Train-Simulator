@@ -1,6 +1,7 @@
 package model;
 
 import view.Drawable.section_types.DefaultTrack;
+import view.Drawable.section_types.JunctionTrack;
 
 /**
  * Created by vanhunick on 22/03/16.
@@ -16,6 +17,10 @@ public class Section {
     // Section it goes to
     private Section to;
 
+    private int toId;
+    private int fromId;
+    int toJuncSectionID;
+
     // Tracks in the section
     private DefaultTrack[] tracks;
 
@@ -30,6 +35,8 @@ public class Section {
 
     // If the section has a junction in it
     private boolean containJunction;
+
+
 
     /**
      * Contructs a Section object
@@ -111,6 +118,54 @@ public class Section {
      * */
     public Section getTo() {return to;}
 
+
+    /**
+     *
+     * */
+    public int getToID(){
+        if(!containJunction)return toId;
+
+        JunctionTrack jt = (JunctionTrack)tracks[tracks.length-1];
+        if(jt.getThrown() && !jt.inBound()){
+            // The track is thrown so return to id track trown
+            return toJuncSectionID;
+        }
+        return -1; // Error
+    }
+
+    public int getFromID(){
+        if(!containJunction)return  fromId;
+
+        JunctionTrack jt = (JunctionTrack)tracks[tracks.length-1];
+        if(jt.getThrown() && jt.inBound()){
+            return toJuncSectionID;
+        }
+        return fromId;
+    }
+
+    public void setToId(int toId){
+        this.toId = toId;
+    }
+    public void setFromId(int fromId){
+        this.fromId = fromId;
+    }
+
+    public void setToJuncSectionID(int juncID){
+        this.toJuncSectionID = juncID;
+    }
+
+    /**
+     * If a section contains a junction track it means it can go to two different sections
+     * depending on the state of the junction inside the section
+     * */
+    public void setHasJunctionTrack(boolean hasJunction){
+        containJunction = hasJunction;
+    }
+
+    public boolean hasJunctionTrack(){
+        return containJunction;
+    }
+
     /**
      * Returns if a train is on the section or not
      *
@@ -158,15 +213,5 @@ public class Section {
         return "Length " + length + " From " + from.getID() + " To " + to.getID() + " Can Detect " + canDetect;
     }
 
-    /**
-     * If a section contains a junction track it means it can go to two different sections
-     * depending on the state of the junction inside the section
-     * */
-    public void setHasJunctionTrack(boolean hasJunction){
-        containJunction = hasJunction;
-    }
 
-    public boolean hasJunctionTrack(){
-        return containJunction;
-    }
 }

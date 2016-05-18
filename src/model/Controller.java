@@ -16,7 +16,7 @@ public class Controller {
     private Section[] sections;
 
     // Used because the controller should not be able to access information inside the track sections
-    private List<ControllerSection> contrlSections;
+    private ControllerSection[] contrlSections;
 
     private ModelTrack model;
 
@@ -24,7 +24,7 @@ public class Controller {
     public Controller(Map<Train, Integer> trainStartMap, Section[] sections, ModelTrack model){
         this.model = model;
         this.sections = sections;
-        this.contrlSections = new ArrayList<>();
+        this.contrlSections = new ControllerSection[sections.length];
         trains = new ArrayList<>();
 
         // Add all the trains to the list of trains
@@ -74,7 +74,9 @@ public class Controller {
                 }
                 else { // A train has entered
                     // The only one that can enter if the one with the lock
-                    getControllerSection(getTrainForNextSection(sectionID).curSection).releaseLock();// Release the lock of the section is came from
+                    contrlSections[cs.section.getFromID()].releaseLock();
+
+//                    getControllerSection(getTrainForNextSection(sectionID).curSection).releaseLock();// Release the lock of the section is came from
                     updateTrain(getTrainForNextSection(sectionID));
                 }
             }
@@ -148,8 +150,12 @@ public class Controller {
      * Sets up the controller section for the controller and locks the tracks the starting trains are on
      * */
     private void createControllerSections(){
-        for(Section s : sections){
-            contrlSections.add(new ControllerSection(s,false,false));
+//        for(Section s : sections){
+//            contrlSections.add(new ControllerSection(s,false,false));
+//        }
+
+        for(int i = 0; i < sections.length; i++){
+            contrlSections[i] = new ControllerSection(sections[i],false,false);
         }
 
         // Lock the sections that have trains on them
@@ -175,20 +181,18 @@ public class Controller {
     public ControllerSection getNextSection(ControllerTrain train, ControllerSection currentSection){
         //if(currentSection.section.hasJunctionTrack())return handleSpecialCaseJunction(currentSection);
 
+
+
         int id;
         if(forwardWithTrack(train)){
             id = currentSection.section.getTo().getID();
+
+            return contrlSections[currentSection.section.getToID()];
         }
         else {
             id = currentSection.section.getFrom().getID();
+            return contrlSections[currentSection.section.getFromID()];
         }
-
-        for(ControllerSection c : contrlSections){
-            if(c.section.getID() == id)return c;
-        }
-
-        // Error
-        return null;
     }
 
     /**
