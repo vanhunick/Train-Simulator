@@ -25,9 +25,12 @@ public class Controller {
         this.model = model;
         this.sections = sections;
         this.contrlSections = new ArrayList<>();
+        trains = new ArrayList<>();
 
         // Add all the trains to the list of trains
         for(Train t : trainStartMap.keySet()){
+            System.out.println(t);
+            System.out.println(trainStartMap.get(t));
             trains.add(new ControllerTrain(t.getId(),t.getDirection(),t.getOrientation(),trainStartMap.get(t)));// TODO chuck in equals meth for train
         }
 

@@ -85,7 +85,12 @@ public class Visualisation implements MouseEvents {
 
     public void setSpeeds(){
         for(DrawableTrain t : trains){
-            modelTrack.setSpeed(t.getTrain().getId(), 400);
+            if(t.getTrain().getId() == 1){
+                modelTrack.setSpeed(t.getTrain().getId(), 500);
+            }
+            else{
+                modelTrack.setSpeed(t.getTrain().getId(), 500);
+            }
         }
     }
 
@@ -190,8 +195,6 @@ public class Visualisation implements MouseEvents {
             for(int j = 0; j < movable.size(); j++){
                 if(j !=i){
                     if((movable.get(j).containsPoint(frontX,frontY) || movable.get(j).containsPoint(backX,backY)) && notConnected(movable.get(i), movable.get(j))){
-                        System.out.println(movable.get(i));
-                        System.out.println(movable.get(j));
                         movable.get(i).setCrashed(true);
                         movable.get(j).setCrashed(true);
                     }
@@ -437,17 +440,19 @@ public class Visualisation implements MouseEvents {
                 movable.add(drawableRollingStock);
             }
             if(ds.getSection().getID() == 101){
-//                Train train1 = new Train(2, 80, 120, true,true);
-//                DrawableTrain drawableTrain1 = new DrawableTrain(train1, ds,ds.getTracks()[0]);
-//
-//
-//                RollingStock rollingStock1 = new RollingStock(80,847584578);
-//                DrawableRollingStock drawableRollingStock1 = new DrawableRollingStock(rollingStock1,drawableTrain1,drawableTrain1.getTrain().getDirection());
-//                drawableRollingStock1.setStart(drawableTrain1.getCurrentLocation(),this);
-//
-//                drawableTrain1.setRollingStockConnected(drawableRollingStock1);
-//
-//                trains.add(drawableTrain1);
+                Train train1 = new Train(2, 80, 120, true,true, 0.8);
+                DrawableTrain drawableTrain1 = new DrawableTrain(train1, ds,ds.getTracks()[0]);
+
+
+                RollingStock rollingStock1 = new RollingStock(80,847584578);
+                DrawableRollingStock drawableRollingStock1 = new DrawableRollingStock(rollingStock1,drawableTrain1,drawableTrain1.getTrain().getDirection());
+                drawableRollingStock1.setStart(drawableTrain1.getCurrentLocation(),this);
+
+                drawableTrain1.setRollingStockConnected(drawableRollingStock1);
+
+                trains.add(drawableTrain1);
+                movable.add(drawableTrain1);
+                movable.add(drawableRollingStock1);
             }
         }
     }
@@ -533,10 +538,14 @@ public class Visualisation implements MouseEvents {
     }
 
     public void useController(){
+        this.modelTrack = new ModelTrack(getTrains(), getSections());
+
+
         Map<Train, Integer> startMap = new HashMap<>();
         for(DrawableTrain train : trains){
             startMap.put(train.getTrain(), train.getCurSection().getSection().getID());
         }
+
 
         modelTrack.setController(new Controller(startMap,getSections(),modelTrack));
         modelTrack.useController(true);

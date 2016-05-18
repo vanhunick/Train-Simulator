@@ -119,4 +119,39 @@ public class Train {
     }
 
     public double getTargetSpeed(){return this.targetSpeed;}
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Train)) return false;
+
+        Train train = (Train) o;
+
+        if (id != train.id) return false;
+        if (Double.compare(train.length, length) != 0) return false;
+        if (orientation != train.orientation) return false;
+        if (direction != train.direction) return false;
+        if (Double.compare(train.maxSpeed, maxSpeed) != 0) return false;
+        if (Double.compare(train.targetSpeed, targetSpeed) != 0) return false;
+        return Double.compare(train.acceleration, acceleration) == 0;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result;
+        long temp;
+        result = id;
+        temp = Double.doubleToLongBits(length);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        result = 31 * result + (orientation ? 1 : 0);
+        result = 31 * result + (direction ? 1 : 0);
+        temp = Double.doubleToLongBits(maxSpeed);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(targetSpeed);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(acceleration);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        return result;
+    }
 }

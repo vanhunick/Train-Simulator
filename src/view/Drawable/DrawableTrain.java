@@ -118,7 +118,6 @@ public class DrawableTrain implements Movable{
      * */
     public void update(){
         if(crashed)return;
-        System.out.println("Tar " + train.getTargetSpeed() + " Max " + train.getMaxSpeed());
         // Check if the train is still accelerating and the current speed is less than the max speed
         if(currentSpeed < train.getTargetSpeed() && currentSpeed < train.getMaxSpeed()){
             applyAcceleration();
@@ -172,7 +171,6 @@ public class DrawableTrain implements Movable{
     public void applyAcceleration(){
         double timeChanged = 20;// ms
         this.currentSpeed += train.getAcceleration()*(1000/timeChanged);
-        System.out.println("Speed " + currentSpeed);
     }
 
     /**
@@ -325,5 +323,41 @@ public class DrawableTrain implements Movable{
     @Override
     public int getLastPointOnCurve() {
         return lastPointOnCurve;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof DrawableTrain)) return false;
+
+        DrawableTrain that = (DrawableTrain) o;
+
+        if (Double.compare(that.width, width) != 0) return false;
+        if (Double.compare(that.lastSpeed, lastSpeed) != 0) return false;
+        if (lastDirection != that.lastDirection) return false;
+        if (crashed != that.crashed) return false;
+        if (Double.compare(that.currentSpeed, currentSpeed) != 0) return false;
+        if (!train.equals(that.train)) return false;
+        if (!rollingStockConnected.equals(that.rollingStockConnected)) return false;
+        return currentLocation.equals(that.currentLocation);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result;
+        long temp;
+        temp = Double.doubleToLongBits(width);
+        result = (int) (temp ^ (temp >>> 32));
+        result = 31 * result + train.hashCode();
+        result = 31 * result + rollingStockConnected.hashCode();
+        temp = Double.doubleToLongBits(lastSpeed);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        result = 31 * result + (lastDirection ? 1 : 0);
+        result = 31 * result + (crashed ? 1 : 0);
+        result = 31 * result + currentLocation.hashCode();
+        temp = Double.doubleToLongBits(currentSpeed);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        return result;
     }
 }
