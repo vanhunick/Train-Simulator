@@ -28,6 +28,9 @@ public class Section {
     // If it can detect trains or not
     private boolean canDetect;
 
+    // If the section has a junction in it
+    private boolean containJunction;
+
     /**
      * Contructs a Section object
      *
@@ -153,5 +156,17 @@ public class Section {
 
     public String toString(){
         return "Length " + length + " From " + from.getID() + " To " + to.getID() + " Can Detect " + canDetect;
+    }
+
+    /**
+     * If a section contains a junction track it means it can go to two different sections
+     * depending on the state of the junction inside the section
+     * */
+    public void setHasJunctionTrack(boolean hasJunction){
+        containJunction = hasJunction;
+    }
+
+    public boolean hasJunctionTrack(){
+        return containJunction;
     }
 }

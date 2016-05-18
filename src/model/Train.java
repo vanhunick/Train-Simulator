@@ -117,4 +117,6 @@ public class Train {
     public void setTargetSpeed(double speed){
         this.targetSpeed = speed;
     }
+
+    public double getTargetSpeed(){return this.targetSpeed;}
 }

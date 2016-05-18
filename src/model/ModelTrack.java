@@ -13,8 +13,12 @@ public class ModelTrack implements Events{
     // List of trains on the railway
     private List<Train> trains;
 
+    private Controller controller;
+
     // The sections that make up the railway
     private Section[] sections;
+
+    private boolean useController;
 
     /**
      * Created a ModelTrack object for sending and receiving events
@@ -58,6 +62,12 @@ public class ModelTrack implements Events{
     public void sectionChanged(int id) {
         for(Section s : sections){
             if(s.getID() == id){
+
+                // If the controller is controlling the trains send the event through
+                if(useController){
+                    controller.receiveSectionEvent(id);
+                }
+
                 System.out.println("Section changing");
                 //update the section status
                 s.setTrainOn(!s.getTrainOn());
@@ -67,9 +77,11 @@ public class ModelTrack implements Events{
 
     @Override
     public void setSpeed(int trainID, double speed) {
+        System.out.println("Setting speed" + trains.size());
         for(Train t : trains){
             if(t.getId() == trainID){
-                t.targetSpeed(speed);
+                System.out.println("Setting target");
+                t.setTargetSpeed(speed);
             }
         }
     }
@@ -94,4 +106,14 @@ public class ModelTrack implements Events{
             }
         }
     }
+
+    public void setController(Controller controller){
+        this.controller = controller;
+    }
+
+    public void useController(boolean use){
+        this.useController = use;
+    }
+
+
 }

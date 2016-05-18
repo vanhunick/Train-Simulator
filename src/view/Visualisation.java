@@ -10,10 +10,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import model.ModelTrack;
-import model.RollingStock;
-import model.Section;
-import model.Train;
+import model.*;
 import view.Drawable.DrawableRollingStock;
 import view.Drawable.DrawableTrain;
 import view.Drawable.Movable;
@@ -22,9 +19,11 @@ import view.Panes.EventGen;
 import view.Panes.EventLog;
 import view.Panes.TrackMenu;
 
-import javax.swing.plaf.basic.BasicInternalFrameTitlePane;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -77,8 +76,17 @@ public class Visualisation implements MouseEvents {
         this.movable = new ArrayList<>();
         CustomTracks ct = new CustomTracks("FULL");
 
+
         this.tracks = ct.getTracks();
         this.railway = ct.getSections();
+
+
+    }
+
+    public void setSpeeds(){
+        for(DrawableTrain t : trains){
+            modelTrack.setSpeed(t.getTrain().getId(), 400);
+        }
     }
 
 
@@ -359,7 +367,7 @@ public class Visualisation implements MouseEvents {
 
         started = false;
         this.drawableRollingStocks.clear();
-        this.modelTrack = new ModelTrack(getTrains(), getSections());
+        //this.modelTrack = new ModelTrack(getTrains(), getSections());
         lastUpdate = System.currentTimeMillis();
     }
 
@@ -374,8 +382,11 @@ public class Visualisation implements MouseEvents {
      * Starts the simulation with the given track and trains
      * */
     public void startSimulation(){
-        started = true;
         this.modelTrack = new ModelTrack(getTrains(), getSections());
+        // Set speeds just for testing
+        setSpeeds();
+        started = true;
+        //this.modelTrack = new ModelTrack(getTrains(), getSections());
         lastUpdate = System.currentTimeMillis();
     }
 
@@ -413,7 +424,6 @@ public class Visualisation implements MouseEvents {
                 //Create the train
                 Train train = new Train(1, 80, 500, true,true,0.2);
                 DrawableTrain drawableTrain = new DrawableTrain(train, ds,ds.getTracks()[0]);
-                drawableTrain.setTargetSpeed(400);
 
                 RollingStock rollingStock = new RollingStock(80,828282);
                 DrawableRollingStock drawableRollingStock = new DrawableRollingStock(rollingStock,drawableTrain,drawableTrain.getTrain().getDirection());
@@ -504,6 +514,7 @@ public class Visualisation implements MouseEvents {
         Button pause = new Button("Pause");
         Button event = new Button("Event");
         Button toggleJunc = new Button("Toggle Junction");
+        Button controller = new Button("Use Controller");
 
 
 
@@ -513,11 +524,25 @@ public class Visualisation implements MouseEvents {
         pause.setOnAction(e -> pause());
         event.setOnAction(e -> startEventDialog());
         toggleJunc.setOnAction(e -> toggleJunction());
+        controller.setOnAction(e -> useController());
 
         vBox.getChildren().addAll(sim,restart, pause,event,toggleJunc);
         vBox.setPrefWidth(WIDTH);
 
         return vBox;
+    }
+
+    public void useController(){
+        Map<Train, Integer> startMap = new HashMap<>();
+        for(DrawableTrain train : trains){
+            startMap.put(train.getTrain(), train.getCurSection().getSection().getID());
+        }
+
+//        model.Controller c = new Controller(startMap,getSections(),modelTrack);
+        Controller c = new Controller(2);
+
+//        modelTrack.setController(new Controller(startMap,getSections(),modelTrack));
+        modelTrack.useController(true);
     }
 
     public void toggleJunction(){
@@ -574,7 +599,6 @@ public class Visualisation implements MouseEvents {
             if(selectedTrain.equals("British Rail Class 25")){
                 Train train1 = new Train(getNextTrainID(), 80, 500, true,true, 0.2);
                 DrawableTrain drawableTrain1 = new DrawableTrain(train1, getSection(dt),dt);
-                drawableTrain1.setTargetSpeed(400);
 
                 trains.add(drawableTrain1);
                 movable.add(drawableTrain1);

@@ -56,9 +56,7 @@ public class DrawableTrain implements Movable{
     public int lastPointOnCurve = 0;
     private SnapshotParameters params;
 
-    //
     private double currentSpeed;
-    private double targetSpeed;
 
 
     /**
@@ -120,9 +118,9 @@ public class DrawableTrain implements Movable{
      * */
     public void update(){
         if(crashed)return;
-
+        System.out.println("Tar " + train.getTargetSpeed() + " Max " + train.getMaxSpeed());
         // Check if the train is still accelerating and the current speed is less than the max speed
-        if(currentSpeed < targetSpeed && currentSpeed < train.getMaxSpeed()){
+        if(currentSpeed < train.getTargetSpeed() && currentSpeed < train.getMaxSpeed()){
             applyAcceleration();
         }
 
@@ -261,9 +259,6 @@ public class DrawableTrain implements Movable{
         this.rollingStockConnected = dr;
     }
 
-    public void setTargetSpeed(double speed){
-        this.targetSpeed = speed;
-    }
 
     @Override
     public void setJuncTrack(DefaultTrack juncTrack){

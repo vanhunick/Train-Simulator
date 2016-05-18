@@ -63,8 +63,13 @@ public class EventGen {
 
         ComboBox trainComboBox = new ComboBox(options);
 
-        trainComboBox.setValue(""+trains.get(0).getId());
-        trainId = ""+trains.get(0).getId();//setting def value
+        if(trains.size() == 0){
+            trainComboBox.setValue("No trains to send events to");
+        }
+        else {
+            trainComboBox.setValue(""+trains.get(0).getId());
+            trainId = ""+trains.get(0).getId();//setting def value
+        }
 
         trainComboBox.valueProperty().addListener(new ChangeListener<String>() {
             @Override public void changed(ObservableValue ov, String t, String t1) {
