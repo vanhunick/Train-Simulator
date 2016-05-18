@@ -20,9 +20,6 @@ public class Controller {
 
     private ModelTrack model;
 
-    public Controller(int i){
-
-    }
 
     public Controller(Map<Train, Integer> trainStartMap, Section[] sections, ModelTrack model){
         this.model = model;

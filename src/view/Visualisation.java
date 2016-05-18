@@ -526,7 +526,7 @@ public class Visualisation implements MouseEvents {
         toggleJunc.setOnAction(e -> toggleJunction());
         controller.setOnAction(e -> useController());
 
-        vBox.getChildren().addAll(sim,restart, pause,event,toggleJunc);
+        vBox.getChildren().addAll(sim,restart, pause,event,toggleJunc, controller);
         vBox.setPrefWidth(WIDTH);
 
         return vBox;
@@ -538,10 +538,7 @@ public class Visualisation implements MouseEvents {
             startMap.put(train.getTrain(), train.getCurSection().getSection().getID());
         }
 
-//        model.Controller c = new Controller(startMap,getSections(),modelTrack);
-        Controller c = new Controller(2);
-
-//        modelTrack.setController(new Controller(startMap,getSections(),modelTrack));
+        modelTrack.setController(new Controller(startMap,getSections(),modelTrack));
         modelTrack.useController(true);
     }
 
