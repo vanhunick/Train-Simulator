@@ -185,6 +185,8 @@ public class Controller {
 
         int id;
         if(forwardWithTrack(train)){
+            System.out.println(currentSection);
+            System.out.println(currentSection.section);
             id = currentSection.section.getTo().getID();
 
             return contrlSections[currentSection.section.getToID()];

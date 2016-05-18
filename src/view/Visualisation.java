@@ -393,7 +393,9 @@ public class Visualisation implements MouseEvents {
         this.modelTrack = new ModelTrack(getTrains(), getSections());
         // Set speeds just for testing
         for(DrawableTrain t : trains){
-            t.getCurSection().getSection().setTrainOn(true);
+            if(t.getCurSection().getSection().canDetect()){
+                t.getCurSection().getSection().setTrainOn(true);
+            }
         }
 
         setSpeeds();
@@ -558,8 +560,22 @@ public class Visualisation implements MouseEvents {
         }
 
 
-        modelTrack.setController(new Controller(startMap,getSections(),modelTrack));
+        Controller controller = new Controller(startMap,getSections(),modelTrack);
+        modelTrack.setController(controller);
         modelTrack.useController(true);
+
+        // Set speeds just for testing
+        for(DrawableTrain t : trains){
+            if(t.getCurSection().getSection().canDetect()){
+                t.getCurSection().getSection().setTrainOn(true);
+            }
+        }
+
+        controller.startControlling();
+        started = true;
+
+        //this.modelTrack = new ModelTrack(getTrains(), getSections());
+        lastUpdate = System.currentTimeMillis();
     }
 
     public void toggleJunction(){
