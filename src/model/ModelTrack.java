@@ -68,7 +68,7 @@ public class ModelTrack implements Events{
                     controller.receiveSectionEvent(id);
                 }
 
-                System.out.println("Section changing");
+
                 //update the section status
                 s.setTrainOn(!s.getTrainOn());
             }

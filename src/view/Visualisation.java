@@ -230,18 +230,23 @@ public class Visualisation implements MouseEvents {
      * event for a section change to the model track and for the event log
      * */
     public void checkSectionChangedEvent(DrawableTrain t,DrawableSection curSection, DefaultTrack destinationTrack){
-
         // Check if the current section contains the new track to move to
         if(!curSection.containsTrack(destinationTrack)){
-            // Does not contain the track so have to update cur track
+
+            // If the current section can detect we must send an event since it has changed state
+            if(curSection.getSection().canDetect()){
+                eventLog.appendText(updateTrainOnSection(t.getTrain(), curSection.getSection(),curSection.getSection()));
+                modelTrack.sectionChanged(curSection.getSection().getID());
+            }
 
             //find where it belongs to
             for(DrawableSection ds : railway){
                 if(ds.containsTrack(destinationTrack)){
+
                     t.setCurSection(ds);//have to do it this way since the destination is not always the same
                     if(ds.getSection().canDetect()){
-                        eventLog.appendText(updateTrainOnSection(t.getTrain(), ds.getSection(),curSection.getSection()));
-                        modelTrack.sectionChanged(curSection.getSection().getID());
+                        eventLog.appendText(updateTrainOnSection(t.getTrain(), ds.getSection(),ds.getSection()));
+                        modelTrack.sectionChanged(ds.getSection().getID());
                     }
                 }
             }
@@ -387,8 +392,14 @@ public class Visualisation implements MouseEvents {
     public void startSimulation(){
         this.modelTrack = new ModelTrack(getTrains(), getSections());
         // Set speeds just for testing
+        for(DrawableTrain t : trains){
+            t.getCurSection().getSection().setTrainOn(true);
+        }
+
         setSpeeds();
         started = true;
+
+
         //this.modelTrack = new ModelTrack(getTrains(), getSections());
         lastUpdate = System.currentTimeMillis();
     }

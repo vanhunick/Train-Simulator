@@ -30,12 +30,14 @@ public class Controller {
         // Add all the trains to the list of trains
         for(Train t : trainStartMap.keySet()){
             System.out.println(t);
+
             System.out.println(trainStartMap.get(t));
             trains.add(new ControllerTrain(t.getId(),t.getDirection(),t.getOrientation(),trainStartMap.get(t)));// TODO chuck in equals meth for train
         }
 
         createControllerSections();
     }
+
 
     public void startControlling(){
         acquireLock();
@@ -51,6 +53,7 @@ public class Controller {
             if(getNextSection(train,getControllerSection(train.curSection)).id == nextSection){
                 return train;
             }
+
         }
         return  null;
     }

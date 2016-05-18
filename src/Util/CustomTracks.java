@@ -108,6 +108,7 @@ public class CustomTracks {
 
 
         railway[0].getSection().setCandetect(true);
+        railway[1].getSection().setCandetect(false);
         railway[2].getSection().setCandetect(true);
         railway[4].getSection().setCandetect(true);
         railway[6].getSection().setCandetect(true);
