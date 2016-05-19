@@ -31,17 +31,9 @@ public class Controller {
 
         // Add all the trains to the list of trains
         for(Train t : trainStartMap.keySet()){
-            System.out.println(t);
-
-            System.out.println(trainStartMap.get(t));
             trains.add(new ControllerTrain(t.getId(),t.getDirection(),t.getOrientation(),trainStartMap.get(t)));// TODO chuck in equals meth for train
         }
-
         createControllerSections();
-
-        for(ControllerSection c : contrlSections){
-            System.out.println(c.id);
-        }
     }
 
 
@@ -55,9 +47,8 @@ public class Controller {
      * @param nextSectionID the id of the next section the train should move to
      * */
     public ControllerTrain getTrainForNextSection(int nextSectionID){
-        System.out.println("Section id " + nextSectionID);
+
         for(ControllerTrain train : trains){
-            System.out.println("Train next id " + getNextSection(train,getControllerSection(train.curSection)).id);
             if(getNextSection(train,getControllerSection(train.curSection)).id == nextSectionID){
                 return train;
             }
@@ -75,8 +66,6 @@ public class Controller {
      * @param sectionID the id of the section that changed state
      * */
     public void receiveSectionEvent(int sectionID){
-        System.out.println("Section ID Event " + sectionID + " Count " + count );
-        count++;
 
         for(ControllerSection cs : contrlSections){
             if(cs.id == sectionID){
@@ -88,6 +77,7 @@ public class Controller {
 
                 }
                 else {
+                    cs.on = true;
                     System.out.println("Enter Event");
                     // A train has entered
                     // The only one that can enter if the one with the lock
@@ -168,9 +158,6 @@ public class Controller {
      * Sets up the controller section for the controller and locks the tracks the starting trains are on
      * */
     private void createControllerSections(){
-//        for(Section s : sections){
-//            contrlSections.add(new ControllerSection(s,false,false));
-//        }
 
         for(int i = 0; i < sections.length; i++){
             contrlSections[i] = new ControllerSection(sections[i],false,false);
@@ -181,7 +168,7 @@ public class Controller {
             for(ControllerTrain ct : trains){
                 if(ct.curSection == cs.section.getID()){
                     cs.on = true;
-                    cs.acquireLock() ;// Lock the section the train starts on TODO check for errors if
+//                    cs.acquireLock() ;// Lock the section the train starts on TODO check for errors if
                 }
             }
         }
@@ -197,21 +184,12 @@ public class Controller {
      * @param currentSection the current section the train is on
      * */
     public ControllerSection getNextSection(ControllerTrain train, ControllerSection currentSection){
-        //if(currentSection.section.hasJunctionTrack())return handleSpecialCaseJunction(currentSection);
 
-        System.out.println("Train " + train + " Sec " + currentSection);
-
-
-        int id;
+        // Check if train is going along nat track direction
         if(forwardWithTrack(train)){
-    //        System.out.println(currentSection);
-//            System.out.println(currentSection.section);
-  //          id = currentSection.section.getTo().getID();
-
             return contrlSections[currentSection.section.getToID()];
         }
         else {
-      //      id = currentSection.section.getFrom().getID();
             return contrlSections[currentSection.section.getFromID()];
         }
     }

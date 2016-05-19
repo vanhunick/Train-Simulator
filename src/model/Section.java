@@ -125,37 +125,38 @@ public class Section {
     public int getToID(){
         if(!containJunction)return toId;
 
-        JunctionTrack jt;
-        if(tracks[tracks.length-1] instanceof JunctionTrack){
-            jt = (JunctionTrack)tracks[tracks.length-1];
-        }
-        else {
-            jt = (JunctionTrack)tracks[0];
-        }
+//        JunctionTrack jt;
+//        if(tracks[tracks.length-1] instanceof JunctionTrack){
+//            jt = (JunctionTrack)tracks[tracks.length-1];
+//        }
+//        else {
+//            jt = (JunctionTrack)tracks[0];
+//        }
+//
+//
+//        if(jt.getThrown() && !jt.inBound()){
+//            // The track is thrown so return to id track trown
+//            return toJuncSectionID;
+//        }
 
-
-        if(jt.getThrown() && !jt.inBound()){
-            // The track is thrown so return to id track trown
-            return toJuncSectionID;
-        }
         return toId; // Error
     }
 
     public int getFromID(){
         if(!containJunction)return  fromId;
 
-        JunctionTrack jt;
-        if(tracks[tracks.length-1] instanceof JunctionTrack){
-            jt = (JunctionTrack)tracks[tracks.length-1];
-        }
-        else {
-            jt = (JunctionTrack)tracks[0];
-        }
-
-
-        if(jt.getThrown() && jt.inBound()){
-            return toJuncSectionID;
-        }
+//        JunctionTrack jt;
+//        if(tracks[tracks.length-1] instanceof JunctionTrack){
+//            jt = (JunctionTrack)tracks[tracks.length-1];
+//        }
+//        else {
+//            jt = (JunctionTrack)tracks[0];
+//        }
+//
+//
+//        if(jt.getThrown() && jt.inBound()){
+//            return toJuncSectionID;
+//        }
         return fromId;
     }
 

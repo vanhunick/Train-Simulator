@@ -87,6 +87,7 @@ public class CustomTracks {
 
         int curID = 0;
 
+        // Outer loop
         railway[0] = new DrawableSection(new Section(99,200,new DefaultTrack[]{tracks[0]}));
         railway[1] =  new DrawableSection(new Section(curID++,300,new DefaultTrack[]{tracks[1]}));
         railway[2] =  new DrawableSection(new Section(curID++,300,new DefaultTrack[]{tracks[2],tracks[3]}));
@@ -95,6 +96,8 @@ public class CustomTracks {
         railway[5] =  new DrawableSection(new Section(101,300,new DefaultTrack[]{tracks[6]}));
         railway[6] =  new DrawableSection(new Section(curID++,300,new DefaultTrack[]{tracks[7]}));
         railway[7] =  new DrawableSection(new Section(curID++,300,new DefaultTrack[]{tracks[8],tracks[9]}));
+
+
         railway[8] =  new DrawableSection(new Section(curID++,300,new DefaultTrack[]{tracks[10]}));
         railway[9] =  new DrawableSection(new Section(curID++,300,new DefaultTrack[]{tracks[11]}));
         railway[10] =  new DrawableSection(new Section(curID++,300,new DefaultTrack[]{tracks[12],tracks[13]}));
@@ -108,7 +111,6 @@ public class CustomTracks {
 
 
         railway[0].getSection().setCandetect(true);
-        railway[1].getSection().setCandetect(false);
         railway[2].getSection().setCandetect(true);
         railway[4].getSection().setCandetect(true);
         railway[6].getSection().setCandetect(true);
@@ -117,7 +119,6 @@ public class CustomTracks {
         railway[12].getSection().setCandetect(true);
         railway[14].getSection().setCandetect(true);
         railway[16].getSection().setCandetect(true);
-
 
         // Set up Section connections
 
