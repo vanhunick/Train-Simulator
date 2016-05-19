@@ -199,7 +199,7 @@ public class CustomTracks {
         railway[16].getSection().setFromId(15);
 
         // First most inside straight
-        railway[17].getSection().setToId(10);
+        railway[17].getSection().setToId(15);
         railway[17].getSection().setFromId(13);
 
 

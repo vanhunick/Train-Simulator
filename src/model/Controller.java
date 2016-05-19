@@ -1,5 +1,7 @@
 package model;
 
+import com.sun.org.apache.xpath.internal.SourceTree;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -36,6 +38,10 @@ public class Controller {
         }
 
         createControllerSections();
+
+        for(ControllerSection c : contrlSections){
+            System.out.println(c.id);
+        }
     }
 
 
@@ -46,33 +52,44 @@ public class Controller {
     /**
      * Returns the train the will be on the nextsection
      *
-     * @param nextSection the id of the next section the train should move to
+     * @param nextSectionID the id of the next section the train should move to
      * */
-    public ControllerTrain getTrainForNextSection(int nextSection){
+    public ControllerTrain getTrainForNextSection(int nextSectionID){
+        System.out.println("Section id " + nextSectionID);
         for(ControllerTrain train : trains){
-            if(getNextSection(train,getControllerSection(train.curSection)).id == nextSection){
+            System.out.println("Train next id " + getNextSection(train,getControllerSection(train.curSection)).id);
+            if(getNextSection(train,getControllerSection(train.curSection)).id == nextSectionID){
                 return train;
             }
 
         }
+
+        System.out.println("Returning null getTrainForNextSection");
         return  null;
     }
 
-
+    int count = 0;
     /**
      * Called when a section on the track has changed its state
      *
      * @param sectionID the id of the section that changed state
      * */
     public void receiveSectionEvent(int sectionID){
+        System.out.println("Section ID Event " + sectionID + " Count " + count );
+        count++;
+
         for(ControllerSection cs : contrlSections){
             if(cs.id == sectionID){
                 // The section already had a train on it so now it has exited the track
                 if(cs.on){
+                    System.out.println("Exit event");
                     cs.releaseLock();// Release the lock as the train has now left the track
                     updateTrain(findTrainOnTrack(sectionID));
+
                 }
-                else { // A train has entered
+                else {
+                    System.out.println("Enter Event");
+                    // A train has entered
                     // The only one that can enter if the one with the lock
                     contrlSections[cs.section.getFromID()].releaseLock();
 
@@ -125,6 +142,7 @@ public class Controller {
             }
         }
         // No train on that track
+        System.out.println("Null find train on track");
         return null;
     }
 
@@ -181,18 +199,19 @@ public class Controller {
     public ControllerSection getNextSection(ControllerTrain train, ControllerSection currentSection){
         //if(currentSection.section.hasJunctionTrack())return handleSpecialCaseJunction(currentSection);
 
+        System.out.println("Train " + train + " Sec " + currentSection);
 
 
         int id;
         if(forwardWithTrack(train)){
-            System.out.println(currentSection);
-            System.out.println(currentSection.section);
-            id = currentSection.section.getTo().getID();
+    //        System.out.println(currentSection);
+//            System.out.println(currentSection.section);
+  //          id = currentSection.section.getTo().getID();
 
             return contrlSections[currentSection.section.getToID()];
         }
         else {
-            id = currentSection.section.getFrom().getID();
+      //      id = currentSection.section.getFrom().getID();
             return contrlSections[currentSection.section.getFromID()];
         }
     }
@@ -228,6 +247,7 @@ public class Controller {
             if(cs.id == id)return cs;
         }
         // Error
+        System.out.println("Null in controller section");
         return null;
     }
 
