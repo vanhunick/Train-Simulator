@@ -441,31 +441,31 @@ public class Visualisation implements MouseEvents {
                 Train train = new Train(1, 80, 500, true,true,0.2);
                 DrawableTrain drawableTrain = new DrawableTrain(train, ds,ds.getTracks()[0]);
 
-                RollingStock rollingStock = new RollingStock(80,828282);
-                DrawableRollingStock drawableRollingStock = new DrawableRollingStock(rollingStock,drawableTrain,drawableTrain.getTrain().getDirection());
-                drawableRollingStock.setStart(drawableTrain.getCurrentLocation(),this);
+//                RollingStock rollingStock = new RollingStock(80,828282);
+//                DrawableRollingStock drawableRollingStock = new DrawableRollingStock(rollingStock,drawableTrain,drawableTrain.getTrain().getDirection());
+//                drawableRollingStock.setStart(drawableTrain.getCurrentLocation(),this);
 
-                drawableTrain.setRollingStockConnected(drawableRollingStock);
+//                drawableTrain.setRollingStockConnected(drawableRollingStock);
 
-                drawableRollingStocks.add(drawableRollingStock);
+//                drawableRollingStocks.add(drawableRollingStock);
                 trains.add(drawableTrain);
                 movable.add(drawableTrain);
-                movable.add(drawableRollingStock);
+//                movable.add(drawableRollingStock);
             }
             if(ds.getSection().getID() == 101){
-                Train train1 = new Train(2, 80, 120, true,true, 0.8);
+                Train train1 = new Train(2, 80, 80, true,true, 0.8);
                 DrawableTrain drawableTrain1 = new DrawableTrain(train1, ds,ds.getTracks()[0]);
 
+//
+//                RollingStock rollingStock1 = new RollingStock(80,847584578);
+//                DrawableRollingStock drawableRollingStock1 = new DrawableRollingStock(rollingStock1,drawableTrain1,drawableTrain1.getTrain().getDirection());
+//                drawableRollingStock1.setStart(drawableTrain1.getCurrentLocation(),this);
 
-                RollingStock rollingStock1 = new RollingStock(80,847584578);
-                DrawableRollingStock drawableRollingStock1 = new DrawableRollingStock(rollingStock1,drawableTrain1,drawableTrain1.getTrain().getDirection());
-                drawableRollingStock1.setStart(drawableTrain1.getCurrentLocation(),this);
-
-                drawableTrain1.setRollingStockConnected(drawableRollingStock1);
+//                drawableTrain1.setRollingStockConnected(drawableRollingStock1);
 
                 trains.add(drawableTrain1);
                 movable.add(drawableTrain1);
-                movable.add(drawableRollingStock1);
+//                movable.add(drawableRollingStock1);
             }
         }
     }

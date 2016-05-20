@@ -122,6 +122,9 @@ public class DrawableTrain implements Movable{
         if(currentSpeed < train.getTargetSpeed() && currentSpeed < train.getMaxSpeed()){
             applyAcceleration();
         }
+        if(currentSpeed > train.getTargetSpeed()){
+            currentSpeed = train.getTargetSpeed();//TODO change to decelerate
+        }
 
         if(lastUpdate == 0){
             lastUpdate = System.currentTimeMillis();
@@ -169,6 +172,7 @@ public class DrawableTrain implements Movable{
     }
 
     public void applyAcceleration(){
+        System.out.println("Trying to speed up but I can't " + currentSpeed);
         double timeChanged = 20;// ms
         this.currentSpeed += train.getAcceleration()*(1000/timeChanged);
     }

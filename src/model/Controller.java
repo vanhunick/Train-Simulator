@@ -38,8 +38,36 @@ public class Controller {
 
 
     public void startControlling(){
-        acquireLock();
+        updateTrains();
     }
+
+    public void updateTrains(){
+        for(ControllerTrain t : trains){
+            ControllerSection nextSec = getNextSection(t,getControllerSection(t.curSection));
+
+            boolean locked = false;
+
+            for(ControllerTrain ot : trains){
+                if(!t.equals(ot)){
+                    if(ot.lockCur == nextSec.id || ot.lockNext == nextSec.id){
+                        // the next section is locked
+                        locked = true;
+                        break;
+                    }
+                }
+            }
+            if(locked){
+                model.setSpeed(t.id,0); // Make the train stop
+            }
+            else {
+                model.setSpeed(t.id,400); // Make the train GO
+                t.lockNext = nextSec.id;// TODO check
+            }
+        }
+    }
+
+
+
 
     /**
      * Returns the train the will be on the nextsection
@@ -69,55 +97,64 @@ public class Controller {
 
         for(ControllerSection cs : contrlSections){
             if(cs.id == sectionID){
-                // The section already had a train on it so now it has exited the track
+
+                // Section Exit Event
                 if(cs.on){
-                    System.out.println("Exit event");
-                    cs.releaseLock();// Release the lock as the train has now left the track
-                    updateTrain(findTrainOnTrack(sectionID));
+                    // There is no longer a train on the current section
+                    cs.on = false;
 
+                    // Find the train that holds the lock
+                    ControllerTrain trainWithLock = getTrainThatHoldSectionLock(cs.id);
+
+                    // Release the lock becasue we exit
+                    trainWithLock.lockCur = trainWithLock.lockNext;
+                    trainWithLock.lockNext = -1;
+
+//                    trainWithLock.lock = contrlSections[cs.section.getToID()].id;// releases the lock
+
+
+                    // There is a train on the next section so set to true
+                    contrlSections[cs.section.getToID()].on = true;
+
+                    // Set the current section of the train to the next section
+                    trainWithLock.curSection = getNextSection(trainWithLock, getControllerSection(trainWithLock.curSection)).id;
                 }
+                // Section Entry Event
                 else {
+                    // There is now something on the track
                     cs.on = true;
-                    System.out.println("Enter Event");
-                    // A train has entered
-                    // The only one that can enter if the one with the lock
-                    contrlSections[cs.section.getFromID()].releaseLock();
 
-//                    getControllerSection(getTrainForNextSection(sectionID).curSection).releaseLock();// Release the lock of the section is came from
-                    updateTrain(getTrainForNextSection(sectionID));
+                    // There is now nothing on the track before it so set to false
+                    contrlSections[cs.section.getFromID()].on = false;
+
+                    // Get the train that holds the lock to this
+                    ControllerTrain trainOnSectionBefore = getTrainThatHoldSectionLock(cs.id);
+                    trainOnSectionBefore.lockCur = trainOnSectionBefore.lockNext;
+                    trainOnSectionBefore.lockNext = -1;
+
+                    trainOnSectionBefore.curSection = cs.id;
                 }
+                updateTrains();
             }
         }
     }
 
-
     /**
-     * Called when a section changed has occoured and the train has changed sections
-     *
-     * @param train the train that changed section
+     * Get train that hold the section lock
      * */
-    public void updateTrain(ControllerTrain train){
-        train.curSection = getNextSection(train, getControllerSection(train.curSection)).id;
-        acquireLock(train);// Try move to the next section
+    public ControllerTrain getTrainThatHoldSectionLock(int sectionID){
+        for(ControllerTrain t : trains){
+            if(t.lockCur == sectionID || t.lockNext == sectionID){
+                return t;
+            }
+        }
+
+        // No train holds the lock
+        return null;
     }
 
 
-    /**
-     * Called when a train moves from a section to another
-     *
-     * @param train the train to acquire a lock for
-     * */
-    public void acquireLock(ControllerTrain train){
 
-            // No need to check direction as that is done with the
-            ControllerSection nextSection = getNextSection(train, getControllerSection(train.curSection));
-            if(nextSection.acquireLock()){
-                model.setSpeed(train.id,400); // Make the train go
-            }
-            else {
-                model.setSpeed(train.id,0); // Make the train stop
-            }
-    }
 
 
     /**
@@ -132,26 +169,11 @@ public class Controller {
             }
         }
         // No train on that track
-        System.out.println("Null find train on track");
+
         return null;
     }
 
 
-    /**
-     * Acquire the locks when the trains are first started after that trains should be checked when events occur
-     * */
-    public void acquireLock(){
-        for(ControllerTrain train : trains){
-                // No need to check direction as that is done with the
-                ControllerSection nextSection = getNextSection(train, getControllerSection(train.curSection));
-                if(nextSection.acquireLock()){
-                    model.setSpeed(train.id,400); // Make the train go
-                }
-                else {
-                    model.setSpeed(train.id,0); // Make the train stop
-                }
-        }
-    }
 
 
     /**
@@ -160,15 +182,18 @@ public class Controller {
     private void createControllerSections(){
 
         for(int i = 0; i < sections.length; i++){
-            contrlSections[i] = new ControllerSection(sections[i],false,false);
+            contrlSections[i] = new ControllerSection(sections[i],false);
         }
 
         // Lock the sections that have trains on them
         for(ControllerSection cs :contrlSections){
             for(ControllerTrain ct : trains){
                 if(ct.curSection == cs.section.getID()){
+
+                    // There is a train starting on this section
                     cs.on = true;
-//                    cs.acquireLock() ;// Lock the section the train starts on TODO check for errors if
+                    ct.lockCur = cs.id;
+                    // Need to aquire the lock for the section since it should have it
                 }
             }
         }
@@ -225,7 +250,6 @@ public class Controller {
             if(cs.id == id)return cs;
         }
         // Error
-        System.out.println("Null in controller section");
         return null;
     }
 
@@ -236,11 +260,16 @@ public class Controller {
         boolean orientation;
         int curSection;
 
+        int lockCur; // id of the section it is locking
+        int lockNext;
+
         public ControllerTrain(int id, boolean direction, boolean orientation, int startingSection){
             this.id = id;
             this.direction = direction;
             this.orientation = orientation;
             this.curSection = startingSection;
+            this.lockNext = -1;
+            this.lockCur = -1;
         }
     }
 
@@ -248,25 +277,11 @@ public class Controller {
         Section section;
         int id;
         boolean on;
-        private boolean locked;
 
-        public ControllerSection(Section section, boolean on, boolean locked){
+        public ControllerSection(Section section, boolean on){
             this.id = section.getID();
             this.section = section;
             this.on = on;
-            this.locked = locked;
-        }
-
-        public boolean acquireLock(){
-            if(locked)return false;
-            else {
-                locked = true;
-                return true;
-            }
-        }
-
-        public void releaseLock(){
-            this.locked = false;
         }
     }
 }

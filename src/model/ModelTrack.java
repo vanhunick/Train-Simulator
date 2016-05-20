@@ -80,7 +80,8 @@ public class ModelTrack implements Events{
         System.out.println("Setting speed" + trains.size());
         for(Train t : trains){
             if(t.getId() == trainID){
-                System.out.println("Setting target");
+                System.out.println("Setting target for " + trainID + " at " + speed);
+
                 t.setTargetSpeed(speed);
             }
         }
