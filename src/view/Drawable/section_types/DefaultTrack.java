@@ -3,6 +3,8 @@ package view.Drawable.section_types;
 import javafx.scene.canvas.GraphicsContext;
 
 import javafx.scene.paint.Color;
+import view.Drawable.DrawableTrain;
+import view.Drawable.Movable;
 
 import java.awt.*;
 
@@ -116,13 +118,16 @@ public abstract class DefaultTrack {
 
     public int getId(){return this.id;}
 
-    public Point getNextPoint(Point cur, int lastSubAngle, double moveBy, boolean nat, boolean direction){System.out.println("Should be implemented in subclass");return null;}
-
     public void draw(GraphicsContext g){
         System.out.println("Should be implemented in subclass");
     }
 
-    public boolean checkOnAfterUpdate(Point curPoint,double lastSubAnle, double moveBy, boolean nat, boolean direction){System.out.println("Should be implemented in subclass CheckOnAfterUpdate");return true;}
+    public boolean checkOnAfterUpdate(Point curPoint,double curRot, double rotationDone, double speed, Movable movable){System.out.println("Should be implemented in subclass checkOnAdterUpate");return true;}
+
+    public double getNextPoint(Point curPoint,double curRot, double rotationDone, double speed, Movable movable){
+        System.out.println("Should be implemented in subclass getNextPoint");
+        return 0;
+    }
 
     public void setStart(DefaultTrack from){System.out.println("Should be implemented in subclass");}
 
@@ -135,15 +140,6 @@ public abstract class DefaultTrack {
     public double getInitialY(double trainWidth){System.out.println("Should be implemented in subclass"); return 0;}
 
     public boolean containsPoint(double x, double y){System.out.println("Should be implemented in subclass");return false;}
-
-    public int getNumberOfPoints(double moveBy){
-        return 0;
-    }
-
-    public int getCurPointAfterSpeedChange(double newSpeed, double oldSpeed, double curPointAlong){
-        System.out.println("Should be implemented in subclass");
-        return 0;
-    }
 
     public int getJuncFrom(){
         return this.juncFrom;
@@ -159,6 +155,21 @@ public abstract class DefaultTrack {
 
     public void setJuncFrom(int juncFrom){
         this.juncFrom = juncFrom;
+    }
+
+    public double lengthOfQuater(){
+        double radius = (getLength()-TRACK_WIDTH/2)/2;
+        double circumference = 2 * Math.PI * radius;
+        return circumference/4;
+    }
+
+    /**
+     * Returns if the train is going along with the natural orientation of the track
+     *
+     * @param t train to check
+     * */
+    public boolean forwardWithTrack(Movable t){
+        return t.getOrientation() && t.getDirection() || !t.getOrientation() && !t.getDirection();
     }
 
     @Override

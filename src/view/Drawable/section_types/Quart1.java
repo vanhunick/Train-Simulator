@@ -3,6 +3,8 @@ package view.Drawable.section_types;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
+import view.Drawable.DrawableTrain;
+import view.Drawable.Movable;
 
 import java.awt.*;
 
@@ -10,6 +12,10 @@ import java.awt.*;
  * Created by Nicky on 25/03/2016.
  */
 public class Quart1 extends DefaultTrack {
+
+    private double radius;
+    private double midPointX;
+    private double midPointY;
 
     /**
      * Constructor for a piece that connects to another piece
@@ -66,6 +72,11 @@ public class Quart1 extends DefaultTrack {
 
         setStartX(startX);
         setStartY(startY);
+
+        // Train fields once start is known
+        radius = getLength()/2;
+        midPointX = getStartX()  + radius + TRACK_WIDTH/2;
+        midPointY = getStartY()  + radius + TRACK_WIDTH/2;
     }
 
     public boolean containsPoint(double x, double y){
@@ -80,77 +91,47 @@ public class Quart1 extends DefaultTrack {
             g.setStroke(Color.GREEN);
         }
 
-        double startX = super.getStartX();
-        double startY = super.getStartY();
-        double length = super.getLength();
-
-        g.strokeArc(startX, startY, length, length, 90, 90, ArcType.OPEN);
-        g.strokeArc(startX + TRACK_WIDTH, startY + TRACK_WIDTH, length - (TRACK_WIDTH* 2), length - (TRACK_WIDTH* 2), 90, 90, ArcType.OPEN);
-
-        g.setStroke(Color.WHITE);
+        g.strokeArc(super.getStartX(), super.getStartY(), super.getLength(), super.getLength(), 90, 90, ArcType.OPEN);
+        g.strokeArc(super.getStartX() + TRACK_WIDTH, super.getStartY()+ TRACK_WIDTH, super.getLength() - (TRACK_WIDTH* 2), super.getLength() - (TRACK_WIDTH* 2), 90, 90, ArcType.OPEN);
     }
 
-    public double getNextRotation(double curRotation, double speed, boolean nat, boolean forward){
-        double l = lengthOfQuater();
 
-        double updates = l/speed;
+    public double getNextPoint(Point curPoint,double curRot, double rotationDone, double speed, Movable movable){
+        // Need to minus the degrees to change
+        double degreesToMove = (90/lengthOfQuater()/2) * speed;
 
-        double rotateCHange = 90/updates;
-
-        if((super.getDirection().equals("RIGHT") && ((nat && forward || !nat && !forward)))){
-            return curRotation + rotateCHange;
-        }
-        else if((super.getDirection().equals("DOWN") && (nat && !forward) || (!nat && forward))){
-            return curRotation + rotateCHange;
+        double nextRotation = 0;
+        if(forwardWithTrack(movable)){
+            nextRotation = 270 - (degreesToMove + rotationDone) ;
+            curRot-= degreesToMove;
         }
         else {
-            return curRotation - rotateCHange;
+            nextRotation = 180 + (degreesToMove + rotationDone) ;
+            curRot+= degreesToMove;
         }
+
+        // Set the new point values
+        curPoint.x = (int)(midPointX + (radius * (Math.cos(Math.toRadians(nextRotation)))));
+        curPoint.y = (int)(midPointY + (radius * (Math.sin(Math.toRadians(nextRotation)))));
+
+        movable.setDegDone(rotationDone + degreesToMove);
+
+        if(forwardWithTrack(movable)){
+            curRot-= degreesToMove;
+        }
+        else {
+            curRot+= degreesToMove;
+        }
+        return curRot;
     }
 
 
-    /**
-     * Returns the next point to move to on the curve given the amount to move
-     * */
-    public Point getNextPoint(Point cur, int lastSubAngle, double moveBy, boolean nat, boolean forward){
-        double lengthOfQauter = lengthOfQuater();
-        double points = (int)(lengthOfQauter/moveBy);
-        double angle = 90;
+    public boolean checkOnAfterUpdate(Point curPoint,double curRot, double rotationDone, double speed, Movable movable){
+        boolean nat = movable.getOrientation();
+        boolean forward = movable.getDirection();
 
-
-        if((super.getDirection().equals("RIGHT") && ((nat && forward || !nat && !forward)))){
-            lastSubAngle = (int)points - lastSubAngle;
-        }
-
-        if((super.getDirection().equals("DOWN") && (nat && !forward) || (!nat && forward))){
-            lastSubAngle = (int)points - lastSubAngle;
-        }
-
-        double subAngle = (lastSubAngle/points)*Math.toRadians(angle);
-
-        double radius = ((super.getLength())/2 - TRACK_WIDTH/2);
-
-        double x = super.getStartX() + super.getLength()/2;
-        double y = super.getStartY() + TRACK_WIDTH/2;
-
-        double a = 1.57079632679;
-        a=a+angle*Math.PI/180;
-
-        double fx = Math.cos(a);
-        double fy = Math.sin(a);
-
-        double lx = -(Math.sin(a));
-        double ly = Math.cos(a);
-
-
-        double xi = x + radius*(Math.sin(subAngle)*fx + (1-Math.cos(subAngle))*(-lx));
-        double yi = y + radius*(Math.sin(subAngle)*fy + (1-Math.cos(subAngle))*(-ly));
-        return new Point((int)xi,(int)yi);
-    }
-
-
-    public boolean checkOnAfterUpdate(Point curPoint,double lastSubAnle, double moveBy, boolean nat, boolean forward){
-        Point p = getNextPoint(curPoint, (int)lastSubAnle, moveBy, nat, forward);
+        getNextPoint(curPoint, curRot, rotationDone, speed, movable);
+        Point p = curPoint;
 
         if(super.getDirection().equals("DOWN")){
             if(nat && forward || !nat && !forward){
@@ -189,28 +170,5 @@ public class Quart1 extends DefaultTrack {
             }
         }
         return true;
-    }
-
-
-
-    public int getCurPointAfterSpeedChange(double newSpeed, double oldSpeed, double curPointAlong){
-        double points = (int)(lengthOfQuater()/newSpeed);
-
-        double pointsPrev = (int)(lengthOfQuater()/oldSpeed);
-        double percentageThrough = curPointAlong/pointsPrev;
-
-        curPointAlong = (int)(points*percentageThrough);
-
-        return (int)curPointAlong;
-    }
-
-    public double lengthOfQuater(){
-        double radius = (super.getLength()-TRACK_WIDTH/2)/2;
-        double circumference = 2 * Math.PI * radius;
-        return circumference/4;
-    }
-
-    public int getNumberOfPoints(double moveBy){
-        return (int)(lengthOfQuater()/moveBy);
     }
 }

@@ -89,7 +89,7 @@ public class Visualisation implements MouseEvents {
                 modelTrack.setSpeed(t.getTrain().getId(), 500);
             }
             else{
-                modelTrack.setSpeed(t.getTrain().getId(), 500);
+                modelTrack.setSpeed(t.getTrain().getId(), 400);
             }
         }
     }
@@ -291,7 +291,7 @@ public class Visualisation implements MouseEvents {
         }
 
         // Check if the train will be on another track after the update
-        if(!curTrack.checkOnAfterUpdate(t.getCurrentLocation(),t.getLastPointOnCurve(),pixelsToMove,t.getOrientation(),t.getDirection())){
+        if(!curTrack.checkOnAfterUpdate(t.getCurrentLocation(),t.getCurRotation(),t.getDegDone() ,pixelsToMove,t)){
 
             DefaultTrack destinationTrack = null;
 
@@ -440,11 +440,11 @@ public class Visualisation implements MouseEvents {
                 //Create the train
                 Train train = new Train(1, 80, 500, true,true,0.2);
                 DrawableTrain drawableTrain = new DrawableTrain(train, ds,ds.getTracks()[0]);
-
+//
 //                RollingStock rollingStock = new RollingStock(80,828282);
 //                DrawableRollingStock drawableRollingStock = new DrawableRollingStock(rollingStock,drawableTrain,drawableTrain.getTrain().getDirection());
 //                drawableRollingStock.setStart(drawableTrain.getCurrentLocation(),this);
-
+//
 //                drawableTrain.setRollingStockConnected(drawableRollingStock);
 
 //                drawableRollingStocks.add(drawableRollingStock);
@@ -460,7 +460,7 @@ public class Visualisation implements MouseEvents {
 //                RollingStock rollingStock1 = new RollingStock(80,847584578);
 //                DrawableRollingStock drawableRollingStock1 = new DrawableRollingStock(rollingStock1,drawableTrain1,drawableTrain1.getTrain().getDirection());
 //                drawableRollingStock1.setStart(drawableTrain1.getCurrentLocation(),this);
-
+//
 //                drawableTrain1.setRollingStockConnected(drawableRollingStock1);
 
                 trains.add(drawableTrain1);

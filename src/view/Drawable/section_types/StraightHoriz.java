@@ -2,6 +2,7 @@ package view.Drawable.section_types;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import view.Drawable.Movable;
 
 import java.awt.*;
 
@@ -44,7 +45,6 @@ public class StraightHoriz extends DefaultTrack {
                 startY = from.getStartY() + from.getLength() - TRACK_WIDTH;
             }
             else if(from.getDrawID() == 6){
-                System.out.println("Setting from junction");
                 startX = from.getStartX() + from.getLength();
                 startY = from.getStartY();
             }
@@ -78,13 +78,12 @@ public class StraightHoriz extends DefaultTrack {
     }
 
 
-    public Point getNextPoint(Point cur, int lastSubAngle, double moveBy, boolean nat, boolean forward){
-        cur.setLocation(getNextX(cur.getX(),moveBy,nat, forward),getNextY(cur.getY(),moveBy,nat));
-        return cur;
+    public double getNextPoint(Point cur, double curRot, double rotDone, double moveBy, Movable movable){
+        cur.setLocation(getNextX(cur.getX(),moveBy,movable.getOrientation(), movable.getDirection()),getNextY(cur.getY(),moveBy,movable.getOrientation()));
+        return getNextRotation(curRot,moveBy,movable.getOrientation(),movable.getDirection());
     }
 
     public double getNextX(double curX, double moveBy, boolean nat, boolean forward){
-
         if(super.getDirection().equals("RIGHT")){
             if(nat && forward || !nat && !forward){
                 if(curX + moveBy > (super.getStartX() + super.getLength())){
@@ -102,7 +101,6 @@ public class StraightHoriz extends DefaultTrack {
                     return curX - moveBy;
                 }
             }
-
         }
         else if(super.getDirection().equals("LEFT")){
             if(nat && forward || !nat && !forward){
@@ -157,9 +155,10 @@ public class StraightHoriz extends DefaultTrack {
         return super.getStartY() + TRACK_WIDTH/2;
     }
 
-    public boolean checkOnAfterUpdate(Point curPoint, double lastSubAnle, double dist, boolean nat, boolean forward){
-        if(getNextX(curPoint.getX(),dist, nat, forward) == -1 )return false;
-        if(getNextY(curPoint.getY(),dist, nat) == -1 )return false;
+    public boolean checkOnAfterUpdate(Point curPoint, double rotation,double rotDone, double dist, Movable movable){
+
+        if(getNextX(curPoint.getX(),dist, movable.getOrientation(), movable.getDirection()) == -1 )return false;
+        if(getNextY(curPoint.getY(),dist, movable.getOrientation()) == -1 )return false;
         return true;
     }
 
@@ -173,5 +172,4 @@ public class StraightHoriz extends DefaultTrack {
         g.strokeLine(super.getStartX(), super.getStartY() + TRACK_WIDTH, super.getStartX() + super.getLength(), super.getStartY()+ TRACK_WIDTH);
         g.setStroke(Color.WHITE);
     }
-
 }

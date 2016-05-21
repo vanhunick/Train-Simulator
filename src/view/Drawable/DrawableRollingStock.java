@@ -51,7 +51,6 @@ public class DrawableRollingStock implements Movable{
     private double speed;
 
     // Weather the current speed is the start speed
-    private boolean start;
 
     // The direction the rolling stock is traveling
     private boolean direction;
@@ -80,7 +79,6 @@ public class DrawableRollingStock implements Movable{
         this.direction = direction;
         this.curRotation = 90;
         this.lastPointOnCurve = 0;
-        this.start = true;
 
         setUpImage();
     }
@@ -140,16 +138,12 @@ public class DrawableRollingStock implements Movable{
 
             if(curTrack instanceof JunctionTrack){
                 JunctionTrack jt = (JunctionTrack)curTrack;
-                this.currentLocation = jt.getNextPoint(this,increment);
-                this.curRotation = jt.getNextRotation(this, increment);
+                this.curRotation= jt.getNextPoint(this,increment);
             }
             else{
                 // Get the next point for the train
-                this.currentLocation = curTrack.getNextPoint(currentLocation, lastPointOnCurve,increment, connectedToTrain.getOrientation(),this.getDirection());
-                // Get the next rotation for the train
-                this.curRotation = curTrack.getNextRotation(curRotation,increment, connectedToTrain.getOrientation(),this.getDirection());
+                this.curRotation = curTrack.getNextPoint(currentLocation,curRotation, degDone,increment, this);
             }
-            lastPointOnCurve++;
             total+=increment;
         }
 
@@ -169,8 +163,7 @@ public class DrawableRollingStock implements Movable{
     public void setDirection(boolean directionToSet){
         // Check the direction is actually different
         if(directionToSet != this.direction){
-            // The point along the curve should be changed since we are now going to other way
-            lastPointOnCurve = curTrack.getNumberOfPoints(speed) - lastPointOnCurve;
+            degDone = Math.abs(90- degDone);//TODO test
         }
         // Set the direction
         this.direction = directionToSet;
@@ -185,38 +178,16 @@ public class DrawableRollingStock implements Movable{
     public void update(double pixels){
         if(!connected)return;
         this.speed = pixels;
-        // If it is the start we need to update the speed to match the train speed
-        if(start){
-            updateSpeed(pixels);
-            start = !start;
-        }
-
 
         if(curTrack instanceof JunctionTrack){
             JunctionTrack jt = (JunctionTrack)curTrack;
-            this.currentLocation = jt.getNextPoint(this,pixels);
-            this.curRotation = jt.getNextRotation(this, pixels);
+            this.curRotation = jt.getNextPoint(this,pixels);
         }
         else{
-            // Get the next point for the train
-            this.currentLocation = curTrack.getNextPoint(currentLocation, lastPointOnCurve,pixels, connectedToTrain.getOrientation(),this.getDirection());
-            // Get the next rotation for the train
-            this.curRotation = curTrack.getNextRotation(curRotation,pixels, connectedToTrain.getOrientation(),this.getDirection());
+            this.curRotation = curTrack.getNextPoint(currentLocation,curRotation, degDone,pixels, this);
         }
-
-        // Increment the progress down the curve
-        lastPointOnCurve++;
     }
 
-
-    /**
-     * Updates the speed of the rolling stock.
-     *
-     * @param moveBy the number of pixels to move by
-     * */
-    public void updateSpeed(double moveBy){
-        lastPointOnCurve = curTrack.getCurPointAfterSpeedChange(moveBy,this.speed,lastPointOnCurve);
-    }
 
     /**
      * Redraws the rolling stock on the screen
@@ -299,6 +270,18 @@ public class DrawableRollingStock implements Movable{
     @Override
     public boolean getOrientation() {
         return connectedToTrain.getTrain().getOrientation();
+    }
+
+    @Override
+    public double getDegDone() {
+        return degDone;
+    }
+
+    private double degDone = 0;
+
+    @Override
+    public void setDegDone(double degDone) {
+        this.degDone = degDone;
     }
 
     @Override

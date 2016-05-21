@@ -10,6 +10,10 @@ import java.awt.*;
  */
 public interface Movable {
 
+    public double getDegDone();
+
+    public void setDegDone(double degDone);
+
     /**
      * Returns the current track it is on
      *

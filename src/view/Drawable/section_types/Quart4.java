@@ -4,6 +4,8 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
 import model.Section;
+import view.Drawable.DrawableTrain;
+import view.Drawable.Movable;
 
 import java.awt.*;
 
@@ -11,6 +13,10 @@ import java.awt.*;
  * Created by Nicky on 25/03/2016.
  */
 public class Quart4 extends DefaultTrack {
+
+    private double radius = getLength()/2;
+    private double midPointX = getStartX() + radius + TRACK_WIDTH/2;
+    private double midPointY = getStartY() + radius - TRACK_WIDTH/2;
 
 
     /**
@@ -65,9 +71,12 @@ public class Quart4 extends DefaultTrack {
                 startY = from.getStartY() + from.getLength()/2 - super.getLength()/2;
             }
         }
+        setStartX(startX);
+        setStartY(startY);
 
-        super.setStartX(startX);
-        super.setStartY(startY);
+        radius = getLength()/2;
+        midPointX = getStartX() + radius + TRACK_WIDTH/2;
+        midPointY = getStartY() + radius - TRACK_WIDTH/2;
     }
 
     public boolean containsPoint(double x, double y){
@@ -77,98 +86,52 @@ public class Quart4 extends DefaultTrack {
 
     public void draw(GraphicsContext g) {
         g.setStroke(super.getColor());
-        if(super.getMouseOn() ){//|| super.getSection().getTrainOn()
+        if(super.getMouseOn() ){
             g.setStroke(Color.GREEN);
         }
 
-        double startX = super.getStartX();
-        double startY = super.getStartY();
-        double length = super.getLength();
-
-
-        g.strokeArc(startX, startY, length, length, -90, -90, ArcType.OPEN);
-        g.strokeArc(startX + TRACK_WIDTH, startY + TRACK_WIDTH, length - (TRACK_WIDTH * 2), length - (TRACK_WIDTH * 2), -90, -90, ArcType.OPEN);
-
-        g.setStroke(Color.WHITE);
+        g.strokeArc(getStartX(), getStartY(), getLength(), getLength(), -90, -90, ArcType.OPEN);
+        g.strokeArc(getStartX() + TRACK_WIDTH, getStartY() + TRACK_WIDTH, getLength() - (TRACK_WIDTH * 2), getLength() - (TRACK_WIDTH * 2), -90, -90, ArcType.OPEN);
     }
 
-    public double getNextRotation(double curRotation, double speed,boolean nat, boolean forward){
-        double l = lengthOfQuater();
 
-        double updates = l/speed;
+    public double getNextPoint(Point curPoint,double curRot, double rotationDone, double speed, Movable movable){
+        // Need to minus the degrees to change
+        double degreesToMove = (90/lengthOfQuater()/2) * speed;
 
-        double rotateCHange = 90/updates;
-
-        if(super.getDirection().equals("UP") || (nat && !forward) || (!nat && forward)){
-            return curRotation + rotateCHange;
+        double nextRotation = 0;
+        if(forwardWithTrack(movable)){
+            nextRotation = 180 - (degreesToMove + rotationDone) ;
+            curRot-= degreesToMove;
         }
         else {
-            return curRotation - rotateCHange;
-        }
-    }
-
-
-    public int getCurPointAfterSpeedChange(double newSpeed, double oldSpeed, double curPointAlong){
-        double points = (int)(lengthOfQuater()/newSpeed);
-
-        double pointsPrev = (int)(lengthOfQuater()/oldSpeed);
-        double percentageThrough = curPointAlong/pointsPrev;
-//
-//        if(changedDirection){
-//            percentageThrough = 1-percentageThrough;
-//        }
-
-        curPointAlong = (int)(points*percentageThrough);
-
-        return (int)curPointAlong;
-    }
-
-
-
-    /**
-     * Returns the next point to move to on the curve given the amount to move
-     * */
-    public Point getNextPoint(Point curPoint, int lastSubAngle, double moveBy, boolean nat, boolean forward){
-        double points = (int)(lengthOfQuater()/moveBy);
-
-
-        double angle = 90;
-
-
-        if(super.getDirection().equals("UP") || (nat && !forward) || (!nat && forward)){
-            lastSubAngle = (int)points - lastSubAngle;
+            nextRotation = 90 + (degreesToMove + rotationDone) ;
+            curRot+= degreesToMove;
         }
 
-        double subAngle = (lastSubAngle/points)*Math.toRadians(angle);
+        // Set the new point values
+        curPoint.x = (int)(midPointX + (radius * (Math.cos(Math.toRadians(nextRotation)))));
+        curPoint.y = (int)(midPointY + (radius * (Math.sin(Math.toRadians(nextRotation)))));
 
+        movable.setDegDone(rotationDone + degreesToMove);
 
-        double radius = ((super.getLength())/2 -  TRACK_WIDTH/2);
+        if(forwardWithTrack(movable)){
+            curRot-= degreesToMove;
+        }
+        else {
+            curRot+= degreesToMove;
+        }
 
-        double x = super.getStartX() + TRACK_WIDTH/2;
-        double y = super.getStartY() + super.getLength()/2;
-
-        double a = 1.57079632679;
-        a=a+angle*Math.PI;
-
-        double fx = Math.cos(a);
-        double fy = Math.sin(a);
-
-        double lx = -(Math.sin(a));
-        double ly = Math.cos(a);
-
-
-        double xi = x + radius*(Math.sin(subAngle)*fx + (1-Math.cos(subAngle))*(-lx));
-        double yi = y + radius*(Math.sin(subAngle)*fy + (1-Math.cos(subAngle))*(-ly));
-        return new Point((int)xi,(int)yi);
+        return curRot;
     }
 
-    public int getNumberOfPoints(double moveBy){
-        return (int)(lengthOfQuater()/moveBy);
-    }
 
-    //Not tested yet
-    public boolean checkOnAfterUpdate(Point curPoint, double lastSubAnle, double moveBy, boolean nat, boolean forward){
-        Point p = getNextPoint(curPoint, (int)lastSubAnle, moveBy, nat, forward);
+    public boolean checkOnAfterUpdate(Point curPoint,double curRot, double rotationDone, double speed, Movable movable){
+        boolean nat = movable.getOrientation();
+        boolean forward = movable.getDirection();
+
+        getNextPoint(curPoint, curRot,rotationDone, speed, movable);
+        Point p = curPoint;
 
         if(super.getDirection().equals("RIGHT")){
             if(nat && forward || !nat && !forward){
@@ -207,12 +170,5 @@ public class Quart4 extends DefaultTrack {
             }
         }
         return true;
-    }
-
-
-    public double lengthOfQuater(){
-        double radius = (super.getLength()-TRACK_WIDTH/2)/2;
-        double circumference = 2 * Math.PI * radius;
-        return circumference/4;
     }
 }

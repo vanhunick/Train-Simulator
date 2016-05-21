@@ -163,28 +163,19 @@ public class JunctionTrack extends DefaultTrack {
         }
     }
 
-//    public Point getNextPoint(DrawableTrain dt, double moveBy){
-//        return dt.getJuncTrack().getNextPoint(dt.getCurrentLocation(),dt.lastPointOnCurve,moveBy,dt.getTrain().getOrientation(),dt.getTrain().getDirection());
-//    }
 
-    public Point getNextPoint(Movable dt, double moveBy){
-        return dt.getJuncTrack().getNextPoint(dt.getCurrentLocation(),dt.getLastPointOnCurve(),moveBy,dt.getOrientation(),dt.getDirection());
+    public double getNextPoint(Movable dt, double moveBy){
+        return dt.getJuncTrack().getNextPoint(dt.getCurrentLocation(),dt.getCurRotation(),dt.getDegDone(),moveBy, dt);
     }
 
-//    public double getNextRotation(DrawableTrain dt, double speed){
-//        return dt.getJuncTrack().getNextRotation(dt.getCurRotation(),speed,dt.getTrain().getOrientation(),dt.getTrain().getDirection());
-//    }
-
-    public double getNextRotation(Movable dt, double speed){
-        return dt.getJuncTrack().getNextRotation(dt.getCurRotation(), speed, dt.getOrientation(), dt.getDirection());
-    }
 
     /**
      * Junctions tracks need to be able to change the lastsubable and need to be able to change the orientation
      * */
     public boolean checkOnAfterUpdate(Movable dt, double moveBy){
 
-        if(dt.getJuncTrack().checkOnAfterUpdate(dt.getCurrentLocation(), dt.getLastPointOnCurve(), moveBy, dt.getOrientation(), dt.getDirection())){
+
+        if(dt.getJuncTrack().checkOnAfterUpdate(dt.getCurrentLocation(), dt.getCurRotation(),dt.getDegDone(), moveBy, dt)){
             return true;
         }
 

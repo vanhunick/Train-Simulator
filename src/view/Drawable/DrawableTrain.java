@@ -135,15 +135,13 @@ public class DrawableTrain implements Movable{
         timeChanged = 20;
         double pixelsToMove = (timeChanged/1000.0)*currentSpeed;
 
-        // Check if the speed have changed
-        if(lastSpeed != pixelsToMove && lastPointOnCurve != 0){
-            lastPointOnCurve =curTrack.getCurPointAfterSpeedChange(pixelsToMove,lastSpeed,lastPointOnCurve);
-        }
+
         lastSpeed = pixelsToMove;
 
         // Check if direction has changed
         if(lastDirection != train.getDirection()){
-            lastPointOnCurve = curTrack.getNumberOfPoints(pixelsToMove) - lastPointOnCurve;
+            degDone = Math.abs(90- degDone);//TODO test
+
             if(rollingStockConnected != null){
                 rollingStockConnected.setDirection(train.getDirection());
             }
@@ -152,18 +150,11 @@ public class DrawableTrain implements Movable{
 
         if(curTrack instanceof JunctionTrack){
             JunctionTrack jt = (JunctionTrack)curTrack;
-            this.currentLocation = jt.getNextPoint(this,pixelsToMove);
-            this.curRotation = jt.getNextRotation(this, pixelsToMove);
+            this.curRotation = jt.getNextPoint(this,pixelsToMove);
         }
         else{
-            // Get the next point for the train
-            this.currentLocation = curTrack.getNextPoint(currentLocation, lastPointOnCurve,pixelsToMove, train.getOrientation(),train.getDirection());
-            // Get the next rotation for the train
-            this.curRotation = curTrack.getNextRotation(curRotation,pixelsToMove, train.getOrientation(),train.getDirection());
+            this.curRotation = curTrack.getNextPoint(currentLocation,curRotation, degDone,pixelsToMove, this);
         }
-
-        // Increment the progress on the current track
-        lastPointOnCurve++;
 
         // Update the rolling stock if there is one connected
         if(rollingStockConnected != null){
@@ -171,8 +162,17 @@ public class DrawableTrain implements Movable{
         }
     }
 
+    private double degDone = 0;
+
+    public double getDegDone(){
+        return this.degDone;
+    }
+
+    public void setDegDone(double done){
+        this.degDone = done;
+    }
+
     public void applyAcceleration(){
-        System.out.println("Trying to speed up but I can't " + currentSpeed);
         double timeChanged = 20;// ms
         this.currentSpeed += train.getAcceleration()*(1000/timeChanged);
     }
@@ -265,6 +265,7 @@ public class DrawableTrain implements Movable{
     @Override
     public void setJuncTrack(DefaultTrack juncTrack){
         lastPointOnCurve = 0;
+        degDone = 0;
         this.juncTrack = juncTrack;
     }
 
@@ -276,6 +277,7 @@ public class DrawableTrain implements Movable{
     @Override
     public void setCurTrack(DefaultTrack track){
         lastPointOnCurve = 0;
+        degDone = 0;
         this.curTrack = track;
     }
 
