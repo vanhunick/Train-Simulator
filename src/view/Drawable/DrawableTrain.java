@@ -32,7 +32,7 @@ public class DrawableTrain implements Movable{
     private DefaultTrack curTrack;
 
     // Only used to work out which track it is on inside a junction track
-    private DefaultTrack juncTrack;// TODO not ideal
+    private DefaultTrack juncTrack;//
 
     // The current section it is on
     private DrawableSection curSection;
@@ -41,7 +41,7 @@ public class DrawableTrain implements Movable{
     private DrawableRollingStock rollingStockConnected;
 
     // Our previous speed used for location calculations around curves
-    private double lastSpeed;
+//    private double lastSpeed;
 
     // The previous direction
     private boolean lastDirection;
@@ -58,6 +58,9 @@ public class DrawableTrain implements Movable{
 
     private double currentSpeed;
 
+
+    // Used by any connected rolling stock
+    private double distMoved;
 
     /**
      * Creates a new drawable train object
@@ -96,6 +99,9 @@ public class DrawableTrain implements Movable{
         }
     }
 
+    public double getForce(){
+        return distMoved;
+    }
 
     /**
      * Redraws the train on the screen
@@ -118,12 +124,13 @@ public class DrawableTrain implements Movable{
      * */
     public void update(){
         if(crashed)return;
+        System.out.println("Updating " + train.getTargetSpeed() + " cur " + currentSpeed );
         // Check if the train is still accelerating and the current speed is less than the max speed
         if(currentSpeed < train.getTargetSpeed() && currentSpeed < train.getMaxSpeed()){
             applyAcceleration();
         }
         if(currentSpeed > train.getTargetSpeed()){
-            currentSpeed = train.getTargetSpeed();//TODO change to decelerate
+            deaccelerate();
         }
 
         if(lastUpdate == 0){
@@ -135,8 +142,7 @@ public class DrawableTrain implements Movable{
         timeChanged = 20;
         double pixelsToMove = (timeChanged/1000.0)*currentSpeed;
 
-
-        lastSpeed = pixelsToMove;
+        distMoved = pixelsToMove;
 
         // Check if direction has changed
         if(lastDirection != train.getDirection()){
@@ -158,7 +164,7 @@ public class DrawableTrain implements Movable{
 
         // Update the rolling stock if there is one connected
         if(rollingStockConnected != null){
-            rollingStockConnected.update(pixelsToMove);
+            rollingStockConnected.update();
         }
     }
 
@@ -175,6 +181,11 @@ public class DrawableTrain implements Movable{
     public void applyAcceleration(){
         double timeChanged = 20;// ms
         this.currentSpeed += train.getAcceleration()*(1000/timeChanged);
+    }
+
+    public void deaccelerate(){
+        double timeChanged = 20;// ms
+        this.currentSpeed -= train.getDeceleration()*(1000/timeChanged);
     }
 
     /**
@@ -248,6 +259,10 @@ public class DrawableTrain implements Movable{
         return this.currentSpeed;
     }
 
+    public double getLastDistMoved(){
+        return distMoved;
+    }
+
     public double getLength(){
         return train.getLength();//TODO need to decide on where to store full length including rolling stock or not to
     }
@@ -316,6 +331,10 @@ public class DrawableTrain implements Movable{
         return this.getTrain().getDirection();
     }
 
+    public void setDirection(boolean forward){
+        this.train.setDirection(forward);
+    }
+
     @Override
     public Point getCurrentLocation(){
         return  this.currentLocation;
@@ -339,7 +358,6 @@ public class DrawableTrain implements Movable{
         DrawableTrain that = (DrawableTrain) o;
 
         if (Double.compare(that.width, width) != 0) return false;
-        if (Double.compare(that.lastSpeed, lastSpeed) != 0) return false;
         if (lastDirection != that.lastDirection) return false;
         if (crashed != that.crashed) return false;
         if (Double.compare(that.currentSpeed, currentSpeed) != 0) return false;
@@ -357,7 +375,6 @@ public class DrawableTrain implements Movable{
         result = (int) (temp ^ (temp >>> 32));
         result = 31 * result + train.hashCode();
         result = 31 * result + rollingStockConnected.hashCode();
-        temp = Double.doubleToLongBits(lastSpeed);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
         result = 31 * result + (lastDirection ? 1 : 0);
         result = 31 * result + (crashed ? 1 : 0);

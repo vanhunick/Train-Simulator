@@ -23,6 +23,11 @@ import java.util.List;
  * Created by User on 26/03/2016.
  */
 public class TrackBuilder implements MouseEvents{
+
+    public void keyPressed(String code){
+
+    }
+
     public static final int WIDTH = 150;
 
     // The number of possible different track pieces you can create
@@ -323,7 +328,7 @@ public class TrackBuilder implements MouseEvents{
                 //td.getStartId()
 
                 //Create the train
-                Train train = new Train(td.getId(),td.getLength(),80,true,false, 0.8);
+                Train train = new Train(td.getId(),td.getLength(),80,true,false, 0.8,0.5);
 
                 // Create the drawable train
 //                DrawableTrain drawableTrain = new DrawableTrain(train, s,s.getSection());//TODO make sections first
@@ -545,7 +550,7 @@ public class TrackBuilder implements MouseEvents{
 //    public List<DefaultTrack> setUpDrawPieces(){
 //        List<DefaultTrack> sections = new ArrayList<>();
 //
-//        double middleX = (screenWidth - boxSize - boxGap) + (boxSize/2);//Start of the box to refresh in
+//        double middleX = (screenWidth - boxSize - boxGap) + (boxSize/2);//Start of the box to draw in
 //        double middleY = 10 + boxGap + (boxSize/2);
 //
 //        double size = boxSize - (boxGap);

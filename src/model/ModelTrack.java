@@ -79,6 +79,7 @@ public class ModelTrack implements Events{
     public void setSpeed(int trainID, double speed) {
         for(Train t : trains){
             if(t.getId() == trainID){
+                System.out.printf("Setting target");
                 t.setTargetSpeed(speed);
             }
         }
