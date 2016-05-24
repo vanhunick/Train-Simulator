@@ -38,10 +38,7 @@ public class Main extends Application {
     @Override
     public void start(final Stage primaryStage) {
 
-        System.out.println(Byte.MAX_VALUE*Byte.MAX_VALUE*Byte.MAX_VALUE*Byte.MAX_VALUE);
-        System.out.println(Integer.MAX_VALUE);
-
-                // Initialises the control that will control the flow of the program
+        // Initialises the control that will control the flow of the program
         this.controller = new ProgramController();
 
         Group root = new Group();
@@ -68,6 +65,9 @@ public class Main extends Application {
 
         setupGUI(primaryStage, scene, root,canvas);
         controller.setDefMode(bl,canvas);
+
+        lastTime = System.nanoTime();
+        setupAnimationTimer(primaryStage,canvas);
     }
 
 
@@ -85,11 +85,8 @@ public class Main extends Application {
         bl.setTop(topMenuBar);//Need to add first as it is being used to calculate offset
         bl.setCenter(canvas);
 
-        canvas.setWidth(SCREEN_WIDTH- EventLog.WIDTH - Visualisation.WIDTH);//TODO do better later
+        canvas.setWidth(SCREEN_WIDTH- EventLog.WIDTH - Simulation.WIDTH);//TODO do better later
         canvas.setHeight(SCREEN_HEIGHT - TopMenuBar.HEIGHT);
-
-        lastTime = System.nanoTime();
-        setupAnimationTimer(primaryStage,canvas);
 
 
         root.getChildren().add(bl);

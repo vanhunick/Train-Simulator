@@ -124,7 +124,6 @@ public class DrawableTrain implements Movable{
      * */
     public void update(){
         if(crashed)return;
-        System.out.println("Updating " + train.getTargetSpeed() + " cur " + currentSpeed );
         // Check if the train is still accelerating and the current speed is less than the max speed
         if(currentSpeed < train.getTargetSpeed() && currentSpeed < train.getMaxSpeed()){
             applyAcceleration();

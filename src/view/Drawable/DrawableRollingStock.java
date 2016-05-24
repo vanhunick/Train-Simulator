@@ -8,7 +8,7 @@ import javafx.scene.paint.*;
 import model.RollingStock;
 import view.Drawable.section_types.DefaultTrack;
 import view.Drawable.section_types.JunctionTrack;
-import view.Visualisation;
+import view.Simulation;
 
 import java.awt.Point;
 
@@ -116,7 +116,7 @@ public class DrawableRollingStock implements Movable{
      *
      * @param vis the visualisation used to simulate the movement back
      * */
-    public void setStart(Point startPointOfConnection, Visualisation vis){
+    public void setStart(Point startPointOfConnection, Simulation vis){
         // Reverse direction so we can reverse it away from the train
         this.direction = !direction;
 

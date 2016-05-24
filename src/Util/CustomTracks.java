@@ -1,8 +1,15 @@
 package Util;
 
 import model.Section;
+import model.Train;
+import view.Drawable.DrawableRollingStock;
+import view.Drawable.DrawableTrain;
+import view.Drawable.Movable;
 import view.Drawable.section_types.*;
 import view.Drawable.section_types.JunctionTrack;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by vanhunick on 16/04/16.
@@ -517,4 +524,52 @@ public class CustomTracks {
     }
 
 
+    public static List<DrawableTrain> getDefaultTrains(DrawableSection[] railway){
+        List<DrawableTrain> trains = new ArrayList<>();
+
+        // Add a train to the track
+        for(DrawableSection ds : railway) {
+            if (ds.getSection().getID() == 99) {
+                //Create the train
+                Train train = new Train(1, 80, 500, true,true,0.2, 0.8);
+                DrawableTrain drawableTrain = new DrawableTrain(train, ds,ds.getTracks()[0]);
+//
+//                RollingStock rollingStock = new RollingStock(80,828282);
+//                DrawableRollingStock drawableRollingStock = new DrawableRollingStock(rollingStock,drawableTrain,drawableTrain.getTrain().getDirection());
+//                drawableRollingStock.setStart(drawableTrain.getCurrentLocation(),this);
+//
+//                drawableTrain.setRollingStockConnected(drawableRollingStock);
+
+//                drawableRollingStocks.add(drawableRollingStock);
+                trains.add(drawableTrain);
+
+//                movable.add(drawableRollingStock);
+            }
+            if(ds.getSection().getID() == 101){
+                Train train1 = new Train(2, 80, 100, true,true, 0.8, 0.8);
+                DrawableTrain drawableTrain1 = new DrawableTrain(train1, ds,ds.getTracks()[0]);
+
+//
+//                RollingStock rollingStock1 = new RollingStock(80,847584578);
+//                DrawableRollingStock drawableRollingStock1 = new DrawableRollingStock(rollingStock1,drawableTrain1,drawableTrain1.getTrain().getDirection());
+//                drawableRollingStock1.setStart(drawableTrain1.getCurrentLocation(),this);
+//
+//                drawableTrain1.setRollingStockConnected(drawableRollingStock1);
+
+                trains.add(drawableTrain1);
+
+//                movable.add(drawableRollingStock1);
+            }
+        }
+        return trains;
+    }
+
+    public static List<Movable> createMovableList(List<DrawableTrain> trains, List<DrawableRollingStock> stocks){
+        List<Movable> movables = new ArrayList<>();
+
+        trains.forEach(t -> movables.add(t));
+        stocks.forEach(s -> movables.add(s));
+
+        return movables;
+    }
 }

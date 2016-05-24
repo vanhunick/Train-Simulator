@@ -29,7 +29,15 @@ import java.util.stream.Collectors;
 /**
  * Created by vanhunick on 22/03/16.
  */
-public class Visualisation implements MouseEvents {
+public class Simulation implements MouseEvents {
+
+    // Modes
+    public static final String MODE_USER = "user";
+    public static final String MODE_TEST = "test";
+    public static final String MODE_CONTROLLER = "controller";
+    public static final String NO_MODE = "controller";
+
+    private String currentMode = NO_MODE;
 
     private Movable seclectedMovable;
 
@@ -42,8 +50,6 @@ public class Visualisation implements MouseEvents {
     // Simulation state
     private boolean started = false;
 
-    // Gui pane to send events to for user
-    private EventLog eventLog;
 
     // Trains and Sections
     private List<DrawableTrain> trains;
@@ -54,45 +60,92 @@ public class Visualisation implements MouseEvents {
     // The tracks
     private DefaultTrack tracks[];
 
-    // buttons for visualisation
-    private VBox vBox;
 
     // Last time the logic was updated
     private long lastUpdate;
 
-    // Is the log currently shows on by def
-    private boolean logShown;
+    private simulationUI UI;
 
 
     /**
      * Constructs a new visualisation object with a default track and trains
      * */
-    public Visualisation(){
-        this.logShown = true;
-        this.vBox = getVisualisationButtons();
-        this.eventLog = new EventLog();
-
-        // Set the default track
+    public Simulation(simulationUI UI){
         this.trains = new ArrayList<>();
         this.drawableRollingStocks = new ArrayList<>();
         this.movable = new ArrayList<>();
-        CustomTracks ct = new CustomTracks("FULL");
-
-
-        this.tracks = ct.getTracks();
-        this.railway = ct.getSections();
-        addDefaultTrains();
-        this.modelTrack = new ModelTrack(getTrains(), getSections());
-        setSpeeds();//TODO just used for testing movement with keys
-        System.out.println("Setting speeds");
+        this.UI = UI;
     }
 
-    public void setSpeeds(){
+
+    /**
+     * Sets the default track and trains
+     * */
+    public void setDefault(){
+        CustomTracks c = new CustomTracks("FULL");
+        tracks = c.getFullTracks();
+        railway = c.getFullSection(tracks);
+        trains = CustomTracks.getDefaultTrains(railway);
+        movable = CustomTracks.createMovableList(trains,drawableRollingStocks);
+        this.modelTrack = new ModelTrack(getTrains(), getSections());
+    }
+
+    /**
+     * Mode used for testing
+     * */
+    public void testMode(){
         for(DrawableTrain t : trains){
             modelTrack.setSpeed(t.getTrain().getId(), 400);
         }
+        started = true;
+//        lastUpdate = System.currentTimeMillis();
     }
 
+    public void controlMode(){
+        Map<Train, Integer> startMap = new HashMap<>();
+        for(DrawableTrain train : trains){
+            startMap.put(train.getTrain(), train.getCurSection().getSection().getID());
+        }
+
+        Controller c = new Controller(startMap,getSections(),modelTrack);
+        modelTrack.setController(c);
+        modelTrack.useController(true);
+        c.startControlling();
+
+        started = true;
+//        lastUpdate = System.currentTimeMillis();
+    }
+
+    public void start(String mode){
+        // If the section the train is on can detect set on to be true
+        for(DrawableTrain t : trains){
+            if(t.getCurSection().getSection().canDetect()){
+                t.getCurSection().getSection().setTrainOn(true);
+            }
+        }
+
+        if(mode.equals(MODE_CONTROLLER)){
+            controlMode();
+        }
+        else if(mode.equals(MODE_TEST)){
+            testMode();
+        }
+    }
+
+    public void restart(){
+        started = false;// Stop the updates
+    }
+
+    /**
+     * Pauses the simulation
+     * */
+    public void pause(){
+        started = false;
+    }
+
+    public void setRailway(DrawableSection[] railway){
+        this.railway = railway;
+    }
 
     /**
      * Updates the trains
@@ -107,10 +160,7 @@ public class Visualisation implements MouseEvents {
             }
 
             // Update the rolling stocks need to be done after as the need to know how much to move based on the train
-            // they are connected to
-            for(DrawableRollingStock drs : drawableRollingStocks){
-                drs.update();
-            }
+            drawableRollingStocks.forEach(d -> d.update());
         }
     }
 
@@ -127,9 +177,7 @@ public class Visualisation implements MouseEvents {
         }
 
         // Updates all the things that move on the track
-        for(Movable m : movable){
-            m.draw(g);
-        }
+        movable.forEach(m -> m.draw(g));
     }
 
 
@@ -223,7 +271,7 @@ public class Visualisation implements MouseEvents {
 
             // If the current section can detect we must send an event since it has changed state
             if(curSection.getSection().canDetect()){
-                eventLog.appendText(updateTrainOnSection(t.getTrain(), curSection.getSection(),curSection.getSection()));
+                UI.sendToeventLog(updateTrainOnSection(t.getTrain(), curSection.getSection(),curSection.getSection()));
                 modelTrack.sectionChanged(curSection.getSection().getID());
             }
 
@@ -233,7 +281,7 @@ public class Visualisation implements MouseEvents {
                     DrawableSection last = t.getCurSection();
                     t.setCurSection(ds);//have to do it this way since the destination is not always the same
                     if(ds.getSection().canDetect()){
-                        eventLog.appendText(updateTrainOnSection(t.getTrain(), last.getSection(),ds.getSection()));
+                        UI.sendToeventLog(updateTrainOnSection(t.getTrain(), last.getSection(), ds.getSection()));
                         modelTrack.sectionChanged(ds.getSection().getID());
                     }
                 }
@@ -341,60 +389,6 @@ public class Visualisation implements MouseEvents {
     }
 
 
-
-    /**
-     * Called when user presses the event button the send an event to a train
-     * */
-    public void startEventDialog(){
-        if(started == false){
-            new ErrorDialog("Start simulation before sending event", "Event Start Error");
-            return;
-        }
-        new EventGen(modelTrack);
-    }
-
-    /**
-     * Stops the simulation
-     * */
-    public void restartSimulation(){
-        started = false;// Stop the updates
-        CustomTracks ct = new CustomTracks("FULL");
-
-        this.tracks = ct.getTracks();
-        this.railway = ct.getSections();
-        trains.clear();
-        movable.clear();
-        addDefaultTrains();
-
-        this.drawableRollingStocks.clear();
-    }
-
-    /**
-     * Pauses the simulation
-     * */
-    public void pause(){
-        started = false;
-    }
-
-
-    /**
-     * Starts the simulation with the given track and trains
-     * */
-    public void startSimulation(){
-        this.modelTrack = new ModelTrack(getTrains(), getSections());
-
-        for(DrawableTrain t : trains){
-            if(t.getCurSection().getSection().canDetect()){
-                t.getCurSection().getSection().setTrainOn(true);
-            }
-        }
-
-        setSpeeds();
-        started = true;
-
-        lastUpdate = System.currentTimeMillis();
-    }
-
     /**
      * Returns the Sections from the drawable sections
      * */
@@ -418,56 +412,6 @@ public class Visualisation implements MouseEvents {
         return trains;
     }
 
-    /**
-     * Adds some default trains train to the starting track
-     * */
-    public void addDefaultTrains(){
-        // Add a train to the track
-        for(DrawableSection ds : railway) {
-            if (ds.getSection().getID() == 99) {
-
-                //Create the train
-                Train train = new Train(1, 80, 500, true,true,0.2, 0.8);
-                DrawableTrain drawableTrain = new DrawableTrain(train, ds,ds.getTracks()[0]);
-//
-//                RollingStock rollingStock = new RollingStock(80,828282);
-//                DrawableRollingStock drawableRollingStock = new DrawableRollingStock(rollingStock,drawableTrain,drawableTrain.getTrain().getDirection());
-//                drawableRollingStock.setStart(drawableTrain.getCurrentLocation(),this);
-//
-//                drawableTrain.setRollingStockConnected(drawableRollingStock);
-
-//                drawableRollingStocks.add(drawableRollingStock);
-                trains.add(drawableTrain);
-                movable.add(drawableTrain);
-//                movable.add(drawableRollingStock);
-            }
-            if(ds.getSection().getID() == 101){
-
-                Train train1 = new Train(2, 80, 100, true,true, 0.8, 0.8);
-                DrawableTrain drawableTrain1 = new DrawableTrain(train1, ds,ds.getTracks()[0]);
-
-//
-//                RollingStock rollingStock1 = new RollingStock(80,847584578);
-//                DrawableRollingStock drawableRollingStock1 = new DrawableRollingStock(rollingStock1,drawableTrain1,drawableTrain1.getTrain().getDirection());
-//                drawableRollingStock1.setStart(drawableTrain1.getCurrentLocation(),this);
-//
-//                drawableTrain1.setRollingStockConnected(drawableRollingStock1);
-
-                trains.add(drawableTrain1);
-                movable.add(drawableTrain1);
-//                movable.add(drawableRollingStock1);
-            }
-        }
-    }
-
-
-
-    /**
-     * Sets the railway to draw
-     * */
-    public void setRailway(DrawableSection[] rail){
-        this.railway = rail;
-    }
 
     /**
      * Sets the trains on the track
@@ -476,37 +420,6 @@ public class Visualisation implements MouseEvents {
         this.trains = trains;
     }
 
-
-
-    /**
-     * Sets the trains to be controlled by the controller
-     * */
-    public void useController(){
-        this.modelTrack = new ModelTrack(getTrains(), getSections());
-
-        Map<Train, Integer> startMap = new HashMap<>();
-        for(DrawableTrain train : trains){
-            startMap.put(train.getTrain(), train.getCurSection().getSection().getID());
-        }
-
-        Controller controller = new Controller(startMap,getSections(),modelTrack);
-        modelTrack.setController(controller);
-        modelTrack.useController(true);
-
-        // If the section the train is on can detect set on to be true
-        for(DrawableTrain t : trains){
-            if(t.getCurSection().getSection().canDetect()){
-                t.getCurSection().getSection().setTrainOn(true);
-            }
-        }
-
-        // Set the controller to take control
-        controller.startControlling();
-
-        // Start the updates
-        started = true;
-        lastUpdate = System.currentTimeMillis();
-    }
 
     /**
      * If the point clicked is on a Junction it toggles the junction on that point
@@ -530,30 +443,6 @@ public class Visualisation implements MouseEvents {
     }
 
 
-    @Override
-    public void mousePressed(double x, double y, MouseEvent e) {}
-
-    @Override
-    public void mouseReleased(double x, double y, MouseEvent e) {}
-
-    @Override
-    public void mouseClicked(double x, double y, MouseEvent e) {
-        if(e.getButton().equals(MouseButton.PRIMARY)){
-            if(e.getClickCount() == 2){
-                toggleJunctionOnPoint(x,y);
-                if(getOnTrack(x,y) != null){
-                    DefaultTrack dt = getOnTrack(x,y);
-                    showTrackMenu(dt);
-                }
-            }
-            else{
-                if(onMovable(x,y)){
-                    eventLog.appendText("Train Selected");
-                }
-            }
-        }
-    }
-
     public boolean onMovable(double x, double y){
         for(Movable m : movable){
             if(m.containsPoint(x,y)){
@@ -562,36 +451,6 @@ public class Visualisation implements MouseEvents {
             }
         }
         return false;
-    }
-
-    public void showTrackMenu(DefaultTrack dt){
-        TrackMenu menu = new TrackMenu(dt);
-
-        if(menu.addTrain()){
-            String selectedTrain = menu.getCurTrainSelection();
-            if(selectedTrain.equals("British Rail Class 25")){
-                Train train1 = new Train(getNextTrainID(), 80, 500, true,true, 0.2, 0.5);
-                DrawableTrain drawableTrain1 = new DrawableTrain(train1, getSection(dt),dt);
-
-                trains.add(drawableTrain1);
-                movable.add(drawableTrain1);
-
-            }
-            else if(selectedTrain.equals("British Rail Class 108 (DMU)")){
-
-            }
-            else if(selectedTrain.equals("British Rail Class 101 (DMU)")){
-
-            }
-        }
-
-        if(menu.addRollingStocl()){
-            RollingStock rollingStock = new RollingStock(80,100,0.8);
-            DrawableRollingStock drawableRollingStock = new DrawableRollingStock(rollingStock);
-            drawableRollingStock.setStartNotConnected(dt);
-            drawableRollingStocks.add(drawableRollingStock);
-            movable.add(drawableRollingStock);
-        }
     }
 
     public DrawableSection getSection(DefaultTrack dt){
@@ -618,9 +477,45 @@ public class Visualisation implements MouseEvents {
                maxID = t.getTrain().getId();
             }
         }
-        maxID+=1;
+        maxID++;
         return maxID;
     }
+
+    public void moveTrain(boolean forward){
+        if(seclectedMovable != null){
+            seclectedMovable.setDirection(forward);
+
+            for(int i = 0; i < 100; i++){
+                seclectedMovable.update();
+            }
+        }
+    }
+
+    // New methods
+    public void addTraintoSimulation(DrawableTrain train){
+        trains.add(train);
+        movable.add(train);
+    }
+
+    public void addRollingStocktoSimulation(DrawableRollingStock stock){
+        drawableRollingStocks.add(stock);
+        movable.add(stock);
+    }
+
+    public ModelTrack getModelTrack(){
+        return this.modelTrack;
+    }
+
+    @Override
+    public void keyPressed(String code) {
+
+    }
+
+    @Override
+    public void mousePressed(double x, double y, MouseEvent e) {}
+
+    @Override
+    public void mouseReleased(double x, double y, MouseEvent e) {}
 
     @Override
     public void mouseMoved(double x, double y, MouseEvent e) {
@@ -637,92 +532,21 @@ public class Visualisation implements MouseEvents {
     @Override
     public void mouseDragged(double x, double y, MouseEvent e) {}
 
-
-    // UI METHODS
-    /**
-     * Creates the buttons for the visualisation and sets up the listners
-     * */
-    private VBox getVisualisationButtons(){
-        VBox vBox = new VBox(8);
-        vBox.setPadding(new Insets(5,5,5,5));
-        Button sim = new Button("Start Simulation");
-        Button restart = new Button("Restart");
-        Button pause = new Button("Pause");
-        Button event = new Button("Event");
-        Button controller = new Button("Use Controller");
-        Button user = new Button("User Control");
-
-        sim.setOnAction(e -> startSimulation());
-        restart.setOnAction(e -> restartSimulation());
-        pause.setOnAction(e -> pause());
-        event.setOnAction(e -> startEventDialog());
-        controller.setOnAction(e -> useController());
-        user.setOnAction(e -> useController());
-
-        vBox.getChildren().addAll(sim,restart, pause,event, controller, user);
-        vBox.setPrefWidth(WIDTH);
-
-        return vBox;
-    }
-
-    public void userControlled(){
-
-    }
-
-    /**
-     * Adds the UI elements for the visualisation from the pane. Used when switching mode
-     * */
-    public void addUIElementsToLayout(BorderPane bp){
-        bp.setRight(eventLog);
-        bp.setLeft(vBox);
-    }
-
-    /**
-     * Removes the UI elements for the visualisation from the pane. Used when switching mode
-     * */
-    public void removeUIElementsFromLayout(BorderPane bp){
-        bp.getChildren().remove(eventLog);
-        bp.getChildren().remove(vBox);
-    }
-
-    /**
-     * Toggles if the log is showing or not
-     * */
-    public void toggleLog(BorderPane bp){
-        if(logShown){
-            bp.getChildren().remove(eventLog);
-            logShown = !logShown;
-        }
-        else {
-            bp.setRight(eventLog);
-            logShown = !logShown;
-        }
-    }
-
-    public void moveTrain(boolean forward){
-        if(seclectedMovable != null){
-            seclectedMovable.setDirection(forward);
-
-            for(int i = 0; i < 100; i++){
-                System.out.println("updating");
-                seclectedMovable.update();
+    @Override
+    public void mouseClicked(double x, double y, MouseEvent e) {
+        if(e.getButton().equals(MouseButton.PRIMARY)){
+            if(e.getClickCount() == 2){
+                toggleJunctionOnPoint(x,y);
+                if(getOnTrack(x,y) != null){
+                    DefaultTrack dt = getOnTrack(x,y);
+                    UI.showTrackMenu(dt);
+                }
             }
-        }
-    }
-
-    /**
-     * Returns if the log is showing or not
-     * */
-    public boolean logShowing(){
-        return this.logShown;
-    }
-
-    public void keyPressed(String code){
-        if(code.equals("UP")){
-            moveTrain(true);
-        }
-        else if(code.equals("DOWN")){
-            moveTrain(false);
+            else{
+                if(onMovable(x,y)){
+                    UI.sendToeventLog("Train Selected");
+                }
+            }
         }
     }
 }

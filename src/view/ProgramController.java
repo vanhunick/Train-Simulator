@@ -5,7 +5,6 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.input.MouseEvent;
 import view.Drawable.DrawableTrain;
-import view.Drawable.section_types.DefaultTrack;
 import view.Drawable.section_types.DrawableSection;
 import view.Panes.EventLog;
 
@@ -21,7 +20,7 @@ public class ProgramController implements MouseEvents {
     private String mode;
 
     // The modes
-    private Visualisation visualisation;
+    private simulationUI visualisation;
     private TrackBuilder trackBuilder;
 
     // The place to send the mouse events to
@@ -37,11 +36,9 @@ public class ProgramController implements MouseEvents {
      * The default mode is the visualisation mode with it default track and trains
      * */
     public void setDefMode(BorderPane borderPane, Canvas canvas){
-        visualisation = new Visualisation();
+        visualisation = new simulationUI();
         this.canvas = canvas;
         visualisation.addUIElementsToLayout(borderPane);
-
-        visualisation.addDefaultTrains();
 
         setMode(ProgramController.VISUALISATION_MODE);
     }
@@ -54,7 +51,6 @@ public class ProgramController implements MouseEvents {
      * */
     public void setMode(String modeToSet){
         if(modeToSet.equals(mode))return;//mode passed in already set
-
 
         if(modeToSet.equals(VISUALISATION_MODE)){
             this.mode = VISUALISATION_MODE;
@@ -93,7 +89,6 @@ public class ProgramController implements MouseEvents {
         }
         else if(mode.equals(BUILDER_MODE)){
             trackBuilder.refresh(g);
-
         }
     }
 
@@ -104,9 +99,8 @@ public class ProgramController implements MouseEvents {
     public void setVisualisationMode(DrawableSection[] track, List<DrawableTrain> trains){
         canvas.setWidth(canvas.getWidth() - EventLog.WIDTH);
 
-        visualisation = new Visualisation();
-        visualisation.setRailway(track);
-        visualisation.setTrains(trains);
+        visualisation = new simulationUI();
+
         trackBuilder.removeUIElementsFromLayout(borderPane);
         visualisation.addUIElementsToLayout(borderPane);
         setMode(VISUALISATION_MODE);
@@ -185,5 +179,5 @@ public class ProgramController implements MouseEvents {
         return borderPane.getCenter().getLayoutBounds().getHeight();
     }
 
-    public Visualisation getVisualisation(){return this.visualisation;}
+    public simulationUI getVisualisation(){return this.visualisation;}
 }
