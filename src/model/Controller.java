@@ -20,9 +20,20 @@ public class Controller {
     // Used because the controller should not be able to access information inside the track sections
     private ControllerSection[] contrlSections;
 
+    // The model that receives and sends events
     private ModelTrack model;
 
 
+    /**
+     * Sets up the controller copies the information from the sections and the starting location of trains
+     * into the controller objects
+     *
+     * @param  trainStartMap the trains and the starting locations
+     *
+     * @param sections the sections in the track
+     *
+     * @param model the model to send the events to and receive events from
+     * */
     public Controller(Map<Train, Integer> trainStartMap, Section[] sections, ModelTrack model){
         this.model = model;
         this.sections = sections;
@@ -37,10 +48,18 @@ public class Controller {
     }
 
 
+    /**
+     * Called from the model to start the controller calling the trains
+     * */
     public void startControlling(){
         updateTrains();
     }
 
+
+    /**
+     * Checks if any of the trains that are stopped can no go and acquire the locks of the
+     * section they more into
+     * */
     public void updateTrains(){
         for(ControllerTrain t : trains){
             ControllerSection nextSec = getNextSection(t,getControllerSection(t.curSection));
@@ -60,14 +79,11 @@ public class Controller {
                 model.setSpeed(t.id,0); // Make the train stop
             }
             else {
-                model.setSpeed(t.id,400); // Make the train GO
-                t.lockNext = nextSec.id;// TODO check
+                model.setSpeed(t.id,400); // Make the train Go
+                t.lockNext = nextSec.id;
             }
         }
     }
-
-
-
 
     /**
      * Returns the train the will be on the nextsection
@@ -75,26 +91,23 @@ public class Controller {
      * @param nextSectionID the id of the next section the train should move to
      * */
     public ControllerTrain getTrainForNextSection(int nextSectionID){
-
         for(ControllerTrain train : trains){
             if(getNextSection(train,getControllerSection(train.curSection)).id == nextSectionID){
                 return train;
             }
 
         }
-
-        System.out.println("Returning null getTrainForNextSection");
         return  null;
     }
 
-    int count = 0;
+
     /**
      * Called when a section on the track has changed its state
      *
      * @param sectionID the id of the section that changed state
      * */
     public void receiveSectionEvent(int sectionID){
-
+        // Go through all the controller sections to see which one it applies to
         for(ControllerSection cs : contrlSections){
             if(cs.id == sectionID){
 
@@ -109,9 +122,6 @@ public class Controller {
                     // Release the lock becasue we exit
                     trainWithLock.lockCur = trainWithLock.lockNext;
                     trainWithLock.lockNext = -1;
-
-//                    trainWithLock.lock = contrlSections[cs.section.getToID()].id;// releases the lock
-
 
                     // There is a train on the next section so set to true
                     contrlSections[cs.section.getToID()].on = true;
@@ -134,10 +144,12 @@ public class Controller {
 
                     trainOnSectionBefore.curSection = cs.id;
                 }
+                // With the new state update the trains
                 updateTrains();
             }
         }
     }
+
 
     /**
      * Get train that hold the section lock
@@ -148,13 +160,9 @@ public class Controller {
                 return t;
             }
         }
-
         // No train holds the lock
         return null;
     }
-
-
-
 
 
     /**
@@ -169,11 +177,8 @@ public class Controller {
             }
         }
         // No train on that track
-
         return null;
     }
-
-
 
 
     /**
@@ -219,6 +224,7 @@ public class Controller {
         }
     }
 
+
     /**
      * Used when a section contains a junction section, important because it means the section
      * can lead to multiple sections. Need to check the state of the junction to determine which one
@@ -253,16 +259,36 @@ public class Controller {
         return null;
     }
 
-    // Classes for trains and section that the controller modifies to keep track of state
+
+    /**
+     * Represents a train being controlled by the controller
+     * */
     private class ControllerTrain {
+        // The id of the train
         int id;
+
+        // The direction and orientation of the train
         boolean direction;
         boolean orientation;
+
+        // The id of the train it is currently on
         int curSection;
 
-        int lockCur; // id of the section it is locking
+        // Lock of the current section it is on
+        int lockCur;
+
+        // Lock of the next section it is trying to get to
         int lockNext;
 
+        /**
+         * Creates a controller train
+         *
+         * @param id the id of the train
+         *
+         * @param direction the direction the train is going
+         *
+         * @param orientation if the train is going along the natural orientation or against
+         * */
         public ControllerTrain(int id, boolean direction, boolean orientation, int startingSection){
             this.id = id;
             this.direction = direction;
@@ -273,11 +299,22 @@ public class Controller {
         }
     }
 
+
+    /**
+     * Represents a section on the track being controlled
+     * */
     private class ControllerSection {
         Section section;
+
+        // Id of the seciont
         int id;
+
+        // If there is currently a train on it or not
         boolean on;
 
+        /**
+         * Creates a controller section
+         * */
         public ControllerSection(Section section, boolean on){
             this.id = section.getID();
             this.section = section;
