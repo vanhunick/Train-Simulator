@@ -172,20 +172,29 @@ public class DrawableRollingStock implements Movable{
 
     /**
      * Updates the location of the rolling stock
-     *
-     * @param pixels the number of pixels to move by
      * */
-    public void update(double pixels){
+    public void update(){
         if(!connected)return;
-        this.speed = pixels;
+
+        if(connected){
+            this.speed = connectedToTrain.getForce();
+        }
+        else {
+            this.decelerate(); // No longer connected so slow it down
+        }
 
         if(curTrack instanceof JunctionTrack){
             JunctionTrack jt = (JunctionTrack)curTrack;
-            this.curRotation = jt.getNextPoint(this,pixels);
+            this.curRotation = jt.getNextPoint(this,speed);
         }
         else{
-            this.curRotation = curTrack.getNextPoint(currentLocation,curRotation, degDone,pixels, this);
+            this.curRotation = curTrack.getNextPoint(currentLocation,curRotation, degDone,speed, this);
         }
+    }
+
+    public void decelerate(){
+        double timeChanged = 20;// ms
+        this.speed -= rollingStock.getDeceleration()*(1000/timeChanged);
     }
 
 
@@ -194,7 +203,7 @@ public class DrawableRollingStock implements Movable{
      *
      * @param g the graphics context to draw on
      * */
-    public void refresh(GraphicsContext g){
+    public void draw(GraphicsContext g){
         // Rotate the image by the current rotation
         trainImageView.setRotate(curRotation);
         Image rotatedImage = trainImageView.snapshot(params, null);

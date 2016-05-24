@@ -42,6 +42,7 @@ public class ProgramController implements MouseEvents {
         visualisation.addUIElementsToLayout(borderPane);
 
         visualisation.addDefaultTrains();
+
         setMode(ProgramController.VISUALISATION_MODE);
     }
 
@@ -127,6 +128,11 @@ public class ProgramController implements MouseEvents {
 
         setMode(BUILDER_MODE);
     }
+
+    public void keyPressed(String code){
+        curMode.keyPressed(code);
+    }
+
 
     @Override
     public void mousePressed(double x, double y, MouseEvent e) {

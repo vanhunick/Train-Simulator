@@ -17,12 +17,19 @@ public class Train {
     // Reversing or going forward
     private boolean direction;
 
-    // Speed of the train
+    // Max Speed of the train
     private  double maxSpeed;
 
     private double targetSpeed;
 
+    // Train attributes
     private double acceleration;
+    private double deceleration;
+    private double weight;
+
+    private double horsePower;
+    private double torque;
+    private double rpm;
 
     /**
      * Creates a new Train object
@@ -37,13 +44,14 @@ public class Train {
      *
      * @param orientation if it is starting with or again the natural orientation of the track
      * */
-    public Train(int id, double length,double maxSpeed,  boolean direction,boolean orientation, double acceleration){
+    public Train(int id, double length,double maxSpeed,  boolean direction,boolean orientation, double acceleration, double deceleration){
         this.id = id;
         this.direction = direction;
         this.length = length;
         this.orientation = orientation;
         this.maxSpeed = maxSpeed;
         this.acceleration = acceleration;
+        this.deceleration = deceleration;
     }
 
     /**
@@ -113,6 +121,8 @@ public class Train {
      * Gets the acceleration of the train
      * */
     public double getAcceleration(){return this.acceleration;}
+
+    public double getDeceleration(){return this.deceleration;}
 
     public void setTargetSpeed(double speed){
         this.targetSpeed = speed;

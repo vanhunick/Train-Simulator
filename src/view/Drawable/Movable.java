@@ -1,5 +1,6 @@
 package view.Drawable;
 
+import javafx.scene.canvas.GraphicsContext;
 import view.Drawable.section_types.DefaultTrack;
 import view.Drawable.section_types.JunctionTrack;
 
@@ -14,6 +15,12 @@ public interface Movable {
 
     public void setDegDone(double degDone);
 
+    public void draw(GraphicsContext g);
+
+
+    public void update();
+
+    public void setDirection(boolean direction);
     /**
      * Returns the current track it is on
      *

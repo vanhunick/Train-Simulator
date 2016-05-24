@@ -8,6 +8,11 @@ import javafx.scene.input.MouseEvent;
 public interface MouseEvents {
 
     /**
+     * Called when a key is pressed
+     * */
+    public void keyPressed(String code);
+
+    /**
      * Called when the mouse button mouse is pressed
      * */
     public void mousePressed(double x, double y, MouseEvent e );

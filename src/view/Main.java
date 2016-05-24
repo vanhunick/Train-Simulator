@@ -49,7 +49,11 @@ public class Main extends Application {
         Canvas canvas = new Canvas();
 
         // Responds to a key being pressed
-        scene.setOnKeyPressed(e -> {String code = e.getCode().toString();if ( !input.contains(code) ) input.add( code );});
+        scene.setOnKeyPressed(e -> {String code = e.getCode().toString();if ( !input.contains(code) ){
+            input.add( code );
+            controller.keyPressed(code);
+        }
+        });
 
         //responds to a key being released
         scene.setOnKeyReleased(e -> {String code = e.getCode().toString();input.remove( code );});
@@ -120,7 +124,7 @@ public class Main extends Application {
                 gc.setStroke(Color.WHITE);
 
 
-                // Update and refresh the controller
+                // Update and draw the controller
                 controller.update();
                 controller.refresh(gc);
 

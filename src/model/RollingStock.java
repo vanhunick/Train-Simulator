@@ -11,6 +11,8 @@ public class RollingStock {
     // The id of the rolling stock
     private int rollID;
 
+    private double deceleration;
+
     /**
      * Creates a new rolling stock object
      *
@@ -18,9 +20,14 @@ public class RollingStock {
      *
      * @param rollID the id of the rolling stock
      * */
-    public RollingStock(double length, int rollID){
+    public RollingStock(double length, int rollID, double deceleration){
         this.length = length;
         this.rollID = rollID;
+        this.deceleration = deceleration;
+    }
+
+    public double getDeceleration(){
+        return this.deceleration;
     }
 
     /**
