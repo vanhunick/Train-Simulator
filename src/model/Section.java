@@ -125,19 +125,19 @@ public class Section {
     public int getToID(){
         if(!containJunction)return toId;
 
-//        JunctionTrack jt;
-//        if(tracks[tracks.length-1] instanceof JunctionTrack){
-//            jt = (JunctionTrack)tracks[tracks.length-1];
-//        }
-//        else {
-//            jt = (JunctionTrack)tracks[0];
-//        }
-//
-//
-//        if(jt.getThrown() && !jt.inBound()){
-//            // The track is thrown so return to id track trown
-//            return toJuncSectionID;
-//        }
+        JunctionTrack jt;
+        if(tracks[tracks.length-1] instanceof JunctionTrack){
+            jt = (JunctionTrack)tracks[tracks.length-1];
+        }
+        else {
+            jt = (JunctionTrack)tracks[0];
+        }
+
+
+        if(jt.getThrown() && !jt.inBound()){
+            // The track is thrown so return to id track trown
+            return toJuncSectionID;
+        }
 
         return toId; // Error
     }
@@ -145,30 +145,42 @@ public class Section {
     public int getFromID(){
         if(!containJunction)return  fromId;
 
-//        JunctionTrack jt;
-//        if(tracks[tracks.length-1] instanceof JunctionTrack){
-//            jt = (JunctionTrack)tracks[tracks.length-1];
-//        }
-//        else {
-//            jt = (JunctionTrack)tracks[0];
-//        }
-//
-//
-//        if(jt.getThrown() && jt.inBound()){
-//            return toJuncSectionID;
-//        }
+        JunctionTrack jt;
+        if(tracks[tracks.length-1] instanceof JunctionTrack){
+            jt = (JunctionTrack)tracks[tracks.length-1];
+        }
+        else {
+            jt = (JunctionTrack)tracks[0];
+        }
+
+
+        if(jt.getThrown() && jt.inBound()){
+            return toJuncSectionID;
+        }
         return fromId;
     }
 
     public void setToId(int toId){
         this.toId = toId;
     }
+
     public void setFromId(int fromId){
         this.fromId = fromId;
     }
 
     public void setToJuncSectionID(int juncID){
         this.toJuncSectionID = juncID;
+    }
+
+    public JunctionTrack getJunction(){
+        JunctionTrack jt = null;
+        if(tracks[tracks.length-1] instanceof JunctionTrack){
+            jt = (JunctionTrack)tracks[tracks.length-1];
+        }
+        else {
+            jt = (JunctionTrack)tracks[0];
+        }
+        return jt;
     }
 
     /**

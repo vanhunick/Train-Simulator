@@ -453,7 +453,7 @@ public class Visualisation implements MouseEvents {
 //                movable.add(drawableRollingStock);
             }
             if(ds.getSection().getID() == 101){
-                Train train1 = new Train(2, 80, 80, true,true, 0.8);
+                Train train1 = new Train(2, 80, 80, false,true, 0.8);
                 DrawableTrain drawableTrain1 = new DrawableTrain(train1, ds,ds.getTracks()[0]);
 
 //

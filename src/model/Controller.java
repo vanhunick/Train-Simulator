@@ -1,6 +1,7 @@
 package model;
 
 import com.sun.org.apache.xpath.internal.SourceTree;
+import view.Drawable.section_types.JunctionTrack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -277,11 +278,63 @@ public class Controller {
         Section section;
         int id;
         boolean on;
+        Junction junction;
+        boolean containsJunction;
+
 
         public ControllerSection(Section section, boolean on){
             this.id = section.getID();
             this.section = section;
             this.on = on;
+
+            if(section.hasJunctionTrack()){
+                containsJunction = true;
+                junction = createJunction(section);
+            }
         }
+
+        public Junction createJunction(Section s){
+            return new Junction(s.getJunction().getThrown(), s.getFromID(), s.getToID(),s.getJunction().getId(),  s.toJuncSectionID,s.getJunction().inBound());
+        }
+
+        public ControllerSection getNextSection(ControllerTrain train){
+            if(!containsJunction){
+                if(forwardWithTrack(train)){
+
+                }
+            }
+
+
+            return null;
+        }
+    }
+
+    //
+    private class Junction {
+        final int junctionID;
+
+        // Section index of the section that came before the section containing this junction
+        final int fromID;
+
+
+        final int toThrownID;
+
+        // Section index of the section that comes after the section containing this junction
+        final int toID;
+
+        // If the junction is thrown or not
+        boolean thrown;
+
+        // If the junction is inbound or not
+        boolean inBound;
+
+        public Junction(boolean thrown, int fromID, int toID, int toThrownID, int junctionID, boolean inbound){
+            this.fromID = fromID;
+            this.toThrownID = toThrownID;
+            this.thrown = thrown;
+            this.toID = toID;
+            this.junctionID = junctionID;
+        }
+
     }
 }
