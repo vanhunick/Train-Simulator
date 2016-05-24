@@ -22,10 +22,8 @@ import view.Panes.EventLog;
 import view.Panes.TrackMenu;
 
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 /**
@@ -92,13 +90,6 @@ public class Visualisation implements MouseEvents {
     public void setSpeeds(){
         for(DrawableTrain t : trains){
             modelTrack.setSpeed(t.getTrain().getId(), 400);
-
-//            if(t.getTrain().getId() == 1){
-//                modelTrack.setSpeed(t.getTrain().getId(), 500);
-//            }
-//            else{
-//                modelTrack.setSpeed(t.getTrain().getId(), 100);
-//            }
         }
     }
 
@@ -658,17 +649,23 @@ public class Visualisation implements MouseEvents {
         Button pause = new Button("Pause");
         Button event = new Button("Event");
         Button controller = new Button("Use Controller");
+        Button user = new Button("User Control");
 
         sim.setOnAction(e -> startSimulation());
         restart.setOnAction(e -> restartSimulation());
         pause.setOnAction(e -> pause());
         event.setOnAction(e -> startEventDialog());
         controller.setOnAction(e -> useController());
+        user.setOnAction(e -> useController());
 
-        vBox.getChildren().addAll(sim,restart, pause,event, controller);
+        vBox.getChildren().addAll(sim,restart, pause,event, controller, user);
         vBox.setPrefWidth(WIDTH);
 
         return vBox;
+    }
+
+    public void userControlled(){
+
     }
 
     /**
@@ -720,15 +717,11 @@ public class Visualisation implements MouseEvents {
     }
 
     public void keyPressed(String code){
-        System.out.println(code);
         if(code.equals("UP")){
             moveTrain(true);
-            System.out.printf("Forwards");
         }
         else if(code.equals("DOWN")){
             moveTrain(false);
-            System.out.println("Backwards");
         }
     }
-
 }
