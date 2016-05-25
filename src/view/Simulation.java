@@ -1,29 +1,19 @@
 package view;
 
 import Util.CustomTracks;
-import javafx.geometry.Insets;
 import javafx.scene.canvas.GraphicsContext;
 
-import javafx.scene.control.Button;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import model.*;
 import view.Drawable.DrawableRollingStock;
 import view.Drawable.DrawableTrain;
 import view.Drawable.Movable;
 import view.Drawable.section_types.*;
-import view.Panes.ErrorDialog;
-import view.Panes.EventGen;
-import view.Panes.EventLog;
-import view.Panes.TrackMenu;
 
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 
 /**
@@ -66,6 +56,7 @@ public class Simulation implements MouseEvents {
 
     private simulationUI UI;
 
+    private boolean testMode = false;
 
     /**
      * Constructs a new visualisation object with a default track and trains
@@ -75,6 +66,10 @@ public class Simulation implements MouseEvents {
         this.drawableRollingStocks = new ArrayList<>();
         this.movable = new ArrayList<>();
         this.UI = UI;
+    }
+
+    public void setTestMode(boolean testMode){
+        this.testMode = testMode;
     }
 
 
@@ -107,7 +102,7 @@ public class Simulation implements MouseEvents {
             startMap.put(train.getTrain(), train.getCurSection().getSection().getID());
         }
 
-        Controller c = new Controller(startMap,getSections(),modelTrack);
+        DeadLockController c = new DeadLockController(startMap,getSections(),modelTrack);
         modelTrack.setController(c);
         modelTrack.useController(true);
         c.startControlling();
@@ -271,7 +266,10 @@ public class Simulation implements MouseEvents {
 
             // If the current section can detect we must send an event since it has changed state
             if(curSection.getSection().canDetect()){
-                UI.sendToeventLog(updateTrainOnSection(t.getTrain(), curSection.getSection(),curSection.getSection()));
+                if(UI != null){
+                    UI.sendToeventLog(updateTrainOnSection(t.getTrain(), curSection.getSection(),curSection.getSection()));
+                }
+
                 modelTrack.sectionChanged(curSection.getSection().getID());
             }
 
@@ -281,7 +279,9 @@ public class Simulation implements MouseEvents {
                     DrawableSection last = t.getCurSection();
                     t.setCurSection(ds);//have to do it this way since the destination is not always the same
                     if(ds.getSection().canDetect()){
-                        UI.sendToeventLog(updateTrainOnSection(t.getTrain(), last.getSection(), ds.getSection()));
+                        if(UI != null){
+                            UI.sendToeventLog(updateTrainOnSection(t.getTrain(), last.getSection(), ds.getSection()));
+                        }
                         modelTrack.sectionChanged(ds.getSection().getID());
                     }
                 }
@@ -324,6 +324,7 @@ public class Simulation implements MouseEvents {
 
         // Check if the train will be on another track after the update
         if(!curTrack.checkOnAfterUpdate(t.getCurrentLocation(),t.getCurRotation(),t.getDegDone() ,pixelsToMove,t)){
+
 
             DefaultTrack destinationTrack = null;
 
@@ -386,6 +387,13 @@ public class Simulation implements MouseEvents {
                 checkSectionChangedEvent((DrawableTrain)t,curSection,destinationTrack);
             }
         }
+    }
+
+    /**
+     * Used for testing
+     * */
+    public void setModelTrack(ModelTrack model){
+        this.modelTrack = model;
     }
 
 
@@ -548,5 +556,16 @@ public class Simulation implements MouseEvents {
                 }
             }
         }
+    }
+
+    public void setTracks(DefaultTrack[] tracks){
+        this.tracks = tracks;
+    }
+
+    /**
+     * Should only be used for testing
+     * */
+    public void setStart(boolean start){
+        this.started = start;
     }
 }

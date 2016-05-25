@@ -144,7 +144,7 @@ public class simulationUI implements MouseEvents{
         test.setToggleGroup(mode);
         test.setSelected(true);
 
-        RadioButton controller = new RadioButton("Controller");
+        RadioButton controller = new RadioButton("DeadLockController");
         controller.setToggleGroup(mode);
 
         selectedMode = Simulation.MODE_TEST;
@@ -161,7 +161,7 @@ public class simulationUI implements MouseEvents{
                     if(m.contains("Test")){
                         selectedMode = Simulation.MODE_TEST;
                     }
-                    else if(m.contains("Controller")){
+                    else if(m.contains("DeadLockController")){
                         selectedMode = Simulation.MODE_CONTROLLER;
                     }
                     else if(m.contains("User")){

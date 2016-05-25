@@ -58,6 +58,9 @@ public class DrawableTrain implements Movable{
 
     private double currentSpeed;
 
+    private  double IMAGE_WIDTH = 20;
+    private  double IMAGE_HEIGHT = 80;
+
 
     // Used by any connected rolling stock
     private double distMoved;
@@ -80,11 +83,6 @@ public class DrawableTrain implements Movable{
         this.lastDirection = train.getDirection();
         this.currentSpeed = 0;
 
-        //Image setup
-        this.trainImage= new Image("file:src/res/train.gif", 20, 80, false, false);
-        this.trainImageView = new ImageView(trainImage);
-        this.params = new SnapshotParameters();
-        params.setFill(Color.TRANSPARENT);
         if(train.getOrientation()){
             if(curTrack.getDirection().equals("LEFT")){
                 this.curRotation = 270;// Not nat orientation
@@ -97,6 +95,14 @@ public class DrawableTrain implements Movable{
         else{//TODO check if need to consider other direction here too
             this.curRotation = 270;// Not nat orientation
         }
+    }
+
+    public void setUpImage(){
+        //Image setup
+        this.trainImage= new Image("file:src/res/train.gif", 20, 80, false, false);
+        this.trainImageView = new ImageView(trainImage);
+        this.params = new SnapshotParameters();
+        params.setFill(Color.TRANSPARENT);
     }
 
     public double getForce(){
@@ -124,6 +130,8 @@ public class DrawableTrain implements Movable{
      * */
     public void update(){
         if(crashed)return;
+
+
         // Check if the train is still accelerating and the current speed is less than the max speed
         if(currentSpeed < train.getTargetSpeed() && currentSpeed < train.getMaxSpeed()){
             applyAcceleration();
@@ -195,10 +203,13 @@ public class DrawableTrain implements Movable{
      * @param y the y location to check
      * */
     public boolean containsPoint(double x, double y){
-        double startX = currentLocation.getX() - trainImage.getWidth()/2;
-        double startY = currentLocation.getY() - trainImage.getHeight()/2;
+//        double startX = currentLocation.getX() - trainImage.getWidth()/2;
+//        double startY = currentLocation.getY() - trainImage.getHeight()/2;
 
-        if(x >= startX && x <= startX + trainImage.getWidth() && y > startY && y < startY + trainImage.getHeight())return true;
+        double startX = currentLocation.getX() - IMAGE_WIDTH/2;
+        double startY = currentLocation.getY() - IMAGE_WIDTH/2;
+
+        if(x >= startX && x <= startX + IMAGE_WIDTH && y > startY && y < startY + IMAGE_HEIGHT)return true;
 
         if(rollingStockConnected != null){
             return rollingStockConnected.containsPoint(x,y);

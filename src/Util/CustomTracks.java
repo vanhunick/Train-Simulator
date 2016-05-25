@@ -533,7 +533,7 @@ public class CustomTracks {
                 //Create the train
                 Train train = new Train(1, 80, 500, true,true,0.2, 0.8);
                 DrawableTrain drawableTrain = new DrawableTrain(train, ds,ds.getTracks()[0]);
-//
+                 drawableTrain.setUpImage();
 //                RollingStock rollingStock = new RollingStock(80,828282);
 //                DrawableRollingStock drawableRollingStock = new DrawableRollingStock(rollingStock,drawableTrain,drawableTrain.getTrain().getDirection());
 //                drawableRollingStock.setStart(drawableTrain.getCurrentLocation(),this);
@@ -557,12 +557,14 @@ public class CustomTracks {
 //                drawableTrain1.setRollingStockConnected(drawableRollingStock1);
 
                 trains.add(drawableTrain1);
-
+                drawableTrain1.setUpImage();
 //                movable.add(drawableRollingStock1);
             }
         }
         return trains;
     }
+
+
 
     public static List<Movable> createMovableList(List<DrawableTrain> trains, List<DrawableRollingStock> stocks){
         List<Movable> movables = new ArrayList<>();
@@ -571,5 +573,43 @@ public class CustomTracks {
         stocks.forEach(s -> movables.add(s));
 
         return movables;
+    }
+
+    public static class Railway {
+        public static DrawableSection[] sections;
+        public static DefaultTrack[] tracks;
+
+        public Railway(DrawableSection[] sections, DefaultTrack[] tracks){
+            this.sections = sections;
+            this.tracks = tracks;
+        }
+    }
+
+    // TRACKS FOR TESTING
+    public static Railway  getHorizontalRailWay(){
+        int curID = 0;
+
+        DefaultTrack[] tracks = new DefaultTrack[]{
+                // s1
+                new StraightHoriz(350, 600, 200, 0, 0, "RIGHT"), // 0
+                // s2
+                new StraightHoriz(200, 0, 1)
+        };
+
+        DrawableSection[] sections = new DrawableSection[2];
+
+        sections[0] = new DrawableSection(new Section(0,200,new DefaultTrack[]{tracks[0]}));
+        sections[1] = new DrawableSection(new Section(1,200,new DefaultTrack[]{tracks[1]}));
+        sections[0].getSection().setCandetect(true);
+
+        sections[0].getSection().setToId(1);
+        sections[1].getSection().setFromId(0);
+
+        tracks[1].setStart(tracks[0]);
+
+        tracks[0].setTo(1);
+        tracks[1].setFrom(0);
+
+        return new Railway(sections,tracks);
     }
 }
