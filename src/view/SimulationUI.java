@@ -25,7 +25,7 @@ import view.Panes.TrackMenu;
 /**
  * Created by Nicky on 24/05/2016.
  */
-public class simulationUI implements MouseEvents{
+public class SimulationUI implements MouseEvents{
 
     //Width of buttons
     public static final int WIDTH = 150;
@@ -48,7 +48,7 @@ public class simulationUI implements MouseEvents{
     /**
      * Constructs a new visualisation object with a default track and trains
      * */
-    public simulationUI(){
+    public SimulationUI(){
         this.sim = new Simulation(this);
         sim.setDefault();
         this.logShown = true;

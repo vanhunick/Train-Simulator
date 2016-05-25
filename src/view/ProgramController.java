@@ -20,7 +20,7 @@ public class ProgramController implements MouseEvents {
     private String mode;
 
     // The modes
-    private simulationUI visualisation;
+    private SimulationUI visualisation;
     private TrackBuilder trackBuilder;
 
     // The place to send the mouse events to
@@ -36,7 +36,7 @@ public class ProgramController implements MouseEvents {
      * The default mode is the visualisation mode with it default track and trains
      * */
     public void setDefMode(BorderPane borderPane, Canvas canvas){
-        visualisation = new simulationUI();
+        visualisation = new SimulationUI();
         this.canvas = canvas;
         visualisation.addUIElementsToLayout(borderPane);
 
@@ -99,7 +99,7 @@ public class ProgramController implements MouseEvents {
     public void setVisualisationMode(DrawableSection[] track, List<DrawableTrain> trains){
         canvas.setWidth(canvas.getWidth() - EventLog.WIDTH);
 
-        visualisation = new simulationUI();
+        visualisation = new SimulationUI();
 
         trackBuilder.removeUIElementsFromLayout(borderPane);
         visualisation.addUIElementsToLayout(borderPane);
@@ -179,5 +179,5 @@ public class ProgramController implements MouseEvents {
         return borderPane.getCenter().getLayoutBounds().getHeight();
     }
 
-    public simulationUI getVisualisation(){return this.visualisation;}
+    public SimulationUI getVisualisation(){return this.visualisation;}
 }

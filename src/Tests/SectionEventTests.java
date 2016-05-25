@@ -20,6 +20,7 @@ public class SectionEventTests {
         return s;
     }
 
+
     @Test
     public void exitEventTest(){
         Simulation simulation = getSimulation();
@@ -41,18 +42,6 @@ public class SectionEventTests {
 
         // Set the target speed for the train
         model.setSpeed(1,200);
-
-
-
-        Controller c = new Controller() {
-
-            @Override
-            public void receiveSectionEvent(int sectionID) {
-                assert (true);
-            }
-        };
-
-        model.setController(c);
 
         simulation.setStart(true);
 

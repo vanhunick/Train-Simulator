@@ -54,14 +54,14 @@ public class Simulation implements MouseEvents {
     // Last time the logic was updated
     private long lastUpdate;
 
-    private simulationUI UI;
+    private SimulationUI UI;
 
     private boolean testMode = false;
 
     /**
      * Constructs a new visualisation object with a default track and trains
      * */
-    public Simulation(simulationUI UI){
+    public Simulation(SimulationUI UI){
         this.trains = new ArrayList<>();
         this.drawableRollingStocks = new ArrayList<>();
         this.movable = new ArrayList<>();
@@ -93,7 +93,6 @@ public class Simulation implements MouseEvents {
             modelTrack.setSpeed(t.getTrain().getId(), 400);
         }
         started = true;
-//        lastUpdate = System.currentTimeMillis();
     }
 
     public void controlMode(){
@@ -108,7 +107,6 @@ public class Simulation implements MouseEvents {
         c.startControlling();
 
         started = true;
-//        lastUpdate = System.currentTimeMillis();
     }
 
     public void start(String mode){
