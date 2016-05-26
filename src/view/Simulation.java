@@ -34,12 +34,14 @@ public class Simulation implements MouseEvents {
     //Width of buttons
     public static final int WIDTH = 150;
 
+    // Each pixel is 1/5 of a meter
+    public static final double METER_MULTIPLIER = 5;
+
     // Model to send events to
     private ModelTrack modelTrack;
 
     // Simulation state
     private boolean started = false;
-
 
     // Trains and Sections
     private List<DrawableTrain> trains;
@@ -228,6 +230,29 @@ public class Simulation implements MouseEvents {
                         movable.get(j).setCrashed(true);
                     }
                 }
+            }
+        }
+    }
+
+    private double collisionsThreshold = 100;//TODO make it something
+
+    public void Collided(Movable movable1, Movable movable2){
+        if(movable1 instanceof DrawableRollingStock && movable2 instanceof DrawableRollingStock){
+
+            // Need to check is the rolling stock is connecting to the back of the train
+
+        }
+        else if(movable1 instanceof DrawableRollingStock){
+
+        }
+        else if(movable2 instanceof DrawableRollingStock){
+
+        }
+        else {
+            // Both must be trains so can't connect
+            if(movable1.getCurrentSpeed() + movable2.getCurrentSpeed() > collisionsThreshold){
+                movable1.setCrashed(true);
+                movable2.setCrashed(true);
             }
         }
     }
@@ -513,9 +538,7 @@ public class Simulation implements MouseEvents {
     }
 
     @Override
-    public void keyPressed(String code) {
-
-    }
+    public void keyPressed(String code) {}
 
     @Override
     public void mousePressed(double x, double y, MouseEvent e) {}

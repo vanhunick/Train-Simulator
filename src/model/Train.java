@@ -22,6 +22,8 @@ public class Train {
 
     private double targetSpeed;
 
+    private double width = 4;// In metres
+
     // Train attributes
     private double acceleration;
     private double deceleration;
@@ -80,6 +82,8 @@ public class Train {
     public double getLength() {
         return length;
     }
+
+    public double getWidth(){ return width; }
 
     /**
      * Get the maxSpeed of the train

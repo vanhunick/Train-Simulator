@@ -531,7 +531,7 @@ public class CustomTracks {
         for(DrawableSection ds : railway) {
             if (ds.getSection().getID() == 99) {
                 //Create the train
-                Train train = new Train(1, 80, 500, true,true,0.2, 0.8);
+                Train train = new Train(1, 15, 500, true,true,0.2, 0.8);
                 DrawableTrain drawableTrain = new DrawableTrain(train, ds,ds.getTracks()[0]);
                  drawableTrain.setUpImage();
 //                RollingStock rollingStock = new RollingStock(80,828282);
@@ -546,7 +546,7 @@ public class CustomTracks {
 //                movable.add(drawableRollingStock);
             }
             if(ds.getSection().getID() == 101){
-                Train train1 = new Train(2, 80, 100, true,true, 0.8, 0.8);
+                Train train1 = new Train(2, 15, 100, true,true, 0.8, 0.8);
                 DrawableTrain drawableTrain1 = new DrawableTrain(train1, ds,ds.getTracks()[0]);
 
 //

@@ -266,10 +266,10 @@ public class DrawableRollingStock implements Movable{
         this.curTrack = curTrack;
     }
 
-    @Override
-    public void setLastPointOnCurve(int point) {
-        this.lastPointOnCurve = point;
-    }
+//    @Override
+//    public void setLastPointOnCurve(int point) {
+//        this.lastPointOnCurve = point;
+//    }
 
     @Override
     public Point getCurrentLocation(){
@@ -306,7 +306,7 @@ public class DrawableRollingStock implements Movable{
         this.isCrashed = crashed;
     }
 
-    @Override
+//    @Override
     public int getLastPointOnCurve(){
         return lastPointOnCurve;
     }

@@ -10,6 +10,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import model.Train;
 import view.Drawable.section_types.*;
+import view.Simulation;
 
 import java.awt.*;
 
@@ -40,9 +41,6 @@ public class DrawableTrain implements Movable{
     // The rolling stock connected if any
     private DrawableRollingStock rollingStockConnected;
 
-    // Our previous speed used for location calculations around curves
-//    private double lastSpeed;
-
     // The previous direction
     private boolean lastDirection;
 
@@ -57,10 +55,6 @@ public class DrawableTrain implements Movable{
     private SnapshotParameters params;
 
     private double currentSpeed;
-
-    private  double IMAGE_WIDTH = 20;
-    private  double IMAGE_HEIGHT = 80;
-
 
     // Used by any connected rolling stock
     private double distMoved;
@@ -99,7 +93,7 @@ public class DrawableTrain implements Movable{
 
     public void setUpImage(){
         //Image setup
-        this.trainImage= new Image("file:src/res/train.gif", 20, 80, false, false);
+        this.trainImage= new Image("file:src/res/train.gif", train.getWidth() * Simulation.METER_MULTIPLIER, train.getLength() * Simulation.METER_MULTIPLIER, false, false);
         this.trainImageView = new ImageView(trainImage);
         this.params = new SnapshotParameters();
         params.setFill(Color.TRANSPARENT);
@@ -122,6 +116,8 @@ public class DrawableTrain implements Movable{
 
         // Draw the image
         g.drawImage(trainImage, currentLocation.getX() - trainImage.getWidth()/2, currentLocation.getY() - trainImage.getHeight()/2);
+
+        g.setStroke(Color.RED);
     }
 
 
@@ -203,17 +199,10 @@ public class DrawableTrain implements Movable{
      * @param y the y location to check
      * */
     public boolean containsPoint(double x, double y){
-//        double startX = currentLocation.getX() - trainImage.getWidth()/2;
-//        double startY = currentLocation.getY() - trainImage.getHeight()/2;
+        double startX = currentLocation.getX() - train.getLength()/2;// Might be width
+        double startY = currentLocation.getY() - train.getLength()/2;
 
-        double startX = currentLocation.getX() - IMAGE_WIDTH/2;
-        double startY = currentLocation.getY() - IMAGE_WIDTH/2;
-
-        if(x >= startX && x <= startX + IMAGE_WIDTH && y > startY && y < startY + IMAGE_HEIGHT)return true;
-
-        if(rollingStockConnected != null){
-            return rollingStockConnected.containsPoint(x,y);
-        }
+        if(x >= startX && x <= startX + train.getWidth()*Simulation.METER_MULTIPLIER   && y > startY && y < startY + train.getLength()*Simulation.METER_MULTIPLIER)return true;
 
         // The point is not on the train or any of it's rolling stock
         return false;
@@ -317,11 +306,6 @@ public class DrawableTrain implements Movable{
     }
 
     @Override
-    public void setLastPointOnCurve(int point) {
-        this.lastPointOnCurve = point;
-    }
-
-    @Override
     public void setCrashed(boolean crashed){
         this.crashed = crashed;
     }
@@ -353,11 +337,6 @@ public class DrawableTrain implements Movable{
     @Override
     public boolean getOrientation() {
         return this.getTrain().getOrientation();
-    }
-
-    @Override
-    public int getLastPointOnCurve() {
-        return lastPointOnCurve;
     }
 
     @Override

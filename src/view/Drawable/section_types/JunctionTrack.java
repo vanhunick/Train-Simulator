@@ -195,14 +195,14 @@ public class JunctionTrack extends DefaultTrack {
                 return false;
             }
             else{
-                dt.setLastPointOnCurve(0);
+//                dt.setLastPointOnCurve(0);
                 dt.setJuncTrack(outUpTrack);
                 return true;
             }
         }
         else if(dt.getJuncTrack().getDrawID() == 2){
             if(nat){
-                dt.setLastPointOnCurve(0);
+//                dt.setLastPointOnCurve(0);
                 dt.setJuncTrack(inRight);
                 return true;
             }
@@ -213,7 +213,7 @@ public class JunctionTrack extends DefaultTrack {
         }
         else if(dt.getJuncTrack().getDrawID() == 3){
             if(nat){
-                dt.setLastPointOnCurve(0);
+//                dt.setLastPointOnCurve(0);
                 dt.setJuncTrack(outRightTrack);
                 return true;
             }
@@ -228,7 +228,7 @@ public class JunctionTrack extends DefaultTrack {
                 return false;
             }
             else {
-                dt.setLastPointOnCurve(0);
+//                dt.setLastPointOnCurve(0);
                 dt.setJuncTrack(inDown);
                 return true;
             }
