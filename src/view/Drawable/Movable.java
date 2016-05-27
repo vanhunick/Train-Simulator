@@ -126,7 +126,7 @@ public interface Movable {
      *
      * @return length
      * */
-    public double getLength();
+    public double getLengthPixels();
 
     /**
      * Returns the speed of the movable

@@ -17,6 +17,9 @@ import java.awt.Point;
  */
 public class DrawableRollingStock implements Movable{
 
+    // Current Speed
+    private double currentSpeed;
+
     // The rolling stock it represents
     private RollingStock rollingStock;
 
@@ -123,7 +126,7 @@ public class DrawableRollingStock implements Movable{
         // the middle of the train it is connected to
         this.currentLocation = new Point((int)startPointOfConnection.getX(),(int)startPointOfConnection.getY());
 
-        double len = rollingStock.getLength() + 40;
+        double len = getLengthPixels() + 40;
         double increment = len/40;
 
         // set current track to the train we are connected to current track
@@ -216,14 +219,14 @@ public class DrawableRollingStock implements Movable{
 
         // Check if we are connected to a train
         if(connectedToTrain != null){
-            conX = connectedToTrain.getCurrentLocation().getX() + ((connectedToTrain.getTrain().getLength()/2) * (Math.cos(Math.toRadians(connectedToTrain.getCurRotation()-90+180))));
-            conY = connectedToTrain.getCurrentLocation().getY() + ((connectedToTrain.getTrain().getLength()/2) * (Math.sin(Math.toRadians(connectedToTrain.getCurRotation()-90+180))));
+            conX = connectedToTrain.getCurrentLocation().getX() + ((connectedToTrain.getLengthPixels()/2) * (Math.cos(Math.toRadians(connectedToTrain.getCurRotation()-90+180))));
+            conY = connectedToTrain.getCurrentLocation().getY() + ((connectedToTrain.getLengthPixels()/2) * (Math.sin(Math.toRadians(connectedToTrain.getCurRotation()-90+180))));
         }
 
         // Meaning we are connected to a rollingstock
         if(conToThis != null){
-            conX = conToThis.getCurrentLocation().getX() + ((connectedToTrain.getTrain().getLength()/2) * (Math.cos(Math.toRadians(connectedToTrain.getCurRotation()-90+180))));
-            conY = conToThis.getCurrentLocation().getY() + ((connectedToTrain.getTrain().getLength()/2) * (Math.sin(Math.toRadians(connectedToTrain.getCurRotation()-90+180))));
+            conX = conToThis.getCurrentLocation().getX() + ((connectedToTrain.getLengthPixels()/2) * (Math.cos(Math.toRadians(connectedToTrain.getCurRotation()-90+180))));
+            conY = conToThis.getCurrentLocation().getY() + ((connectedToTrain.getLengthPixels()/2) * (Math.sin(Math.toRadians(connectedToTrain.getCurRotation()-90+180))));
         }
 
         // Find the front of the rolling stock
@@ -306,13 +309,14 @@ public class DrawableRollingStock implements Movable{
         this.isCrashed = crashed;
     }
 
-//    @Override
-    public int getLastPointOnCurve(){
-        return lastPointOnCurve;
+
+    public double getLengthPixels(){
+        return rollingStock.getLength()*Simulation.METER_MULTIPLIER;//TODO decide if to store here or in rolling stock
     }
 
-    public double getLength(){
-        return rollingStock.getLength();//TODO decide if to store here or in rolling stock
+    @Override
+    public double getCurrentSpeed() {
+        return this.currentSpeed;
     }
 
     @Override

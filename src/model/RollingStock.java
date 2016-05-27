@@ -1,5 +1,7 @@
 package model;
 
+import view.Simulation;
+
 /**
  * Created by vanhunick on 21/04/16.
  */

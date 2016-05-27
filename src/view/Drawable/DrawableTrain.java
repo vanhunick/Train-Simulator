@@ -117,7 +117,13 @@ public class DrawableTrain implements Movable{
         // Draw the image
         g.drawImage(trainImage, currentLocation.getX() - trainImage.getWidth()/2, currentLocation.getY() - trainImage.getHeight()/2);
 
-        g.setStroke(Color.RED);
+        double conX = this.getCurrentLocation().getX() + ((getLengthPixels()/2) * (Math.cos(Math.toRadians(this.getCurRotation()-90+180))));
+        double conY = this.getCurrentLocation().getY() + ((getLengthPixels()/2) * (Math.sin(Math.toRadians(this.getCurRotation()-90+180))));
+
+        g.setFill(Color.GREEN);
+        g.fillRect(conX,conY,20,20);
+
+
     }
 
 
@@ -199,10 +205,10 @@ public class DrawableTrain implements Movable{
      * @param y the y location to check
      * */
     public boolean containsPoint(double x, double y){
-        double startX = currentLocation.getX() - train.getLength()/2;// Might be width
-        double startY = currentLocation.getY() - train.getLength()/2;
+        double startX = currentLocation.getX() - getLengthPixels()/2;// Might be width
+        double startY = currentLocation.getY() - getLengthPixels()/2;
 
-        if(x >= startX && x <= startX + train.getWidth()*Simulation.METER_MULTIPLIER   && y > startY && y < startY + train.getLength()*Simulation.METER_MULTIPLIER)return true;
+        if(x >= startX && x <= startX + train.getWidth()*Simulation.METER_MULTIPLIER   && y > startY && y < startY + getLengthPixels()*Simulation.METER_MULTIPLIER)return true;
 
         // The point is not on the train or any of it's rolling stock
         return false;
@@ -262,8 +268,12 @@ public class DrawableTrain implements Movable{
         return distMoved;
     }
 
-    public double getLength(){
-        return train.getLength();//TODO need to decide on where to store full length including rolling stock or not to
+    public double getLengthPixels(){
+        return train.getLength() * Simulation.METER_MULTIPLIER;//TODO need to decide on where to store full length including rolling stock or not to
+    }
+
+    public double getLengthMetres(){
+        return train.getLength();
     }
 
     /**

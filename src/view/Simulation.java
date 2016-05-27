@@ -216,12 +216,12 @@ public class Simulation implements MouseEvents {
         for(int i = 0; i < movable.size(); i++){
 
             // Find the front of the train
-            double frontX = movable.get(i).getCurrentLocation().getX() + ((movable.get(i).getLength()/2) * (Math.cos(Math.toRadians(movable.get(i).getCurRotation()-90))));
-            double frontY = movable.get(i).getCurrentLocation().getY() + ((movable.get(i).getLength()/2) * (Math.sin(Math.toRadians(movable.get(i).getCurRotation()-90))));
+            double frontX = movable.get(i).getCurrentLocation().getX() + ((movable.get(i).getLengthPixels()/2) * (Math.cos(Math.toRadians(movable.get(i).getCurRotation()-90))));
+            double frontY = movable.get(i).getCurrentLocation().getY() + ((movable.get(i).getLengthPixels()/2) * (Math.sin(Math.toRadians(movable.get(i).getCurRotation()-90))));
 
             // Find the back of the train
-            double backX = movable.get(i).getCurrentLocation().getX() + ((movable.get(i).getLength()/2) * (Math.cos(Math.toRadians(movable.get(i).getCurRotation()-90+180))));
-            double backY = movable.get(i).getCurrentLocation().getY() + ((movable.get(i).getLength()/2) * (Math.sin(Math.toRadians(movable.get(i).getCurRotation()-90+180))));
+            double backX = movable.get(i).getCurrentLocation().getX() + ((movable.get(i).getLengthPixels()/2) * (Math.cos(Math.toRadians(movable.get(i).getCurRotation()-90+180))));
+            double backY = movable.get(i).getCurrentLocation().getY() + ((movable.get(i).getLengthPixels()/2) * (Math.sin(Math.toRadians(movable.get(i).getCurRotation()-90+180))));
 
             for(int j = 0; j < movable.size(); j++){
                 if(j !=i){
@@ -234,7 +234,7 @@ public class Simulation implements MouseEvents {
         }
     }
 
-    private double collisionsThreshold = 100;//TODO make it something
+    private double collisionsThreshold = 100;//TODO make it something realistic
 
     public void Collided(Movable movable1, Movable movable2){
         if(movable1 instanceof DrawableRollingStock && movable2 instanceof DrawableRollingStock){
