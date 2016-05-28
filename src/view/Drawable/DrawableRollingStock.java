@@ -5,6 +5,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.*;
+import javafx.scene.shape.Circle;
 import model.RollingStock;
 import view.Drawable.section_types.DefaultTrack;
 import view.Drawable.section_types.JunctionTrack;
@@ -66,6 +67,9 @@ public class DrawableRollingStock implements Movable{
     // Is connected to a train
     private boolean connected;
 
+    private Circle frontConnection;
+    private Circle backConnection;
+
     /**
      * Creates a new drawable rolling stock object
      *
@@ -82,10 +86,20 @@ public class DrawableRollingStock implements Movable{
         this.direction = direction;
         this.curRotation = 90;
         this.lastPointOnCurve = 0;
+        this.frontConnection = new Circle();
+        this.backConnection = new Circle();
 
         setUpImage();
     }
 
+
+    public Circle getFrontConnection(){
+        return this.frontConnection;
+    }
+
+    public Circle getBackConnection(){
+        return this.backConnection;
+    }
 
     /**
      * Constructor for a Rollingstock not connected to a train
@@ -178,6 +192,21 @@ public class DrawableRollingStock implements Movable{
      * */
     public void update(){
         if(!connected)return;
+
+        double frontX = currentLocation.getX() + ((80/2) * (Math.cos(Math.toRadians(curRotation-90))));
+        double frontY = currentLocation.getY() + ((80/2) * (Math.sin(Math.toRadians(curRotation-90))));
+
+        double backX = currentLocation.getX() + ((getLengthPixels()/2) * (Math.cos(Math.toRadians(getCurRotation()-90+180))));
+        double backY = currentLocation.getY() + ((getLengthPixels()/2) * (Math.sin(Math.toRadians(getCurRotation()-90+180))));
+
+
+        frontConnection.setCenterX(frontX);
+        frontConnection.setCenterY(frontY);
+        frontConnection.setRadius(20);
+
+        backConnection.setCenterX(backX);
+        backConnection.setCenterY(backY);
+        backConnection.setRadius(20);
 
         if(connected){
             this.speed = connectedToTrain.getForce();

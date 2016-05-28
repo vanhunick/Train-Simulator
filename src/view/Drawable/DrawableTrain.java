@@ -8,6 +8,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import model.Train;
 import view.Drawable.section_types.*;
 import view.Simulation;
@@ -121,9 +122,17 @@ public class DrawableTrain implements Movable{
         double conY = this.getCurrentLocation().getY() + ((getLengthPixels()/2) * (Math.sin(Math.toRadians(this.getCurRotation()-90+180))));
 
         g.setFill(Color.GREEN);
-        g.fillRect(conX,conY,20,20);
+        g.fillRect(conX-5,conY-5,10,10);
 
 
+    }
+
+    private double connectionSize = 10;
+
+    private Circle connection = new Circle();
+
+    public boolean pointOnConnection(double x, double y){
+        return connection.contains(x,y);
     }
 
 
@@ -132,6 +141,10 @@ public class DrawableTrain implements Movable{
      * */
     public void update(){
         if(crashed)return;
+
+        connection.setCenterX(this.getCurrentLocation().getX() + ((getLengthPixels()/2) * (Math.cos(Math.toRadians(this.getCurRotation()-90+180)))));
+        connection.setCenterY(this.getCurrentLocation().getY() + ((getLengthPixels()/2) * (Math.sin(Math.toRadians(this.getCurRotation()-90+180)))));
+        connection.setRadius(10);
 
 
         // Check if the train is still accelerating and the current speed is less than the max speed
@@ -208,7 +221,7 @@ public class DrawableTrain implements Movable{
         double startX = currentLocation.getX() - getLengthPixels()/2;// Might be width
         double startY = currentLocation.getY() - getLengthPixels()/2;
 
-        if(x >= startX && x <= startX + train.getWidth()*Simulation.METER_MULTIPLIER   && y > startY && y < startY + getLengthPixels()*Simulation.METER_MULTIPLIER)return true;
+        if(x >= startX && x <= startX + train.getWidth()*Simulation.METER_MULTIPLIER   && y > startY && y < startY + getLengthPixels())return true;
 
         // The point is not on the train or any of it's rolling stock
         return false;

@@ -6,6 +6,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import model.*;
 import view.Drawable.DrawableRollingStock;
 import view.Drawable.DrawableTrain;
@@ -226,6 +227,7 @@ public class Simulation implements MouseEvents {
             for(int j = 0; j < movable.size(); j++){
                 if(j !=i){
                     if((movable.get(j).containsPoint(frontX,frontY) || movable.get(j).containsPoint(backX,backY)) && notConnected(movable.get(i), movable.get(j))){
+                        System.out.println("Collided");
                         movable.get(i).setCrashed(true);
                         movable.get(j).setCrashed(true);
                     }
@@ -243,6 +245,8 @@ public class Simulation implements MouseEvents {
 
         }
         else if(movable1 instanceof DrawableRollingStock){
+            Circle c = new Circle();
+            Circle b = new Circle();
 
         }
         else if(movable2 instanceof DrawableRollingStock){
