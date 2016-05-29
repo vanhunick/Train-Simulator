@@ -135,6 +135,11 @@ public class DrawableTrain implements Movable{
         return connection.contains(x,y);
     }
 
+    public Circle getConnection(){
+        return connection;
+    }
+
+
 
     /**
      * Updates the location of the train

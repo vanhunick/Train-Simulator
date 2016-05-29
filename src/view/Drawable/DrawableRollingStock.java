@@ -375,4 +375,9 @@ public class DrawableRollingStock implements Movable{
 
     public boolean isConnected(){return this.connected;}
 
+    public void setTrainConnection(DrawableTrain train){
+        this.connected = true;
+        this.connectedToTrain = train;
+    }
+
 }
