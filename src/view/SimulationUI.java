@@ -84,7 +84,7 @@ public class SimulationUI implements MouseEvents{
      * Called when user presses the event button the send an event to a train
      * */
     public void startEventDialog(){
-        if(started == false){
+        if(sim.getStarted() == false){
             new ErrorDialog("Start simulation before sending event", "Event Start Error");
             return;
         }

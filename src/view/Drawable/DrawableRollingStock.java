@@ -177,7 +177,6 @@ public class DrawableRollingStock implements Movable{
      * @param directionToSet the direction it should go
      * */
     public void setDirection(boolean directionToSet){
-        System.out.println("Setting direction");
         // Check the direction is actually different
         if(directionToSet != this.direction){
             degDone = Math.abs(90- degDone);//TODO test
@@ -217,12 +216,10 @@ public class DrawableRollingStock implements Movable{
         }
 
         if(curTrack instanceof JunctionTrack){
-            System.out.println(currentSpeed);
             JunctionTrack jt = (JunctionTrack)curTrack;
             this.curRotation = jt.getNextPoint(this,currentSpeed);
         }
         else{
-            System.out.println(curTrack);
             this.curRotation = curTrack.getNextPoint(currentLocation,curRotation, degDone,currentSpeed, this);
         }
     }
@@ -324,7 +321,6 @@ public class DrawableRollingStock implements Movable{
 
     @Override
     public void setDegDone(double degDone) {
-        System.out.println("Setting deg done ");
         this.degDone = degDone;
     }
 
