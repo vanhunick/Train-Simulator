@@ -101,7 +101,7 @@ public class Simulation implements MouseEvents {
      * */
     public void testMode(){
         for(DrawableTrain t : trains){
-            modelTrack.setSpeed(t.getTrain().getId(), 400);
+            modelTrack.setSpeed(t.getTrain().getId(), 100);
         }
         started = true;
     }
@@ -160,11 +160,12 @@ public class Simulation implements MouseEvents {
                 checkCollision();
                 onSectionCheck(t,0);
                 t.update();
-
             }
 
-            // Update the rolling stocks need to be done after as the need to know how much to move based on the train
-            drawableRollingStocks.forEach(d -> d.update());
+        for(DrawableRollingStock r : drawableRollingStocks){
+            onSectionCheck(r,r.getCurrentSpeed());
+            r.update();
+        }
         }
     }
 
@@ -237,7 +238,7 @@ public class Simulation implements MouseEvents {
                     if((movable.get(j).containsPoint(frontX,frontY) || movable.get(j).containsPoint(backX,backY))){
 
                         System.out.println("Collided");
-                        collided(movable.get(i),movable.get(j));
+                        collided(movable.get(i), movable.get(j));
 //                        movable.get(i).setCrashed(true);
 //                        movable.get(j).setCrashed(true);
                     }
@@ -246,33 +247,47 @@ public class Simulation implements MouseEvents {
         }
     }
 
-    private double collisionsThreshold = 100;//TODO make it something realistic
+    private double collisionsThreshold = 500;//TODO make it something realistic
 
     public void collided(Movable movable1, Movable movable2){
+        if(!notConnected(movable1,movable2))return;
+        System.out.println("Not connected");
 
         // First check the speed of the collision if they are going to fast the rest does not matter
         if(movable1.getCurrentSpeed() + movable2.getCurrentSpeed() > collisionsThreshold){
+            System.out.println("Crashing");
             movable1.setCrashed(true);
             movable2.setCrashed(true);
         }
 
         if(movable1 instanceof DrawableRollingStock && movable2 instanceof DrawableRollingStock){
-
+            System.out.println("In here MO");
             // Need to check is the rolling stock is connecting to the back of the train
 
         }
         else if(movable1 instanceof DrawableRollingStock){
+            System.out.println("In the right place");
             DrawableRollingStock r = (DrawableRollingStock)movable1;
             DrawableTrain t = (DrawableTrain)movable2;
 
+            // TEMP
+            r.setTrainConnection(t);
+            t.setRollingStockConnected(r);
+            // END TEMP
+
             // Check if they are colliding on the connection point
             if(r.getFrontConnection().intersects(t.getConnection().getBoundsInLocal()) || r.getBackConnection().intersects(t.getConnection().getBoundsInLocal()) ){
-                System.out.println("Connecting");
+                System.out.println("Intersection");
                 r.setTrainConnection(t);
                 t.setRollingStockConnected(r);
             }
+            else {
+                System.out.println("Not intersecting");
+            }
         }
         else if(movable2 instanceof DrawableRollingStock){
+            System.out.println("In the right place 2");
+
             DrawableRollingStock r = (DrawableRollingStock)movable2;
             DrawableTrain t = (DrawableTrain)movable1;
 

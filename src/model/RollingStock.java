@@ -9,6 +9,7 @@ public class RollingStock {
 
     // Length of rolling stock
     private double length;
+    private double width = 4;
 
     // The id of the rolling stock
     private int rollID;
@@ -39,6 +40,10 @@ public class RollingStock {
      * */
     public double getLength(){
         return this.length;
+    }
+
+    public double getWidth(){
+        return this.width;
     }
 
     /**

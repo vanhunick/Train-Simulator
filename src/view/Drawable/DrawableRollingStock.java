@@ -46,7 +46,7 @@ public class DrawableRollingStock implements Movable{
     private Point currentLocation;
 
     // Last point on the curve
-    public int lastPointOnCurve;
+//    public int lastPointOnCurve;
 
     // Image drawing params
     private SnapshotParameters params;
@@ -54,7 +54,6 @@ public class DrawableRollingStock implements Movable{
     // The speed of the rolling stock
     private double speed;
 
-    // Weather the current speed is the start speed
 
     // The direction the rolling stock is traveling
     private boolean direction;
@@ -80,16 +79,16 @@ public class DrawableRollingStock implements Movable{
      * @param direction the direction it is traveling
      * */
     public DrawableRollingStock(RollingStock rollingStock, DrawableTrain connectedToTrain, boolean direction){
-        this.connected = true;
         this.rollingStock = rollingStock;
         this.connectedToTrain = connectedToTrain;
         this.direction = direction;
         this.curRotation = 90;
-        this.lastPointOnCurve = 0;
         this.frontConnection = new Circle();
         this.backConnection = new Circle();
 
-        setUpImage();
+        if(connectedToTrain != null){
+            connected = true;
+        }
     }
 
 
@@ -178,6 +177,7 @@ public class DrawableRollingStock implements Movable{
      * @param directionToSet the direction it should go
      * */
     public void setDirection(boolean directionToSet){
+        System.out.println("Setting direction");
         // Check the direction is actually different
         if(directionToSet != this.direction){
             degDone = Math.abs(90- degDone);//TODO test
@@ -209,18 +209,21 @@ public class DrawableRollingStock implements Movable{
         backConnection.setRadius(20);
 
         if(connected){
-            this.speed = connectedToTrain.getForce();
+            this.currentSpeed= connectedToTrain.getForce();
+
         }
         else {
             this.decelerate(); // No longer connected so slow it down
         }
 
         if(curTrack instanceof JunctionTrack){
+            System.out.println(currentSpeed);
             JunctionTrack jt = (JunctionTrack)curTrack;
-            this.curRotation = jt.getNextPoint(this,speed);
+            this.curRotation = jt.getNextPoint(this,currentSpeed);
         }
         else{
-            this.curRotation = curTrack.getNextPoint(currentLocation,curRotation, degDone,speed, this);
+            System.out.println(curTrack);
+            this.curRotation = curTrack.getNextPoint(currentLocation,curRotation, degDone,currentSpeed, this);
         }
     }
 
@@ -269,7 +272,6 @@ public class DrawableRollingStock implements Movable{
             g.strokeLine(frontX, frontY,conX,conY);
         }
 
-
         // Draw the image
         g.drawImage(rollingStockImage, currentLocation.getX() - rollingStockImage.getWidth()/2, currentLocation.getY() - rollingStockImage.getHeight()/2);
     }
@@ -283,10 +285,10 @@ public class DrawableRollingStock implements Movable{
      * @param y the y location to check
      * */
     public boolean containsPoint(double x, double y) {
-        double startX = currentLocation.getX() - rollingStockImage.getWidth()/2;
-        double startY = currentLocation.getY() - rollingStockImage.getHeight()/2;
+        double startX = currentLocation.getX() - getWidthPixels()/2;
+        double startY = currentLocation.getY() - getLengthPixels()/2;
 
-        if(x >= startX && x <= startX + rollingStockImage.getWidth() && y > startY && y < startY + rollingStockImage.getHeight())return true;
+        if(x >= startX && x <= startX + getWidthPixels() && y > startY && y < startY + getLengthPixels())return true;
 
         return false;
     }
@@ -294,14 +296,10 @@ public class DrawableRollingStock implements Movable{
 
     @Override
     public void setCurTrack(DefaultTrack curTrack){
-        lastPointOnCurve = 0;
+        degDone = 0;
         this.curTrack = curTrack;
     }
 
-//    @Override
-//    public void setLastPointOnCurve(int point) {
-//        this.lastPointOnCurve = point;
-//    }
 
     @Override
     public Point getCurrentLocation(){
@@ -310,7 +308,11 @@ public class DrawableRollingStock implements Movable{
 
     @Override
     public boolean getOrientation() {
-        return connectedToTrain.getTrain().getOrientation();
+        if(connected){
+            return connectedToTrain.getTrain().getOrientation();
+        }
+
+        return true;//TODO fix later should be our own orientation
     }
 
     @Override
@@ -322,6 +324,7 @@ public class DrawableRollingStock implements Movable{
 
     @Override
     public void setDegDone(double degDone) {
+        System.out.println("Setting deg done ");
         this.degDone = degDone;
     }
 
@@ -343,6 +346,10 @@ public class DrawableRollingStock implements Movable{
         return rollingStock.getLength()*Simulation.METER_MULTIPLIER;//TODO decide if to store here or in rolling stock
     }
 
+    public double getWidthPixels(){
+        return rollingStock.getWidth()*Simulation.METER_MULTIPLIER;//TODO decide if to store here or in rolling stock
+    }
+
     @Override
     public double getCurrentSpeed() {
         return this.currentSpeed;
@@ -360,12 +367,13 @@ public class DrawableRollingStock implements Movable{
 
     @Override
     public void setJuncTrack(DefaultTrack jt) {
+        degDone = 0;
         this.juncTrack = jt;
     }
 
     @Override
     public double getCurRotation(){
-        return  this.curRotation;
+        return this.curRotation;
     }
 
     @Override
@@ -378,6 +386,8 @@ public class DrawableRollingStock implements Movable{
     public void setTrainConnection(DrawableTrain train){
         this.connected = true;
         this.connectedToTrain = train;
+        this.direction = train.getDirection();
+        this.currentSpeed = train.getCurrentSpeed();
     }
 
 }

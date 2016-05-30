@@ -123,8 +123,6 @@ public class DrawableTrain implements Movable{
 
         g.setFill(Color.GREEN);
         g.fillRect(conX-5,conY-5,10,10);
-
-
     }
 
     private double connectionSize = 10;
@@ -168,7 +166,6 @@ public class DrawableTrain implements Movable{
         long timeChanged = curTime - lastUpdate;
         timeChanged = 20;
         double pixelsToMove = (timeChanged/1000.0)*currentSpeed;
-
         distMoved = pixelsToMove;
 
         // Check if direction has changed
@@ -187,11 +184,6 @@ public class DrawableTrain implements Movable{
         }
         else{
             this.curRotation = curTrack.getNextPoint(currentLocation,curRotation, degDone,pixelsToMove, this);
-        }
-
-        // Update the rolling stock if there is one connected
-        if(rollingStockConnected != null){
-            rollingStockConnected.update();
         }
     }
 
@@ -306,7 +298,6 @@ public class DrawableTrain implements Movable{
 
     @Override
     public void setJuncTrack(DefaultTrack juncTrack){
-        lastPointOnCurve = 0;
         degDone = 0;
         this.juncTrack = juncTrack;
     }
@@ -318,7 +309,6 @@ public class DrawableTrain implements Movable{
 
     @Override
     public void setCurTrack(DefaultTrack track){
-        lastPointOnCurve = 0;
         degDone = 0;
         this.curTrack = track;
     }
