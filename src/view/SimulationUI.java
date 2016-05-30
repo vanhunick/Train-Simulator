@@ -27,11 +27,8 @@ import view.Panes.TrackMenu;
  */
 public class SimulationUI implements MouseEvents{
 
-    //Width of buttons
+    // Width of buttons
     public static final int WIDTH = 150;
-
-    // Simulation state
-    private boolean started = false;
 
     // Gui pane to send events to for user
     private EventLog eventLog;
@@ -42,6 +39,7 @@ public class SimulationUI implements MouseEvents{
     // Is the log currently shows on by def
     private boolean logShown;
 
+    // The simulation
     private Simulation sim;
 
 
@@ -57,6 +55,11 @@ public class SimulationUI implements MouseEvents{
 
     }
 
+    /**
+     * Displays the events on the log on the screen if the log is showing
+     *
+     * @param event string representing the event
+     * */
     public void sendToeventLog(String event){
         if(logShown){
             eventLog.appendText(event);
@@ -75,9 +78,7 @@ public class SimulationUI implements MouseEvents{
      * Redraws all the elements on the screen
      * */
     public void refresh(GraphicsContext g){
-
             sim.refresh(g);
-
     }
 
     /**
@@ -90,7 +91,6 @@ public class SimulationUI implements MouseEvents{
         }
         new EventGen(sim.getModelTrack());
     }
-
 
     /**
      * Pops up a menu where you can add tracks or trains to a track or modify attributes of the track

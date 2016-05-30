@@ -21,44 +21,32 @@ import java.awt.*;
  */
 public class DrawableTrain implements Movable{
 
-    // The width of the train
-    private double width = 40;
-
     // The train to draw
     private Train train;
 
-    // Time of the lastUpdate
-    private long lastUpdate;
-
-    // The current track it is on
-    private DefaultTrack curTrack;
-
-    // Only used to work out which track it is on inside a junction track
-    private DefaultTrack juncTrack;//
-
-    // The current section it is on
-    private DrawableSection curSection;
-
     // The rolling stock connected if any
     private DrawableRollingStock rollingStockConnected;
+    private double connectionSize = 10;// The size of the circle that represent the connection
 
-    // The previous direction
-    private boolean lastDirection;
-
-    private boolean crashed;
+    // Fields for the state of the train
+    private long lastUpdate; // Time of the lastUpdate
+    private DefaultTrack curTrack; // The current track it is on
+    private DefaultTrack juncTrack; // Only used to work out which track it is on inside a junction track
+    private DrawableSection curSection; // The current section it is on
+    private boolean lastDirection; // The previous direction
+    private boolean crashed; // If the train is crashed or not
+    private double width = 40; // The width of the train
+    private double currentSpeed; // The current speed of the train
+    private double distMoved; // The last distance moved in pixels used by stock
+    private double degDone = 0; // The degrees the train is through the curve
 
     // Drawing fields
-    private Image trainImage;
-    private ImageView trainImageView;
-    private double curRotation = 90;
-    private Point currentLocation;
-    public int lastPointOnCurve = 0;
-    private SnapshotParameters params;
-
-    private double currentSpeed;
-
-    // Used by any connected rolling stock
-    private double distMoved;
+    private Image trainImage; // Image of the train
+    private ImageView trainImageView; // Image view of the train
+    private double curRotation = 90;  // The current rotation of the train image
+    private Point currentLocation; // Current location of the train
+    private SnapshotParameters params; // Params of the train image
+    private Circle connection;
 
     /**
      * Creates a new drawable train object
@@ -70,6 +58,7 @@ public class DrawableTrain implements Movable{
      * @param curTrack the track it is on
      * */
     public DrawableTrain(Train train,DrawableSection curSection, DefaultTrack curTrack){
+        this.connection = new Circle();
         this.crashed = false;
         this.curSection = curSection;
         this.train = train;
@@ -85,23 +74,20 @@ public class DrawableTrain implements Movable{
             else {
                 this.curRotation = 90;// Nat orientation
             }
-
         }
         else{//TODO check if need to consider other direction here too
             this.curRotation = 270;// Not nat orientation
         }
     }
 
+    /**
+     * Sets up the image fields for the drawable train
+     * */
     public void setUpImage(){
-        //Image setup
         this.trainImage= new Image("file:src/res/train.gif", train.getWidth() * Simulation.METER_MULTIPLIER, train.getLength() * Simulation.METER_MULTIPLIER, false, false);
         this.trainImageView = new ImageView(trainImage);
         this.params = new SnapshotParameters();
         params.setFill(Color.TRANSPARENT);
-    }
-
-    public double getForce(){
-        return distMoved;
     }
 
     /**
@@ -124,19 +110,6 @@ public class DrawableTrain implements Movable{
         g.setFill(Color.GREEN);
         g.fillRect(conX-5,conY-5,10,10);
     }
-
-    private double connectionSize = 10;
-
-    private Circle connection = new Circle();
-
-    public boolean pointOnConnection(double x, double y){
-        return connection.contains(x,y);
-    }
-
-    public Circle getConnection(){
-        return connection;
-    }
-
 
 
     /**
@@ -187,21 +160,19 @@ public class DrawableTrain implements Movable{
         }
     }
 
-    private double degDone = 0;
 
-    public double getDegDone(){
-        return this.degDone;
-    }
-
-    public void setDegDone(double done){
-        this.degDone = done;
-    }
-
+    /**
+     * Applies acceleration to the train
+     * */
     public void applyAcceleration(){
         double timeChanged = 20;// ms
         this.currentSpeed += train.getAcceleration()*(1000/timeChanged);
     }
 
+
+    /**
+     * Slows the train down by it's deceleration
+     * */
     public void deaccelerate(){
         double timeChanged = 20;// ms
         this.currentSpeed -= train.getDeceleration()*(1000/timeChanged);
@@ -222,6 +193,27 @@ public class DrawableTrain implements Movable{
 
         // The point is not on the train or any of it's rolling stock
         return false;
+    }
+
+    /**
+     * Returns the circle representing the area of the connection point
+     * */
+    public Circle getConnection(){
+        return connection;
+    }
+
+    /**
+     * Returns how many degrees it is through the current curve
+     * */
+    public double getDegDone(){
+        return this.degDone;
+    }
+
+    /**
+     * Sets the amount the train is through the curve
+     * */
+    public void setDegDone(double done){
+        this.degDone = done;
     }
 
     /**
@@ -269,23 +261,33 @@ public class DrawableTrain implements Movable{
         return  this.currentLocation.getY();
     }
 
-
+    /**
+     * Returns the current speed of the train
+     * */
     public double getCurrentSpeed(){
         return this.currentSpeed;
     }
 
-    public double getLastDistMoved(){
-        return distMoved;
-    }
-
+    /**
+     * Returns the length of the train in pixels
+     * */
     public double getLengthPixels(){
         return train.getLength() * Simulation.METER_MULTIPLIER;//TODO need to decide on where to store full length including rolling stock or not to
     }
 
+    /**
+     * Returns the length of the train im metres
+     * */
     public double getLengthMetres(){
         return train.getLength();
     }
 
+    /**
+     * Returns the last distance moved in pixels of the train
+     * */
+    public double getForce(){
+        return distMoved;
+    }
 
 
     /**
@@ -296,7 +298,6 @@ public class DrawableTrain implements Movable{
     public void setRollingStockConnected(DrawableRollingStock dr){
         this.rollingStockConnected = dr;
     }
-
 
     @Override
     public void setJuncTrack(DefaultTrack juncTrack){
