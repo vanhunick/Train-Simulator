@@ -286,6 +286,8 @@ public class DrawableTrain implements Movable{
         return train.getLength();
     }
 
+
+
     /**
      * Sets the rolling stock connected
      *

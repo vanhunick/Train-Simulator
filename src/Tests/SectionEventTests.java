@@ -78,7 +78,6 @@ public class SectionEventTests {
 
         drawableRollingStock.setStartNotConnected(railway.tracks[0]);
 
-
         simulation.addTraintoSimulation(dt);
         simulation.addRollingStocktoSimulation(drawableRollingStock);
 
@@ -99,5 +98,9 @@ public class SectionEventTests {
         }
         assert (success);
     }
+
+
+
+
 
 }

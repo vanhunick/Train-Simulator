@@ -119,7 +119,7 @@ public class SimulationUI implements MouseEvents{
         // Checks if a rolling stock should be added to the track
         if(menu.addRollingStocl()){
             RollingStock rollingStock = new RollingStock(80,100,0.8);
-            DrawableRollingStock drawableRollingStock = new DrawableRollingStock(rollingStock);
+            DrawableRollingStock drawableRollingStock = new DrawableRollingStock(rollingStock, null, true);
             drawableRollingStock.setStartNotConnected(dt);
             sim.addRollingStocktoSimulation(drawableRollingStock);
         }

@@ -18,56 +18,32 @@ import java.awt.Point;
  */
 public class DrawableRollingStock implements Movable{
 
-    // Current Speed
-    private double currentSpeed;
-
     // The rolling stock it represents
     private RollingStock rollingStock;
 
-    // The train it is connected to
-    private DrawableTrain connectedToTrain;
+    // Connection can be null
+    private DrawableTrain connectedToTrain; // The train we are connected to
+    private DrawableRollingStock connectedToStock;// The rolling stock pulling or pushing us
+    private DrawableRollingStock conToThis;// Rolling stock we are pulling or pushing
 
-    // The current track it is on
-    private DefaultTrack curTrack;
+    // Image drawing fields
+    private SnapshotParameters params; // Drawing parameters
+    private ImageView trainImageView; // The image view of the rolling stock
+    private Image rollingStockImage; // The image of the rolling stock
+    private double curRotation;// How far the image should be rotated
 
-    // Rolling stock connected to us
-    private DrawableRollingStock conToThis;
+    // Rolling stock state information
+    private boolean connected; // Connected to a train or not
+    private boolean isCrashed; // Currently crashed or not
+    private boolean direction; // Forward or backwards direction
+    private double currentSpeed; // The current speed of the stock
+    private Circle frontConnection; // Circle representing front where a connection with a stock or train can be make
+    private Circle backConnection; // Circle representing back where a connection with a stock or train can be make
+    private DefaultTrack juncTrack; // The junction track is is on if it is on one
+    private DefaultTrack curTrack; // The current track it is on
+    private Point currentLocation;// The location of the rolling stock
+    private double degDone = 0; // The degrees through the curve
 
-    // Image of rolling stock
-    private Image rollingStockImage;
-
-    // The imageView of the image
-    private ImageView trainImageView;
-
-    // How far the image should be rotated
-    private double curRotation;
-
-    // The location of the rolling stock
-    private Point currentLocation;
-
-    // Last point on the curve
-//    public int lastPointOnCurve;
-
-    // Image drawing params
-    private SnapshotParameters params;
-
-    // The speed of the rolling stock
-    private double speed;
-
-
-    // The direction the rolling stock is traveling
-    private boolean direction;
-
-    private DefaultTrack juncTrack;
-
-    // The state of the rolling stock
-    private boolean isCrashed;
-
-    // Is connected to a train
-    private boolean connected;
-
-    private Circle frontConnection;
-    private Circle backConnection;
 
     /**
      * Creates a new drawable rolling stock object
@@ -92,24 +68,9 @@ public class DrawableRollingStock implements Movable{
     }
 
 
-    public Circle getFrontConnection(){
-        return this.frontConnection;
-    }
-
-    public Circle getBackConnection(){
-        return this.backConnection;
-    }
-
     /**
-     * Constructor for a Rollingstock not connected to a train
+     * Sets up the image and image params for the rolling stock
      * */
-    public DrawableRollingStock(RollingStock rollingStock){
-        this.connected = false;
-        this.rollingStock = rollingStock;
-        this.curRotation = 90;
-        setUpImage();
-    }
-
     public void setUpImage(){
         this.rollingStockImage = new Image("file:src/res/rolling_stock.png", 20, 80, false, false);
         this.trainImageView = new ImageView(rollingStockImage);
@@ -117,10 +78,18 @@ public class DrawableRollingStock implements Movable{
         params.setFill(javafx.scene.paint.Color.TRANSPARENT);
     }
 
+
+    /**
+     * Used when rolling stock is started on a track not connected to a train.
+     * places the rolling stock on the track
+     *
+     * @param startingTrack the track to place the stock on
+     * */
     public void setStartNotConnected(DefaultTrack startingTrack){
         this.curTrack = startingTrack;
         this.currentLocation = new Point((int) curTrack.getInitialX(20),(int) curTrack.getInitialY(20));
     }
+
 
     /**
      * Sets the start of the train. The way it does it is by placing the rolling stock on top
@@ -162,10 +131,6 @@ public class DrawableRollingStock implements Movable{
             }
             total+=increment;
         }
-
-        // Set the current speed to be the increment
-        speed = increment;
-
         // Set the direction back to normal
         setDirection(!this.direction);
     }
@@ -208,8 +173,12 @@ public class DrawableRollingStock implements Movable{
         backConnection.setRadius(20);
 
         if(connected){
-            this.currentSpeed= connectedToTrain.getForce();
-
+            if(connectedToTrain != null){
+                this.currentSpeed= connectedToTrain.getForce();
+            }
+            else {
+                this.currentSpeed = connectedToStock.getForce();//TODO check if theis is how I want to work
+            }
         }
         else {
             this.decelerate(); // No longer connected so slow it down
@@ -224,11 +193,13 @@ public class DrawableRollingStock implements Movable{
         }
     }
 
+    /**
+     * Decelerates the rolling stock down
+     * */
     public void decelerate(){
         double timeChanged = 20;// ms
-        this.speed -= rollingStock.getDeceleration()*(1000/timeChanged);
+        this.currentSpeed -= rollingStock.getDeceleration()*(1000/timeChanged);
     }
-
 
     /**
      * Redraws the rolling stock on the screen
@@ -259,7 +230,6 @@ public class DrawableRollingStock implements Movable{
         }
 
         // Find the front of the rolling stock
-
         double frontX = currentLocation.getX() + ((80/2) * (Math.cos(Math.toRadians(curRotation-90))));
         double frontY = currentLocation.getY() + ((80/2) * (Math.sin(Math.toRadians(curRotation-90))));
 
@@ -290,17 +260,85 @@ public class DrawableRollingStock implements Movable{
         return false;
     }
 
+    /**
+     * Sets the rolling stock connected to a train.
+     *
+     * @param train train to connect to
+     * */
+    public void setTrainConnection(DrawableTrain train){
+        this.connected = true;
+        this.connectedToTrain = train;
+        this.direction = train.getDirection();
+        this.currentSpeed = train.getCurrentSpeed();
+    }
+
+    /**
+     * Sets the rolling stock connected to a train.
+     *
+     * @param stock rolling stock to connect to
+     * */
+    public void setStockConnection(DrawableRollingStock stock){
+        this.connected = true;
+        this.connectedToStock = stock;
+        this.direction = stock.getDirection();
+        this.currentSpeed = stock.getCurrentSpeed();
+    }
+
+
+    /**
+     * Returns if the rolling stock is connected to a train or rolling stock or not
+     * */
+    public boolean isConnected(){return this.connected;}
+
+
+    /**
+     * Sets the rolling stock connected to us
+     * */
+    public void setRollingStockConToUs(DrawableRollingStock stock){
+        this.conToThis = stock;
+    }
+
+
+    /**
+     * Returns the amount to move in pixels
+     * */
+    public double getForce(){
+        return this.currentSpeed;
+    }//TODO change to proper physics later
+
+    /**
+     * Returns the circle representing area of the front connection point of the rolling stock
+     * */
+    public Circle getFrontConnection(){
+        return this.frontConnection;
+    }
+
+    /**
+     * Returns the circle representing area of the back connection point of the rolling stock
+     * */
+    public Circle getBackConnection(){
+        return this.backConnection;
+    }
+
+    /**
+     * Returns the width of the train in pixels
+     *
+     * @return width in pixels
+     * */
+    public double getWidthPixels(){
+        return rollingStock.getWidth()*Simulation.METER_MULTIPLIER;//TODO decide if to store here or in rolling stock
+    }
+
+    @Override
+    public void setJuncTrack(DefaultTrack jt) {
+        degDone = 0;
+        this.juncTrack = jt;
+    }
 
     @Override
     public void setCurTrack(DefaultTrack curTrack){
         degDone = 0;
         this.curTrack = curTrack;
-    }
-
-
-    @Override
-    public Point getCurrentLocation(){
-        return  this.currentLocation;
     }
 
     @Override
@@ -313,11 +351,14 @@ public class DrawableRollingStock implements Movable{
     }
 
     @Override
+    public Point getCurrentLocation(){
+        return  this.currentLocation;
+    }
+
+    @Override
     public double getDegDone() {
         return degDone;
     }
-
-    private double degDone = 0;
 
     @Override
     public void setDegDone(double degDone) {
@@ -337,14 +378,8 @@ public class DrawableRollingStock implements Movable{
         this.isCrashed = crashed;
     }
 
-
-    public double getLengthPixels(){
-        return rollingStock.getLength()*Simulation.METER_MULTIPLIER;//TODO decide if to store here or in rolling stock
-    }
-
-    public double getWidthPixels(){
-        return rollingStock.getWidth()*Simulation.METER_MULTIPLIER;//TODO decide if to store here or in rolling stock
-    }
+    @Override
+    public double getLengthPixels(){return rollingStock.getLength()*Simulation.METER_MULTIPLIER;}
 
     @Override
     public double getCurrentSpeed() {
@@ -362,12 +397,6 @@ public class DrawableRollingStock implements Movable{
     }
 
     @Override
-    public void setJuncTrack(DefaultTrack jt) {
-        degDone = 0;
-        this.juncTrack = jt;
-    }
-
-    @Override
     public double getCurRotation(){
         return this.curRotation;
     }
@@ -376,14 +405,4 @@ public class DrawableRollingStock implements Movable{
     public DefaultTrack getJuncTrack() {
         return juncTrack;
     }
-
-    public boolean isConnected(){return this.connected;}
-
-    public void setTrainConnection(DrawableTrain train){
-        this.connected = true;
-        this.connectedToTrain = train;
-        this.direction = train.getDirection();
-        this.currentSpeed = train.getCurrentSpeed();
-    }
-
 }
