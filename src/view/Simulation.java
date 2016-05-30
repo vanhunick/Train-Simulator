@@ -262,8 +262,17 @@ public class Simulation implements MouseEvents {
 
         if(movable1 instanceof DrawableRollingStock && movable2 instanceof DrawableRollingStock){
             // Need to check is the rolling stock is connecting to the back of the train
+            DrawableRollingStock r1 = (DrawableRollingStock)movable1;
+            DrawableRollingStock r2 = (DrawableRollingStock)movable2;
 
-
+            if(r1.isConnected()){
+                r1.setRollingStockConToUs(r2);
+                r2.setStockConnection(r1);
+            }
+            else{
+                r2.setRollingStockConToUs(r1);
+                r1.setStockConnection(r2);
+            }
         }
         else if(movable1 instanceof DrawableRollingStock){
             DrawableRollingStock r = (DrawableRollingStock)movable1;

@@ -606,6 +606,15 @@ public class CustomTracks {
 
                 stocks.add(drawableRollingStock);
             }
+            if (ds.getSection().getID() == 101) {
+                RollingStock rollingStock = new RollingStock(15,28282,0.9);
+                DrawableRollingStock drawableRollingStock = new DrawableRollingStock(rollingStock,null,true);
+                drawableRollingStock.setUpImage();
+
+                drawableRollingStock.setStartNotConnected(ds.getSection().getTracks()[0]);
+
+                stocks.add(drawableRollingStock);
+            }
         }
         return stocks;
     }
