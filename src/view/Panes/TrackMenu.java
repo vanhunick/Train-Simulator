@@ -37,7 +37,7 @@ public class TrackMenu {
 
         Dialog dialog = new Dialog<>();
         dialog.initModality(Modality.WINDOW_MODAL);
-        dialog.setTitle("Edit StraightTrack");
+        dialog.setTitle("Edit StraightTrack ID: " + section.getId());
 
         dialog.setHeaderText("Enter track details");
 

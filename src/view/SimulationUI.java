@@ -42,6 +42,8 @@ public class SimulationUI implements MouseEvents{
     // The simulation
     private Simulation sim;
 
+    private String lastEvent;
+
 
     /**
      * Constructs a new visualisation object with a default track and trains
@@ -60,9 +62,17 @@ public class SimulationUI implements MouseEvents{
      *
      * @param event string representing the event
      * */
-    public void sendToeventLog(String event){
+    public void sendToeventLog(String event, int status){
         if(logShown){
+            if(event.equals(lastEvent))return;
+            lastEvent = event;
             eventLog.appendText(event);
+            if(status == 1){
+                eventLog.setStyle("-fx-text-fill: green; -fx-font-size: 16;");
+            }
+            else if(status == 2){
+                eventLog.setStyle("-fx-text-fill: red; -fx-font-size: 16;");
+            }
         }
     }
 

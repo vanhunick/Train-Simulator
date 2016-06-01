@@ -59,7 +59,6 @@ public class Simulation implements MouseEvents {
 
     private SimulationUI UI;
 
-    private boolean testMode = false;
 
     /**
      * Constructs a new visualisation object with a default track and trains
@@ -73,10 +72,6 @@ public class Simulation implements MouseEvents {
 
     public boolean getStarted(){
         return this.started;
-    }
-
-    public void setTestMode(boolean testMode){
-        this.testMode = testMode;
     }
 
 
@@ -93,9 +88,9 @@ public class Simulation implements MouseEvents {
         movable = CustomTracks.createMovableList(trains,drawableRollingStocks);
 
         // Connected to test
-        trains = CustomTracks.getConnectTestTrains(railway);
-        drawableRollingStocks = CustomTracks.getConnectTestRollingStock(railway);
-        movable = CustomTracks.createMovableList(trains,drawableRollingStocks);
+//        trains = CustomTracks.getConnectTestTrains(railway,this);
+//        drawableRollingStocks = CustomTracks.getConnectTestRollingStock(railway);
+//        movable = CustomTracks.createMovableList(trains,drawableRollingStocks);
 
         this.modelTrack = new ModelTrack(getTrains(), getSections());
     }
@@ -105,8 +100,11 @@ public class Simulation implements MouseEvents {
      * */
     public void testMode(){
         for(DrawableTrain t : trains){
-            modelTrack.setSpeed(t.getTrain().getId(), 100);
+            modelTrack.setSpeed(t.getTrain().getId(), 500);
         }
+        modelTrack.setSpeed(trains.get(0).getTrain().getId(), 500);
+        modelTrack.setSpeed(trains.get(1).getTrain().getId(), 500);
+
         started = true;
     }
 
@@ -168,8 +166,9 @@ public class Simulation implements MouseEvents {
 
         for(DrawableRollingStock r : drawableRollingStocks){
             onSectionCheck(r,r.getCurrentSpeed());
+            checkCollision();
             r.update();
-        }
+            }
         }
     }
 
@@ -240,7 +239,6 @@ public class Simulation implements MouseEvents {
             for(int j = 0; j < movable.size(); j++){
                 if(j !=i){
                     if((movable.get(j).containsPoint(frontX,frontY) || movable.get(j).containsPoint(backX,backY))){
-
                         collided(movable.get(i), movable.get(j));
                     }
                 }
@@ -253,11 +251,11 @@ public class Simulation implements MouseEvents {
     public void collided(Movable movable1, Movable movable2){
         if(!notConnected(movable1,movable2))return;
 
-
         // First check the speed of the collision if they are going to fast the rest does not matter
         if(movable1.getCurrentSpeed() + movable2.getCurrentSpeed() > collisionsThreshold){
             movable1.setCrashed(true);
             movable2.setCrashed(true);
+            sendEventToUI("Collision ", 2);
         }
 
         if(movable1 instanceof DrawableRollingStock && movable2 instanceof DrawableRollingStock){
@@ -269,7 +267,7 @@ public class Simulation implements MouseEvents {
                 r1.setRollingStockConToUs(r2);
                 r2.setStockConnection(r1);
             }
-            else{
+            else {
                 r2.setRollingStockConToUs(r1);
                 r1.setStockConnection(r2);
             }
@@ -278,18 +276,15 @@ public class Simulation implements MouseEvents {
             DrawableRollingStock r = (DrawableRollingStock)movable1;
             DrawableTrain t = (DrawableTrain)movable2;
 
-            // TEMP
-            r.setTrainConnection(t);
-            t.setRollingStockConnected(r);
-            // END TEMP
-
             // Check if they are colliding on the connection point
-            if(r.getFrontConnection().intersects(t.getConnection().getBoundsInLocal()) || r.getBackConnection().intersects(t.getConnection().getBoundsInLocal()) ){
+            if(r.getFrontConnection().intersects(t.getConnection().getLayoutBounds()) || r.getBackConnection().intersects(t.getConnection().getLayoutBounds()) ){
                 r.setTrainConnection(t);
                 t.setRollingStockConnected(r);
             }
             else {
-
+                r.setCrashed(true);
+                t.setCrashed(true);
+                sendEventToUI("Collision ", 2);
             }
         }
         else if(movable2 instanceof DrawableRollingStock){
@@ -297,9 +292,14 @@ public class Simulation implements MouseEvents {
             DrawableTrain t = (DrawableTrain)movable1;
 
             // Check if they are colliding on the connection point
-            if(r.getFrontConnection().intersects(t.getConnection().getBoundsInLocal()) || r.getBackConnection().intersects(t.getConnection().getBoundsInLocal()) ){
+            if(r.getFrontConnection().intersects(t.getConnection().getLayoutBounds()) || r.getBackConnection().intersects(t.getConnection().getLayoutBounds()) ){
                 r.setTrainConnection(t);
                 t.setRollingStockConnected(r);
+            }
+            else{
+                r.setCrashed(true);
+                t.setCrashed(true);
+                sendEventToUI("Collision ", 2);
             }
         }
     }
@@ -337,7 +337,7 @@ public class Simulation implements MouseEvents {
             // If the current section can detect we must send an event since it has changed state
             if(curSection.getSection().canDetect()){
                 if(UI != null){
-                    UI.sendToeventLog(updateTrainOnSection(t.getTrain(), curSection.getSection(),curSection.getSection()));
+                    UI.sendToeventLog(updateTrainOnSection(t.getTrain(), curSection.getSection(),curSection.getSection()),1);
                 }
 
                 modelTrack.sectionChanged(curSection.getSection().getID());
@@ -349,11 +349,9 @@ public class Simulation implements MouseEvents {
                     DrawableSection last = t.getCurSection();
                     t.setCurSection(ds);//have to do it this way since the destination is not always the same
                     if(ds.getSection().canDetect()){
-                        if(UI != null){
-                            UI.sendToeventLog(updateTrainOnSection(t.getTrain(), last.getSection(), ds.getSection()));
-                        }
-                        modelTrack.sectionChanged(ds.getSection().getID());
+                        sendEventToUI(updateTrainOnSection(t.getTrain(), last.getSection(), ds.getSection()),1);
                     }
+                    modelTrack.sectionChanged(ds.getSection().getID());
                 }
             }
         }
@@ -620,7 +618,7 @@ public class Simulation implements MouseEvents {
             }
             else{
                 if(onMovable(x,y)){
-                    UI.sendToeventLog("Train Selected");
+                    UI.sendToeventLog("Train Selected",1);
                 }
             }
         }
@@ -635,5 +633,15 @@ public class Simulation implements MouseEvents {
      * */
     public void setStart(boolean start){
         this.started = start;
+    }
+
+    /**
+     * Checks if the user interface exists before sending the event. It will be null if
+     * test are run
+     */
+    public void sendEventToUI(String event, int status){
+        if(UI != null){
+            UI.sendToeventLog(event, status);
+        }
     }
 }

@@ -78,6 +78,7 @@ public class DrawableTrain implements Movable{
         else{//TODO check if need to consider other direction here too
             this.curRotation = 270;// Not nat orientation
         }
+        setConnectionLocation();
     }
 
     /**
@@ -112,16 +113,19 @@ public class DrawableTrain implements Movable{
     }
 
 
+    public void setConnectionLocation(){
+        connection.setCenterX(this.getCurrentLocation().getX() + ((getLengthPixels()/2) * (Math.cos(Math.toRadians(this.getCurRotation()-90+180)))));
+        connection.setCenterY(this.getCurrentLocation().getY() + ((getLengthPixels()/2) * (Math.sin(Math.toRadians(this.getCurRotation()-90+180)))));
+        connection.setRadius(10);
+    }
+
     /**
      * Updates the location of the train
      * */
     public void update(){
         if(crashed)return;
 
-        connection.setCenterX(this.getCurrentLocation().getX() + ((getLengthPixels()/2) * (Math.cos(Math.toRadians(this.getCurRotation()-90+180)))));
-        connection.setCenterY(this.getCurrentLocation().getY() + ((getLengthPixels()/2) * (Math.sin(Math.toRadians(this.getCurRotation()-90+180)))));
-        connection.setRadius(10);
-
+        setConnectionLocation();
 
         // Check if the train is still accelerating and the current speed is less than the max speed
         if(currentSpeed < train.getTargetSpeed() && currentSpeed < train.getMaxSpeed()){
@@ -352,7 +356,7 @@ public class DrawableTrain implements Movable{
 
     @Override
     public Point getCurrentLocation(){
-        return  this.currentLocation;
+        return this.currentLocation;
     }
 
     @Override
