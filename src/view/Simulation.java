@@ -103,7 +103,7 @@ public class Simulation implements MouseEvents {
             modelTrack.setSpeed(t.getTrain().getId(), 500);
         }
         modelTrack.setSpeed(trains.get(0).getTrain().getId(), 500);
-        modelTrack.setSpeed(trains.get(1).getTrain().getId(), 500);
+//        modelTrack.setSpeed(trains.get(1).getTrain().getId(), 500);
 
         started = true;
     }

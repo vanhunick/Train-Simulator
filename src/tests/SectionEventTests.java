@@ -5,7 +5,8 @@ import Util.CustomTracks;
 import model.ModelTrack;
 import model.RollingStock;
 import model.Train;
-import org.junit.*;
+//import org.junit.*;
+import org.junit.Test;
 import view.Drawable.DrawableRollingStock;
 import view.Drawable.DrawableTrain;
 import view.Simulation;
@@ -83,7 +84,7 @@ public class SectionEventTests {
         ModelTrack model = new ModelTrack(simulation.getTrains(),simulation.getSections());
 
         // Set the target speed for the train
-        model.setSpeed(1,100);
+        model.setSpeed(1, 100);
 
         simulation.setStart(true);
 

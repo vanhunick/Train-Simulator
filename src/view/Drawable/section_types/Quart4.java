@@ -96,31 +96,41 @@ public class Quart4 extends DefaultTrack {
 
 
     public double getNextPoint(Point curPoint,double curRot, double rotationDone, double speed, Movable movable){
+        radius = getLength()/2;
+        midPointX = getStartX() + radius + TRACK_WIDTH/2;
+        midPointY = getStartY() + radius - TRACK_WIDTH/2;
+
         // Need to minus the degrees to change
         double degreesToMove = (90/lengthOfQuater()/2) * speed;
 
         double nextRotation = 0;
-        if(forwardWithTrack(movable)){
-            nextRotation = 180 - (degreesToMove + rotationDone) ;
-            curRot-= degreesToMove;
+        if(super.getDirection().equals("RIGHT")){
+            if(forwardWithTrack(movable)){
+                nextRotation = 180 - (degreesToMove + rotationDone) ;
+                curRot-= degreesToMove*2;
+            }
+            else {
+                nextRotation = 90 + (degreesToMove + rotationDone) ;
+                curRot+= degreesToMove*2;
+            }
         }
-        else {
-            nextRotation = 90 + (degreesToMove + rotationDone) ;
-            curRot+= degreesToMove;
+        else if(super.getDirection().equals("UP")){
+            if(forwardWithTrack(movable)){
+                nextRotation = 90 + (degreesToMove + rotationDone) ;
+                curRot+= degreesToMove*2;
+            }
+            else {
+                nextRotation = 180 - (degreesToMove + rotationDone) ;
+                curRot-= degreesToMove*2;
+            }
         }
+
 
         // Set the new point values
         curPoint.x = (int)(midPointX + (radius * (Math.cos(Math.toRadians(nextRotation)))));
         curPoint.y = (int)(midPointY + (radius * (Math.sin(Math.toRadians(nextRotation)))));
 
         movable.setDegDone(rotationDone + degreesToMove);
-
-        if(forwardWithTrack(movable)){
-            curRot-= degreesToMove;
-        }
-        else {
-            curRot+= degreesToMove;
-        }
 
         return curRot;
     }
@@ -134,7 +144,7 @@ public class Quart4 extends DefaultTrack {
         Point p = curPoint;
 
         if(super.getDirection().equals("RIGHT")){
-            if(nat && forward || !nat && !forward){
+            if(forwardWithTrack(movable)){
                 if(p.getY() > super.getStartY() + super.getLength()){
                     return false;
                 }
@@ -144,15 +154,17 @@ public class Quart4 extends DefaultTrack {
             }
             else {
                 if(p.getY() < super.getStartY() + super.getLength()/2){
+                    System.out.println("Treu 1");
                     return false;//No longer in this section
                 }
                 if(p.getX() < super.getStartX() ){
+                    System.out.println("Treu 2");
                     return false;//No longer in this section
                 }
             }
         }
         else if(super.getDirection().equals("UP")){
-            if(nat && forward || !nat && !forward){
+            if(forwardWithTrack(movable)){
                 if(p.getY() < super.getStartY() + super.getLength()/2){
                     return false;//No longer in this section
                 }

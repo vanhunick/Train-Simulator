@@ -109,13 +109,13 @@ public class DrawableTrain implements Movable{
         double conY = this.getCurrentLocation().getY() + ((getLengthPixels()/2) * (Math.sin(Math.toRadians(this.getCurRotation()-90+180))));
 
         g.setFill(Color.GREEN);
-        g.fillRect(conX-5,conY-5,10,10);
+        g.fillRect(conX - 5, conY - 5, 10, 10);
     }
 
 
     public void setConnectionLocation(){
         connection.setCenterX(this.getCurrentLocation().getX() + ((getLengthPixels()/2) * (Math.cos(Math.toRadians(this.getCurRotation()-90+180)))));
-        connection.setCenterY(this.getCurrentLocation().getY() + ((getLengthPixels()/2) * (Math.sin(Math.toRadians(this.getCurRotation()-90+180)))));
+        connection.setCenterY(this.getCurrentLocation().getY() + ((getLengthPixels() / 2) * (Math.sin(Math.toRadians(this.getCurRotation() - 90 + 180)))));
         connection.setRadius(10);
     }
 

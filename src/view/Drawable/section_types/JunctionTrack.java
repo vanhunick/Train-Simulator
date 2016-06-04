@@ -86,7 +86,7 @@ public class JunctionTrack extends DefaultTrack {
                 outUpTrack.setStartX(straightTrack.getStartX() - ((outUpTrack.getLength()-TRACK_WIDTH/2)/2));
                 outUpTrack.setStartY(straightTrack.getStartY() - outUpTrack.getLength() + TRACK_WIDTH);
                 outUpTrack.setDirection("UP");
-
+                outUpTrack.setMid();
                 outRightTrack.setStart(outUpTrack);
             }
         }
@@ -165,7 +165,8 @@ public class JunctionTrack extends DefaultTrack {
 
 
     public double getNextPoint(Movable dt, double moveBy){
-        return dt.getJuncTrack().getNextPoint(dt.getCurrentLocation(),dt.getCurRotation(),dt.getDegDone(),moveBy, dt);
+        double p = dt.getJuncTrack().getNextPoint(dt.getCurrentLocation(),dt.getCurRotation(),dt.getDegDone(),moveBy, dt);
+        return p;
     }
 
 
@@ -173,8 +174,6 @@ public class JunctionTrack extends DefaultTrack {
      * Junctions tracks need to be able to change the lastsubable and need to be able to change the orientation
      * */
     public boolean checkOnAfterUpdate(Movable dt, double moveBy){
-
-
         if(dt.getJuncTrack().checkOnAfterUpdate(dt.getCurrentLocation(), dt.getCurRotation(),dt.getDegDone(), moveBy, dt)){
             return true;
         }
@@ -195,14 +194,14 @@ public class JunctionTrack extends DefaultTrack {
                 return false;
             }
             else{
-//                dt.setLastPointOnCurve(0);
+                dt.setDegDone(0);
                 dt.setJuncTrack(outUpTrack);
                 return true;
             }
         }
         else if(dt.getJuncTrack().getDrawID() == 2){
             if(nat){
-//                dt.setLastPointOnCurve(0);
+                dt.setDegDone(0);
                 dt.setJuncTrack(inRight);
                 return true;
             }
@@ -213,7 +212,7 @@ public class JunctionTrack extends DefaultTrack {
         }
         else if(dt.getJuncTrack().getDrawID() == 3){
             if(nat){
-//                dt.setLastPointOnCurve(0);
+                dt.setDegDone(0);
                 dt.setJuncTrack(outRightTrack);
                 return true;
             }
@@ -228,7 +227,7 @@ public class JunctionTrack extends DefaultTrack {
                 return false;
             }
             else {
-//                dt.setLastPointOnCurve(0);
+                dt.setDegDone(0);
                 dt.setJuncTrack(inDown);
                 return true;
             }

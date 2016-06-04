@@ -94,17 +94,33 @@ public class Quart2 extends DefaultTrack {
     }
 
     public double getNextPoint(Point curPoint,double curRot, double rotationDone, double speed, Movable movable){
+        radius = getLength()/2;
+        midPointX = getStartX()  + radius - TRACK_WIDTH/2;
+        midPointY = getStartY()  + radius + TRACK_WIDTH/2;
+
         // Need to minus the degrees to change
         double degreesToMove = (90/lengthOfQuater()/2) * speed;
 
         double nextRotation = 0;
-        if(forwardWithTrack(movable)){
-            nextRotation = 0 - (degreesToMove + rotationDone) ;
-            curRot-= degreesToMove;
+        if(super.getDirection().equals("LEFT")){
+            if(forwardWithTrack(movable)){
+                nextRotation = 0 - (degreesToMove + rotationDone) ;
+                curRot-= degreesToMove*2;
+            }
+            else {
+                nextRotation = 270 + (degreesToMove + rotationDone) ;
+                curRot+= degreesToMove*2;
+            }
         }
-        else {
-            nextRotation = 270 + (degreesToMove + rotationDone) ;
-            curRot+= degreesToMove;
+        else if(super.getDirection().equals("DOWN")){
+            if(forwardWithTrack(movable)){
+                nextRotation = 270 + (degreesToMove + rotationDone) ;
+                curRot+= degreesToMove*2;
+            }
+            else {
+                nextRotation = 0 - (degreesToMove + rotationDone) ;
+                curRot-= degreesToMove*2;
+            }
         }
 
         // Set the new point values
@@ -113,12 +129,6 @@ public class Quart2 extends DefaultTrack {
 
         movable.setDegDone(rotationDone + degreesToMove);
 
-        if(forwardWithTrack(movable)){
-            curRot-= degreesToMove;
-        }
-        else {
-            curRot+= degreesToMove;
-        }
         return curRot;
     }
 
@@ -131,7 +141,7 @@ public class Quart2 extends DefaultTrack {
         Point p = curPoint;
 
         if(super.getDirection().equals("DOWN")){
-            if(nat && forward || !nat && !forward){
+            if(forwardWithTrack(movable)){
                 if(p.getY() > super.getStartY() + super.getLength()/2){
                     return false;
                 }
@@ -150,7 +160,7 @@ public class Quart2 extends DefaultTrack {
 
         }
         else if(super.getDirection().equals("LEFT")){
-            if(nat && forward || !nat && !forward){
+            if(forwardWithTrack(movable)){
                 if(p.getY() < super.getStartY() - super.getLength()/2){
                     return false;
                 }

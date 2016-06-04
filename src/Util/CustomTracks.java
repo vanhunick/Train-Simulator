@@ -533,14 +533,14 @@ public class CustomTracks {
         for(DrawableSection ds : railway) {
             if (ds.getSection().getID() == 99) {
                 //Create the train
-                Train train = new Train(1, 15, 500, true,true,0.8, 0.8);
+                Train train = new Train(1, 10, 500, true,true,0.8, 0.8);
                 DrawableTrain drawableTrain = new DrawableTrain(train, ds,ds.getTracks()[0]);
                  drawableTrain.setUpImage();
-                trains.add(drawableTrain);
+              //  trains.add(drawableTrain);
 
             }
             if(ds.getSection().getID() == 101){
-                Train train1 = new Train(2, 15, 100, true,true, 0.8, 0.8);
+                Train train1 = new Train(2, 10, 100, true,true, 0.8, 0.8);
                 DrawableTrain drawableTrain1 = new DrawableTrain(train1, ds,ds.getTracks()[0]);
                 trains.add(drawableTrain1);
                 drawableTrain1.setUpImage();
