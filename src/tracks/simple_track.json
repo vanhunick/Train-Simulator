@@ -1,0 +1,50 @@
+{
+  "sections":[
+    {"id":0,
+      "detect":true,
+      "length":100,
+      "from":3,
+      "to":1,
+      "junction":0,
+      "tracks":[
+        {"type":"Straight", "id":0, "to":1, "from":5,"length":100}
+      ]
+    },
+    {
+      "id":1,
+      "length":100,
+      "detect":false,
+      "from":1,
+      "to":2,
+      "junction":0,
+      "tracks":[
+        {"type":"Q2", "id":1, "to":2, "from":0,"length":200},
+        {"type":"Q3", "id":2, "to":3, "from":1,"length":200}
+      ]
+    },
+    {
+      "id":2,
+      "length":100,
+      "detect":true,
+      "from":2,
+      "to":3,
+      "junction":0,
+      "tracks":[
+        {"type":"Straight", "id":3, "to":4, "from":2,"length":100},
+        {"type":"Junction", "id":4, "to":5, "from":3,"length":100, "inbound":true}
+      ]
+    },
+    {
+      "id":3,
+      "length":100,
+      "detect":false,
+      "from":0,
+      "to":2,
+      "junction":0,
+      "tracks":[
+        {"type":"Q4", "id":5, "to":6, "from":4,"length":200},
+        {"type":"Q1", "id":6, "to":0, "from":5,"length":200}
+      ]
+    }
+  ]
+}
