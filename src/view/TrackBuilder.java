@@ -9,13 +9,15 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import model.RollingStock;
 import model.Section;
 import model.Train;
+import view.Drawable.DrawableRollingStock;
 import view.Drawable.DrawableTrain;
 import view.Drawable.section_types.*;
 import view.Panes.ErrorDialog;
 import view.Panes.TrackMenu;
-import view.Panes.TrainDialog;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,22 +53,25 @@ public class TrackBuilder implements MouseEvents{
     private double screenWidth;
     private double screenHeight;
 
-    // The sections drawn to select from
-    private List<DefaultTrack> sections;
+    // The exampleTracks drawn to select from
+    private List<DefaultTrack> exampleTracks;
 
     // The section that represent the track
-    private List<DefaultTrack> tracksInTrack;
+    private List<DefaultTrack> tracksInSection;
 
     // The added trains to the track
     private List<DrawableTrain> trains;
 
-    // The sections the incapsulate the tracks
+    // The exampleTracks the incapsulate the tracks
     private List<DrawableSection> sectionsForTrack;
 
     // All the tracks that have been created
     private List<DefaultTrack> allTracks;
 
     private DrawableSection curentSection;
+
+    // List
+    private List<DrawableRollingStock> stocks;
 
     // ID for section
     private  int curSectionID;
@@ -83,7 +88,7 @@ public class TrackBuilder implements MouseEvents{
     // The current ID of the tracks will be incremented with each piece added
     private int curId = 0;
 
-    // Set if every time you add new piece it alternates between detection and non detection sections
+    // Set if every time you add new piece it alternates between detection and non detection exampleTracks
     private boolean alternate = true;
 
     /**
@@ -94,11 +99,13 @@ public class TrackBuilder implements MouseEvents{
     public TrackBuilder(ProgramController controller){
         this.controller = controller;
         this.vBox = createBuilderButtons();
-        this.tracksInTrack = new ArrayList<>();
+        this.tracksInSection = new ArrayList<>();
         this.trains = new ArrayList<>();
-//        this.sections = setUpDrawPieces();
+        this.stocks = new ArrayList<>();
+        this.exampleTracks = setUpDrawPieces();
+        this.sectionsForTrack = new ArrayList<>();
+        this.allTracks = new ArrayList<>();
     }
-
 
     public void updateSize(){
         this.screenWidth = controller.getCanvasWidth();
@@ -106,7 +113,7 @@ public class TrackBuilder implements MouseEvents{
         this.shownPanelStartX = screenWidth - boxSize - boxGap*2;
         shownPanelStartX = screenWidth - (boxSize - (boxGap*2));
         this.boxSize = ((screenHeight - 50 - ((NUMB_PIECES*boxGap)+boxGap))/NUMB_PIECES);
-//        this.sections = setUpDrawPieces();
+        this.exampleTracks = setUpDrawPieces();
     }
 
     public void update(){}
@@ -119,7 +126,7 @@ public class TrackBuilder implements MouseEvents{
     public void refresh(GraphicsContext gc){
 
         //Draw the currently created track
-        for(DefaultTrack d : tracksInTrack){
+        for(DefaultTrack d : allTracks){
             gc.setStroke(Color.WHITE);
             d.draw(gc);
         }
@@ -131,10 +138,18 @@ public class TrackBuilder implements MouseEvents{
         // Draw the piece selection panel
         drawShownPanel(gc);
 
+        for(DefaultTrack t : exampleTracks){
+            t.setColor(Color.BLACK);
+            t.draw(gc);
+        }
+
         // Draw the trains
         for(DrawableTrain dt : trains){
             dt.draw(gc);
         }
+
+        gc.setStroke(Color.GREEN);
+        gc.strokeText("Current Section = " + curSectionID, 50, 40);
     }
 
     /**
@@ -162,7 +177,7 @@ public class TrackBuilder implements MouseEvents{
         }
 
         gc.setLineWidth(5);
-        for(DefaultTrack ds : sections){
+        for(DefaultTrack ds : exampleTracks){
             ds.draw(gc);
         }
         gc.setLineWidth(1);
@@ -205,35 +220,44 @@ public class TrackBuilder implements MouseEvents{
         alternate.setSelected(true);
         alternate.setOnAction(e -> alternateCheckBoxEvent(alternate));
 
-        addTrainMenu.setOnAction(e -> showAddTrainMenu());
+
         undo.setOnAction(e -> undo());
         sim.setOnAction(e -> simulateTrack());
         clear.setOnAction(e -> clear());
         completeSection.setOnAction(e -> newSection());
 
-        vBox.getChildren().addAll(sim,clear,undo,addTrainMenu,alternate);
+        vBox.getChildren().addAll(sim,clear,undo,addTrainMenu,alternate,completeSection);
         vBox.setPrefWidth(WIDTH);
         return vBox;
     }
 
-
     public void newSection(){
-        DefaultTrack[] defaultTracks = new DefaultTrack[tracksInTrack.size()];
+        if(tracksInSection.size() == 0){
+            new ErrorDialog("There are no tracks in this section", "Invalid Section");
+            return;
+        }
+        DefaultTrack[] sectionTracks = new DefaultTrack[tracksInSection.size()];
 
-        for(int i = 0; i < defaultTracks.length; i++){
-            defaultTracks[i] = tracksInTrack.get(i);
+        // Copy over the created tracks into to section
+        for(int i = 0; i < tracksInSection.size(); i++){
+            sectionTracks[i] = tracksInSection.get(i);
         }
 
-        sectionsForTrack.add(new DrawableSection(new Section(curSectionID,100.0,defaultTracks)));
+        // Empty out the tracks
+        tracksInSection.clear();
+
+        Section s = new Section(curSectionID,100,sectionTracks);//TODO do length later
+        DrawableSection ds = new DrawableSection(s);
+
+        sectionsForTrack.add(ds);
         curSectionID++;
-        tracksInTrack.clear();//new Section so clear the list
     }
 
 
 
 
     /**
-     * Toggle the checkbox for alternating sections
+     * Toggle the checkbox for alternating exampleTracks
      * */
     public void alternateCheckBoxEvent(CheckBox alternate){
         alternate.setSelected(!this.alternate);
@@ -246,12 +270,10 @@ public class TrackBuilder implements MouseEvents{
      * the created track and trains
      * */
     public void simulateTrack(){
-        if(tracksInTrack.size() == 0 || trains.size() == 0){
+        if(tracksInSection.size() == 0 || trains.size() == 0){
             new ErrorDialog("No track or trains to simulate", "Error");
             return;
         }
-
-//        controller.setVisualisationMode(makeSections(tracksInTrack), trains);
     }
 
     public List<DrawableSection> makeSections(List<DefaultTrack> tracks){
@@ -268,8 +290,8 @@ public class TrackBuilder implements MouseEvents{
      * Undoes and addition of a track piece
      * */
     public void undo(){
-        if(tracksInTrack.size() > 0){
-            this.tracksInTrack.remove(tracksInTrack.size()-1);
+        if(tracksInSection.size() > 0){
+            this.tracksInSection.remove(tracksInSection.size()-1);
             this.shouldDetect = !shouldDetect;//reverse it
         }
     }
@@ -279,7 +301,7 @@ public class TrackBuilder implements MouseEvents{
      * Removes all added tracks from the list
      * */
     public void clear(){
-        tracksInTrack.clear();
+        tracksInSection.clear();
     }
 
 
@@ -316,59 +338,61 @@ public class TrackBuilder implements MouseEvents{
     }
 
     /**
+     * Pops up a menu where you can add tracks or trains to a track or modify attributes of the track
      *
+     * @param dt the track to modify or add a train or stock to
      * */
-    public void showAddTrainMenu(){
-        TrainDialog td = new TrainDialog(this);
+    public void showTrackMenu(DefaultTrack dt){
+        TrackMenu menu = new TrackMenu(dt);
 
-
-        for(DefaultTrack s : tracksInTrack){
-            if(s.getId() == td.getStartId()){//section the train should start on
-
-                //td.getStartId()
-
-                //Create the train
-                Train train = new Train(td.getId(),td.getLength(),80,true,false, 0.8,0.5);
-
-                // Create the drawable train
-//                DrawableTrain drawableTrain = new DrawableTrain(train, s,s.getSection());//TODO make sections first
-//                trains.add(drawableTrain);
+        // Checks if a train should be added to the track
+        if(menu.addTrain()){
+            String selectedTrain = menu.getCurTrainSelection();
+            if(selectedTrain.equals("British Rail Class 25")){
+                Train train1 = new Train(getNextTrainID(), 80, 500, true,true, 0.2, 0.5);
+                DrawableTrain drawableTrain1 = new DrawableTrain(train1, getSection(dt),dt);
+                trains.add(drawableTrain1);
             }
+            else if(selectedTrain.equals("British Rail Class 108 (DMU)")){
+
+            }
+            else if(selectedTrain.equals("British Rail Class 101 (DMU)")){
+
+            }
+        }
+
+        // Checks if a rolling stock should be added to the track
+        if(menu.addRollingStocl()){
+            RollingStock rollingStock = new RollingStock(80,100,0.8);
+            DrawableRollingStock drawableRollingStock = new DrawableRollingStock(rollingStock, null, true);
+            drawableRollingStock.setStartNotConnected(dt);
+            stocks.add(drawableRollingStock);
         }
     }
 
-    /**
-     * Creates a very basic railway with one track per section
-     * */
-//    public Section[] linkUpSections(List<DefaultTrack> sections){
-//        Section[] railway = new Section[sections.size()];
-//
-//        Section start = sections.get(0).getSection();
-//        railway[0] = start;
-//        for(int i = 1; i < sections.size(); i++){
-//            Section s = sections.get(i).getSection();
-//            s.setFrom(railway[i-1]);
-//            railway[i] = s;
-//        }
-//
-//        for(int i = 0; i < sections.size()-1; i++){
-//            railway[i].setTo(railway[i+1]);
-//        }
-//
-//        //link the last one to the start
-//        railway[railway.length-1].setTo(railway[0]);
-//        railway[0].setFrom(railway[sections.size()-1]);
-//
-//        for(Section s : railway){
-//        }
-//
-//        return railway;
-//    }
+    public DrawableSection getSection(DefaultTrack track){
+        for(DrawableSection s : sectionsForTrack){
+            for(DefaultTrack t : s.getTracks()){
+                if(t.equals(track))return s;
+            }
+        }
+        return null;
+    }
 
+    public int getNextTrainID(){
+        int maxID = 0;
+        for(DrawableTrain t : trains){
+            if(t.getTrain().getId() > maxID){
+                maxID = t.getTrain().getId();
+            }
+        }
+        maxID++;
+        return maxID;
+    }
 
 
     public DefaultTrack getTrack(double x, double y){
-        for(DefaultTrack s : tracksInTrack){
+        for(DefaultTrack s : tracksInSection){
             if(s.containsPoint(x,y)){
                 return s;
             }
@@ -376,11 +400,8 @@ public class TrackBuilder implements MouseEvents{
         return null;
     }
 
-    public void showTrackMenu(DefaultTrack ds){
-        TrackMenu tm = new TrackMenu(ds);
 
-        ds.setLength(tm.getLength());
-    }
+
 
     @Override
     public void mousePressed(double x, double y, MouseEvent e) {}
@@ -390,7 +411,7 @@ public class TrackBuilder implements MouseEvents{
 
     @Override
     public void mouseClicked(double x, double y, MouseEvent e){
-        int numbSections = tracksInTrack.size();
+        int numbSections = tracksInSection.size();
 
         if(e.getButton().equals(MouseButton.PRIMARY)){
             if(e.getClickCount() == 2){
@@ -410,17 +431,17 @@ public class TrackBuilder implements MouseEvents{
             }
         }
 
-        if(tracksInTrack.size() < numbSections){
+        if(tracksInSection.size() < numbSections){
             curId--;//StraightTrack was removed can free vup ID
         }
-        else if(tracksInTrack.size() > numbSections){
+        else if(tracksInSection.size() > numbSections){
             curId++;//Added a track need to increment the ID
         }
     }
 
     @Override
     public void mouseMoved(double x, double y, MouseEvent e){
-        for(DefaultTrack d : tracksInTrack){
+        for(DefaultTrack d : tracksInSection){
             if(d.containsPoint(x,y)){
                 d.setMouseOn(true);
             }
@@ -435,12 +456,8 @@ public class TrackBuilder implements MouseEvents{
 
     }
 
-    public void linkUpDrawSections(List<DrawableSection> railway){
-
-    }
 
     public void addFirstPiece(){
-
         DefaultTrack ds0 = null;
         if(selectedBox == 0){
             ds0 = new StraightHoriz((int)trackStartX,(int)trackStartY, (int)pieceSize,0,curId, "RIGHT");
@@ -465,65 +482,58 @@ public class TrackBuilder implements MouseEvents{
             // No boxes were selected so don't add null
             return;
         }
-        if(alternate){
-            if(shouldDetect){
-//                ds0.getSection().setCandetect(true);//TODO make into dection
-            }
-            else{
-//                ds0.getSection().setCandetect(false);
-            }
-            shouldDetect = !shouldDetect;
-        }
 
-        tracksInTrack.add(ds0);
+        allTracks.add(ds0);
+        tracksInSection.add(ds0);
     }
 
     private boolean shouldDetect = true;
 
 
+    public void nextSection(){
+
+
+        if(alternate){
+            curentSection.getSection().setCandetect(shouldDetect);
+            shouldDetect = !shouldDetect;
+        }
+    }
+
     public void addPiece(){
-        if(tracksInTrack.size() == 0){
-//            addFirstPiece();
+        if(tracksInSection.size() == 0){
+            addFirstPiece();
             return;
         }
 
+        int length = 100;
+
         DefaultTrack ds1 = null;
 
-//        if(selectedBox == 0){
-//            ds1 = new StraightHoriz(new Section(curId, 100, null, null, null), (int)pieceSize,0);
-//
-//        }
-//        else if(selectedBox == 1){
-//            ds1 = new Quart1(new Section(curId, 200, null, null, null), (int)pieceSize*2,1);
-//        }
-//        else if(selectedBox == 2){
-//            ds1 = new Quart2(new Section(curId, 200, null, null, null), (int)pieceSize*2,2);
-//        }
-//        else if(selectedBox == 3){
-//            ds1 = new Quart3(new Section(curId, 200, null, null, null), (int)pieceSize*2,3);
-//        }
-//        else if(selectedBox == 4){
-//            ds1 = new Quart4(new Section(curId, 200, null, null, null), (int)pieceSize*2,4);
-//        }
-//        else if(selectedBox == 5){
-//            ds1 = new StraightVert(new Section(curId, 100, null, null, null), (int)pieceSize,5);
-//        }
-//        else {
-//            return; // No box selected
-//        }
-
-        if(alternate){
-            if(shouldDetect){
-//                ds1.getSection().setCandetect(true);
-            }
-            else{
-//                ds1.getSection().setCandetect(false);
-            }
-            shouldDetect = !shouldDetect;
+        if(selectedBox == 0){
+            ds1 = new StraightHoriz(length, 0, curId);
+        }
+        else if(selectedBox == 1){
+            ds1 = new Quart1(length*2, 1, curId);
+        }
+        else if(selectedBox == 2){
+            ds1 = new Quart2(length*2, 2, curId);
+        }
+        else if(selectedBox == 3){
+            ds1 = new Quart3(length*2, 3, curId);
+        }
+        else if(selectedBox == 4){
+            ds1 = new Quart4(length*2, 4, curId);
+        }
+        else if(selectedBox == 5){
+            ds1 = new StraightVert(length, 5, curId);
+        }
+        else {
+            return; // No box selected
         }
 
-//        ds1.setStart(tracksInTrack.get(tracksInTrack.size()-1));
-        tracksInTrack.add(ds1);
+        ds1.setStart(allTracks.get(allTracks.size()-1));
+        allTracks.add(ds1);
+        tracksInSection.add(ds1);
     }
 
     public void selectPiece(double x, double y){
@@ -543,56 +553,61 @@ public class TrackBuilder implements MouseEvents{
         return false;
     }
 
+
     public List<DefaultTrack> getCreatedTrack(){
-        return tracksInTrack;
+        return tracksInSection;
     }
 
-//    public List<DefaultTrack> setUpDrawPieces(){
-//        List<DefaultTrack> sections = new ArrayList<>();
-//
-//        double middleX = (screenWidth - boxSize - boxGap) + (boxSize/2);//Start of the box to draw in
-//        double middleY = 10 + boxGap + (boxSize/2);
-//
-//        double size = boxSize - (boxGap);
-//        double y = middleY - DefaultTrack.TRACK_WIDTH/2;
-//        double x = middleX - (size/2);
-//
-//        DefaultTrack ds0 = new StraightHoriz(new Section(2, 100, null, null, null),(int)x,(int)y, (int)size,0, "LEFT");
-//
-//        x = middleX - size/4;
-//        y = middleY + boxSize + boxGap - (size/2) + size/4;
-//
-//        DefaultTrack ds1 = new Quart1(new Section(2, 100, null, null, null),(int)(x) ,(int)y, (int)size,1, "RIGHT");
-//
-//        y += boxSize + boxGap;
-//        x = middleX - size/2 - size/4;
-//
-//        DefaultTrack ds2 = new Quart2(new Section(2, 100, null, null, null),(int)(x),(int)y, (int)(size),2, "RIGHT");
-//
-//        x = middleX - size/2 - size/4;
-//        y += boxSize + boxGap - size/2;
-//
-//        DefaultTrack ds3 = new Quart3(new Section(2, 100, null, null, null),(int)(x),(int)y, (int)(size),3, "RIGHT");
-//
-//        y += boxSize + boxGap;
-//        x = middleX - size/2 + size/4 ;
-//
-//        DefaultTrack ds4 = new Quart4(new Section(2, 100, null, null, null),(int)(x),(int)y, (int)(size),4, "RIGHT");
-//
-//        x = middleX - DefaultTrack.TRACK_WIDTH /2 + size/4;
-//        y+= boxSize + boxGap + size/4;
-//
-//        DefaultTrack ds5 = new StraightVert(new Section(2, 100, null, null, null),(int)(x),(int)y, (int)(size),5, "RIGHT");
-//
-//        sections.add(ds0);
-//        sections.add(ds1);
-//        sections.add(ds2);
-//        sections.add(ds3);
-//        sections.add(ds4);
-//        sections.add(ds5);
-//
-//        return sections;
-//    }
 
+    /**
+     * A list of tracks to show to the user to choose from on the UI
+     * */
+    public List<DefaultTrack> setUpDrawPieces(){
+        List<DefaultTrack> sections = new ArrayList<>();
+
+        double middleX = (screenWidth - boxSize - boxGap) + (boxSize/2);//Start of the box to draw in
+        double middleY = 10 + boxGap + (boxSize/2);
+
+        double size = boxSize - (boxGap);
+        double y = middleY - DefaultTrack.TRACK_WIDTH/2;
+        double x = middleX - (size/2);
+
+
+        DefaultTrack ds0 = new StraightHoriz((int)x,(int)y, (int)size,0,0, "RIGHT");
+
+        x = middleX - size/4;
+        y = middleY + boxSize + boxGap - (size/2) + size/4;
+
+        DefaultTrack ds1 = new Quart1((int)x,(int)y, (int)size,1,"RIGHT",0 );
+
+        y += boxSize + boxGap;
+        x = middleX - size/2 - size/4;
+
+        DefaultTrack ds2 = new Quart2((int)x,(int)y, (int)size,2,"RIGHT",0 );
+
+        x = middleX - size/2 - size/4;
+        y += boxSize + boxGap - size/2;
+
+        DefaultTrack ds3 = new Quart3((int)x,(int)y, (int)size,3,"RIGHT",0 );
+
+        y += boxSize + boxGap;
+        x = middleX - size/2 + size/4 ;
+
+        DefaultTrack ds4 = new Quart4((int)x,(int)y, (int)size,4,"RIGHT",0 );
+
+        x = middleX - DefaultTrack.TRACK_WIDTH /2 + size/4;
+        y+= boxSize + boxGap + size/4;
+
+        DefaultTrack ds5 = new StraightVert((int)x,(int)y, (int)size,5,"RIGHT",0);
+
+        sections.add(ds0);
+        sections.add(ds1);
+        sections.add(ds2);
+        sections.add(ds3);
+        sections.add(ds4);
+        sections.add(ds5);
+
+        return sections;
+    }
 }
 
