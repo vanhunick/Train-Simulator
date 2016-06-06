@@ -51,5 +51,12 @@
         {"type":"Straight horizontal", "id":7, "to":0, "from":6,"length":50}
       ]
     }
+  ],
+  "trains":[
+    {"id":1, "curTrack":0,"length":15,"maxSpeed":500,"direction":true,"orientation":true},
+    {"id":2, "curTrack":3,"length":15,"maxSpeed":500,"direction":true,"orientation":true}
+  ],
+  "stocks":[
+    {"id":1, "curTrack":7,"length":15,"direction":true,"orientation":true}
   ]
 }

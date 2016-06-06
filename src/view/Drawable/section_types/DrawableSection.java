@@ -43,6 +43,13 @@ public class DrawableSection {
         return false;
     }
 
+    public DefaultTrack getTrackWithID(int id){
+        for(DefaultTrack t : section.getTracks()){
+            if (t.getId() == id)return t;
+        }
+        return null;
+    }
+
     public void setSection(Section section){
         this.section = section;
     }

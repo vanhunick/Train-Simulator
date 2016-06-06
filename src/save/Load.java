@@ -2,6 +2,7 @@ package save;
 
 import com.sun.org.apache.xpath.internal.SourceTree;
 import model.Section;
+import model.Train;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import view.Drawable.DrawableRollingStock;
@@ -38,6 +39,7 @@ public class Load {
     public LoadedRailway loadFromFile(String filePath){
         System.out.println("Loading File");
         try {
+            // Load in the JSON file into a string
             String str = "";
             Scanner scan = new Scanner(new File(filePath));
             while (scan.hasNext())
@@ -59,9 +61,6 @@ public class Load {
             for (int i = 0; i < sectionsArray.length(); i++){
 
                 JSONObject sectionObject = sectionsArray.getJSONObject(i);
-
-
-
 
                 JSONArray trackArray = sectionObject.getJSONArray("tracks");
 
@@ -93,12 +92,15 @@ public class Load {
                 int length = sectionObject.getInt("length");
                 int from = sectionObject.getInt("from");
                 int to = sectionObject.getInt("to");
+                boolean detect = sectionObject.getBoolean("detect");
 
                 sections[i] = new DrawableSection(new Section(id,length,from,to,tracksInSection));//TODO node sure if will work
+                sections[i].getSection().setCandetect(detect);
             }
 
-            List<DrawableTrain> trains = new ArrayList<>();
-            List<DrawableRollingStock> stocks = new ArrayList<>();
+            // Load the trains and rolling stocks
+            List<DrawableTrain> trains = loadTrains(obj, sections);
+            List<DrawableRollingStock> stocks = loadRollingStocks(obj,sections);
 
             LoadedRailway railway = new LoadedRailway(sections,tracks.toArray(new DefaultTrack[tracks.size()]),trains,stocks);
 
@@ -116,6 +118,51 @@ public class Load {
         System.out.println("Returning null");
         return null;
     }
+
+    public List<DrawableTrain> loadTrains(JSONObject obj, DrawableSection[] sections){
+        List<DrawableTrain> trains = new ArrayList<>();
+
+        JSONArray trainArray = obj.getJSONArray("trains");
+
+        for(int i = 0; i < trainArray.length(); i++){
+            JSONObject trainObject = trainArray.getJSONObject(i);
+
+            int id = trainObject.getInt("id");
+            int curTrack = trainObject.getInt("id");
+            int length = trainObject.getInt("id");
+            int maxSpeed = trainObject.getInt("id");
+            boolean dir = trainObject.getBoolean("direction");
+            boolean ori = trainObject.getBoolean("orientation");
+
+            //TODO acc and decel
+            Train t = new Train(id,length,maxSpeed,dir,ori,0.8,0.8);
+
+            DefaultTrack track = null;
+            DrawableSection section = null;
+            for(DrawableSection s : sections){
+                if(s.getTrackWithID(curTrack) != null){
+                    track = s.getTrackWithID(curTrack);
+                    section = s;
+                    break;
+                }
+            }
+
+            DrawableTrain dt = new DrawableTrain(t,section,track);
+            trains.add(dt);
+        }
+
+        return trains;
+    }
+
+    public List<DrawableRollingStock> loadRollingStocks(JSONObject obj, DrawableSection[] sections){
+        List<DrawableRollingStock> trains = new ArrayList<>();
+
+        JSONArray rollingStockArray = obj.getJSONArray("stocks");
+
+
+        return trains;
+    }
+
 
     public void setUpStartingLocations(DefaultTrack[] tracks, int startTrackIndex, int count){
         if(count == tracks.length-1){
@@ -145,8 +192,10 @@ public class Load {
                 return new Quart3(length,3,id);
             case "Q4":
                 return new Quart4(length,4,id);
-            case "Straight":
+            case "Straight horizontal":
                 return new StraightHoriz(length,0,id);
+            case "Straight vertical":
+                return new StraightVert(length,0,id);
             case "Junction":
                 boolean inbound = trackObject.getBoolean("inbound");
                 return new JunctionTrack(length,6,id,false,inbound);
@@ -173,8 +222,11 @@ public class Load {
                 return new Quart3(x,y,length,3,"RIGHT",id);
             case "Q4":
                 return new Quart4(x,y,length,4,"RIGHT",id);
-            case "Straight":
+            case "Straight horizontal":
                 return new StraightHoriz(x,y,length,0,id,"RIGHT");
+            case "Straight vertical":
+//                return new StraightVert(x,y,length,0,id,"RIGHT");
+                return null;//TODO fix later
             case "Junction":
                 boolean inbound = trackObject.getBoolean("inbound");
                 return new JunctionTrack(x,y,length,6,id,"RIGHT",false,inbound);
@@ -190,10 +242,15 @@ public class Load {
 
     public static void main(String[] args){
         Load load = new Load();
-        LoadedRailway l = load.loadFromFile("src/tracks/simple_track.json");
+        LoadedRailway l = load.loadFromFile("src/tracks/atrackandtrains.json");
+//         l = load.loadFromFile("src/tracks/simple_track.json");
+
         for(DefaultTrack t : l.tracks){
-           // System.out.println(t);
-            System.out.println("X " + t.getStartX() + " Y " + t.getStartY() + " ID " + t.getId());
+            System.out.println(t);
+        }
+
+        for(DrawableTrain dt : l.trains){
+            System.out.println(dt);
         }
 
     }

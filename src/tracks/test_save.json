@@ -1,0 +1,93 @@
+{"sections": [
+ {
+  "junction": 0,
+  "detect": true,
+  "from": 3,
+  "id": 0,
+  "to": 1,
+  "tracks": [{
+   "length": 100,
+   "from": 7,
+   "id": 0,
+   "to": 1,
+   "type": "Straight horizontal"
+  }]
+ },
+ {
+  "junction": 0,
+  "detect": false,
+  "from": 1,
+  "id": 1,
+  "to": 2,
+  "tracks": [
+   {
+    "length": 200,
+    "from": 0,
+    "id": 1,
+    "to": 2,
+    "type": "Q2"
+   },
+   {
+    "length": 200,
+    "from": 1,
+    "id": 2,
+    "to": 3,
+    "type": "Q3"
+   }
+  ]
+ },
+ {
+  "junction": 0,
+  "detect": true,
+  "from": 2,
+  "id": 2,
+  "to": 3,
+  "tracks": [
+   {
+    "length": 100,
+    "from": 2,
+    "id": 3,
+    "to": 4,
+    "type": "Straight horizontal"
+   },
+   {
+    "inbound": true,
+    "length": 50,
+    "from": 3,
+    "id": 4,
+    "to": 5,
+    "type": "Junction"
+   }
+  ]
+ },
+ {
+  "junction": 0,
+  "detect": false,
+  "from": 0,
+  "id": 3,
+  "to": 2,
+  "tracks": [
+   {
+    "length": 200,
+    "from": 4,
+    "id": 5,
+    "to": 6,
+    "type": "Q4"
+   },
+   {
+    "length": 200,
+    "from": 5,
+    "id": 6,
+    "to": 7,
+    "type": "Q1"
+   },
+   {
+    "length": 50,
+    "from": 6,
+    "id": 7,
+    "to": 0,
+    "type": "Straight horizontal"
+   }
+  ]
+ }
+]}
