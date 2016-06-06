@@ -20,10 +20,10 @@ import java.util.Scanner;
 public class Load {
 
     public class LoadedRailway{
-        DrawableSection[] sections;
-        DefaultTrack[] tracks;
-        List<DrawableTrain> trains;
-        List<DrawableRollingStock> stocks;
+        public DrawableSection[] sections;
+        public DefaultTrack[] tracks;
+        public List<DrawableTrain> trains;
+        public List<DrawableRollingStock> stocks;
 
         public LoadedRailway(DrawableSection[] sections, DefaultTrack[] tracks, List<DrawableTrain> trains, List<DrawableRollingStock> stocks){
             this.sections = sections;
@@ -35,10 +35,11 @@ public class Load {
 
 
 
-    public LoadedRailway loadSimpleTrack(){
+    public LoadedRailway loadFromFile(String filePath){
+        System.out.println("Loading File");
         try {
             String str = "";
-            Scanner scan = new Scanner(new File("src/tracks/simple_track.json"));
+            Scanner scan = new Scanner(new File(filePath));
             while (scan.hasNext())
                 str += scan.nextLine();
             scan.close();
@@ -52,25 +53,37 @@ public class Load {
             // Create a new array the size of the array in the file
             DrawableSection[] sections = new DrawableSection[sectionsArray.length()];
 
-
             // Go through each of the sections
             List<DefaultTrack> tracks = new ArrayList<>();
+            int startingTrack = -1;
             for (int i = 0; i < sectionsArray.length(); i++){
 
                 JSONObject sectionObject = sectionsArray.getJSONObject(i);
 
 
 
-                JSONArray trackArray = sectionObject.getJSONArray("tracks");
 
+                JSONArray trackArray = sectionObject.getJSONArray("tracks");
 
                 DefaultTrack[] tracksInSection = new DefaultTrack[trackArray.length()];
 
                 // Go through and create the track array
                 for(int j = 0; j < trackArray.length(); j++){
-                    JSONObject trackObject = trackArray.getJSONObject(i);
-                    tracksInSection[i] = getTrackFromObject(trackObject);
-                    tracks.add(getTrackFromObject(trackObject));
+                    JSONObject trackObject = trackArray.getJSONObject(j);
+                    DefaultTrack track = getTrackFromObject(trackObject);
+
+                    if(j == 0 && sectionObject.getBoolean("start")){
+                        track = getStartTrackFromObject(trackObject);
+                        startingTrack = tracks.size();
+                    }
+
+                    int from = trackObject.getInt("from");
+                    int to = trackObject.getInt("to");
+
+                    track.setFrom(from);
+                    track.setTo(to);
+                    tracks.add(track);
+                    tracksInSection[j] = track;
                 }
 
                 // Create the section object
@@ -81,7 +94,7 @@ public class Load {
                 int from = sectionObject.getInt("from");
                 int to = sectionObject.getInt("to");
 
-                sections[i] = new DrawableSection(new Section(id,length,sections[from].getSection(),sections[to].getSection(),tracksInSection));//TODO node sure if will work
+                sections[i] = new DrawableSection(new Section(id,length,from,to,tracksInSection));//TODO node sure if will work
             }
 
             List<DrawableTrain> trains = new ArrayList<>();
@@ -89,24 +102,35 @@ public class Load {
 
             LoadedRailway railway = new LoadedRailway(sections,tracks.toArray(new DefaultTrack[tracks.size()]),trains,stocks);
 
+            // Set the starts of the tracks
+            setUpStartingLocations(tracks.toArray(new DefaultTrack[tracks.size()]),startingTrack,0);
+
+            System.out.println("Succes Loading Railway File");
+            return railway;
+
         } catch (FileNotFoundException e) {
+            System.out.println("Failed Loading File");
             e.printStackTrace();
         }
 
-
+        System.out.println("Returning null");
         return null;
     }
-//
-//    public DefaultTrack[] getTracksFromSections(DrawableSection[] sections, int numbTracks){
-//        DefaultTrack[] tracks = new DefaultTrack[numbTracks];
-//
-//        for(int i = 0; i < sections.length; i++){
-//            DefaultTrack[] secTracks = sections[i].getTracks();
-//            for(int j = 0; j < secTracks.length; j++){
-//
-//            }
-//        }
-//    }
+
+    public void setUpStartingLocations(DefaultTrack[] tracks, int startTrackIndex, int count){
+        if(count == tracks.length-1){
+            return;
+        }
+        for(int i = 0; i < tracks.length; i++){
+            if(tracks[i].getFrom() == startTrackIndex){
+                System.out.println("ID " + i + " From " + tracks[i].getFrom() + " l " + tracks[i].getLength());
+                tracks[i].setStart(tracks[startTrackIndex]);
+                count++;
+                setUpStartingLocations(tracks,i,count);
+                return;
+            }
+        }
+    }
 
     public static DefaultTrack getTrackFromObject(JSONObject trackObject){
         int id = trackObject.getInt("id");
@@ -134,9 +158,44 @@ public class Load {
         return null;
     }
 
+    public static DefaultTrack getStartTrackFromObject(JSONObject trackObject){
+        int id = trackObject.getInt("id");
+        int length = trackObject.getInt("length");
+        int x = 300;
+        int y = 100;
+
+        switch (trackObject.getString("type")){
+            case "Q1":
+                return new Quart1(x,y,length,1,"RIGHT",id);//TODO put direction in file
+            case "Q2":
+                return new Quart2(x,y,length,2,"RIGHT",id);
+            case "Q3":
+                return new Quart3(x,y,length,3,"RIGHT",id);
+            case "Q4":
+                return new Quart4(x,y,length,4,"RIGHT",id);
+            case "Straight":
+                return new StraightHoriz(x,y,length,0,id,"RIGHT");
+            case "Junction":
+                boolean inbound = trackObject.getBoolean("inbound");
+                return new JunctionTrack(x,y,length,6,id,"RIGHT",false,inbound);
+            default:
+                System.out.println("No Match for type");
+        }
+
+        // Should never happen
+        return null;
+    }
+
+
+
     public static void main(String[] args){
         Load load = new Load();
-        load.loadSimpleTrack();
+        LoadedRailway l = load.loadFromFile("src/tracks/simple_track.json");
+        for(DefaultTrack t : l.tracks){
+           // System.out.println(t);
+            System.out.println("X " + t.getStartX() + " Y " + t.getStartY() + " ID " + t.getId());
+        }
+
     }
 
 

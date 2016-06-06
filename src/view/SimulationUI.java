@@ -13,6 +13,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import model.*;
+import save.Load;
 import view.Drawable.DrawableRollingStock;
 import view.Drawable.DrawableTrain;
 import view.Drawable.section_types.DefaultTrack;
@@ -191,6 +192,10 @@ public class SimulationUI implements MouseEvents{
         vBox.setPrefWidth(WIDTH);
 
         return vBox;
+    }
+
+    public void startWithLoadedRailway(Load.LoadedRailway railway){
+        sim.loadRailway(railway);
     }
 
 

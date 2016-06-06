@@ -70,6 +70,10 @@ public class Quart4 extends DefaultTrack {
                 startX = from.getStartX() + from.getLength()/2 - super.getLength()/2;
                 startY = from.getStartY() + from.getLength()/2 - super.getLength()/2;
             }
+            else if(from.getDrawID() == 6){
+                startX = from.getStartX() - super.getLength()/2;
+                startY = from.getStartY() - super.getLength() + TRACK_WIDTH;
+            }
         }
         setStartX(startX);
         setStartY(startY);

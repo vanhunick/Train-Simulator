@@ -12,10 +12,10 @@ public class Section {
     private double length;
 
     // Section it came from
-    private Section from;
+    private int from;
 
     // Section it goes to
-    private Section to;
+    private int to;
 
     private int toId;
     private int fromId;
@@ -51,7 +51,7 @@ public class Section {
      *
      * @param tracks the tracks inside the section
      * */
-    public Section(int id, double length, Section from, Section to, DefaultTrack[] tracks){
+    public Section(int id, double length, int from, int to, DefaultTrack[] tracks){
         this.canDetect = false;
         this.id = id;
         this.length = length;
@@ -88,14 +88,14 @@ public class Section {
      *
      * @param from the section it originates from
      * */
-    public void setFrom(Section from){this.from = from;}
+    public void setFrom(int from){this.from = from;}
 
     /**
      * Set where the section goes to
      *
      * @param to the section it goes to
      * */
-    public void setTo(Section to){this.to = to;}
+    public void setTo(int to){this.to = to;}
 
     /**
      * Returns the length of the train
@@ -109,14 +109,14 @@ public class Section {
      *
      * @return from section
      * */
-    public Section getFrom() {return from;}
+    public int getFrom() {return from;}
 
     /**
      * Returns the section it goes to
      *
      * @return to section
      * */
-    public Section getTo() {return to;}
+    public int getTo() {return to;}
 
 
     /**
@@ -239,7 +239,7 @@ public class Section {
     }
 
     public String toString(){
-        return "Length " + length + " From " + from.getID() + " To " + to.getID() + " Can Detect " + canDetect;
+        return "Length " + length + " From " + from + " To " + to + " Can Detect " + canDetect;//TODO from and to should access array it is not the id but position in the array
     }
 
 

@@ -62,9 +62,10 @@ public class JunctionTrack extends DefaultTrack {
     /**
      * Constructor for the starting piece
      * */
-    public JunctionTrack(int startX, int startY, int length, int drawID,int id, String direction, boolean thrown){
+    public JunctionTrack(int startX, int startY, int length, int drawID,int id, String direction, boolean thrown, boolean inbound){
         super(startX,startY,length,drawID,id, direction);
         this.thrown = thrown;
+        this.inbound = inbound;
     }
 
     public void setStart(DefaultTrack from){

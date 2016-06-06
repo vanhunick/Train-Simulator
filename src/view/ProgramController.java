@@ -4,6 +4,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.input.MouseEvent;
+import save.Load;
 import view.Drawable.DrawableTrain;
 import view.Drawable.section_types.DrawableSection;
 import view.Panes.EventLog;
@@ -121,6 +122,12 @@ public class ProgramController implements MouseEvents {
 
 
         setMode(BUILDER_MODE);
+    }
+
+    public void setLoadedRailway(Load.LoadedRailway railway){
+        if(mode.equals(VISUALISATION_MODE)){
+            visualisation.startWithLoadedRailway(railway);
+        }
     }
 
     public void keyPressed(String code){

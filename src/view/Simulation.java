@@ -8,6 +8,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import model.*;
+import save.Load;
 import view.Drawable.DrawableRollingStock;
 import view.Drawable.DrawableTrain;
 import view.Drawable.Movable;
@@ -106,6 +107,17 @@ public class Simulation implements MouseEvents {
 //        modelTrack.setSpeed(trains.get(1).getTrain().getId(), 500);
 
         started = true;
+    }
+
+    public void loadRailway(Load.LoadedRailway loadedRailway) {
+        System.out.println("Loading Railway In simulation");
+        this.railway = loadedRailway.sections;
+        this.tracks = loadedRailway.tracks;
+        this.trains = loadedRailway.trains;
+        this.drawableRollingStocks = loadedRailway.stocks;
+
+        movable = CustomTracks.createMovableList(trains, drawableRollingStocks);
+
     }
 
     public void controlMode(){

@@ -1,9 +1,11 @@
 package view.Panes;
 
+import Util.CustomTracks;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import save.Load;
 import view.ProgramController;
 
 /**
@@ -26,8 +28,8 @@ public class TopMenuBar extends MenuBar {
         Menu menuView = new Menu("View");
 
         //List for file
-        MenuItem newTrackItem = new MenuItem("New StraightTrack");
-        MenuItem loadTrackItem = new MenuItem("Load StraightTrack");
+        MenuItem newTrackItem = new MenuItem("New Track");
+        MenuItem loadTrackItem = new MenuItem("Load Track");
         MenuItem simulateItem= new MenuItem("Simulate");
 
         //Handle file events
@@ -65,7 +67,11 @@ public class TopMenuBar extends MenuBar {
 
     // TODO implement
     public void handleLoadTrackPressed(ActionEvent e){
-        System.out.println("Load StraightTrack Pressed");
+        LoadPane l = new LoadPane();
+
+        l.loadRailway();
+        Load.LoadedRailway railway = l.getRailway();
+        controller.setLoadedRailway(railway);
     }
 
 
