@@ -127,9 +127,6 @@ public class Simulation implements MouseEvents {
         this.drawableRollingStocks = loadedRailway.stocks;
 
         movable = CustomTracks.createMovableList(trains, drawableRollingStocks);
-        System.out.println("Trains"  +trains.size());
-        System.out.println("Location " + trains.get(0).getCurrentLocation());
-
         this.modelTrack = new ModelTrack(getTrains(), getSections());
     }
 

@@ -254,6 +254,8 @@ public class TrackBuilder implements MouseEvents{
         DefaultTrack[] tracks = new DefaultTrack[allTracks.size()];
         allTracks.toArray(tracks);
 
+        tracks[0].setFrom(tracks.length-1);
+
         LoadedRailway railway = new LoadedRailway(sections,tracks,trains,stocks);
 
         // Get user to enter a file location to save to
