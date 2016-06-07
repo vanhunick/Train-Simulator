@@ -118,7 +118,6 @@ public class Simulation implements MouseEvents {
         this.drawableRollingStocks = loadedRailway.stocks;
 
         movable = CustomTracks.createMovableList(trains, drawableRollingStocks);
-
     }
 
     public void controlMode(){
@@ -352,19 +351,19 @@ public class Simulation implements MouseEvents {
                 if(UI != null){
                     UI.sendToeventLog(updateTrainOnSection(t.getTrain(), curSection.getSection(),curSection.getSection()),1);
                 }
-
                 modelTrack.sectionChanged(curSection.getSection().getID());
             }
 
-            //find where it belongs to
+            //  Find where it belongs to
             for(DrawableSection ds : railway){
                 if(ds.containsTrack(destinationTrack)){
                     DrawableSection last = t.getCurSection();
                     t.setCurSection(ds);//have to do it this way since the destination is not always the same
                     if(ds.getSection().canDetect()){
                         sendEventToUI(updateTrainOnSection(t.getTrain(), last.getSection(), ds.getSection()),1);
+                        modelTrack.sectionChanged(ds.getSection().getID());
                     }
-                    modelTrack.sectionChanged(ds.getSection().getID());
+
                 }
             }
         }

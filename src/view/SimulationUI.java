@@ -70,10 +70,10 @@ public class SimulationUI implements MouseEvents{
             lastEvent = event;
             eventLog.appendText(event);
             if(status == 1){
-                eventLog.setStyle("-fx-text-fill: green; -fx-font-size: 16;");
+                eventLog.setStyle("-fx-text-fill: green; -fx-font-size: 12;");
             }
             else if(status == 2){
-                eventLog.setStyle("-fx-text-fill: red; -fx-font-size: 16;");
+                eventLog.setStyle("-fx-text-fill: red; -fx-font-size: 12;");
             }
         }
     }
