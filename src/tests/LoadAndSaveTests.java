@@ -36,7 +36,7 @@ public class LoadAndSaveTests {
         JSONObject obj = new JSONObject(str);
 
         Save save = new Save();
-        String JSON = save.save(l,"src/tracks/","test_save");
+        String JSON = save.save(l,"src/tracks/test_save");
         JSON.replaceAll("\\s+", "");
         String orign = obj.toString().replaceAll("\\s+", "");
         int count = 0;

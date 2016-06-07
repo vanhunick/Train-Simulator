@@ -265,7 +265,7 @@ public class TrackBuilder implements MouseEvents{
         File file = fileChooser.showSaveDialog(null);
         if (file != null) {
                 Save s = new Save();
-                s.save(railway,file.getAbsolutePath(),file.getName());
+                s.save(railway,file.getAbsolutePath());
         }
     }
 

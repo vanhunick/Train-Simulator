@@ -17,7 +17,7 @@ public class Save {
 
 
 
-    public String save(LoadedRailway railway, String location, String name){
+    public String save(LoadedRailway railway, String location){
 
         // Create the top level JSON object
         JSONObject railwayObj = new JSONObject();
@@ -32,7 +32,7 @@ public class Save {
         railwayObj.put("stocks", saveRollingStocks(railway.stocks));
 
         try {
-            FileWriter file = new FileWriter(location+""+name+".json");
+            FileWriter file = new FileWriter(location+".json");
             file.write(railwayObj.toString(1));
             file.flush();
             file.close();
@@ -170,6 +170,6 @@ public class Save {
         LoadedRailway l = load.loadFromFile("src/tracks/simple_track.json");
 
         Save save = new Save();
-        save.save(l,"src/tracks/","test_save");
+        save.save(l,"src/tracks/test_save");
     }
 }
