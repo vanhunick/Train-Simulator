@@ -2,11 +2,9 @@ package view.Drawable.section_types;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.ArcType;
-import view.Drawable.DrawableTrain;
 import view.Drawable.Movable;
-
-import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by vanhunick on 14/04/16.
@@ -42,6 +40,7 @@ public class JunctionTrack extends DefaultTrack {
     private Quart2 inDown;
     private Quart4 inRight;
 
+    private List<DefaultTrack> junctionTracks;
 
     /**
      * Constructor for a piece that connects to another piece
@@ -50,13 +49,24 @@ public class JunctionTrack extends DefaultTrack {
         super(length, drawID,id);
         this.thrown = thrown;
         this.inbound = inbound;
-
+        this.junctionTracks = new ArrayList<>();
 
         straightTrack = new StraightHoriz(length,0,1);
+        junctionTracks.add(straightTrack);
+        createAndAddTracks(length);
+    }
+
+    public void createAndAddTracks(int length){
+
         outRightTrack = new Quart1(length+(TRACK_WIDTH/2),1,1);//TODO possibly length/2
         inDown = new Quart2(length+(TRACK_WIDTH/2),2,1);
         outUpTrack = new Quart3(length+(TRACK_WIDTH/2),3,1);
         inRight = new Quart4(length+(TRACK_WIDTH/2),4,1);
+
+        junctionTracks.add(outRightTrack);
+        junctionTracks.add(inDown);
+        junctionTracks.add(outUpTrack);
+        junctionTracks.add(inRight);
     }
 
     /**
@@ -66,6 +76,27 @@ public class JunctionTrack extends DefaultTrack {
         super(startX,startY,length,drawID,id, direction);
         this.thrown = thrown;
         this.inbound = inbound;
+        this.junctionTracks = new ArrayList<>();
+
+        straightTrack = new StraightHoriz(startX,startY,length,0,1,"RIGHT");
+        createAndAddTracks(length);
+
+        if(inbound){
+            inRight.setStartX(straightTrack.getStartX() + straightTrack.getLength() - ((inRight.getLength()-TRACK_WIDTH/2)/2) - TRACK_WIDTH);
+            inRight.setStartY(straightTrack.getStartY() - inRight.getLength() + TRACK_WIDTH);
+
+            inRight.setDirection("UP");// Direction not actually left but it means we can use the method to connect the next peice
+            inDown.setStart(inRight);
+            inDown.setDirection("DOWN");
+            inRight.setDirection("RIGHT");// Change the direction back to what it is supposed to be
+        }
+        else{
+            outUpTrack.setStartX(straightTrack.getStartX() - ((outUpTrack.getLength()-TRACK_WIDTH/2)/2));
+            outUpTrack.setStartY(straightTrack.getStartY() - outUpTrack.getLength() + TRACK_WIDTH);
+            outUpTrack.setDirection("UP");
+            outUpTrack.setMid();
+            outRightTrack.setStart(outUpTrack);
+        }
     }
 
     public void setStart(DefaultTrack from){
@@ -122,6 +153,7 @@ public class JunctionTrack extends DefaultTrack {
     }
 
     private void setTrackColors(boolean thrown){
+//        if (1 ==1 )return;
         if(thrown){
             inDown.setColor(Color.BLUE);
             inRight.setColor(Color.BLUE);
@@ -136,6 +168,10 @@ public class JunctionTrack extends DefaultTrack {
             outRightTrack.setColor(Color.WHITE);
             straightTrack.setColor(Color.WHITE);
         }
+    }
+
+    public void setColor(Color color){
+        junctionTracks.forEach(t -> t.setColor(color));
     }
 
     public void draw(GraphicsContext g){

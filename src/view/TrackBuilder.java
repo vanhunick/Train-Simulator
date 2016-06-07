@@ -41,7 +41,7 @@ public class TrackBuilder implements MouseEvents{
     public static final int WIDTH = 150;
 
     // The number of possible different track pieces you can create
-    public static final int NUMB_PIECES = 6;
+    public static final int NUMB_PIECES = 7;
 
     // Represents the currently selected track piece
     private int selectedBox;
@@ -642,12 +642,19 @@ public class TrackBuilder implements MouseEvents{
 
         DefaultTrack ds5 = new StraightVert((int)x,(int)y, (int)size,5,"RIGHT",0);
 
+
+        x = middleX - DefaultTrack.TRACK_WIDTH /2 - size/4;
+        y+= boxSize + boxGap*2 + size/2;
+
+        DefaultTrack ds6 = new JunctionTrack((int)x,(int)y, (int)size/2,7,0,"RIGHT",false,true);
+
         sections.add(ds0);
         sections.add(ds1);
         sections.add(ds2);
         sections.add(ds3);
         sections.add(ds4);
         sections.add(ds5);
+        sections.add(ds6);
 
         return sections;
     }
