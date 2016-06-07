@@ -57,6 +57,6 @@
     {"id":2, "curTrack":3,"length":15,"maxSpeed":500,"direction":true,"orientation":true}
   ],
   "stocks":[
-    {"id":1, "curTrack":7,"length":15,"direction":true,"orientation":true}
+    {"id":1, "curTrack":7,"length":15,"conTo":-1,"conToUs":-1,"direction":true,"orientation":true}
   ]
 }

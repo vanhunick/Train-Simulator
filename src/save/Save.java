@@ -110,12 +110,32 @@ public class Save {
     }
 
     public JSONArray saveRollingStocks(List<DrawableRollingStock> rollingList){
-        JSONArray trainArray = new JSONArray();
+        JSONArray stockArray = new JSONArray();
 
         for(DrawableRollingStock t : rollingList){
+            JSONObject stockObject = new JSONObject();
 
+            stockObject.put("id",t.getStock().getRollID());
+            stockObject.put("length",t.getStock().getLength());
+            stockObject.put("direction",t.getDirection());
+            stockObject.put("orientation",t.getOrientation());
+
+            if(t.getRollingStockConnected() !=null){
+                stockObject.put("conToUs",t.getRollingStockConnected().getStock().getRollID());
+            }
+            else {
+                stockObject.put("conToUs",-1);
+            }
+
+            // Check if we are connected to anything or anything is connected to us
+            if(t.getConToThis() != null){
+                stockObject.put("conTo",t.getConToThis().getStock().getRollID());
+            }
+            else {
+                stockObject.put("conTo",t.getOrientation());
+            }
         }
-        return trainArray;
+        return stockArray;
     }
 
     public String getTrackType(DefaultTrack track){

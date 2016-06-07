@@ -303,6 +303,10 @@ public class DrawableRollingStock implements Movable{
         this.conToThis = stock;
     }
 
+    public DrawableRollingStock getConToThis(){
+        return conToThis;
+    }
+
 
     /**
      * Returns the amount to move in pixels
@@ -418,5 +422,9 @@ public class DrawableRollingStock implements Movable{
     @Override
     public DefaultTrack getJuncTrack() {
         return juncTrack;
+    }
+
+    public RollingStock getStock(){
+        return this.rollingStock;
     }
 }
