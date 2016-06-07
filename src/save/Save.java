@@ -49,11 +49,22 @@ public class Save {
         // Create the JSON array for each of the sections
         JSONArray sectionArray = new JSONArray();
 
+        boolean start = true;
+
         for(DrawableSection s : sections){
             JSONObject sectionObject = new JSONObject();
             sectionObject.put("id",s.getSection().getID());
+            if(start){
+                sectionObject.put("start",true);
+                start = false;
+            }
+            else{
+                sectionObject.put("start",false);
+            }
+
             sectionObject.put("detect",s.getSection().canDetect());
             sectionObject.put("from",s.getSection().getFrom());
+            sectionObject.put("length",s.getSection().getLength());
             sectionObject.put("to",s.getSection().getTo());
             sectionObject.put("junction",0);//TODO implement later
 
@@ -83,8 +94,18 @@ public class Save {
         JSONArray trainArray = new JSONArray();
 
         for(DrawableTrain t : trainList){
+            JSONObject trainObject = new JSONObject();
 
+            trainObject.put("id",t.getTrain().getId());
+            trainObject.put("curTrack",t.getCurTrack().getId());
+            trainObject.put("length",t.getTrain().getLength());
+            trainObject.put("maxSpeed",t.getTrain().getMaxSpeed());
+            trainObject.put("direction",t.getTrain().getDirection());
+            trainObject.put("orientation",t.getTrain().getOrientation());
+
+            trainArray.put(trainObject);
         }
+
         return trainArray;
     }
 

@@ -243,7 +243,7 @@ public class TrackBuilder implements MouseEvents{
     public void save(){
         // Check if there are tracks that have not been added to a section yet
         if(tracksInSection.size() > 0){
-            nextSection();// Act like the next section button is clicked
+            newSection();// Act like the next section button is clicked
         }
 
         // Sections
@@ -279,7 +279,6 @@ public class TrackBuilder implements MouseEvents{
             sectionTracks[i] = tracksInSection.get(i);
         }
 
-
         // Empty out the tracks
         tracksInSection.clear();
 
@@ -288,6 +287,11 @@ public class TrackBuilder implements MouseEvents{
         // Set the Section to be from the one before
         s.setFrom(sectionsForTrack.size()-1);
         DrawableSection ds = new DrawableSection(s);
+
+        if(alternate){
+            ds.getSection().setCandetect(shouldDetect);
+            shouldDetect = !shouldDetect;
+        }
 
         sectionsForTrack.add(ds);
         curSectionID++;
@@ -388,8 +392,9 @@ public class TrackBuilder implements MouseEvents{
         if(menu.addTrain()){
             String selectedTrain = menu.getCurTrainSelection();
             if(selectedTrain.equals("British Rail Class 25")){
-                Train train1 = new Train(getNextTrainID(), 80, 500, true,true, 0.2, 0.5);
+                Train train1 = new Train(getNextTrainID(), menu.getLength(), 500, true,true, 0.2, 0.5);
                 DrawableTrain drawableTrain1 = new DrawableTrain(train1, getSection(dt),dt);
+                drawableTrain1.setUpImage();
                 trains.add(drawableTrain1);
             }
             else if(selectedTrain.equals("British Rail Class 108 (DMU)")){
@@ -527,14 +532,7 @@ public class TrackBuilder implements MouseEvents{
     private boolean shouldDetect = true;
 
 
-    public void nextSection(){
 
-
-        if(alternate){
-            curentSection.getSection().setCandetect(shouldDetect);
-            shouldDetect = !shouldDetect;
-        }
-    }
 
     public void addPiece(){
         if(allTracks.size() == 0){
