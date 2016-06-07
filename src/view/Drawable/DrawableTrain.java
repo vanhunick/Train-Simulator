@@ -388,7 +388,6 @@ public class DrawableTrain implements Movable{
         temp = Double.doubleToLongBits(width);
         result = (int) (temp ^ (temp >>> 32));
         result = 31 * result + train.hashCode();
-        result = 31 * result + rollingStockConnected.hashCode();
         result = 31 * result + (int) (temp ^ (temp >>> 32));
         result = 31 * result + (lastDirection ? 1 : 0);
         result = 31 * result + (crashed ? 1 : 0);

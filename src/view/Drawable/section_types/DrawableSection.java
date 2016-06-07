@@ -45,7 +45,9 @@ public class DrawableSection {
 
     public DefaultTrack getTrackWithID(int id){
         for(DefaultTrack t : section.getTracks()){
-            if (t.getId() == id)return t;
+            if (t.getId() == id){
+                return t;
+            }
         }
         return null;
     }

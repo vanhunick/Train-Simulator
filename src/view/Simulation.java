@@ -6,9 +6,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 import model.*;
-import save.Load;
 import save.LoadedRailway;
 import view.Drawable.DrawableRollingStock;
 import view.Drawable.DrawableTrain;
@@ -89,6 +87,7 @@ public class Simulation implements MouseEvents {
         trains = CustomTracks.getDefaultTrains(railway);
         movable = CustomTracks.createMovableList(trains,drawableRollingStocks);
 
+
         // Connected to test
 //        trains = CustomTracks.getConnectTestTrains(railway,this);
 //        drawableRollingStocks = CustomTracks.getConnectTestRollingStock(railway);
@@ -117,7 +116,21 @@ public class Simulation implements MouseEvents {
         this.trains = loadedRailway.trains;
         this.drawableRollingStocks = loadedRailway.stocks;
 
+
+
+        // Set up the images for the trains and stocks
+        trains.forEach(t -> t.setUpImage());
+        trains.forEach(t -> movable.add(t));
+        drawableRollingStocks.forEach(s -> s.setUpImage());
+        drawableRollingStocks.forEach(s -> movable.add(s));
+
+        this.drawableRollingStocks = loadedRailway.stocks;
+
         movable = CustomTracks.createMovableList(trains, drawableRollingStocks);
+        System.out.println("Trains"  +trains.size());
+        System.out.println("Location " + trains.get(0).getCurrentLocation());
+
+        this.modelTrack = new ModelTrack(getTrains(), getSections());
     }
 
     public void controlMode(){

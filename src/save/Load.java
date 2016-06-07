@@ -86,24 +86,26 @@ public class Load {
                 sections[i].getSection().setCandetect(detect);
             }
 
+
+
+
+            // Set the starts of the tracks
+            setUpStartingLocations(tracks.toArray(new DefaultTrack[tracks.size()]),startingTrack,0);
+
+
             // Load the trains and rolling stocks
             List<DrawableTrain> trains = loadTrains(obj, sections);
             List<DrawableRollingStock> stocks = loadRollingStocks(obj,sections);
 
             LoadedRailway railway = new LoadedRailway(sections,tracks.toArray(new DefaultTrack[tracks.size()]),trains,stocks);
 
-            // Set the starts of the tracks
-            setUpStartingLocations(tracks.toArray(new DefaultTrack[tracks.size()]),startingTrack,0);
-
-            System.out.println("Succes Loading Railway File");
+            System.out.println("Success Loading Railway File");
             return railway;
 
         } catch (FileNotFoundException e) {
             System.out.println("Failed Loading File");
             e.printStackTrace();
         }
-
-        System.out.println("Returning null");
         return null;
     }
 
@@ -116,9 +118,9 @@ public class Load {
             JSONObject trainObject = trainArray.getJSONObject(i);
 
             int id = trainObject.getInt("id");
-            int curTrack = trainObject.getInt("id");
-            int length = trainObject.getInt("id");
-            int maxSpeed = trainObject.getInt("id");
+            int curTrack = trainObject.getInt("curTrack");
+            int length = trainObject.getInt("length");
+            int maxSpeed = trainObject.getInt("maxSpeed");
             boolean dir = trainObject.getBoolean("direction");
             boolean ori = trainObject.getBoolean("orientation");
 
@@ -158,7 +160,6 @@ public class Load {
         }
         for(int i = 0; i < tracks.length; i++){
             if(tracks[i].getFrom() == startTrackIndex){
-                System.out.println("ID " + i + " From " + tracks[i].getFrom() + " l " + tracks[i].getLength());
                 tracks[i].setStart(tracks[startTrackIndex]);
                 count++;
                 setUpStartingLocations(tracks,i,count);

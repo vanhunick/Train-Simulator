@@ -132,6 +132,7 @@ public class StraightHoriz extends DefaultTrack {
     }
 
     public double getInitialX(double trainWidth){
+        System.out.println("Getting initial");
         return super.getStartX() + super.getLength()/2;//place it in the middle of the track
     }
 
