@@ -14,6 +14,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import model.*;
 import save.Load;
+import save.LoadedRailway;
 import view.Drawable.DrawableRollingStock;
 import view.Drawable.DrawableTrain;
 import view.Drawable.section_types.DefaultTrack;
@@ -194,7 +195,7 @@ public class SimulationUI implements MouseEvents{
         return vBox;
     }
 
-    public void startWithLoadedRailway(Load.LoadedRailway railway){
+    public void startWithLoadedRailway(LoadedRailway railway){
         sim.loadRailway(railway);
     }
 

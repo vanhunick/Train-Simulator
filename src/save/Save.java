@@ -17,7 +17,7 @@ public class Save {
 
 
 
-    public String save(Load.LoadedRailway railway, String location, String name){
+    public String save(LoadedRailway railway, String location, String name){
 
         // Create the top level JSON object
         JSONObject railwayObj = new JSONObject();
@@ -126,7 +126,7 @@ public class Save {
 
     public static void main(String[] args){
         Load load = new Load();
-        Load.LoadedRailway l = load.loadFromFile("src/tracks/simple_track.json");
+        LoadedRailway l = load.loadFromFile("src/tracks/simple_track.json");
 
         Save save = new Save();
         save.save(l,"src/tracks/","test_save");

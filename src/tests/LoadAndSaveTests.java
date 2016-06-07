@@ -3,6 +3,7 @@ package tests;
 import org.json.JSONObject;
 import org.junit.Test;
 import save.Load;
+import save.LoadedRailway;
 import save.Save;
 
 import java.io.File;
@@ -17,7 +18,7 @@ public class LoadAndSaveTests {
     @Test
     public void loadAndSaveEqaulity(){
         Load load = new Load();
-        Load.LoadedRailway l = load.loadFromFile("src/tracks/simple_track.json");
+        LoadedRailway l = load.loadFromFile("src/tracks/simple_track.json");
 
 
         String str = "";

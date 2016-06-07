@@ -1,5 +1,6 @@
 package view;
 
+import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Insets;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
@@ -9,15 +10,22 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.stage.FileChooser;
 import model.RollingStock;
 import model.Section;
 import model.Train;
+import save.Load;
+import save.LoadedRailway;
+import save.Save;
 import view.Drawable.DrawableRollingStock;
 import view.Drawable.DrawableTrain;
 import view.Drawable.section_types.*;
 import view.Panes.ErrorDialog;
 import view.Panes.TrackMenu;
 
+import javax.imageio.ImageIO;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -215,20 +223,48 @@ public class TrackBuilder implements MouseEvents{
         Button undo = new Button("Undo StraightTrack");
         Button addTrainMenu = new Button("Add Train");
         Button completeSection = new Button("New Section");
+        Button save = new Button("Save");
 
         CheckBox alternate = new CheckBox("Alternate");
         alternate.setSelected(true);
         alternate.setOnAction(e -> alternateCheckBoxEvent(alternate));
 
-
+        save.setOnAction(e -> save());
         undo.setOnAction(e -> undo());
         sim.setOnAction(e -> simulateTrack());
         clear.setOnAction(e -> clear());
         completeSection.setOnAction(e -> newSection());
 
-        vBox.getChildren().addAll(sim,clear,undo,addTrainMenu,alternate,completeSection);
+        vBox.getChildren().addAll(sim,clear,undo,addTrainMenu,completeSection,save,alternate);
         vBox.setPrefWidth(WIDTH);
         return vBox;
+    }
+
+    public void save(){
+        // Check if there are tracks that have not been added to a section yet
+        if(tracksInSection.size() > 0){
+            nextSection();// Act like the next section button is clicked
+        }
+
+        // Sections
+        DrawableSection[] sections = new DrawableSection[sectionsForTrack.size()];
+        sectionsForTrack.toArray(sections);
+
+        // Tracks
+        DefaultTrack[] tracks = new DefaultTrack[allTracks.size()];
+        allTracks.toArray(tracks);
+
+        LoadedRailway railway = new LoadedRailway(sections,tracks,trains,stocks);
+
+        // Get user to enter a file location to save to
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save Railway");
+
+        File file = fileChooser.showSaveDialog(null);
+        if (file != null) {
+                Save s = new Save();
+                s.save(railway,file.getAbsolutePath(),file.getName());
+        }
     }
 
     public void newSection(){
@@ -243,18 +279,19 @@ public class TrackBuilder implements MouseEvents{
             sectionTracks[i] = tracksInSection.get(i);
         }
 
+
         // Empty out the tracks
         tracksInSection.clear();
 
         Section s = new Section(curSectionID,100,sectionTracks);//TODO do length later
+
+        // Set the Section to be from the one before
+        s.setFrom(sectionsForTrack.size()-1);
         DrawableSection ds = new DrawableSection(s);
 
         sectionsForTrack.add(ds);
         curSectionID++;
     }
-
-
-
 
     /**
      * Toggle the checkbox for alternating exampleTracks
@@ -292,7 +329,9 @@ public class TrackBuilder implements MouseEvents{
     public void undo(){
         if(tracksInSection.size() > 0){
             this.tracksInSection.remove(tracksInSection.size()-1);
-            this.shouldDetect = !shouldDetect;//reverse it
+        }
+        if(allTracks.size() > 0){
+            this.allTracks.remove(allTracks.size()-1);
         }
     }
 
@@ -392,16 +431,13 @@ public class TrackBuilder implements MouseEvents{
 
 
     public DefaultTrack getTrack(double x, double y){
-        for(DefaultTrack s : tracksInSection){
+        for(DefaultTrack s : allTracks){
             if(s.containsPoint(x,y)){
                 return s;
             }
         }
         return null;
     }
-
-
-
 
     @Override
     public void mousePressed(double x, double y, MouseEvent e) {}
@@ -411,7 +447,7 @@ public class TrackBuilder implements MouseEvents{
 
     @Override
     public void mouseClicked(double x, double y, MouseEvent e){
-        int numbSections = tracksInSection.size();
+        int numbSections = allTracks.size();
 
         if(e.getButton().equals(MouseButton.PRIMARY)){
             if(e.getClickCount() == 2){
@@ -431,17 +467,17 @@ public class TrackBuilder implements MouseEvents{
             }
         }
 
-        if(tracksInSection.size() < numbSections){
+        if(allTracks.size() < numbSections){
             curId--;//StraightTrack was removed can free vup ID
         }
-        else if(tracksInSection.size() > numbSections){
+        else if(allTracks.size() > numbSections){
             curId++;//Added a track need to increment the ID
         }
     }
 
     @Override
     public void mouseMoved(double x, double y, MouseEvent e){
-        for(DefaultTrack d : tracksInSection){
+        for(DefaultTrack d : allTracks){
             if(d.containsPoint(x,y)){
                 d.setMouseOn(true);
             }
@@ -459,6 +495,7 @@ public class TrackBuilder implements MouseEvents{
 
     public void addFirstPiece(){
         DefaultTrack ds0 = null;
+
         if(selectedBox == 0){
             ds0 = new StraightHoriz((int)trackStartX,(int)trackStartY, (int)pieceSize,0,curId, "RIGHT");
         }
@@ -500,7 +537,7 @@ public class TrackBuilder implements MouseEvents{
     }
 
     public void addPiece(){
-        if(tracksInSection.size() == 0){
+        if(allTracks.size() == 0){
             addFirstPiece();
             return;
         }
@@ -531,9 +568,14 @@ public class TrackBuilder implements MouseEvents{
             return; // No box selected
         }
 
+
         ds1.setStart(allTracks.get(allTracks.size()-1));
         allTracks.add(ds1);
         tracksInSection.add(ds1);
+
+        // Set the from and to for the tracks
+        allTracks.get(allTracks.size()-1).setFrom(allTracks.size()-2);//TODO does not handle junction tracks yet
+        allTracks.get(allTracks.size()-2).setTo(allTracks.size()-1);
     }
 
     public void selectPiece(double x, double y){

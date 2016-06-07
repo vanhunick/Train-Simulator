@@ -3,6 +3,7 @@ package view.Panes;
 import javafx.scene.control.Button;
 import javafx.stage.FileChooser;
 import save.Load;
+import save.LoadedRailway;
 
 import java.io.File;
 
@@ -12,7 +13,7 @@ import java.io.File;
 public class LoadPane {
 
 
-    private Load.LoadedRailway railway;
+    private LoadedRailway railway;
 
     public void loadRailway(){
         FileChooser fileChooser = new FileChooser();
@@ -30,7 +31,7 @@ public class LoadPane {
         railway = load.loadFromFile(file.getAbsolutePath());
     }
 
-    public Load.LoadedRailway getRailway(){
+    public LoadedRailway getRailway(){
         return railway;
     }
 }

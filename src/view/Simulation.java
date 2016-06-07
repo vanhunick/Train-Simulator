@@ -9,6 +9,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import model.*;
 import save.Load;
+import save.LoadedRailway;
 import view.Drawable.DrawableRollingStock;
 import view.Drawable.DrawableTrain;
 import view.Drawable.Movable;
@@ -109,7 +110,7 @@ public class Simulation implements MouseEvents {
         started = true;
     }
 
-    public void loadRailway(Load.LoadedRailway loadedRailway) {
+    public void loadRailway(LoadedRailway loadedRailway) {
         System.out.println("Loading Railway In simulation");
         this.railway = loadedRailway.sections;
         this.tracks = loadedRailway.tracks;

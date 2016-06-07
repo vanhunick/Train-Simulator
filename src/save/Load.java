@@ -20,19 +20,7 @@ import java.util.Scanner;
  */
 public class Load {
 
-    public class LoadedRailway{
-        public DrawableSection[] sections;
-        public DefaultTrack[] tracks;
-        public List<DrawableTrain> trains;
-        public List<DrawableRollingStock> stocks;
 
-        public LoadedRailway(DrawableSection[] sections, DefaultTrack[] tracks, List<DrawableTrain> trains, List<DrawableRollingStock> stocks){
-            this.sections = sections;
-            this.tracks = tracks;
-            this.trains = trains;
-            this.stocks = stocks;
-        }
-    }
 
 
 

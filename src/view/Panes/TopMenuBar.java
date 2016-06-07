@@ -6,6 +6,7 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import save.Load;
+import save.LoadedRailway;
 import view.ProgramController;
 
 /**
@@ -70,7 +71,7 @@ public class TopMenuBar extends MenuBar {
         LoadPane l = new LoadPane();
 
         l.loadRailway();
-        Load.LoadedRailway railway = l.getRailway();
+        LoadedRailway railway = l.getRailway();
         controller.setLoadedRailway(railway);
     }
 
