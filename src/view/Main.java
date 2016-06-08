@@ -66,8 +66,10 @@ public class Main extends Application {
         canvas.setOnMouseDragged(e -> controller.mouseDragged(e.getX(), e.getY(),e));
 
 
+
         setupGUI(primaryStage, scene, root,canvas);
         controller.setDefMode(bl,canvas);
+
 
         lastTime = System.nanoTime();
         setupAnimationTimer(primaryStage,canvas);
@@ -84,13 +86,13 @@ public class Main extends Application {
         topToolBar.setPrefWidth(SCREEN_WIDTH/2);
         TopMenuBar topMenuBar = new TopMenuBar(controller);
         topMenuBar.setPrefWidth(SCREEN_WIDTH/2);
-        topMenuBar.setMinHeight(35);
-        topToolBar.setPrefHeight(35);
+        topMenuBar.setMinHeight(40);
+        topToolBar.setPrefHeight(40);
 
         HBox barBox = new HBox();
 
         barBox.getChildren().addAll(topMenuBar,topToolBar);
-
+        controller.setToolBar(topToolBar);
 
 
         primaryStage.setHeight(SCREEN_HEIGHT);
@@ -158,6 +160,7 @@ public class Main extends Application {
             }
         }.start();
     }
+
 
     public static void main(String[] args) {
         Application.launch(args);

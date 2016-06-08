@@ -75,6 +75,7 @@ public class Simulation implements MouseEvents {
     }
 
 
+
     /**
      * Sets the default track and trains
      * */
@@ -144,7 +145,8 @@ public class Simulation implements MouseEvents {
         started = true;
     }
 
-    public void start(String mode){
+    public void start(){
+        String mode = UI.getSelectedMode();
         // If the section the train is on can detect set on to be true
         for(DrawableTrain t : trains){
             if(t.getCurSection().getSection().canDetect()){

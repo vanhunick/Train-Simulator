@@ -79,6 +79,10 @@ public class SimulationUI implements MouseEvents{
     }
 
 
+    public String getSelectedMode(){
+        return this.selectedMode;
+    }
+
     /**
      * Updates the trains
      * */
@@ -147,9 +151,6 @@ public class SimulationUI implements MouseEvents{
     private VBox getVisualisationButtons(){
         VBox vBox = new VBox(8);
         vBox.setPadding(new Insets(5,5,5,5));
-        Button start = new Button("Start Simulation");
-        Button restart = new Button("Restart");
-        Button pause = new Button("Pause");
         Button event = new Button("Event");
 
         RadioButton test = new RadioButton("Test");
@@ -183,13 +184,9 @@ public class SimulationUI implements MouseEvents{
             }
         });
 
-
-        start.setOnAction(e -> sim.start(selectedMode));
-        restart.setOnAction(e -> sim.restart());
-        pause.setOnAction(e -> sim.pause());
         event.setOnAction(e -> startEventDialog());
 
-        vBox.getChildren().addAll(start,restart, pause,event, user, test,controller);
+        vBox.getChildren().addAll(event, user, test,controller);
         vBox.setPrefWidth(WIDTH);
 
         return vBox;
@@ -253,6 +250,10 @@ public class SimulationUI implements MouseEvents{
         else if(code.equals("DOWN")){
             sim.moveTrain(false);
         }
+    }
+
+    public Simulation getSim(){
+        return this.sim;
     }
 
     @Override

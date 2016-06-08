@@ -8,6 +8,7 @@ import save.LoadedRailway;
 import view.Drawable.DrawableTrain;
 import view.Drawable.section_types.DrawableSection;
 import view.Panes.EventLog;
+import view.Panes.TopToolBar;
 
 import java.util.List;
 
@@ -18,10 +19,10 @@ public class ProgramController implements MouseEvents {
     public static final String BUILDER_MODE = "builder_mode";
 
     // The current mode
-    private String mode;
+    private String mode = "NO_MODE";
 
     // The modes
-    private SimulationUI visualisation;
+    private SimulationUI simulationUI;
     private TrackBuilder trackBuilder;
 
     // The place to send the mouse events to
@@ -30,16 +31,18 @@ public class ProgramController implements MouseEvents {
     // Used for adding and removing the UI elements for different modes
     private BorderPane borderPane;
 
+    private TopToolBar toolBar;
+
 
     // Canvas
     private Canvas canvas;
     /**
-     * The default mode is the visualisation mode with it default track and trains
+     * The default mode is the simulationUI mode with it default track and trains
      * */
     public void setDefMode(BorderPane borderPane, Canvas canvas){
-        visualisation = new SimulationUI();
+        simulationUI = new SimulationUI();
         this.canvas = canvas;
-        visualisation.addUIElementsToLayout(borderPane);
+        simulationUI.addUIElementsToLayout(borderPane);
 
         setMode(ProgramController.VISUALISATION_MODE);
     }
@@ -54,10 +57,12 @@ public class ProgramController implements MouseEvents {
         if(modeToSet.equals(mode))return;//mode passed in already set
 
         if(modeToSet.equals(VISUALISATION_MODE)){
+            toolBar.enableButtons(true);
             this.mode = VISUALISATION_MODE;
-            curMode = visualisation;
+            curMode = simulationUI;
         }
         else if(modeToSet.equals(BUILDER_MODE)){
+            toolBar.enableButtons(false);
             this.mode = BUILDER_MODE;
             setBuilderMode();
             trackBuilder.updateSize();
@@ -74,7 +79,7 @@ public class ProgramController implements MouseEvents {
      * */
     public void update(){
         if(mode.equals(VISUALISATION_MODE)){
-            visualisation.update();
+            simulationUI.update();
         }
         else if(mode.equals(BUILDER_MODE)){
             trackBuilder.update();
@@ -86,7 +91,7 @@ public class ProgramController implements MouseEvents {
      * */
     public void refresh(GraphicsContext g){
         if(mode.equals(VISUALISATION_MODE)){
-            visualisation.refresh(g);
+            simulationUI.refresh(g);
         }
         else if(mode.equals(BUILDER_MODE)){
             trackBuilder.refresh(g);
@@ -100,10 +105,10 @@ public class ProgramController implements MouseEvents {
     public void setVisualisationMode(DrawableSection[] track, List<DrawableTrain> trains){
         canvas.setWidth(canvas.getWidth() - EventLog.WIDTH);
 
-        visualisation = new SimulationUI();
+        simulationUI = new SimulationUI();
 
         trackBuilder.removeUIElementsFromLayout(borderPane);
-        visualisation.addUIElementsToLayout(borderPane);
+        simulationUI.addUIElementsToLayout(borderPane);
         setMode(VISUALISATION_MODE);
     }
 
@@ -113,10 +118,10 @@ public class ProgramController implements MouseEvents {
      * */
     public void setBuilderMode(){
         this.trackBuilder = new TrackBuilder(this);// Pass the controller to the builder
-        visualisation.removeUIElementsFromLayout(borderPane);
+        simulationUI.removeUIElementsFromLayout(borderPane);
         trackBuilder.addUIElementsToLayout(borderPane);
 
-        if(visualisation.logShowing()){
+        if(simulationUI.logShowing()){
             canvas.setWidth(canvas.getWidth() + EventLog.WIDTH);// WHY 20?????
         }
 
@@ -126,8 +131,12 @@ public class ProgramController implements MouseEvents {
 
     public void setLoadedRailway(LoadedRailway railway){
         if(mode.equals(VISUALISATION_MODE)){
-            visualisation.startWithLoadedRailway(railway);
+            simulationUI.startWithLoadedRailway(railway);
         }
+    }
+
+    public void setToolBar(TopToolBar toolBar){
+        this.toolBar = toolBar;
     }
 
     public void keyPressed(String code){
@@ -164,15 +173,14 @@ public class ProgramController implements MouseEvents {
 
     public void toggleLogView(){
         if(mode.equals(VISUALISATION_MODE)){
-            visualisation.toggleLog(borderPane);
+            simulationUI.toggleLog(borderPane);
 
-            if(visualisation.logShowing()){
+            if(simulationUI.logShowing()){
                 canvas.setWidth(canvas.getWidth() - EventLog.WIDTH);
             }
             else {
                 canvas.setWidth(canvas.getWidth() + EventLog.WIDTH);
             }
-
         }
     }
 
@@ -186,5 +194,9 @@ public class ProgramController implements MouseEvents {
         return borderPane.getCenter().getLayoutBounds().getHeight();
     }
 
-    public SimulationUI getVisualisation(){return this.visualisation;}
+    public SimulationUI getSimulationUI(){return this.simulationUI;}
+
+    public String gerMode(){
+        return this.mode;
+    }
 }
