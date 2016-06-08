@@ -7,10 +7,13 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import view.Panes.EventLog;
 import view.Panes.TopMenuBar;
+import view.Panes.TopToolBar;
+
 import java.util.ArrayList;
 
 public class Main extends Application {
@@ -77,12 +80,24 @@ public class Main extends Application {
         bl = new BorderPane();
         controller.setBorderPane(bl);
 
+        TopToolBar topToolBar = new TopToolBar(controller);
+        topToolBar.setPrefWidth(SCREEN_WIDTH/2);
         TopMenuBar topMenuBar = new TopMenuBar(controller);
+        topMenuBar.setPrefWidth(SCREEN_WIDTH/2);
+        topMenuBar.setMinHeight(35);
+        topToolBar.setPrefHeight(35);
+
+        HBox barBox = new HBox();
+
+        barBox.getChildren().addAll(topMenuBar,topToolBar);
+
+
 
         primaryStage.setHeight(SCREEN_HEIGHT);
         primaryStage.setWidth(SCREEN_WIDTH);
 
-        bl.setTop(topMenuBar);//Need to add first as it is being used to calculate offset
+//        bl.setTop(topMenuBar);//Need to add first as it is being used to calculate offset
+        bl.setTop(barBox);//Need to add first as it is being used to calculate offset
         bl.setCenter(canvas);
 
         canvas.setWidth(SCREEN_WIDTH- EventLog.WIDTH - Simulation.WIDTH);//TODO do better later

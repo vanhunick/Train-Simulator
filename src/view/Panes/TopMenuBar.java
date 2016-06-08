@@ -2,9 +2,7 @@ package view.Panes;
 
 import Util.CustomTracks;
 import javafx.event.ActionEvent;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
+import javafx.scene.control.*;
 import save.Load;
 import save.LoadedRailway;
 import view.ProgramController;
@@ -52,8 +50,11 @@ public class TopMenuBar extends MenuBar {
         // Add the view items
         menuView.getItems().add(log);
 
+
+
         //Add to the menu bar
         this.getMenus().addAll(menuFile, menuEdit, menuView);
+
     }
 
     public void handleNewTrackPressed(ActionEvent e){
