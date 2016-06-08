@@ -20,6 +20,7 @@ public class TopToolBar extends ToolBar {
     Button play;
     Button pause;
     Button stop;
+    Button event;
 
 
     public TopToolBar(ProgramController controller){
@@ -29,22 +30,30 @@ public class TopToolBar extends ToolBar {
         Image playImage = new Image("file:src/res/play.png",imageSize,imageSize,false,false);
         Image pauseImage = new Image("file:src/res/pause.png",imageSize,imageSize,false,false);
         Image stopImage = new Image("file:src/res/stop.png",imageSize,imageSize,false,false);
+        Image eventImage = new Image("file:src/res/event.png",imageSize,imageSize,false,false);
 
         play = new Button("", new ImageView(playImage));
         pause = new Button("",new ImageView(pauseImage));
         stop = new Button("",new ImageView(stopImage));
+        event = new Button("E",new ImageView(eventImage));
 
         // use hbox
         HBox buttonBox = new HBox(5);
         buttonBox.setPrefWidth(this.getPrefWidth());
         buttonBox.setAlignment(Pos.BASELINE_RIGHT);
-        buttonBox.getChildren().addAll(play,stop,pause);
+        buttonBox.getChildren().addAll(event,play,stop,pause);
         HBox.setHgrow( buttonBox, Priority.ALWAYS );
 
 
         if(!controller.gerMode().equals(ProgramController.VISUALISATION_MODE)){
             enableButtons(false);
         }
+
+        event.setOnAction(e -> {
+            if(controller.gerMode().equals(ProgramController.VISUALISATION_MODE)){
+                controller.getSimulationUI().startEventDialog();
+            }
+        });
 
         play.setOnAction(e -> {
             if(controller.gerMode().equals(ProgramController.VISUALISATION_MODE)){
@@ -77,12 +86,15 @@ public class TopToolBar extends ToolBar {
             play.setDisable(false);
             stop.setDisable(false);
             pause.setDisable(false);
+            event.setDisable(false);
+
 
         }
         else{
             play.setDisable(true);
             stop.setDisable(true);
             pause.setDisable(true);
+            event.setDisable(true);
         }
     }
 }

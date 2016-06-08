@@ -151,7 +151,7 @@ public class SimulationUI implements MouseEvents{
     private VBox getVisualisationButtons(){
         VBox vBox = new VBox(8);
         vBox.setPadding(new Insets(5,5,5,5));
-        Button event = new Button("Event");
+
 
         RadioButton test = new RadioButton("Test");
         test.setToggleGroup(mode);
@@ -184,9 +184,7 @@ public class SimulationUI implements MouseEvents{
             }
         });
 
-        event.setOnAction(e -> startEventDialog());
-
-        vBox.getChildren().addAll(event, user, test,controller);
+        vBox.getChildren().addAll(user, test,controller);
         vBox.setPrefWidth(WIDTH);
 
         return vBox;
