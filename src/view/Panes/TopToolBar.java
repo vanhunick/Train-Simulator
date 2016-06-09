@@ -21,27 +21,44 @@ public class TopToolBar extends ToolBar {
     Button pause;
     Button stop;
     Button event;
+    Button newSec;
+    Button newTrain;
+    Button undoBut;
+
 
 
     public TopToolBar(ProgramController controller){
         int imageSize = 20;
 
         //Icon made by Freepik from www.flaticon.com
+
+        // Simulation Icons
         Image playImage = new Image("file:src/res/play.png",imageSize,imageSize,false,false);
         Image pauseImage = new Image("file:src/res/pause.png",imageSize,imageSize,false,false);
         Image stopImage = new Image("file:src/res/stop.png",imageSize,imageSize,false,false);
         Image eventImage = new Image("file:src/res/event.png",imageSize,imageSize,false,false);
+
+        // Track Builder Icons
+        Image newSection = new Image("file:src/res/train-rails.png",imageSize,imageSize,false,false);
+        Image undo = new Image("file:src/res/undo.png",imageSize,imageSize,false,false);
+        Image train = new Image("file:src/res/metro.png",imageSize,imageSize,false,false);
+
 
         play = new Button("", new ImageView(playImage));
         pause = new Button("",new ImageView(pauseImage));
         stop = new Button("",new ImageView(stopImage));
         event = new Button("E",new ImageView(eventImage));
 
+        newSec = new Button("",new ImageView(newSection));
+        undoBut = new Button("",new ImageView(undo));
+        newTrain = new Button("",new ImageView(train));
+
+
         // use hbox
         HBox buttonBox = new HBox(5);
         buttonBox.setPrefWidth(this.getPrefWidth());
         buttonBox.setAlignment(Pos.BASELINE_RIGHT);
-        buttonBox.getChildren().addAll(event,play,stop,pause);
+        buttonBox.getChildren().addAll(newSec,undoBut,newTrain,event,play,stop,pause);
         HBox.setHgrow( buttonBox, Priority.ALWAYS );
 
 

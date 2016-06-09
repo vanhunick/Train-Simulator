@@ -86,14 +86,13 @@ public class Main extends Application {
         topToolBar.setPrefWidth(SCREEN_WIDTH/2);
         TopMenuBar topMenuBar = new TopMenuBar(controller);
         topMenuBar.setPrefWidth(SCREEN_WIDTH/2);
-        topMenuBar.setMinHeight(40);
-        topToolBar.setPrefHeight(40);
+        topMenuBar.setMinHeight(45);
+        topToolBar.setPrefHeight(45);
 
         HBox barBox = new HBox();
 
         barBox.getChildren().addAll(topMenuBar,topToolBar);
         controller.setToolBar(topToolBar);
-
 
         primaryStage.setHeight(SCREEN_HEIGHT);
         primaryStage.setWidth(SCREEN_WIDTH);
@@ -102,7 +101,7 @@ public class Main extends Application {
         bl.setTop(barBox);//Need to add first as it is being used to calculate offset
         bl.setCenter(canvas);
 
-        canvas.setWidth(SCREEN_WIDTH- EventLog.WIDTH - Simulation.WIDTH);//TODO do better later
+        canvas.setWidth(SCREEN_WIDTH- EventLog.WIDTH - Simulation.WIDTH);
         canvas.setHeight(SCREEN_HEIGHT - TopMenuBar.HEIGHT);
 
 
