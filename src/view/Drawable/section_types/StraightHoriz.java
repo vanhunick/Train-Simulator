@@ -171,10 +171,14 @@ public class StraightHoriz extends DefaultTrack {
             g.setStroke(Color.GREEN);
         }
 
-        // Draw the
-        g.setStroke(Color.ROSYBROWN);
-        g.setLineWidth(3);
 
+        // Set the background Color
+//        g.setFill(DefaultTrack.BACKGROUND_COLOR);
+//        g.fillRect(super.getStartX(),super.getStartY() - 10,super.getLength(),TRACK_WIDTH + 20);
+
+
+        g.setStroke(DefaultTrack.RAIL_COLOR);
+        g.setLineWidth(3);
 
         double y = super.getStartY() -5;
         double ey = super.getStartY() + TRACK_WIDTH +5;
@@ -183,10 +187,8 @@ public class StraightHoriz extends DefaultTrack {
             g.strokeLine(x,y,x,ey);
         }
 
-        g.setStroke(Color.BLACK);
+        g.setStroke(DefaultTrack.RAIL_COLOR);
         g.setLineWidth(2);
-
-
         g.strokeLine(super.getStartX(), super.getStartY(), super.getStartX() + super.getLength(), super.getStartY());
         g.strokeLine(super.getStartX(), super.getStartY() + TRACK_WIDTH, super.getStartX() + super.getLength(), super.getStartY()+ TRACK_WIDTH);
         g.setStroke(Color.WHITE);

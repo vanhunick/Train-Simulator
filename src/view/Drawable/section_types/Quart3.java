@@ -183,8 +183,15 @@ public class Quart3 extends DefaultTrack {
             g.setStroke(Color.GREEN);
         }
 
+
+        // Set The background Color
+        g.setFill(DefaultTrack.BACKGROUND_COLOR);
+
         double degreesToMove = (90/lengthOfQuater()) * SimulationUI.RAIL_SEP*1.5;
 
+
+        // Set The background Color
+        g.setStroke(DefaultTrack.TIE_COLOR);
         for(int deg = 0; deg < 90; deg+=degreesToMove) {
             double sX = (int) (midPointX + TRACK_WIDTH/2 + ((radius+5) * (Math.cos(Math.toRadians(deg)))));
             double sY = (int) (midPointY + TRACK_WIDTH/2 + ((radius+5) * (Math.sin(Math.toRadians(deg)))));
@@ -192,12 +199,13 @@ public class Quart3 extends DefaultTrack {
             double eX = (int) (midPointX + TRACK_WIDTH/2 + ((radius - TRACK_WIDTH-5) * (Math.cos(Math.toRadians(deg)))));
             double eY = (int) (midPointY + TRACK_WIDTH/2 + ((radius - TRACK_WIDTH-5) * (Math.sin(Math.toRadians(deg)))));
 
-            g.setStroke(Color.ROSYBROWN);
             g.setLineWidth(3);
             g.strokeLine(sX,sY,eX,eY);
         }
 
-        g.setStroke(Color.BLACK);
+
+        // Set The background Color
+        g.setStroke(DefaultTrack.RAIL_COLOR);
         g.setLineWidth(2);
         g.strokeArc(getStartX() , getStartY(), getLength(), getLength(), -90, 90, ArcType.OPEN);
         g.strokeArc(getStartX() + TRACK_WIDTH, getStartY()+ TRACK_WIDTH, getLength()- (TRACK_WIDTH*2), getLength()- (TRACK_WIDTH*2), -90, 90, ArcType.OPEN);

@@ -15,6 +15,10 @@ public abstract class DefaultTrack {
     private boolean mouseOn;
     private Color color = Color.WHITE;
 
+    public static final Color TIE_COLOR = new Color(0.5,0.5,0.5,1);
+    public static final Color RAIL_COLOR = new Color(0.5,0.5,0.5,1);
+    public static final Color BACKGROUND_COLOR = new Color(0.8,0.8,0.8,1);
+
     public static final int TRACK_WIDTH = 10;
     private double startX;
     private double startY;

@@ -153,7 +153,7 @@ public class SimulationUI implements MouseEvents{
     private VBox getVisualisationButtons(){
         VBox vBox = new VBox(8);
         vBox.setPadding(new Insets(5,5,5,5));
-        vBox.setStyle("-fx-background-color: #4496FF;");
+        vBox.setStyle("-fx-background-color: #4F708C;");
 
         RadioButton test = new RadioButton("Test");
         test.setToggleGroup(mode);
