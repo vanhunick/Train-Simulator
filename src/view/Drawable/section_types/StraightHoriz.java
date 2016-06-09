@@ -177,7 +177,7 @@ public class StraightHoriz extends DefaultTrack {
 //        g.fillRect(super.getStartX(),super.getStartY() - 10,super.getLength(),TRACK_WIDTH + 20);
 
 
-        g.setStroke(DefaultTrack.RAIL_COLOR);
+        g.setStroke(DefaultTrack.TIE_COLOR);
         g.setLineWidth(3);
 
         double y = super.getStartY() -5;

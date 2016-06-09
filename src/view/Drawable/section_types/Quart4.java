@@ -98,7 +98,7 @@ public class Quart4 extends DefaultTrack {
 
         double degreesToMove = (90/lengthOfQuater()) * SimulationUI.RAIL_SEP*1.5;
 
-        g.setStroke(DefaultTrack.RAIL_COLOR);
+        g.setStroke(DefaultTrack.TIE_COLOR);
         for(int deg = 90; deg < 180; deg+=degreesToMove) {
 
             double sX = (int) (midPointX - TRACK_WIDTH/2 + ((radius+5) * (Math.cos(Math.toRadians(deg)))));
