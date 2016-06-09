@@ -196,6 +196,10 @@ public class ProgramController implements MouseEvents {
 
     public SimulationUI getSimulationUI(){return this.simulationUI;}
 
+    public TrackBuilder getTrackBuilder(){
+        return this.trackBuilder;
+    }
+
     public String gerMode(){
         return this.mode;
     }
