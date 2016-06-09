@@ -6,6 +6,7 @@ import javafx.scene.shape.ArcType;
 import model.Section;
 import view.Drawable.DrawableTrain;
 import view.Drawable.Movable;
+import view.SimulationUI;
 
 import java.awt.*;
 
@@ -89,6 +90,22 @@ public class Quart2 extends DefaultTrack {
             g.setStroke(Color.GREEN);
         }
 
+        double degreesToMove = (90/lengthOfQuater()) * SimulationUI.RAIL_SEP*1.5;
+
+        for(int deg = 270; deg < 360; deg+=degreesToMove) {
+            double sX = (int) (midPointX + TRACK_WIDTH/2 + ((radius+5) * (Math.cos(Math.toRadians(deg)))));
+            double sY = (int) (midPointY - TRACK_WIDTH/2 + ((radius+5) * (Math.sin(Math.toRadians(deg)))));
+
+            double eX = (int) (midPointX + TRACK_WIDTH/2 + ((radius - TRACK_WIDTH-5) * (Math.cos(Math.toRadians(deg)))));
+            double eY = (int) (midPointY - TRACK_WIDTH/2 + ((radius - TRACK_WIDTH-5) * (Math.sin(Math.toRadians(deg)))));
+
+            g.setStroke(Color.ROSYBROWN);
+            g.setLineWidth(3);
+            g.strokeLine(sX,sY,eX,eY);
+        }
+
+        g.setStroke(Color.BLACK);
+        g.setLineWidth(2);
         g.strokeArc(getStartX(), super.getStartY(), getLength(), getLength(), 360, 90, ArcType.OPEN);
         g.strokeArc(getStartX() + TRACK_WIDTH, super.getStartY() + TRACK_WIDTH, getLength() - (TRACK_WIDTH*2), getLength() - (TRACK_WIDTH*2), 360, 90, ArcType.OPEN);
     }

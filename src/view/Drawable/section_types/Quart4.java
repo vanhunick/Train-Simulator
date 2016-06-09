@@ -3,9 +3,8 @@ package view.Drawable.section_types;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
-import model.Section;
-import view.Drawable.DrawableTrain;
 import view.Drawable.Movable;
+import view.SimulationUI;
 
 import java.awt.*;
 
@@ -94,6 +93,25 @@ public class Quart4 extends DefaultTrack {
             g.setStroke(Color.GREEN);
         }
 
+        double degreesToMove = (90/lengthOfQuater()) * SimulationUI.RAIL_SEP*1.5;
+
+        for(int deg = 90; deg < 180; deg+=degreesToMove) {
+
+            double sX = (int) (midPointX - TRACK_WIDTH/2 + ((radius+5) * (Math.cos(Math.toRadians(deg)))));
+            double sY = (int) (midPointY + TRACK_WIDTH/2 + ((radius+5) * (Math.sin(Math.toRadians(deg)))));
+
+            double eX = (int) (midPointX - TRACK_WIDTH/2 + ((radius - TRACK_WIDTH-5) * (Math.cos(Math.toRadians(deg)))));
+            double eY = (int) (midPointY + TRACK_WIDTH/2 + ((radius - TRACK_WIDTH-5) * (Math.sin(Math.toRadians(deg)))));
+
+
+            g.setStroke(Color.ROSYBROWN);
+            g.setLineWidth(3);
+            g.strokeLine(sX,sY,eX,eY);
+        }
+
+        g.setStroke(Color.BLACK);
+        g.setLineWidth(2);
+
         g.strokeArc(getStartX(), getStartY(), getLength(), getLength(), -90, -90, ArcType.OPEN);
         g.strokeArc(getStartX() + TRACK_WIDTH, getStartY() + TRACK_WIDTH, getLength() - (TRACK_WIDTH * 2), getLength() - (TRACK_WIDTH * 2), -90, -90, ArcType.OPEN);
     }
@@ -141,9 +159,6 @@ public class Quart4 extends DefaultTrack {
 
 
     public boolean checkOnAfterUpdate(Point curPoint,double curRot, double rotationDone, double speed, Movable movable){
-        boolean nat = movable.getOrientation();
-        boolean forward = movable.getDirection();
-
         getNextPoint(curPoint, curRot,rotationDone, speed, movable);
         Point p = curPoint;
 
@@ -158,11 +173,9 @@ public class Quart4 extends DefaultTrack {
             }
             else {
                 if(p.getY() < super.getStartY() + super.getLength()/2){
-                    System.out.println("Treu 1");
                     return false;//No longer in this section
                 }
                 if(p.getX() < super.getStartX() ){
-                    System.out.println("Treu 2");
                     return false;//No longer in this section
                 }
             }

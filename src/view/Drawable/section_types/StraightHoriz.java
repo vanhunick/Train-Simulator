@@ -3,6 +3,8 @@ package view.Drawable.section_types;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import view.Drawable.Movable;
+import view.Simulation;
+import view.SimulationUI;
 
 import java.awt.*;
 
@@ -168,6 +170,22 @@ public class StraightHoriz extends DefaultTrack {
         if(super.getMouseOn() ){//|| super.getSection().getTrainOn()
             g.setStroke(Color.GREEN);
         }
+
+        // Draw the
+        g.setStroke(Color.ROSYBROWN);
+        g.setLineWidth(3);
+
+
+        double y = super.getStartY() -5;
+        double ey = super.getStartY() + TRACK_WIDTH +5;
+
+        for(double x = super.getStartX(); x < super.getStartX() + super.getLength(); x+= SimulationUI.RAIL_SEP){
+            g.strokeLine(x,y,x,ey);
+        }
+
+        g.setStroke(Color.BLACK);
+        g.setLineWidth(2);
+
 
         g.strokeLine(super.getStartX(), super.getStartY(), super.getStartX() + super.getLength(), super.getStartY());
         g.strokeLine(super.getStartX(), super.getStartY() + TRACK_WIDTH, super.getStartX() + super.getLength(), super.getStartY()+ TRACK_WIDTH);

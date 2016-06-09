@@ -132,8 +132,10 @@ public class Main extends Application {
                 }
 
                 // Clear the screen
-                gc.setStroke(Color.BLACK);
+                gc.setFill(new Color(0.27,0.59,1,1));
+//                gc.setFill(new Color(0.49,0.44,0.5,1));
                 gc.clearRect(0, 0, primaryStage.getWidth(), primaryStage.getHeight());
+                gc.fillRect(0, 0, primaryStage.getWidth(), primaryStage.getHeight());
                 gc.setStroke(Color.WHITE);
 
 
@@ -147,6 +149,7 @@ public class Main extends Application {
                 }
 
                 gc.strokeText("         20m ", 800, 25);
+
 
                 gc.setStroke(Color.WHITE);
                 gc.strokeLine(800,30,800 + (20*Simulation.METER_MULTIPLIER),30);

@@ -32,7 +32,7 @@ public class SimulationUI implements MouseEvents{
     // Width of buttons
     public static final int WIDTH = 150;
 
-    public static final int RAIL_SEP = 5;
+    public static final int RAIL_SEP = 12;
 
     // Gui pane to send events to for user
     private EventLog eventLog;
@@ -153,7 +153,7 @@ public class SimulationUI implements MouseEvents{
     private VBox getVisualisationButtons(){
         VBox vBox = new VBox(8);
         vBox.setPadding(new Insets(5,5,5,5));
-
+        vBox.setStyle("-fx-background-color: #4496FF;");
 
         RadioButton test = new RadioButton("Test");
         test.setToggleGroup(mode);
