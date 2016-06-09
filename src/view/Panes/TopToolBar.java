@@ -18,6 +18,7 @@ import java.io.File;
  */
 public class TopToolBar extends ToolBar {
 
+    // Tool bar buttons
     Button play;
     Button pause;
     Button stop;
@@ -28,12 +29,48 @@ public class TopToolBar extends ToolBar {
     Button saveBut;
     Button clear;
 
-
-
+    /**
+     * The top tool bar on the user interface used to control the program
+     *
+     * @param controller the controller to pass the events to
+     * */
     public TopToolBar(ProgramController controller){
+        // The size of the buttons
         int imageSize = 20;
 
         //Icon made by Freepik from www.flaticon.com
+
+
+//TODO Just wanted to see an alternative way of adding buttons
+//        String[] paths = new String[]{"file:src/res/play.png",
+//                "file:src/res/pause.png",
+//                "file:src/res/stop.png",
+//                "file:src/res/event.png",
+//                "file:src/res/save.png",
+//                "file:src/res/clear.png",
+//                "file:src/res/train-rails.png",
+//                "file:src/res/undo.png",
+//                "file:src/res/metro.png"
+//        };
+//
+//        String[] tips = new String[]{
+//                "Starts the Simulation",
+//                "Pauses the Simulation",
+//                "Stops and resets the Simulation",
+//                "Opens the event generation menu",
+//                "End this section and start the next one",
+//                "Undo the last added track",
+//                "Starts the Simulation with the created track",
+//                "Save the current track to file",
+//                "Clears the entire track"
+//        };
+//
+//        Button[] buttons = new Button[paths.length];
+//
+//        for(int i = 0; i < paths.length; i++){
+//            buttons[i] = new Button("",new ImageView(new Image(paths[i],imageSize,imageSize,false,false)));
+//            buttons[i].setTooltip(new Tooltip(tips[i]));
+//        }
 
         // Simulation Icons
         Image playImage = new Image("file:src/res/play.png",imageSize,imageSize,false,false);
@@ -48,12 +85,11 @@ public class TopToolBar extends ToolBar {
         Image undo = new Image("file:src/res/undo.png",imageSize,imageSize,false,false);
         Image simImage = new Image("file:src/res/metro.png",imageSize,imageSize,false,false);
 
-
+        // Buttons with image inside
         play = new Button("", new ImageView(playImage));
         pause = new Button("",new ImageView(pauseImage));
         stop = new Button("",new ImageView(stopImage));
         event = new Button("",new ImageView(eventImage));
-
         newSec = new Button("",new ImageView(newSection));
         undoBut = new Button("",new ImageView(undo));
         sim = new Button("",new ImageView(simImage));
@@ -71,8 +107,6 @@ public class TopToolBar extends ToolBar {
         Tooltip saveTip = new Tooltip("Save the current track to file");
         Tooltip clearTip = new Tooltip("Clears the entire track");
 
-
-
         // Add the tooltips to buttons
         play.setTooltip(playTip);
         pause.setTooltip(pauseTip);
@@ -84,15 +118,14 @@ public class TopToolBar extends ToolBar {
         saveBut.setTooltip(saveTip);
         clear.setTooltip(clearTip);
 
-
-        // use hbox
+        // use horizontal box to separate out the buttons
         HBox buttonBox = new HBox(5);
         buttonBox.setPrefWidth(this.getPrefWidth());
         buttonBox.setAlignment(Pos.BASELINE_RIGHT);
         buttonBox.getChildren().addAll(sim,clear,saveBut,newSec,undoBut,event,play,stop,pause);
         HBox.setHgrow( buttonBox, Priority.ALWAYS );
 
-
+        // Checks which mode the program is in the see which buttons should be disabled
         if(!controller.gerMode().equals(ProgramController.VISUALISATION_MODE)){
             enableButtons(false);
         }
@@ -151,10 +184,7 @@ public class TopToolBar extends ToolBar {
             }
         });
 
-
-
-
-
+        // Make it a horizontal tool bar
         this.setOrientation(Orientation.HORIZONTAL);
         this.getItems().addAll(
                 new Separator(),
@@ -163,6 +193,9 @@ public class TopToolBar extends ToolBar {
         );
     }
 
+    /**
+     * Disables the buttons
+     * */
     public void enableButtons(boolean enable){
         if(enable){
             play.setDisable(false);
