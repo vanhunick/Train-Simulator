@@ -218,17 +218,9 @@ public class TrackBuilder implements MouseEvents{
         VBox vBox = new VBox(8);
         vBox.setPadding(new Insets(5,5,5,5));
 
-//        Button sim = new Button("Simulate StraightTrack");
-//        Button addTrainMenu = new Button("Add Train");
-
         CheckBox alternate = new CheckBox("Alternate");
         alternate.setSelected(true);
         alternate.setOnAction(e -> alternateCheckBoxEvent(alternate));
-
-
-//        undo.setOnAction(e -> undo());
-//        sim.setOnAction(e -> simulateTrack());
-//        completeSection.setOnAction(e -> newSection());
 
         vBox.getChildren().addAll(alternate);
         vBox.setPrefWidth(WIDTH);

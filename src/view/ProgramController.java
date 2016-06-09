@@ -5,6 +5,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.input.MouseEvent;
 import save.LoadedRailway;
+import view.Drawable.DrawableRollingStock;
 import view.Drawable.DrawableTrain;
 import view.Drawable.section_types.DrawableSection;
 import view.Panes.EventLog;
@@ -33,6 +34,10 @@ public class ProgramController implements MouseEvents {
 
     private TopToolBar toolBar;
 
+    public ProgramController(){
+        simulationUI = new SimulationUI();
+        trackBuilder = new TrackBuilder(this);
+    }
 
     // Canvas
     private Canvas canvas;
@@ -40,10 +45,8 @@ public class ProgramController implements MouseEvents {
      * The default mode is the simulationUI mode with it default track and trains
      * */
     public void setDefMode(BorderPane borderPane, Canvas canvas){
-        simulationUI = new SimulationUI();
         this.canvas = canvas;
         simulationUI.addUIElementsToLayout(borderPane);
-
         setMode(ProgramController.VISUALISATION_MODE);
     }
 
@@ -57,9 +60,10 @@ public class ProgramController implements MouseEvents {
         if(modeToSet.equals(mode))return;//mode passed in already set
 
         if(modeToSet.equals(VISUALISATION_MODE)){
+            curMode = simulationUI;
+            setVisualisationMode(null,null,null);//TODO change later
             toolBar.enableButtons(true);
             this.mode = VISUALISATION_MODE;
-            curMode = simulationUI;
         }
         else if(modeToSet.equals(BUILDER_MODE)){
             toolBar.enableButtons(false);
@@ -102,14 +106,10 @@ public class ProgramController implements MouseEvents {
     /**
      * Sets the mode of the program by removing UI elements from other mode and adding it's own.
      * */
-    public void setVisualisationMode(DrawableSection[] track, List<DrawableTrain> trains){
-        canvas.setWidth(canvas.getWidth() - EventLog.WIDTH);
-
-        simulationUI = new SimulationUI();
-
+    public void setVisualisationMode(DrawableSection[] track, List<DrawableTrain> trains, List<DrawableRollingStock> stocks){
         trackBuilder.removeUIElementsFromLayout(borderPane);
         simulationUI.addUIElementsToLayout(borderPane);
-        setMode(VISUALISATION_MODE);
+
     }
 
 
@@ -117,16 +117,14 @@ public class ProgramController implements MouseEvents {
      * Sets the mode of the program by removing UI elements from other mode and adding it's own.
      * */
     public void setBuilderMode(){
-        this.trackBuilder = new TrackBuilder(this);// Pass the controller to the builder
         simulationUI.removeUIElementsFromLayout(borderPane);
         trackBuilder.addUIElementsToLayout(borderPane);
 
         if(simulationUI.logShowing()){
-            canvas.setWidth(canvas.getWidth() + EventLog.WIDTH);// WHY 20?????
+            canvas.setWidth(canvas.getWidth() + EventLog.WIDTH);
         }
 
-
-        setMode(BUILDER_MODE);
+//        setMode(BUILDER_MODE);
     }
 
     public void setLoadedRailway(LoadedRailway railway){

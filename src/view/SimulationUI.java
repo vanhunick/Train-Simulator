@@ -201,8 +201,10 @@ public class SimulationUI implements MouseEvents{
      * Adds the UI elements for the visualisation from the pane. Used when switching mode
      * */
     public void addUIElementsToLayout(BorderPane bp){
-        bp.setRight(eventLog);
+        System.out.println("Setting eventlog");
+
         bp.setLeft(vBox);
+        bp.setRight(eventLog);
     }
 
 
