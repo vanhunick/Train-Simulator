@@ -48,7 +48,10 @@ public class DrawableTrain implements Movable{
     private SnapshotParameters params; // Params of the train image
     private Circle connection;
 
-    private double engineForce = 0;
+    private double engineForce = 494000;
+    private double maxEngineForce = 700000;
+    private double minEngineForce = 220000;
+
 
     /**
      * Creates a new drawable train object
@@ -135,7 +138,7 @@ public class DrawableTrain implements Movable{
 
         }
         else {
-            engineForce = 494000;
+
             netForce = engineForce - Math.min(engineForce,(friction * ((train.getWeight()+getRollingstockWeights()) * 9.88) ));
             netForce = netForce - airResistance();
             System.out.println(netForce +" Air " + airResistance());
@@ -191,7 +194,17 @@ public class DrawableTrain implements Movable{
         //new movement code
         long timeChanged = curTime - lastUpdate;
         timeChanged = 20;
+
         currentSpeed += getAcceleration()*(1000/20);
+
+        if(currentSpeed > train.getTargetSpeed()){
+            engineForce -= 5000;
+        }
+
+        if(currentSpeed < train.getTargetSpeed()){
+            engineForce += 5000;
+        }
+
 
 
         double pixelsToMove = (timeChanged/1000.0)*currentSpeed;

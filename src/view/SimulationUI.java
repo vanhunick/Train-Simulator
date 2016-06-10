@@ -4,10 +4,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Button;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.Toggle;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
@@ -22,6 +19,9 @@ import view.Panes.ErrorDialog;
 import view.Panes.EventGen;
 import view.Panes.EventLog;
 import view.Panes.TrackMenu;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -48,11 +48,14 @@ public class SimulationUI implements MouseEvents{
 
     private String lastEvent;
 
+    private List<Slider> physicsSliders;
+
 
     /**
      * Constructs a new visualisation object with a default track and trains
      * */
     public SimulationUI(){
+        this.physicsSliders = getPhysicsSliders();
         this.sim = new Simulation(this);
         sim.setDefault();
         this.logShown = true;
@@ -190,6 +193,53 @@ public class SimulationUI implements MouseEvents{
         vBox.setPrefWidth(WIDTH);
 
         return vBox;
+    }
+
+    private boolean pyhsSliders = false;
+
+    public void showPhysicsSliders(){
+        System.out.println("Sliding some physics");
+        if(pyhsSliders){
+            pyhsSliders = false;
+            for(Slider s : physicsSliders){
+                vBox.getChildren().remove(s);
+            }
+        }
+        else {
+            pyhsSliders = true;
+            for(Slider s : physicsSliders){
+               vBox.getChildren().add(s);
+            }
+        }
+    }
+
+    private List<Slider> getPhysicsSliders(){
+        List<Slider> sliders = new ArrayList<>();
+
+        Slider friction = new Slider();
+        friction.setMin(0);
+        friction.setMax(1);
+        friction.setValue(0.5);
+        friction.setShowTickLabels(true);
+        friction.setShowTickMarks(true);
+        friction.setMajorTickUnit(5);
+        friction.setMinorTickCount(10);
+        friction.setBlockIncrement(0.2);
+
+        Slider trainWeight = new Slider();
+        friction.setMin(0);
+        friction.setMax(1000);
+        friction.setValue(100);
+        friction.setShowTickLabels(true);
+        friction.setShowTickMarks(true);
+        friction.setMajorTickUnit(200);
+        friction.setMinorTickCount(100);
+        friction.setBlockIncrement(100);
+
+        sliders.add(friction);
+        sliders.add(trainWeight);
+
+        return sliders;
     }
 
     public void startWithLoadedRailway(LoadedRailway railway){

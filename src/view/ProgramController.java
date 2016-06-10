@@ -1,5 +1,6 @@
 package view;
 
+import javafx.event.ActionEvent;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.BorderPane;
@@ -8,6 +9,7 @@ import save.LoadedRailway;
 import view.Drawable.DrawableRollingStock;
 import view.Drawable.DrawableTrain;
 import view.Drawable.section_types.DrawableSection;
+import view.Panes.ErrorDialog;
 import view.Panes.EventLog;
 import view.Panes.TopToolBar;
 
@@ -130,6 +132,15 @@ public class ProgramController implements MouseEvents {
     public void setLoadedRailway(LoadedRailway railway){
         if(mode.equals(VISUALISATION_MODE)){
             simulationUI.startWithLoadedRailway(railway);
+        }
+    }
+
+    public void handlePhysicsPressed(ActionEvent e){
+        if(mode.equals(VISUALISATION_MODE)){
+            simulationUI.showPhysicsSliders();
+        }
+        else{
+            new ErrorDialog("You need to be in the Simulation mode to change physics settings", "Invalid Mode");
         }
     }
 
