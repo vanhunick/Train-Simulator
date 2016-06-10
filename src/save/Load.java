@@ -125,7 +125,7 @@ public class Load {
             boolean ori = trainObject.getBoolean("orientation");
 
             //TODO acc and decel
-            Train t = new Train(id,length,maxSpeed,dir,ori,0.8,0.8);
+            Train t = new Train(id,length,maxSpeed,dir,ori,71000);//TODO save weight
 
             DefaultTrack track = null;
             DrawableSection section = null;

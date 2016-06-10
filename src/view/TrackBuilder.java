@@ -381,7 +381,7 @@ public class TrackBuilder implements MouseEvents{
         if(menu.addTrain()){
             String selectedTrain = menu.getCurTrainSelection();
             if(selectedTrain.equals("British Rail Class 25")){
-                Train train1 = new Train(getNextTrainID(), menu.getLength(), 500, true,true, 0.2, 0.5);
+                Train train1 = new Train(getNextTrainID(), menu.getLength(), 500, true,true,71000);
                 DrawableTrain drawableTrain1 = new DrawableTrain(train1, getSection(dt),dt);
                 drawableTrain1.setUpImage();
                 trains.add(drawableTrain1);
@@ -396,7 +396,7 @@ public class TrackBuilder implements MouseEvents{
 
         // Checks if a rolling stock should be added to the track
         if(menu.addRollingStocl()){
-            RollingStock rollingStock = new RollingStock(80,100,0.8);
+            RollingStock rollingStock = new RollingStock(80,100,51000);
             DrawableRollingStock drawableRollingStock = new DrawableRollingStock(rollingStock, null, true);
             drawableRollingStock.setStartNotConnected(dt);
             stocks.add(drawableRollingStock);

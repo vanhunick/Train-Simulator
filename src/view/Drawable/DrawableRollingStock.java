@@ -67,6 +67,12 @@ public class DrawableRollingStock implements Movable{
         }
     }
 
+    public double getRollingStocConnectedkWeight(){
+        if(conToThis != null){
+            return rollingStock.getWeight() + conToThis.getRollingStocConnectedkWeight();
+        }
+        return rollingStock.getWeight();
+    }
 
     /**
      * Sets up the image and image params for the rolling stock
@@ -203,7 +209,7 @@ public class DrawableRollingStock implements Movable{
      * */
     public void decelerate(){
         double timeChanged = 20;// ms
-        this.currentSpeed -= rollingStock.getDeceleration()*(1000/timeChanged);
+//        this.currentSpeed -= rollingStock.getDeceleration()*(1000/timeChanged);//TODO think about later
     }
 
     /**

@@ -31,9 +31,7 @@ public class Train {
     private double deceleration;
     private double weight;
 
-    private double horsePower;
-    private double torque;
-    private double rpm;
+
 
     /**
      * Creates a new Train object
@@ -48,14 +46,13 @@ public class Train {
      *
      * @param orientation if it is starting with or again the natural orientation of the track
      * */
-    public Train(int id, double length,double maxSpeed,  boolean direction,boolean orientation, double acceleration, double deceleration){
+    public Train(int id, double length,double maxSpeed,  boolean direction,boolean orientation, double weight){
         this.id = id;
         this.direction = direction;
         this.length = length;
         this.orientation = orientation;
         this.maxSpeed = maxSpeed;
-        this.acceleration = acceleration;
-        this.deceleration = deceleration;
+        this.weight = weight;
     }
 
     /**
@@ -135,6 +132,10 @@ public class Train {
     }
 
     public double getTargetSpeed(){return this.targetSpeed;}
+
+    public double getWeight(){
+        return this.weight;
+    }
 
     @Override
     public boolean equals(Object o) {

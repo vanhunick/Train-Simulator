@@ -1,7 +1,5 @@
 package model;
 
-import view.Simulation;
-
 /**
  * Created by vanhunick on 21/04/16.
  */
@@ -10,11 +8,12 @@ public class RollingStock {
     // Length of rolling stock
     private double length;
     private double width = 4;
+//    private double weight;
 
     // The id of the rolling stock
     private int rollID;
 
-    private double deceleration;
+    private double weight;
 
     /**
      * Creates a new rolling stock object
@@ -23,14 +22,14 @@ public class RollingStock {
      *
      * @param rollID the id of the rolling stock
      * */
-    public RollingStock(double length, int rollID, double deceleration){
+    public RollingStock(double length, int rollID, double weight){
         this.length = length;
         this.rollID = rollID;
-        this.deceleration = deceleration;
+        this.weight = weight;
     }
 
-    public double getDeceleration(){
-        return this.deceleration;
+    public double getWeight(){
+        return this.weight;
     }
 
     /**

@@ -31,7 +31,7 @@ public class SectionEventTests {
         simulation.setTracks(railway.tracks);
 
 
-        Train t = new Train(1,100,500,true,true,0.9,0.9);
+        Train t = new Train(1,100,500,true,true,71000);
         DrawableTrain dt = new DrawableTrain(t,railway.sections[0],railway.tracks[0]);
 
         simulation.addTraintoSimulation(dt);
@@ -70,7 +70,7 @@ public class SectionEventTests {
         simulation.setTracks(railway.tracks);
 
         // Create a train
-        Train t = new Train(1,100,500,false,true,0.9,0.9);
+        Train t = new Train(1,100,500,false,true,71000);
         DrawableTrain dt = new DrawableTrain(t,railway.sections[1],railway.tracks[1]);
 
         RollingStock rollingStock = new RollingStock(15,2,0.9);
@@ -113,7 +113,7 @@ public class SectionEventTests {
         simulation.setTracks(railway.tracks);
 
         // Create a train that is facing towards the rolling stock
-        Train t = new Train(1,100,500,true,false,0.9,0.9);
+        Train t = new Train(1,100,500,true,false,71000);
         DrawableTrain dt = new DrawableTrain(t,railway.sections[1],railway.tracks[1]);
 
         RollingStock rollingStock = new RollingStock(15,2,0.9);

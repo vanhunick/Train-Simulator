@@ -48,6 +48,8 @@ public class DrawableTrain implements Movable{
     private SnapshotParameters params; // Params of the train image
     private Circle connection;
 
+    private double engineForce = 0;
+
     /**
      * Creates a new drawable train object
      *
@@ -113,6 +115,42 @@ public class DrawableTrain implements Movable{
     }
 
 
+    public double  getAcceleration(){
+        // Normal force needed for friction mass * gravity since it's always horizontal
+        // Force = train power -  max static friction which is co efficient of static friction * Normal forcr which is mass * gravity
+        // Force = train power - (coStaticFriction * (mass*gravity)
+        // if train is moving use kinetic friction else use the static friction
+
+        double friction = 0;
+        if(currentSpeed > 0){
+            friction = DefaultTrack.KINETIC_FRICTION;
+        }
+        else {
+            friction = DefaultTrack.STATIC_FRICTRION;
+        }
+        // Train is trying to go forward
+        double netForce = 0;
+        if(engineForce < 0){
+            netForce = engineForce + (friction * (train.getWeight() * 9.88) );
+
+        }
+        else {
+            engineForce = 500000;
+            netForce = engineForce - Math.min(engineForce,(friction * ((train.getWeight()+getRollingstockWeights()) * 9.88) ));
+//            System.out.println(netForce);
+        }
+
+        // acceleration = force / mass
+        return netForce / train.getWeight() + getRollingstockWeights();
+    }
+
+    public double getRollingstockWeights(){
+        if(rollingStockConnected != null){
+            return rollingStockConnected.getRollingStocConnectedkWeight();
+        }
+        return 0;
+    }
+
     public void setConnectionLocation(){
         connection.setCenterX(this.getCurrentLocation().getX() + ((getLengthPixels()/2) * (Math.cos(Math.toRadians(this.getCurRotation()-90+180)))));
         connection.setCenterY(this.getCurrentLocation().getY() + ((getLengthPixels() / 2) * (Math.sin(Math.toRadians(this.getCurRotation() - 90 + 180)))));
@@ -128,20 +166,24 @@ public class DrawableTrain implements Movable{
         setConnectionLocation();
 
         // Check if the train is still accelerating and the current speed is less than the max speed
-        if(currentSpeed < train.getTargetSpeed() && currentSpeed < train.getMaxSpeed()){
-            applyAcceleration();
-        }
-        if(currentSpeed > train.getTargetSpeed()){
-            deaccelerate();
-        }
+//        if(currentSpeed < train.getTargetSpeed() && currentSpeed < train.getMaxSpeed()){
+//            applyAcceleration();
+//        }
+//        if(currentSpeed > train.getTargetSpeed()){
+//            deaccelerate();
+//        }
 
         if(lastUpdate == 0){
             lastUpdate = System.currentTimeMillis();
         }
         long curTime = System.currentTimeMillis();
 
+        //new movement code
         long timeChanged = curTime - lastUpdate;
         timeChanged = 20;
+        currentSpeed += getAcceleration()*(1000/20);
+
+
         double pixelsToMove = (timeChanged/1000.0)*currentSpeed;
         distMoved = pixelsToMove;
 

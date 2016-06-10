@@ -36,6 +36,8 @@ public abstract class DefaultTrack {
     private int drawID;
     private int id;
 
+    public static double STATIC_FRICTRION = 0.7;
+    public static double  KINETIC_FRICTION = 0.5;
 
     /**
      * Constructor for a piece that connects to another piece

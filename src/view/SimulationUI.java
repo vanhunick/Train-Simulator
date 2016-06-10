@@ -122,7 +122,7 @@ public class SimulationUI implements MouseEvents{
         if(menu.addTrain()){
             String selectedTrain = menu.getCurTrainSelection();
             if(selectedTrain.equals("British Rail Class 25")){
-                Train train1 = new Train(sim.getNextTrainID(), 80, 500, true,true, 0.2, 0.5);
+                Train train1 = new Train(sim.getNextTrainID(), 80, 500, true,true,71000);
                 DrawableTrain drawableTrain1 = new DrawableTrain(train1, sim.getSection(dt),dt);
                 sim.addTraintoSimulation(drawableTrain1);
             }
