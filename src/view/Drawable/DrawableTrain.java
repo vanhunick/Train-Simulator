@@ -135,13 +135,23 @@ public class DrawableTrain implements Movable{
 
         }
         else {
-            engineForce = 500000;
+            engineForce = 494000;
             netForce = engineForce - Math.min(engineForce,(friction * ((train.getWeight()+getRollingstockWeights()) * 9.88) ));
-//            System.out.println(netForce);
+            netForce = netForce - airResistance();
+            System.out.println(netForce +" Air " + airResistance());
         }
 
         // acceleration = force / mass
         return netForce / train.getWeight() + getRollingstockWeights();
+    }
+
+    public double airResistance(){
+        double airDensity = 1.225;// kg/m3
+        double velocity = currentSpeed; // should be ms
+        double dragCoefficient = 0.525;// Drag coefficient
+        double area = 2.769 * 3.861;//TODO from the British_Rail_Class_25 wiki page w*h
+
+        return ((airDensity * dragCoefficient * area )/2) * velocity;
     }
 
     public double getRollingstockWeights(){
