@@ -533,7 +533,7 @@ public class CustomTracks {
         for(DrawableSection ds : railway) {
             if (ds.getSection().getID() == 99) {
                 //Create the train
-                Train train = new Train(1, 15, 500, true,true,71000);
+                Train train = new Train(1, 15, 100, true,true,71000);
                 DrawableTrain drawableTrain = new DrawableTrain(train, ds,ds.getTracks()[0]);
                  drawableTrain.setUpImage();
               //  trains.add(drawableTrain);

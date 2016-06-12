@@ -76,6 +76,7 @@ public class Simulation implements MouseEvents {
 
 
 
+
     /**
      * Sets the default track and trains
      * */
@@ -102,9 +103,9 @@ public class Simulation implements MouseEvents {
      * */
     public void testMode(){
         for(DrawableTrain t : trains){
-            modelTrack.setSpeed(t.getTrain().getId(), 500);
+            modelTrack.setSpeed(t.getTrain().getId(), 28);
         }
-        modelTrack.setSpeed(trains.get(0).getTrain().getId(), 500);
+        modelTrack.setSpeed(trains.get(0).getTrain().getId(), 27);
 //        modelTrack.setSpeed(trains.get(1).getTrain().getId(), 500);
 
         started = true;
@@ -382,11 +383,11 @@ public class Simulation implements MouseEvents {
     }
 
     public double getDistanceToMoveFromTrain(DrawableTrain drawableTrain){
-        double speed = drawableTrain.getCurrentSpeed();
+        double speedInPixels = drawableTrain.getCurrentSpeed() * Simulation.METER_MULTIPLIER;//
         long curTime = System.currentTimeMillis();
         long timeChanged = curTime - lastUpdate;
         timeChanged = 20;
-        double pixelsToMove = (timeChanged/1000.0)*speed;
+        double pixelsToMove = (timeChanged/1000.0)*speedInPixels;
         lastUpdate = System.currentTimeMillis();
         return pixelsToMove;
     }
@@ -546,6 +547,10 @@ public class Simulation implements MouseEvents {
     public boolean onMovable(double x, double y){
         for(Movable m : movable){
             if(m.containsPoint(x,y)){
+                System.out.println("Contains Point");
+                if(m instanceof DrawableTrain){
+                    UI.setSelectedTrain((DrawableTrain)m);
+                }
                 seclectedMovable = m;
                 return true;
             }

@@ -48,7 +48,10 @@ public class SimulationUI implements MouseEvents{
 
     private String lastEvent;
 
+    private DrawableTrain selectedTrain;
+
     private List<Slider> physicsSliders;
+    private List<Label> physicsLabels;
 
 
     /**
@@ -56,12 +59,12 @@ public class SimulationUI implements MouseEvents{
      * */
     public SimulationUI(){
         this.physicsSliders = getPhysicsSliders();
+        this.physicsLabels = getPhysicsLabels();
         this.sim = new Simulation(this);
         sim.setDefault();
         this.logShown = true;
         this.vBox = getVisualisationButtons();
         this.eventLog = new EventLog();
-
     }
 
     /**
@@ -75,7 +78,7 @@ public class SimulationUI implements MouseEvents{
             lastEvent = event;
             eventLog.appendText(event);
             if(status == 1){
-                eventLog.setStyle("-fx-text-fill: green; -fx-font-size: 12;");
+                eventLog.setStyle("-fx-text-fill: black; -fx-font-size: 12;");
             }
             else if(status == 2){
                 eventLog.setStyle("-fx-text-fill: red; -fx-font-size: 12;");
@@ -99,7 +102,8 @@ public class SimulationUI implements MouseEvents{
      * Redraws all the elements on the screen
      * */
     public void refresh(GraphicsContext g){
-            sim.refresh(g);
+        sim.refresh(g);
+        drawTrainInfoPanel(g);
     }
 
     /**
@@ -198,19 +202,42 @@ public class SimulationUI implements MouseEvents{
     private boolean pyhsSliders = false;
 
     public void showPhysicsSliders(){
-        System.out.println("Sliding some physics");
         if(pyhsSliders){
             pyhsSliders = false;
-            for(Slider s : physicsSliders){
-                vBox.getChildren().remove(s);
+            for(int i = 0; i < physicsSliders.size(); i++){
+                vBox.getChildren().remove(physicsLabels.get(i));
+                vBox.getChildren().remove(physicsSliders.get(i));
             }
         }
         else {
             pyhsSliders = true;
-            for(Slider s : physicsSliders){
-               vBox.getChildren().add(s);
+            for(int i = 0; i < physicsSliders.size(); i++){
+                vBox.getChildren().add(physicsLabels.get(i));
+                vBox.getChildren().add(physicsSliders.get(i));
             }
         }
+    }
+
+    public void setSelectedTrain(DrawableTrain train){
+        this.selectedTrain = train;
+    }
+
+    public void drawTrainInfoPanel(GraphicsContext g){
+        if(selectedTrain == null)return;
+        int startX =1000;
+        int startY = 20;
+
+        g.setFill(Color.BLACK);
+        g.fillRect(startX,startY,150,250);
+        g.setFill(new Color(0,0,0.96,1));
+        g.setLineWidth(1);
+        g.strokeRect(startX,startY,150,250);
+
+        g.strokeText("Direction: " + selectedTrain.getDirection(),startX+5,startY+=15);
+        g.strokeText("Weight: " + selectedTrain.getTrain().getWeight(),startX+5,startY+=20);
+        g.strokeText("Target Speed m/s: " + String.format("%.2f", selectedTrain.getTrain().getTargetSpeed()), startX + 5, startY += 20);
+        g.strokeText("Speed m/s: " + String.format("%.2f", selectedTrain.getCurrentSpeed()), startX + 5, startY += 20);
+        g.strokeText("Acceleration m/s: " + String.format("%.2f", selectedTrain.getAcceleration()),startX+5,startY+=20);
     }
 
     private List<Slider> getPhysicsSliders(){
@@ -227,19 +254,44 @@ public class SimulationUI implements MouseEvents{
         friction.setBlockIncrement(0.2);
 
         Slider trainWeight = new Slider();
-        friction.setMin(0);
-        friction.setMax(1000);
-        friction.setValue(100);
-        friction.setShowTickLabels(true);
-        friction.setShowTickMarks(true);
-        friction.setMajorTickUnit(200);
-        friction.setMinorTickCount(100);
-        friction.setBlockIncrement(100);
+        trainWeight.setMin(0);
+        trainWeight.setMax(100000);
+        trainWeight.setValue(50000);
+        trainWeight.setShowTickLabels(true);
+        trainWeight.setShowTickMarks(true);
+        trainWeight.setMajorTickUnit(20000);
+        trainWeight.setMinorTickCount(10);
+        trainWeight.setBlockIncrement(10000);
 
-        sliders.add(friction);
+        Slider trainpower = new Slider();
+        trainpower.setMin(0);
+        trainpower.setMax(80000);
+        trainpower.setValue(40000);
+        trainpower.setShowTickLabels(true);
+        trainpower.setShowTickMarks(true);
+        trainpower.setMajorTickUnit(20000);
+        trainpower.setMinorTickCount(10);
+        trainpower.setBlockIncrement(20000);
+
+        sliders.add(trainpower);
         sliders.add(trainWeight);
+        sliders.add(friction);
 
         return sliders;
+    }
+
+    public List<Label> getPhysicsLabels(){
+        List<Label> labels = new ArrayList<>();
+
+        Label trainThrottle = new Label("Train Throttle ");
+        Label trainWeight = new Label("Train Weight:");
+        Label trackFriction = new Label("Track Friction:");
+
+        labels.add(trainThrottle);
+        labels.add(trainWeight);
+        labels.add(trackFriction);
+
+        return labels;
     }
 
     public void startWithLoadedRailway(LoadedRailway railway){
@@ -251,8 +303,6 @@ public class SimulationUI implements MouseEvents{
      * Adds the UI elements for the visualisation from the pane. Used when switching mode
      * */
     public void addUIElementsToLayout(BorderPane bp){
-        System.out.println("Setting eventlog");
-
         bp.setLeft(vBox);
         bp.setRight(eventLog);
     }

@@ -36,7 +36,7 @@ public class DrawableTrain implements Movable{
     private boolean lastDirection; // The previous direction
     private boolean crashed; // If the train is crashed or not
     private double width = 40; // The width of the train
-    private double currentSpeed; // The current speed of the train
+    private double currentSpeed; // The current speed of the train metres per second
     private double distMoved; // The last distance moved in pixels used by stock
     private double degDone = 0; // The degrees the train is through the curve
 
@@ -139,13 +139,13 @@ public class DrawableTrain implements Movable{
         }
         else {
 
-            netForce = engineForce - Math.min(engineForce,(friction * ((train.getWeight()+getRollingstockWeights()) * 9.88) ));
-            netForce = netForce - airResistance();
-            System.out.println(netForce +" Air " + airResistance());
+            netForce = Math.max(0,engineForce - Math.min(engineForce,(friction * ((train.getWeight()+getRollingstockWeights()) * 9.88) )));
+            netForce = Math.max(0,netForce - airResistance());
+
         }
 
         // acceleration = force / mass
-        return netForce / train.getWeight() + getRollingstockWeights();
+        return netForce / (train.getWeight() + getRollingstockWeights());
     }
 
     public double airResistance(){
@@ -178,13 +178,6 @@ public class DrawableTrain implements Movable{
 
         setConnectionLocation();
 
-        // Check if the train is still accelerating and the current speed is less than the max speed
-//        if(currentSpeed < train.getTargetSpeed() && currentSpeed < train.getMaxSpeed()){
-//            applyAcceleration();
-//        }
-//        if(currentSpeed > train.getTargetSpeed()){
-//            deaccelerate();
-//        }
 
         if(lastUpdate == 0){
             lastUpdate = System.currentTimeMillis();
@@ -193,21 +186,25 @@ public class DrawableTrain implements Movable{
 
         //new movement code
         long timeChanged = curTime - lastUpdate;
-        timeChanged = 20;
+        timeChanged = 20;//milli second
 
-        currentSpeed += getAcceleration()*(1000/20);
+        double acceleration = getAcceleration();// Metres per second per second
+        currentSpeed += acceleration * (timeChanged/1000.0);// Convert Millisecond to second
 
         if(currentSpeed > train.getTargetSpeed()){
-            engineForce -= 5000;
+            engineForce -= 10000;
         }
 
         if(currentSpeed < train.getTargetSpeed()){
-            engineForce += 5000;
+            if(acceleration < 0.25){
+                engineForce += 10000;
+            }
+
         }
 
 
 
-        double pixelsToMove = (timeChanged/1000.0)*currentSpeed;
+        double pixelsToMove = ((timeChanged/1000.0)* (currentSpeed * Simulation.METER_MULTIPLIER));// Converts from metres to pixels
         distMoved = pixelsToMove;
 
         // Check if direction has changed
@@ -231,23 +228,6 @@ public class DrawableTrain implements Movable{
 
 
     /**
-     * Applies acceleration to the train
-     * */
-    public void applyAcceleration(){
-        double timeChanged = 20;// ms
-        this.currentSpeed += train.getAcceleration()*(1000/timeChanged);
-    }
-
-
-    /**
-     * Slows the train down by it's deceleration
-     * */
-    public void deaccelerate(){
-        double timeChanged = 20;// ms
-        this.currentSpeed -= train.getDeceleration()*(1000/timeChanged);
-    }
-
-    /**
      * Returns if the point at x,y is on the train
      *
      * @param x the x location to check
@@ -258,7 +238,8 @@ public class DrawableTrain implements Movable{
         double startX = currentLocation.getX() - getLengthPixels()/2;// Might be width
         double startY = currentLocation.getY() - getLengthPixels()/2;
 
-        if(x >= startX && x <= startX + train.getWidth()*Simulation.METER_MULTIPLIER   && y > startY && y < startY + getLengthPixels())return true;
+
+        if(x >= startX && x <= startX + getLengthPixels()   && y > startY && y < startY + getLengthPixels())return true;//TODO make more accurate
 
         // The point is not on the train or any of it's rolling stock
         return false;
