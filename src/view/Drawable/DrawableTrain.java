@@ -138,10 +138,8 @@ public class DrawableTrain implements Movable{
 
         }
         else {
-
             netForce = Math.max(0,engineForce - Math.min(engineForce,(friction * ((train.getWeight()+getRollingstockWeights()) * 9.88) )));
             netForce = Math.max(0,netForce - airResistance());
-
         }
 
         // acceleration = force / mass
@@ -202,6 +200,12 @@ public class DrawableTrain implements Movable{
 
         }
 
+
+        int i = 0;
+        int j = 0;
+
+        i += 1;//3
+        j = j + 1;// 3
 
 
         double pixelsToMove = ((timeChanged/1000.0)* (currentSpeed * Simulation.METER_MULTIPLIER));// Converts from metres to pixels

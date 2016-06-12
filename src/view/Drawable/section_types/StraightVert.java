@@ -3,6 +3,7 @@ package view.Drawable.section_types;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import model.Section;
+import view.Drawable.Movable;
 
 import java.awt.*;
 
@@ -75,53 +76,75 @@ public class StraightVert extends DefaultTrack {
                 y >= super.getStartY() && y <= super.getStartY() + super.getLength();
     }
 
+    public boolean checkOnAfterUpdate(Point curPoint, double rotation,double rotDone, double dist, Movable movable){
 
-    public double getNextRotation(double curRotation, double speed, boolean nat){
+        if(getNextX(curPoint.getX(),dist, movable.getOrientation(), movable.getDirection()) == -1 )return false;
+        if(getNextY(curPoint.getY(),dist, movable.getOrientation()) == -1 )return false;
+        return true;
+    }
+
+    public double getNextRotation(double curRotation, double speed, boolean nat, boolean forward){
         if(super.getDirection().equals("UP")){
-            return 0;
+            if(nat)return 0;
+            return 180;
         }
         else if(super.getDirection().equals("DOWN")){
-            return 180;
+            if(nat)return 180;
+            return 0;
         }
         // Error
         return 0;
     }
 
-
-    public Point getNextPoint(Point cur, int lastSubAngle, double moveBy, boolean nat){
-        cur.setLocation(getNextX(cur.getX(),moveBy),getNextY(cur.getY(),moveBy));
-        return cur;
+    public double getNextPoint(Point cur, double curRot, double rotDone, double moveBy, Movable movable){
+        cur.setLocation(getNextX(cur.getX(),moveBy,movable.getOrientation(), movable.getDirection()),getNextY(cur.getY(),moveBy,movable.getOrientation()));
+        return getNextRotation(curRot,moveBy,movable.getOrientation(),movable.getDirection());
     }
 
-    public double getNextX(double curX, double moveBy){
-        //Going down or up never changes x value
-        return curX;
-    }
 
-    public double getNextY(double curY, double moveBy){
-        if(super.getDirection().equals("DOWN")){
-            if(curY + moveBy > super.getStartY() + super.getLength()){
-                return -1;//No longer in this section TODO update later
+
+    public double getNextX(double curX, double moveBy, boolean nat, boolean forward){
+        if(super.getDirection().equals("RIGHT")){
+            if(nat && forward || !nat && !forward){
+                if(curX + moveBy > (super.getStartX() + super.getLength())){
+                    return -1;//No longer in this section TODO update later
+                }
+                else{
+                    return curX + moveBy;
+                }
             }
             else{
-                return curY + moveBy;
+                if(curX - moveBy < super.getStartX()){
+                    return -1;//No longer in this section TODO update later
+                }
+                else{
+                    return curX - moveBy;
+                }
             }
         }
-        else if(super.getDirection().equals("UP")){
-            if(curY - moveBy < super.getStartY()){// 40 being the train size
-                return -1;//No longer in this section TODO update later
+        else if(super.getDirection().equals("LEFT")){
+            if(nat && forward || !nat && !forward){
+                if(curX - moveBy < super.getStartX()){
+                    return -1;//No longer in this section TODO update later
+                }
+                else{
+                    return curX - moveBy;
+                }
             }
             else{
-                return curY - moveBy;
+                if(curX + moveBy > (super.getStartX() + super.getLength())){
+                    return -1;//No longer in this section TODO update later
+                }
+                else{
+                    return curX + moveBy;
+                }
             }
         }
         return -1;
     }
 
-    public boolean checkOnAfterUpdate(Point curPoint, double lastSubAnle, double dist, boolean nat){
-        if(getNextX(curPoint.getX(),dist) == -1 )return false;
-        if(getNextY(curPoint.getY(),dist) == -1 )return false;
-        return true;
+    public double getNextY(double curY, double moveBy, boolean nat){
+        return curY;
     }
 
 
