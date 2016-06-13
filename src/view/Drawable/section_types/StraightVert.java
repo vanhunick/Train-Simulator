@@ -4,6 +4,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import model.Section;
 import view.Drawable.Movable;
+import view.SimulationUI;
 
 import java.awt.*;
 
@@ -77,74 +78,71 @@ public class StraightVert extends DefaultTrack {
     }
 
     public boolean checkOnAfterUpdate(Point curPoint, double rotation,double rotDone, double dist, Movable movable){
-
-        if(getNextX(curPoint.getX(),dist, movable.getOrientation(), movable.getDirection()) == -1 )return false;
-        if(getNextY(curPoint.getY(),dist, movable.getOrientation()) == -1 )return false;
+        if(getNextY(curPoint.getY(),dist, movable.getOrientation(), movable.getDirection()) == -1 )return false;
+        if(getNextX(curPoint.getX(),dist, movable.getOrientation()) == -1 )return false;
         return true;
     }
 
     public double getNextRotation(double curRotation, double speed, boolean nat, boolean forward){
-        if(super.getDirection().equals("UP")){
-            if(nat)return 0;
-            return 180;
-        }
-        else if(super.getDirection().equals("DOWN")){
+        if(super.getDirection().equals("DOWN")){
             if(nat)return 180;
             return 0;
+        }
+        else if(super.getDirection().equals("UP")){
+            if(nat)return 0;
+            return 180;
         }
         // Error
         return 0;
     }
 
     public double getNextPoint(Point cur, double curRot, double rotDone, double moveBy, Movable movable){
-        cur.setLocation(getNextX(cur.getX(),moveBy,movable.getOrientation(), movable.getDirection()),getNextY(cur.getY(),moveBy,movable.getOrientation()));
+        cur.setLocation(getNextX(cur.getX(),moveBy,movable.getOrientation()),getNextY(cur.getY(),moveBy,movable.getOrientation(), movable.getDirection()));
         return getNextRotation(curRot,moveBy,movable.getOrientation(),movable.getDirection());
     }
 
-
-
-    public double getNextX(double curX, double moveBy, boolean nat, boolean forward){
-        if(super.getDirection().equals("RIGHT")){
+    public double getNextY(double curY, double moveBy, boolean nat, boolean forward){
+        if(super.getDirection().equals("DOWN")){
             if(nat && forward || !nat && !forward){
-                if(curX + moveBy > (super.getStartX() + super.getLength())){
-                    return -1;//No longer in this section TODO update later
+                if(curY + moveBy > super.getStartY() + super.getLength()){
+                    return -1;//No longer in this section
                 }
                 else{
-                    return curX + moveBy;
+                    return curY + moveBy;
                 }
             }
             else{
-                if(curX - moveBy < super.getStartX()){
-                    return -1;//No longer in this section TODO update later
+                if(curY - moveBy < super.getStartY()){
+                    return -1;//No longer in this section
                 }
                 else{
-                    return curX - moveBy;
+                    return curY - moveBy;
                 }
             }
         }
-        else if(super.getDirection().equals("LEFT")){
+        else if(super.getDirection().equals("UP")){
             if(nat && forward || !nat && !forward){
-                if(curX - moveBy < super.getStartX()){
-                    return -1;//No longer in this section TODO update later
+                if(curY - moveBy < super.getStartY()){
+                    return -1;//No longer in this section
                 }
                 else{
-                    return curX - moveBy;
+                    return curY - moveBy;
                 }
             }
             else{
-                if(curX + moveBy > (super.getStartX() + super.getLength())){
-                    return -1;//No longer in this section TODO update later
+                if(curY + moveBy > (super.getStartY() + super.getLength())){
+                    return -1;//No longer in this section
                 }
                 else{
-                    return curX + moveBy;
+                    return curY + moveBy;
                 }
             }
         }
         return -1;
     }
 
-    public double getNextY(double curY, double moveBy, boolean nat){
-        return curY;
+    public double getNextX(double curX, double moveBy, boolean nat){
+        return curX;
     }
 
 
@@ -154,9 +152,26 @@ public class StraightVert extends DefaultTrack {
             g.setStroke(Color.GREEN);
         }
 
+
+        g.setStroke(DefaultTrack.TIE_COLOR);
+        g.setLineWidth(3);
+
+        double x = super.getStartX() - 5 - TRACK_WIDTH;
+        double eX = super.getStartX() + 5;
+
+        for(double y = super.getStartY(); y < super.getStartY() + super.getLength(); y += SimulationUI.RAIL_SEP){
+            g.strokeLine(x,y,eX,y);
+        }
+
+        g.setStroke(DefaultTrack.RAIL_COLOR);
+        g.setLineWidth(2);
+
         double startX = super.getStartX();
         double startY = super.getStartY();
         double length = super.getLength();
+
+        g.fillOval(200,200,10,10);
+        g.fillOval(200,494,10,10);
 
         g.strokeLine(startX, startY, startX, startY + length);
         g.strokeLine(startX - TRACK_WIDTH, startY, startX - TRACK_WIDTH, startY + length);

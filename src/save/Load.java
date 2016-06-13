@@ -184,7 +184,7 @@ public class Load {
             case "Straight horizontal":
                 return new StraightHoriz(length,0,id);
             case "Straight vertical":
-                return new StraightVert(length,0,id);
+                return new StraightVert(length,5,id);
             case "Junction":
                 boolean inbound = trackObject.getBoolean("inbound");
                 return new JunctionTrack(length,6,id,false,inbound);

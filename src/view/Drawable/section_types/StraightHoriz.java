@@ -134,7 +134,6 @@ public class StraightHoriz extends DefaultTrack {
     }
 
     public double getInitialX(double trainWidth){
-        System.out.println("Getting initial");
         return super.getStartX() + super.getLength()/2;//place it in the middle of the track
     }
 
@@ -159,7 +158,6 @@ public class StraightHoriz extends DefaultTrack {
     }
 
     public boolean checkOnAfterUpdate(Point curPoint, double rotation,double rotDone, double dist, Movable movable){
-
         if(getNextX(curPoint.getX(),dist, movable.getOrientation(), movable.getDirection()) == -1 )return false;
         if(getNextY(curPoint.getY(),dist, movable.getOrientation()) == -1 )return false;
         return true;
@@ -170,12 +168,6 @@ public class StraightHoriz extends DefaultTrack {
         if(super.getMouseOn() ){//|| super.getSection().getTrainOn()
             g.setStroke(Color.GREEN);
         }
-
-
-        // Set the background Color
-//        g.setFill(DefaultTrack.BACKGROUND_COLOR);
-//        g.fillRect(super.getStartX(),super.getStartY() - 10,super.getLength(),TRACK_WIDTH + 20);
-
 
         g.setStroke(DefaultTrack.TIE_COLOR);
         g.setLineWidth(3);

@@ -144,7 +144,7 @@ public class DrawableTrain implements Movable{
         else {
             netForce = engineForce - (friction * ((train.getWeight()+getRollingstockWeights()) * 9.88) );
             netForce = netForce - airResistance();
-            System.out.println(netForce);
+
         }
 
         // acceleration = force / mass
@@ -192,7 +192,6 @@ public class DrawableTrain implements Movable{
         timeChanged = 20;//milli second
 
         double acceleration = getAcceleration();// Metres per second per second
-        System.out.println("acceleration " + acceleration);
 
         if(train.getDirection() == true){
             if(currentSpeed + (acceleration* (timeChanged/1000.0)) < 0){
