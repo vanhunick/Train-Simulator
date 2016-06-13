@@ -86,6 +86,10 @@ public class DrawableTrain implements Movable{
         setConnectionLocation();
     }
 
+    public double getEngineForce(){
+        return this.engineForce;
+    }
+
     /**
      * Sets up the image fields for the drawable train
      * */
@@ -131,15 +135,16 @@ public class DrawableTrain implements Movable{
         else {
             friction = DefaultTrack.STATIC_FRICTRION;
         }
-        // Train is trying to go forward
+
         double netForce = 0;
         if(engineForce < 0){
             netForce = engineForce + (friction * (train.getWeight() * 9.88) );
 
         }
         else {
-            netForce = Math.max(0,engineForce - Math.min(engineForce,(friction * ((train.getWeight()+getRollingstockWeights()) * 9.88) )));
-            netForce = Math.max(0,netForce - airResistance());
+            netForce = engineForce - (friction * ((train.getWeight()+getRollingstockWeights()) * 9.88) );
+            netForce = netForce - airResistance();
+            System.out.println(netForce);
         }
 
         // acceleration = force / mass
@@ -187,15 +192,28 @@ public class DrawableTrain implements Movable{
         timeChanged = 20;//milli second
 
         double acceleration = getAcceleration();// Metres per second per second
-        currentSpeed += acceleration * (timeChanged/1000.0);// Convert Millisecond to second
+        System.out.println("acceleration " + acceleration);
+
+        if(train.getDirection() == true){
+            if(currentSpeed + (acceleration* (timeChanged/1000.0)) < 0){
+                currentSpeed = 0;
+            }
+            else {
+                currentSpeed += acceleration * (timeChanged/1000.0);// Convert Millisecond to second
+            }
+        }
+
+
 
         if(currentSpeed > train.getTargetSpeed()){
-            engineForce -= 10000;
+            if(engineForce - 1000 >= 0){
+                engineForce -= 1000;
+            }
         }
 
         if(currentSpeed < train.getTargetSpeed()){
             if(acceleration < 0.25){
-                engineForce += 10000;
+                engineForce += 1000;
             }
 
         }
