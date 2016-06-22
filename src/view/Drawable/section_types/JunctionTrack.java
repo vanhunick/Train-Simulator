@@ -69,6 +69,36 @@ public class JunctionTrack extends DefaultTrack {
         junctionTracks.add(inRight);
     }
 
+
+
+    @Override
+    public void setSelected(boolean selected){
+        super.setSelected(selected);
+
+        if(selected) {
+            if (thrown) {
+                inDown.setSelected(true);
+                inRight.setSelected(true);
+                outUpTrack.setSelected(true);
+                outRightTrack.setSelected(true);
+                straightTrack.setSelected(false);
+            } else {
+                inDown.setSelected(false);
+                inRight.setSelected(false);
+                outUpTrack.setSelected(false);
+                outRightTrack.setSelected(false);
+                straightTrack.setSelected(true);
+            }
+        }
+        else {
+            inDown.setSelected(false);
+            inRight.setSelected(false);
+            outUpTrack.setSelected(false);
+            outRightTrack.setSelected(false);
+            straightTrack.setSelected(false);
+        }
+    }
+
     /**
      * Constructor for the starting piece
      * */
@@ -177,6 +207,10 @@ public class JunctionTrack extends DefaultTrack {
     public void draw(GraphicsContext g){
         straightTrack.draw(g);
         setTrackColors(thrown);
+
+//        g.setStroke(Color.WHITE);
+        g.strokeText("Thrown " + thrown,super.getStartX(),super.getStartY() - 20);//TODO update with colors later
+
 
         if(super.getDirection().equals("RIGHT")){
             if(inbound){

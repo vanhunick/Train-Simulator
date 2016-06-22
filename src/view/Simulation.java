@@ -598,6 +598,7 @@ public class Simulation implements MouseEvents {
 
     // New methods
     public void addTraintoSimulation(DrawableTrain train){
+        train.setUpImage();
         trains.add(train);
         movable.add(train);
     }

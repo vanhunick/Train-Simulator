@@ -173,6 +173,12 @@ public class StraightVert extends DefaultTrack {
         g.fillOval(200,200,10,10);
         g.fillOval(200,494,10,10);
 
+        if(super.getSelected()){
+            g.setStroke(DefaultTrack.SELECTED_COLOR);
+        }
+        else {
+            g.setStroke(DefaultTrack.RAIL_COLOR);
+        }
         g.strokeLine(startX, startY, startX, startY + length);
         g.strokeLine(startX - TRACK_WIDTH, startY, startX - TRACK_WIDTH, startY + length);
 

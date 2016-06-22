@@ -179,7 +179,12 @@ public class StraightHoriz extends DefaultTrack {
             g.strokeLine(x,y,x,ey);
         }
 
-        g.setStroke(DefaultTrack.RAIL_COLOR);
+        if(super.getSelected()){
+            g.setStroke(DefaultTrack.SELECTED_COLOR);
+        }
+        else {
+            g.setStroke(DefaultTrack.RAIL_COLOR);
+        }
         g.setLineWidth(2);
         g.strokeLine(super.getStartX(), super.getStartY(), super.getStartX() + super.getLength(), super.getStartY());
         g.strokeLine(super.getStartX(), super.getStartY() + TRACK_WIDTH, super.getStartX() + super.getLength(), super.getStartY()+ TRACK_WIDTH);

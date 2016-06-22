@@ -205,7 +205,12 @@ public class Quart3 extends DefaultTrack {
 
 
         // Set The background Color
-        g.setStroke(DefaultTrack.RAIL_COLOR);
+        if(super.getSelected()){
+            g.setStroke(DefaultTrack.SELECTED_COLOR);
+        }
+        else {
+            g.setStroke(DefaultTrack.RAIL_COLOR);
+        }
         g.setLineWidth(2);
         g.strokeArc(getStartX() , getStartY(), getLength(), getLength(), -90, 90, ArcType.OPEN);
         g.strokeArc(getStartX() + TRACK_WIDTH, getStartY()+ TRACK_WIDTH, getLength()- (TRACK_WIDTH*2), getLength()- (TRACK_WIDTH*2), -90, 90, ArcType.OPEN);
