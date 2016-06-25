@@ -171,6 +171,13 @@ public class StraightVert extends DefaultTrack {
         double startY = super.getStartY();
         double length = super.getLength();
 
+
+        if(super.getSelected()){
+            g.setStroke(DefaultTrack.SELECTED_COLOR);
+        }
+        else {
+            g.setStroke(DefaultTrack.RAIL_COLOR);
+        }
         g.strokeLine(startX, startY, startX, startY + length);
         g.strokeLine(startX - TRACK_WIDTH, startY, startX - TRACK_WIDTH, startY + length);
 

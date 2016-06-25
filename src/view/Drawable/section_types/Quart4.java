@@ -111,9 +111,14 @@ public class Quart4 extends DefaultTrack {
             g.strokeLine(sX,sY,eX,eY);
         }
 
-        g.setStroke(DefaultTrack.RAIL_COLOR);
-        g.setLineWidth(2);
+        if(super.getSelected()){
+            g.setStroke(DefaultTrack.SELECTED_COLOR);
+        }
+        else {
+            g.setStroke(DefaultTrack.RAIL_COLOR);
+        }
 
+        g.setLineWidth(2);
         g.strokeArc(getStartX(), getStartY(), getLength(), getLength(), -90, -90, ArcType.OPEN);
         g.strokeArc(getStartX() + TRACK_WIDTH, getStartY() + TRACK_WIDTH, getLength() - (TRACK_WIDTH * 2), getLength() - (TRACK_WIDTH * 2), -90, -90, ArcType.OPEN);
     }

@@ -18,6 +18,7 @@ public abstract class DefaultTrack {
     public static final Color TIE_COLOR = new Color(0.5,0.29,0,1);
     public static final Color RAIL_COLOR = new Color(0.5,0.5,0.5,1);
     public static final Color BACKGROUND_COLOR = new Color(0.8,0.8,0.8,1);
+    public static final Color SELECTED_COLOR = new Color(0.9,0.0,0.0,1);
 
     public static final int TRACK_WIDTH = 10;
     private double startX;
@@ -36,6 +37,8 @@ public abstract class DefaultTrack {
     private int drawID;
     private int id;
 
+    private boolean selected;
+
     public static double STATIC_FRICTRION = 0.7;
     public static double  KINETIC_FRICTION = 0.5;
 
@@ -48,7 +51,6 @@ public abstract class DefaultTrack {
         this.id = id;
         this.juncFrom = -1;
         this.juncTo = -1;
-
     }
 
     /**
@@ -64,6 +66,15 @@ public abstract class DefaultTrack {
         this.direction = direction;
         this.juncFrom = -1;
         this.juncTo = -1;
+    }
+
+
+    public void setSelected(boolean selected){
+        this.selected = selected;
+    }
+
+    public boolean getSelected(){
+        return this.selected;
     }
 
     public Color getColor(){

@@ -112,7 +112,13 @@ public class Quart2 extends DefaultTrack {
             g.strokeLine(sX,sY,eX,eY);
         }
 
-        g.setStroke(DefaultTrack.RAIL_COLOR);
+        if(super.getSelected()){
+            g.setStroke(DefaultTrack.SELECTED_COLOR);
+        }
+        else {
+            g.setStroke(DefaultTrack.RAIL_COLOR);
+        }
+
         g.setLineWidth(2);
         g.strokeArc(getStartX(), super.getStartY(), getLength(), getLength(), 360, 90, ArcType.OPEN);
         g.strokeArc(getStartX() + TRACK_WIDTH, super.getStartY() + TRACK_WIDTH, getLength() - (TRACK_WIDTH*2), getLength() - (TRACK_WIDTH*2), 360, 90, ArcType.OPEN);
