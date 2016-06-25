@@ -140,6 +140,7 @@ public class StraightVert extends DefaultTrack {
         }
         return -1;
     }
+    
 
     public double getNextX(double curX, double moveBy, boolean nat){
         return curX;
@@ -169,9 +170,6 @@ public class StraightVert extends DefaultTrack {
         double startX = super.getStartX();
         double startY = super.getStartY();
         double length = super.getLength();
-
-        g.fillOval(200,200,10,10);
-        g.fillOval(200,494,10,10);
 
         g.strokeLine(startX, startY, startX, startY + length);
         g.strokeLine(startX - TRACK_WIDTH, startY, startX - TRACK_WIDTH, startY + length);
