@@ -19,6 +19,7 @@ import view.Drawable.DrawableTrain;
 import view.Drawable.section_types.*;
 import view.Panes.ErrorDialog;
 import view.Panes.TrackMenu;
+
 import java.awt.*;
 import java.io.File;
 import java.util.ArrayList;
@@ -90,12 +91,13 @@ public class TrackBuilder implements MouseEvents{
     // Set if every time you add new piece it alternates between detection and non detection exampleTracks
     private boolean alternate = true;
 
-    // For drawing from junction
-    private JunctionTrack selectedJunctionTrack;
-    private DefaultTrack currentSelectedTrack;
-
     // If the next section should detect or not
     private boolean shouldDetect = true;
+
+    // The track being dragged by the mouse
+    private DefaultTrack mouseSelectedPeice;
+
+
 
 
     /**
@@ -112,6 +114,7 @@ public class TrackBuilder implements MouseEvents{
         this.exampleTracks = setUpDrawPieces();
         this.sectionsForTrack = new ArrayList<>();
         this.allTracks = new ArrayList<>();
+        this.mouseLocation = new Point(0,0);
     }
 
     public void updateSize(){
@@ -133,7 +136,6 @@ public class TrackBuilder implements MouseEvents{
     public void refresh(GraphicsContext gc){
         //Draw the currently created track
         for(DefaultTrack d : allTracks){
-            gc.setStroke(Color.WHITE);
             d.draw(gc);
         }
 
@@ -144,8 +146,8 @@ public class TrackBuilder implements MouseEvents{
         // Draw the piece selection panel
         drawShownPanel(gc);
 
+        // Draw the example tracks
         for(DefaultTrack t : exampleTracks){
-            t.setColor(Color.BLACK);
             t.draw(gc);
         }
 
@@ -154,12 +156,15 @@ public class TrackBuilder implements MouseEvents{
             dt.draw(gc);
         }
 
+        // Show the direction of the piece being dragged
         if(mouseSelectedPeice != null){
             gc.strokeText("Current Direction = " + mouseSelectedPeice.getDirection(), 50, 80);
         }
 
-        gc.setStroke(Color.GREEN);
-        gc.strokeText("Current Section = " + curSectionID, 50, 40);
+        // Indicate the id of the current section
+        if(sectionMode){
+            gc.strokeText("Current Section = " + curSectionID, 50, 40);
+        }
     }
 
     /**
@@ -433,15 +438,15 @@ public class TrackBuilder implements MouseEvents{
         if(e.getButton().equals(MouseButton.PRIMARY)){
 
             // Check if the click is on the track panel
-            if(oneShownPanel(x, y)){
+            if(onTrackPanel(x)){
                 if(e.getButton().equals(MouseButton.PRIMARY)){
                     // Set the selected box
-                    selectPiece(x, y);
+                    selectPiece(y);
 
                     // Check is mouse pressed on a box
                     if(selectedBox !=-1){
                         curId++;
-                        DefaultTrack t = getSelectedTrackFromPanel();
+                        DefaultTrack t = getSelectedTrackFromPanel((int)x,(int)y);
 
                         allTracks.add(t);
                         mouseSelectedPeice = t;
@@ -565,8 +570,11 @@ public class TrackBuilder implements MouseEvents{
         }
     }
 
+    private Point mouseLocation;
+
     @Override
     public void mouseMoved(double x, double y, MouseEvent e){
+
         for(DefaultTrack d : allTracks){
             if(d.containsPoint(x,y)){
                 d.setMouseOn(true);
@@ -577,10 +585,13 @@ public class TrackBuilder implements MouseEvents{
         }
     }
 
-    private DefaultTrack mouseSelectedPeice;
+
 
     @Override
     public void mouseDragged(double x, double y, MouseEvent e) {
+        this.mouseLocation.setLocation(x,y);// Update mouse location
+
+
         if(mouseSelectedPeice != null){
             mouseSelectedPeice.setMid(x,y);
 
@@ -610,40 +621,28 @@ public class TrackBuilder implements MouseEvents{
         }
     }
 
-    private DefaultTrack[] trackChoices = new DefaultTrack[]{
-            new StraightHoriz((int)trackStartX,(int)trackStartY, (int)pieceSize,0,curId, "RIGHT"),
-            new Quart1((int)trackStartX,(int)trackStartY, (int)pieceSize*2,1, "RIGHT", curId),
-            new Quart2((int)trackStartX,(int)trackStartY, (int)pieceSize*2,2, "DOWN", curId),
-            new Quart3((int)trackStartX,(int)trackStartY, (int)pieceSize*2,3, "LEFT", curId),
-            new Quart4((int)trackStartX,(int)trackStartY, (int)pieceSize*2,4, "UP", curId),
-            new StraightVert((int)trackStartX,(int)trackStartY, (int)pieceSize,5, "DOWN",curId),
-            new JunctionTrack((int)trackStartX,(int)trackStartY, (int)pieceSize,curId, 6, "RIGHT",false,true),
-            new JunctionTrack((int)trackStartX,(int)trackStartY, (int)pieceSize,curId, 6, "RIGHT",false,false)
-    };
-
-    public DefaultTrack getSelectedTrackFromPanel(){
-        DefaultTrack ds0 = null;
-
+    /**
+     * Returns a new track of the type selected in the track panel
+     * */
+    public DefaultTrack getSelectedTrackFromPanel(int x, int y){
         DefaultTrack[] trackChoices = new DefaultTrack[]{
-                new StraightHoriz((int)trackStartX,(int)trackStartY, (int)pieceSize,0,curId, "RIGHT"),
-                new Quart1((int)trackStartX,(int)trackStartY, (int)pieceSize*2,1, "RIGHT", curId),
-                new Quart2((int)trackStartX,(int)trackStartY, (int)pieceSize*2,2, "DOWN", curId),
-                new Quart3((int)trackStartX,(int)trackStartY, (int)pieceSize*2,3, "LEFT", curId),
-                new Quart4((int)trackStartX,(int)trackStartY, (int)pieceSize*2,4, "UP", curId),
-                new StraightVert((int)trackStartX,(int)trackStartY, (int)pieceSize,5, "DOWN",curId),
-                new JunctionTrack((int)trackStartX,(int)trackStartY, (int)pieceSize,curId, 6, "RIGHT",false,true),
-                new JunctionTrack((int)trackStartX,(int)trackStartY, (int)pieceSize,curId, 6, "RIGHT",false,false)
+                new StraightHoriz(x,(int)trackStartY, (int)pieceSize,0,curId, "RIGHT"),
+                new Quart1(x,y, (int)pieceSize*2,1, "RIGHT", curId),
+                new Quart2(x,y, (int)pieceSize*2,2, "DOWN", curId),
+                new Quart3(x,y, (int)pieceSize*2,3, "LEFT", curId),
+                new Quart4(x,y, (int)pieceSize*2,4, "UP", curId),
+                new StraightVert(x,y, (int)pieceSize,5, "DOWN",curId),
+                new JunctionTrack(x,y, (int)pieceSize,curId, 6, "RIGHT",false,true),
+                new JunctionTrack(x,y, (int)pieceSize,curId, 6, "RIGHT",false,false)
         };
 
         return trackChoices[selectedBox];
     }
 
-
-
-
-
-
-
+    /**
+     * Returns the index of the track in the tracks array -1
+     * if it does not exist
+     * */
     public int getTrackIndex(DefaultTrack track){
         for(int i = 0; i < allTracks.size(); i++){
             if(track.equals(allTracks.get(i)))return i;
@@ -651,35 +650,10 @@ public class TrackBuilder implements MouseEvents{
         return -1;
     }
 
-    private void checkConnection(JunctionTrack jTrack){
-        Point jPoint = jTrack.getConnectionPoint();
-        for(DefaultTrack t : allTracks){
-            if(Math.abs(jPoint.getY() - t.getConnectionPoint().getX()) < 5 && Math.abs(jPoint.getY() - t.getConnectionPoint().getY()) < 5  ){
-                // Close enough to connect
-                if(jTrack.inBound()){
-                    if(jTrack.getInboundFrom() == 0){//TODO update to -1
-
-                    }
-                    if(jTrack.getInboundTo() == 0){
-
-                    }
-                }
-                else{
-                    if(jTrack.getOutBoundTotraight() == 0){
-
-                    }
-                    if(jTrack.getOutboundToThrown() == 0){
-
-                    }
-
-                }
-
-            }
-        }
-
-    }
-
-    public void selectPiece(double x, double y){
+    /**
+     * Selects the box on the screen using the y location
+     * */
+    public void selectPiece(double y){
         int selected = 0;
         for(double ty = 20+ boxGap; ty < (((boxSize+boxGap)*NUMB_PIECES)+boxGap); ty+=boxSize+boxGap){
             if(y > ty && y < ty + boxSize){
@@ -691,11 +665,13 @@ public class TrackBuilder implements MouseEvents{
         this.selectedBox = -1;//None selected
     }
 
-    public boolean oneShownPanel(double x, double y){
+    /**
+     * Returns if the x point is on the track panel
+     * */
+    public boolean onTrackPanel(double x){
         if(x > shownPanelStartX)return true;
         return false;
     }
-
 
     /**
      * A list of tracks to show to the user to choose from on the UI
@@ -703,61 +679,26 @@ public class TrackBuilder implements MouseEvents{
     public List<DefaultTrack> setUpDrawPieces(){
         List<DefaultTrack> sections = new ArrayList<>();
 
-        double middleX = (screenWidth - boxSize - boxGap) + (boxSize/2);//Start of the box to draw in
-        double middleY = 10 + boxGap + (boxSize/2);
-
+        double x = (screenWidth - boxSize - boxGap) + (boxSize/2);//Start of the box to draw in
+        double y = 10 + boxGap + (boxSize/2) - DefaultTrack.TRACK_WIDTH/2;
         double size = boxSize - (boxGap);
-        double y = middleY - DefaultTrack.TRACK_WIDTH/2;
-        double x = middleX - (size/2);
 
+        DefaultTrack[] trackChoices = new DefaultTrack[]{
+                new StraightHoriz((int)x,(int)y, (int)size,0,0, "RIGHT"),
+                new Quart1((int)x,(int)y, (int)size,1,"RIGHT",0 ),
+                new Quart2((int)x,(int)y, (int)size,2,"RIGHT",0 ),
+                new Quart3((int)x,(int)y, (int)size,3,"RIGHT",0 ),
+                new Quart4((int)x,(int)y, (int)size,4,"RIGHT",0 ),
+                new StraightVert((int)x,(int)y, (int)size,5,"RIGHT",0),
+                new JunctionTrack((int)x,(int)y, (int)size/2,7,0,"RIGHT",false,true),
+                new JunctionTrack((int)x,(int)y, (int)size/2,7,0,"RIGHT",false,false)
+        };
 
-        DefaultTrack ds0 = new StraightHoriz((int)x,(int)y, (int)size,0,0, "RIGHT");
-
-        x = middleX - size/4;
-        y = middleY + boxSize + boxGap - (size/2) + size/4;
-
-        DefaultTrack ds1 = new Quart1((int)x,(int)y, (int)size,1,"RIGHT",0 );
-
-        y += boxSize + boxGap;
-        x = middleX - size/2 - size/4;
-
-        DefaultTrack ds2 = new Quart2((int)x,(int)y, (int)size,2,"RIGHT",0 );
-
-        x = middleX - size/2 - size/4;
-        y += boxSize + boxGap - size/2;
-
-        DefaultTrack ds3 = new Quart3((int)x,(int)y, (int)size,3,"RIGHT",0 );
-
-        y += boxSize + boxGap;
-        x = middleX - size/2 + size/4 ;
-
-        DefaultTrack ds4 = new Quart4((int)x,(int)y, (int)size,4,"RIGHT",0 );
-
-        x = middleX - DefaultTrack.TRACK_WIDTH /2 + size/4;
-        y+= boxSize + boxGap + size/4;
-
-        DefaultTrack ds5 = new StraightVert((int)x,(int)y, (int)size,5,"RIGHT",0);
-
-
-        x = middleX - DefaultTrack.TRACK_WIDTH /2 - size/4;
-        y+= boxSize + boxGap*2 + size/2;
-
-        DefaultTrack ds6 = new JunctionTrack((int)x,(int)y, (int)size/2,7,0,"RIGHT",false,true);
-
-        x = middleX - DefaultTrack.TRACK_WIDTH /2 - size/4;
-        y+= boxSize + boxGap*2 ;
-
-
-        DefaultTrack ds7 = new JunctionTrack((int)x,(int)y, (int)size/2,7,0,"RIGHT",false,false);
-
-        sections.add(ds0);
-        sections.add(ds1);
-        sections.add(ds2);
-        sections.add(ds3);
-        sections.add(ds4);
-        sections.add(ds5);
-        sections.add(ds6);
-        sections.add(ds7);
+        for(DefaultTrack track : trackChoices){
+            track.setMid(x,y);
+            y+=boxSize + boxGap;
+            sections.add(track);
+        }
 
         return sections;
     }
@@ -766,18 +707,20 @@ public class TrackBuilder implements MouseEvents{
      * Called when a key is pressed
      * */
     public void keyPressed(String code){
-
+        // Use E to change the direction of a track piece
         if(code.equals("E")){
             if(mouseSelectedPeice != null){
                 mouseSelectedPeice.toggleDirection();
             }
         }
+        // Use R to rotate through the selectable pieces
         if(code.equals("R")){
             if(mouseSelectedPeice != null){
                 if(selectedBox == 7)selectedBox = 0;
                 else selectedBox++;
                 allTracks.remove(allTracks.size()-1);
-                DefaultTrack t = getSelectedTrackFromPanel();
+                DefaultTrack t = getSelectedTrackFromPanel((int)mouseLocation.getX(),(int)mouseLocation.getY());//TODO possibly use cur mouse loc
+                t.setMid(mouseLocation.getX(),mouseLocation.getY());
                 allTracks.add(t);
                 mouseSelectedPeice = t;
             }

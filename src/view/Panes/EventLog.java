@@ -13,12 +13,10 @@ public class EventLog extends TextArea {
     public EventLog(){
         super();
 
-
         this.setPrefRowCount(10);
         this.setPrefColumnCount(100);
         this.setWrapText(true);
         this.setPrefWidth(250);
         this.setStyle("-fx-control-inner-background:#414A4C;");
-//        this.setStyle("-fx-background-color: #414A4C;");
     }
 }
