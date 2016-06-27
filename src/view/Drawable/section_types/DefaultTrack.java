@@ -18,7 +18,9 @@ public abstract class DefaultTrack {
     public static final Color TIE_COLOR = new Color(0.5,0.29,0,1);
     public static final Color RAIL_COLOR = new Color(0.5,0.5,0.5,1);
     public static final Color BACKGROUND_COLOR = new Color(0.8,0.8,0.8,1);
-    public static final Color SELECTED_COLOR = new Color(0.9,0.0,0.0,1);
+    public static Color SELECTED_COLOR = new Color(0.9,0.0,0.0,1);
+
+    public static final int CONNECT_SENS = 10;
 
     public static final int TRACK_WIDTH = 10;
     private double startX;
@@ -53,6 +55,29 @@ public abstract class DefaultTrack {
         this.juncTo = -1;
     }
 
+    public boolean canConnect(DefaultTrack track){
+        System.out.println("Can connect should be implemented in subclass");
+        return false;
+    }
+
+    public Point getConnectionPointFrom(){
+        System.out.println("point null should be implemented in subclass");
+        return null;
+    }
+
+    public void toggleDirection(){
+        System.out.println("toggle direction should be implemented in subclass");
+    }
+
+    public Point getConnectionPointTo(){
+        System.out.println("point from should be implemented in subclass");
+        return null;
+    }
+
+    public void setMid(double x, double y){
+        System.out.println("set mid should be implemented in subclass");
+    }
+
     /**
      * Constructor for the starting piece
      * */
@@ -68,6 +93,10 @@ public abstract class DefaultTrack {
         this.juncTo = -1;
     }
 
+    public Point getConnectionPoint(){
+        System.out.println("Should be implemented in subclass getConnectionPoint");
+        return null;
+    }
 
     public void setSelected(boolean selected){
         this.selected = selected;

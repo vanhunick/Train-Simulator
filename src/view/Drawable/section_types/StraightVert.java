@@ -72,10 +72,76 @@ public class StraightVert extends DefaultTrack {
         super.setStartY(startY);
     }
 
+    public boolean canConnect(DefaultTrack trackToConnect){
+        int id = trackToConnect.getDrawID();
+
+        if(getDirection().equals("DOWN")){
+            if(id == 3 || id == 4 || id == 5){
+                if(Math.abs(getConnectionPointTo().getX() - trackToConnect.getConnectionPointFrom().getX()) < DefaultTrack.CONNECT_SENS &&
+                        Math.abs(getConnectionPointTo().getY() - trackToConnect.getConnectionPointFrom().getY()) < DefaultTrack.CONNECT_SENS)return true;
+            }
+        }
+        else if(getDirection().equals("UP")){
+            if(id == 1 || id == 2 || id == 5){
+                if(Math.abs(getConnectionPointTo().getX() - trackToConnect.getConnectionPointFrom().getX()) < DefaultTrack.CONNECT_SENS &&
+                        Math.abs(getConnectionPointTo().getY() - trackToConnect.getConnectionPointFrom().getY()) < DefaultTrack.CONNECT_SENS)return true;
+            }
+        }
+        return false;
+    }
+
     public boolean containsPoint(double x, double y){
         return x >= super.getStartX() && x <= super.getStartX() + TRACK_WIDTH &&
                 y >= super.getStartY() && y <= super.getStartY() + super.getLength();
     }
+
+    public Point getConnectionPoint(){
+        if(super.getDirection().equals("UP")){
+            return new Point((int)(super.getStartX()+ TRACK_WIDTH/2),(int) (getStartY()));
+        }
+        else if(super.getDirection().equals("DOWN")){
+            return new Point((int)(super.getStartX() + TRACK_WIDTH/2),(int) (getStartY() + getLength()));
+        }
+        return null;
+    }
+
+    public void toggleDirection(){
+        if(getDirection().equals("UP")){
+            setDirection("DOWN");
+        }
+        else {
+            setDirection("UP");
+        }
+    }
+
+    public Point getConnectionPointFrom(){
+        if(super.getDirection().equals("UP")){
+            return new Point((int)(super.getStartX() + TRACK_WIDTH/2),(int) (getStartY() + getLength()));
+        }
+        else if(super.getDirection().equals("DOWN")){
+            return new Point((int)(super.getStartX()+ TRACK_WIDTH/2),(int) (getStartY()));
+        }
+        return null;
+    }
+
+    public Point getConnectionPointTo(){
+        if(super.getDirection().equals("UP")){
+            return new Point((int)(super.getStartX()+ TRACK_WIDTH/2),(int) (getStartY()));
+        }
+        else if(super.getDirection().equals("DOWN")){
+            return new Point((int)(super.getStartX() + TRACK_WIDTH/2),(int) (getStartY() + getLength()));
+        }
+        return null;
+    }
+
+
+    public void setMid(double x, double y){
+        setStartX(x + TRACK_WIDTH/2);
+        setStartY(y - getLength()/2);
+    }
+
+
+
 
     public boolean checkOnAfterUpdate(Point curPoint, double rotation,double rotDone, double dist, Movable movable){
         if(getNextY(curPoint.getY(),dist, movable.getOrientation(), movable.getDirection()) == -1 )return false;

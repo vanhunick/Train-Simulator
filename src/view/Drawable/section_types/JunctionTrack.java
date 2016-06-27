@@ -3,6 +3,8 @@ package view.Drawable.section_types;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import view.Drawable.Movable;
+
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,7 +59,6 @@ public class JunctionTrack extends DefaultTrack {
     }
 
     public void createAndAddTracks(int length){
-
         outRightTrack = new Quart1(length+(TRACK_WIDTH/2),1,1);//TODO possibly length/2
         inDown = new Quart2(length+(TRACK_WIDTH/2),2,1);
         outUpTrack = new Quart3(length+(TRACK_WIDTH/2),3,1);
@@ -129,6 +130,28 @@ public class JunctionTrack extends DefaultTrack {
         }
     }
 
+    public void updateLocation(double startX, double startY){
+        straightTrack.setStartX(startX);
+        straightTrack.setStartY(startY);
+
+        if(inbound){
+            inRight.setStartX(straightTrack.getStartX() + straightTrack.getLength() - ((inRight.getLength()-TRACK_WIDTH/2)/2) - TRACK_WIDTH);
+            inRight.setStartY(straightTrack.getStartY() - inRight.getLength() + TRACK_WIDTH);
+
+            inRight.setDirection("UP");// Direction not actually left but it means we can use the method to connect the next peice
+            inDown.setStart(inRight);
+            inDown.setDirection("DOWN");
+            inRight.setDirection("RIGHT");// Change the direction back to what it is supposed to be
+        }
+        else{
+            outUpTrack.setStartX(straightTrack.getStartX() - ((outUpTrack.getLength()-TRACK_WIDTH/2)/2));
+            outUpTrack.setStartY(straightTrack.getStartY() - outUpTrack.getLength() + TRACK_WIDTH);
+            outUpTrack.setDirection("UP");
+            outUpTrack.setMid();
+            outRightTrack.setStart(outUpTrack);
+        }
+    }
+
     public void setStart(DefaultTrack from){
         if(from.getDirection().equals("RIGHT")){
             super.setDirection("RIGHT");
@@ -178,6 +201,43 @@ public class JunctionTrack extends DefaultTrack {
         super.setStartY(straightTrack.getStartY());
     }
 
+    public boolean canConnect(DefaultTrack trackToConnect){
+        int id = trackToConnect.getDrawID();
+
+        if(getDirection().equals("RIGHT")){
+            if(id == 0 || id == 2 || id == 3 || id == 6){
+                if(Math.abs(straightTrack.getConnectionPointTo().getX() - trackToConnect.getConnectionPointFrom().getX()) < DefaultTrack.CONNECT_SENS &&
+                        Math.abs(straightTrack.getConnectionPointTo().getY() - trackToConnect.getConnectionPointFrom().getY()) < DefaultTrack.CONNECT_SENS)return true;
+            }
+        }
+        else if(getDirection().equals("LEFT")){
+            if(id == 0 || id == 1 || id == 4 || id == 6){
+                if(Math.abs(straightTrack.getConnectionPointTo().getX() - trackToConnect.getConnectionPointFrom().getX()) < DefaultTrack.CONNECT_SENS &&
+                        Math.abs(straightTrack.getConnectionPointTo().getY() - trackToConnect.getConnectionPointFrom().getY()) < DefaultTrack.CONNECT_SENS)return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean canConnectThrown(DefaultTrack trackToConnect){
+        int id = trackToConnect.getDrawID();
+
+        if(getDirection().equals("RIGHT")){
+            if(id == 0 || id == 2 || id == 3){
+                if(Math.abs(outRightTrack.getConnectionPointTo().getX() - trackToConnect.getConnectionPointFrom().getX()) < DefaultTrack.CONNECT_SENS &&
+                        Math.abs(outRightTrack.getConnectionPointTo().getY() - trackToConnect.getConnectionPointFrom().getY()) < DefaultTrack.CONNECT_SENS)return true;
+            }
+        }
+        else if(getDirection().equals("LEFT")){//TODO
+            if(id == 0 || id == 1 || id == 4){
+                if(Math.abs(getConnectionPointTo().getX() - trackToConnect.getConnectionPointFrom().getX()) < DefaultTrack.CONNECT_SENS &&
+                        Math.abs(getConnectionPointTo().getY() - trackToConnect.getConnectionPointFrom().getY()) < DefaultTrack.CONNECT_SENS)return true;
+            }
+        }
+        return false;
+    }
+
+
     public double getLength() {
         return super.getLength();
     }
@@ -208,7 +268,6 @@ public class JunctionTrack extends DefaultTrack {
         straightTrack.draw(g);
         setTrackColors(thrown);
 
-//        g.setStroke(Color.WHITE);
         g.strokeText("Thrown " + thrown,super.getStartX(),super.getStartY() - 20);//TODO update with colors later
 
 
@@ -308,6 +367,10 @@ public class JunctionTrack extends DefaultTrack {
         return false;
     }
 
+    public void setMid(double x, double y){
+        updateLocation(x - getLength()/2,y + getLength()/2);
+    }
+
     public int getToOutbound(){
         if(thrown){
             return outboundToThrown;
@@ -324,6 +387,23 @@ public class JunctionTrack extends DefaultTrack {
         else{
             return inboundFromStraight;
         }
+    }
+
+    public Point getConnectionThrown(){
+        if(inbound){
+            return inDown.getConnectionPointFrom();
+        }
+        else {
+            return outRightTrack.getConnectionPointTo();
+        }
+    }
+
+    public Point getConnectionPointTo(){
+        return straightTrack.getConnectionPointTo();
+    }
+
+    public Point getConnectionPointFrom(){
+        return straightTrack.getConnectionPointFrom();
     }
 
     public DefaultTrack getInboundThrownJuncTrack(){
@@ -457,7 +537,24 @@ public class JunctionTrack extends DefaultTrack {
         }
     }
 
+    public boolean canConnect(double x, double y){
 
+
+        return false;
+    }
+
+    //TODO support the top tracks
+    public Point getConnectionPoint(){
+        if(inbound){
+            if(getDirection().equals("RIGHT")){
+                return inDown.getConnectionPoint();
+            }
+            return inDown.getConnectionPoint();
+        }
+        else {
+            return outRightTrack.getConnectionPoint();
+        }
+    }
 
 
 

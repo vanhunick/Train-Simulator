@@ -78,6 +78,33 @@ public class Quart1 extends DefaultTrack {
         setMid();
     }
 
+    public boolean canConnect(DefaultTrack trackToConnect){
+        int id = trackToConnect.getDrawID();
+
+        if(getDirection().equals("RIGHT")){
+            if(id == 0 || id == 2 || id == 3){
+                if(Math.abs(getConnectionPointTo().getX() - trackToConnect.getConnectionPointFrom().getX()) < DefaultTrack.CONNECT_SENS &&
+                        Math.abs(getConnectionPointTo().getY() - trackToConnect.getConnectionPointFrom().getY()) < DefaultTrack.CONNECT_SENS)return true;
+            }
+        }
+        else if(getDirection().equals("DOWN")){
+            if(id == 3 || id == 4 || id == 5){
+                if(Math.abs(getConnectionPointTo().getX() - trackToConnect.getConnectionPointFrom().getX()) < DefaultTrack.CONNECT_SENS &&
+                        Math.abs(getConnectionPointTo().getY() - trackToConnect.getConnectionPointFrom().getY()) < DefaultTrack.CONNECT_SENS)return true;
+            }
+        }
+        return false;
+    }
+
+    public void toggleDirection(){
+        if(getDirection().equals("RIGHT")){
+            setDirection("DOWN");
+        }
+        else {
+            setDirection("RIGHT");
+        }
+    }
+
     public void setMid(){
         radius = getLength()/2;
         midPointX = getStartX()  + radius + TRACK_WIDTH/2;
@@ -89,6 +116,45 @@ public class Quart1 extends DefaultTrack {
     public boolean containsPoint(double x, double y){
         return x >= super.getStartX() && x <= super.getStartX() + super.getLength()/2 &&
                 y >= super.getStartY() && y <= super.getStartY() + super.getLength()/2;
+    }
+
+    public Point getConnectionPoint(){
+        if(super.getDirection().equals("RIGHT")){
+            return new Point((int)(super.getStartX()+getLength()/2),(int) (getStartY() + TRACK_WIDTH/2));
+        }
+        else if(super.getDirection().equals("DOWN")){
+            return new Point((int)(super.getStartX()+ TRACK_WIDTH/2),(int) (getStartY() + getLength()/2));
+        }
+        return null;
+    }
+
+
+    public Point getConnectionPointFrom(){
+        if(super.getDirection().equals("RIGHT")){
+            return new Point((int)(super.getStartX()+ TRACK_WIDTH/2),(int) (getStartY() + getLength()/2));
+        }
+        else if(super.getDirection().equals("DOWN")){
+            return new Point((int)(super.getStartX()+getLength()/2),(int) (getStartY() + TRACK_WIDTH/2));
+        }
+        return null;
+    }
+
+    public Point getConnectionPointTo(){
+        if(super.getDirection().equals("RIGHT")){
+            return new Point((int)(super.getStartX()+getLength()/2),(int) (getStartY() + TRACK_WIDTH/2));
+        }
+        else if(super.getDirection().equals("DOWN")){
+            return new Point((int)(super.getStartX()+ TRACK_WIDTH/2),(int) (getStartY() + getLength()/2));
+        }
+        return null;
+    }
+
+
+    public void setMid(double x, double y){
+        setStartX(x - getLength()/4);
+        setStartY(y - getLength()/4);
+
+        setMid();
     }
 
     public void draw(GraphicsContext g) {
@@ -127,6 +193,8 @@ public class Quart1 extends DefaultTrack {
         g.strokeArc(super.getStartX(), super.getStartY(), super.getLength(), super.getLength(), 90, 90, ArcType.OPEN);
         g.strokeArc(super.getStartX() + TRACK_WIDTH, super.getStartY()+ TRACK_WIDTH, super.getLength() - (TRACK_WIDTH* 2), super.getLength() - (TRACK_WIDTH* 2), 90, 90, ArcType.OPEN);
     }
+
+
 
 
     public double getNextPoint(Point curPoint,double curRot, double rotationDone, double speed, Movable movable){

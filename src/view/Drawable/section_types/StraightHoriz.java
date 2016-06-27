@@ -32,6 +32,8 @@ public class StraightHoriz extends DefaultTrack {
         double startX = 0;
         double startY = 0;
 
+        System.out.println(from);
+
         if(from.getDirection().equals("RIGHT")){
             super.setDirection("RIGHT");
             if(from.getDrawID() == 0){
@@ -73,6 +75,36 @@ public class StraightHoriz extends DefaultTrack {
         super.setStartX(startX);
         super.setStartY(startY);
     }
+
+
+    public boolean canConnect(DefaultTrack trackToConnect){
+        int id = trackToConnect.getDrawID();
+        System.out.println(trackToConnect);
+
+        if(getDirection().equals("RIGHT")){
+            if(id == 0 || id == 2 || id == 3 || id == 6){
+                if(Math.abs(getConnectionPointTo().getX() - trackToConnect.getConnectionPointFrom().getX()) < DefaultTrack.CONNECT_SENS &&
+                        Math.abs(getConnectionPointTo().getY() - trackToConnect.getConnectionPointFrom().getY()) < DefaultTrack.CONNECT_SENS)return true;
+            }
+        }
+        else if(getDirection().equals("LEFT")){
+            if(id == 0 || id == 1 || id == 4 || id == 6){
+                if(Math.abs(getConnectionPointTo().getX() - trackToConnect.getConnectionPointFrom().getX()) < DefaultTrack.CONNECT_SENS &&
+                        Math.abs(getConnectionPointTo().getY() - trackToConnect.getConnectionPointFrom().getY()) < DefaultTrack.CONNECT_SENS)return true;
+            }
+        }
+        return false;
+    }
+
+    public void toggleDirection(){
+        if(getDirection().equals("RIGHT")){
+            setDirection("LEFT");
+        }
+        else {
+            setDirection("RIGHT");
+        }
+    }
+
 
     public boolean containsPoint(double x, double y){
         return x >= super.getStartX() && x <= super.getStartX() + super.getLength() &&
@@ -150,6 +182,12 @@ public class StraightHoriz extends DefaultTrack {
         return 0;
     }
 
+    public void setMid(double x, double y){
+        setStartX(x - getLength()/2);
+        setStartY(y - TRACK_WIDTH/2);
+    }
+
+
     /**
      * USed to put the train in the middle of the track when first drawn
      * */
@@ -161,6 +199,36 @@ public class StraightHoriz extends DefaultTrack {
         if(getNextX(curPoint.getX(),dist, movable.getOrientation(), movable.getDirection()) == -1 )return false;
         if(getNextY(curPoint.getY(),dist, movable.getOrientation()) == -1 )return false;
         return true;
+    }
+
+    public Point getConnectionPoint(){
+        if(super.getDirection().equals("RIGHT")){
+            return new Point((int)(super.getStartX()+ getLength()),(int) (getStartY() + TRACK_WIDTH/2));
+        }
+        else if(super.getDirection().equals("LEFT")){
+            return new Point((int)(super.getStartX()),(int) (getStartY() + TRACK_WIDTH/2));
+        }
+        return null;
+    }
+
+    public Point getConnectionPointFrom(){
+        if(super.getDirection().equals("RIGHT")){
+            return new Point((int)(super.getStartX()),(int) (getStartY() + TRACK_WIDTH/2));
+        }
+        else if(super.getDirection().equals("LEFT")){
+            return new Point((int)(super.getStartX()+ getLength()),(int) (getStartY() + TRACK_WIDTH/2));
+        }
+        return null;
+    }
+
+    public Point getConnectionPointTo(){
+        if(super.getDirection().equals("RIGHT")){
+            return new Point((int)(super.getStartX()+ getLength()),(int) (getStartY() + TRACK_WIDTH/2));
+        }
+        else if(super.getDirection().equals("LEFT")){
+            return new Point((int)(super.getStartX()),(int) (getStartY() + TRACK_WIDTH/2));
+        }
+        return null;
     }
 
     public void draw(GraphicsContext g) {
