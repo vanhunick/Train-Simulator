@@ -79,7 +79,6 @@ public class StraightHoriz extends DefaultTrack {
 
     public boolean canConnect(DefaultTrack trackToConnect){
         int id = trackToConnect.getDrawID();
-        System.out.println(trackToConnect);
 
         if(getDirection().equals("RIGHT")){
             if(id == 0 || id == 2 || id == 3 || id == 6){

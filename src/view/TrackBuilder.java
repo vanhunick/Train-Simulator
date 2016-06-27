@@ -43,8 +43,6 @@ public class TrackBuilder implements MouseEvents{
 
     // The location and size of the piece to place on the canvas
     private double pieceSize = 100;
-    private double trackStartX = 30;
-    private double trackStartY = 150;
 
     // Start of the piece selection panel
     private double shownPanelStartX;
@@ -53,6 +51,7 @@ public class TrackBuilder implements MouseEvents{
     private double screenWidth;
     private double screenHeight;
 
+    // If the user is selecting sections
     private boolean sectionMode = false;
 
     // The exampleTracks drawn to select from
@@ -97,7 +96,8 @@ public class TrackBuilder implements MouseEvents{
     // The track being dragged by the mouse
     private DefaultTrack mouseSelectedPeice;
 
-
+    // The current location of the mouse
+    private Point mouseLocation;
 
 
     /**
@@ -117,6 +117,10 @@ public class TrackBuilder implements MouseEvents{
         this.mouseLocation = new Point(0,0);
     }
 
+
+    /**
+     * Called when the screen size changes to make sure all the elements still fit
+     * */
     public void updateSize(){
         this.screenWidth = controller.getCanvasWidth();
         this.screenHeight = controller.getCanvasHeight();
@@ -125,8 +129,6 @@ public class TrackBuilder implements MouseEvents{
         this.boxSize = ((screenHeight - 50 - ((NUMB_PIECES*boxGap)+boxGap))/NUMB_PIECES);
         this.exampleTracks = setUpDrawPieces();
     }
-
-    public void update(){}
 
     /**
      * Called to redraw all of the elements on the screen
@@ -174,7 +176,6 @@ public class TrackBuilder implements MouseEvents{
      * */
     public void drawShownPanel(GraphicsContext gc){
         gc.setFill(Color.WHITE);
-
         gc.fillRect(shownPanelStartX, 10, screenWidth - shownPanelStartX, ((boxSize+boxGap)*NUMB_PIECES)+boxGap/2);
         gc.strokeRect(shownPanelStartX, 10, screenWidth - shownPanelStartX, ((boxSize + boxGap) * NUMB_PIECES) + boxGap/2);
 
@@ -187,10 +188,8 @@ public class TrackBuilder implements MouseEvents{
             gc.setStroke(Color.BLACK);
             gc.strokeRect(shownPanelStartX + boxGap, curY, boxSize-boxGap/2, boxSize - boxGap/2);
             gc.setLineWidth(1);
-
             curY+= boxGap + boxSize;
         }
-
         gc.setLineWidth(5);
         for(DefaultTrack ds : exampleTracks){
             ds.draw(gc);
@@ -198,41 +197,7 @@ public class TrackBuilder implements MouseEvents{
         gc.setLineWidth(1);
     }
 
-    /**
-     * Adds the appropriate UI elements for the builder to the border pane
-     *
-     * @param bp the border pane to add elements to
-     * */
-    public void addUIElementsToLayout(BorderPane bp){
-        bp.setLeft(vBox);
-    }
 
-
-    /**
-     * Removes the appropriate UI elements for the builder to the border pane
-     *
-     * @param bp the border pane to add elements to
-     * */
-    public void removeUIElementsFromLayout(BorderPane bp){
-        bp.getChildren().remove(vBox);
-    }
-
-
-    /**
-     * Creates the buttons for the track builder and sets of action listeners for them
-     * */
-    private VBox createBuilderButtons(){
-        VBox vBox = new VBox(8);
-        vBox.setPadding(new Insets(5, 5, 5, 5));
-
-        CheckBox alternate = new CheckBox("Alternate");
-        alternate.setSelected(true);
-        alternate.setOnAction(e -> alternateCheckBoxEvent(alternate));
-
-        vBox.getChildren().addAll(alternate);
-        vBox.setPrefWidth(WIDTH);
-        return vBox;
-    }
 
     public void save(){
         // Check if there are tracks that have not been added to a section yet
@@ -240,7 +205,6 @@ public class TrackBuilder implements MouseEvents{
             newSection();// Act like the next section button is clicked
         }
 
-        System.out.println("Sections for track " + sectionsForTrack.size());
         // Sections
         DrawableSection[] sections = new DrawableSection[sectionsForTrack.size()];
         sectionsForTrack.toArray(sections);
@@ -403,6 +367,9 @@ public class TrackBuilder implements MouseEvents{
         }
     }
 
+    /**
+     * Returns the section the tracks belongs to null if none
+     * */
     public DrawableSection getSection(DefaultTrack track){
         for(DrawableSection s : sectionsForTrack){
             for(DefaultTrack t : s.getTracks()){
@@ -412,6 +379,9 @@ public class TrackBuilder implements MouseEvents{
         return null;
     }
 
+    /**
+     * Returns the next valid train id
+     * */
     public int getNextTrainID(){
         int maxID = 0;
         for(DrawableTrain t : trains){
@@ -423,7 +393,10 @@ public class TrackBuilder implements MouseEvents{
         return maxID;
     }
 
-
+    /**
+     * Returns the track at the point x,y if there is one
+     * else returns null
+     * */
     public DefaultTrack getTrack(double x, double y){
         for(DefaultTrack s : allTracks){
             if(s.containsPoint(x,y)){
@@ -465,18 +438,20 @@ public class TrackBuilder implements MouseEvents{
             placeTrack(mouseSelectedPeice);
         }
 
+        // The mouse was released but the location for the track was not valid
         if(allTracks.size() < numbSections){
             curId--;//StraightTrack was removed can free vup ID
         }
     }
 
-
-
+    /**
+     * Places a track called when the user released the mouse in a valid
+     * location for the track
+     * */
     public boolean placeTrack(DefaultTrack track){
 
         // The first track can be placed anywhere
         if(allTracks.size() == 1){
-//            allTracks.add(track);
             return true;
         }
 
@@ -530,7 +505,6 @@ public class TrackBuilder implements MouseEvents{
         // Connect the start piece
         for(DefaultTrack t : allTracks){
             if(t.canConnect(allTracks.get(0))){
-                System.out.println("Working");
                 allTracks.get(0).setFrom(getTrackIndex(t));
             }
         }
@@ -570,11 +544,10 @@ public class TrackBuilder implements MouseEvents{
         }
     }
 
-    private Point mouseLocation;
+
 
     @Override
     public void mouseMoved(double x, double y, MouseEvent e){
-
         for(DefaultTrack d : allTracks){
             if(d.containsPoint(x,y)){
                 d.setMouseOn(true);
@@ -585,13 +558,11 @@ public class TrackBuilder implements MouseEvents{
         }
     }
 
-
-
     @Override
     public void mouseDragged(double x, double y, MouseEvent e) {
         this.mouseLocation.setLocation(x,y);// Update mouse location
 
-
+        // Highlights the selected piece red or green based on if it is valid to place
         if(mouseSelectedPeice != null){
             mouseSelectedPeice.setMid(x,y);
 
@@ -626,7 +597,7 @@ public class TrackBuilder implements MouseEvents{
      * */
     public DefaultTrack getSelectedTrackFromPanel(int x, int y){
         DefaultTrack[] trackChoices = new DefaultTrack[]{
-                new StraightHoriz(x,(int)trackStartY, (int)pieceSize,0,curId, "RIGHT"),
+                new StraightHoriz(x,y, (int)pieceSize,0,curId, "RIGHT"),
                 new Quart1(x,y, (int)pieceSize*2,1, "RIGHT", curId),
                 new Quart2(x,y, (int)pieceSize*2,2, "DOWN", curId),
                 new Quart3(x,y, (int)pieceSize*2,3, "LEFT", curId),
@@ -726,5 +697,43 @@ public class TrackBuilder implements MouseEvents{
             }
         }
     }
+
+    /**
+     * Adds the appropriate UI elements for the builder to the border pane
+     *
+     * @param bp the border pane to add elements to
+     * */
+    public void addUIElementsToLayout(BorderPane bp){
+        bp.setLeft(vBox);
+    }
+
+
+    /**
+     * Removes the appropriate UI elements for the builder to the border pane
+     *
+     * @param bp the border pane to add elements to
+     * */
+    public void removeUIElementsFromLayout(BorderPane bp){
+        bp.getChildren().remove(vBox);
+    }
+
+
+    /**
+     * Creates the buttons for the track builder and sets of action listeners for them
+     * */
+    private VBox createBuilderButtons(){
+        VBox vBox = new VBox(8);
+        vBox.setPadding(new Insets(5, 5, 5, 5));
+
+        CheckBox alternate = new CheckBox("Alternate");
+        alternate.setSelected(true);
+        alternate.setOnAction(e -> alternateCheckBoxEvent(alternate));
+
+        vBox.getChildren().addAll(alternate);
+        vBox.setPrefWidth(WIDTH);
+        return vBox;
+    }
+
+    public void update(){}
 }
 
