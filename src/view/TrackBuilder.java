@@ -19,8 +19,6 @@ import view.Drawable.DrawableTrain;
 import view.Drawable.section_types.*;
 import view.Panes.ErrorDialog;
 import view.Panes.TrackMenu;
-
-import javax.sound.midi.Track;
 import java.awt.*;
 import java.io.File;
 import java.util.ArrayList;
@@ -71,9 +69,7 @@ public class TrackBuilder implements MouseEvents{
     // All the tracks that have been created
     private List<DefaultTrack> allTracks;
 
-    private DrawableSection curentSection;
-
-    // List
+    // List of stocks on the track
     private List<DrawableRollingStock> stocks;
 
     // ID for section
@@ -95,9 +91,7 @@ public class TrackBuilder implements MouseEvents{
     private boolean alternate = true;
 
     // For drawing from junction
-    private boolean fromThrown = false;
     private JunctionTrack selectedJunctionTrack;
-    private int junctionTrackID;
     private DefaultTrack currentSelectedTrack;
 
 
@@ -263,46 +257,24 @@ public class TrackBuilder implements MouseEvents{
     }
 
 
-
+    /**
+     * Called when the user clicks the new section button
+     * Indicates they want to start a new section or start the
+     * section creation part of the builder.
+     * */
     public void newSection(){
         // User clicked create sections for the first time
         if(!sectionMode){
             sectionMode = true;
+            // link up the unconnected tracks
             connectDestinations();
-
             return;
         }
-
-        DefaultTrack[] sectionTracks = new DefaultTrack[tracksInSection.size()];
-
-        // Copy over the created tracks into to section
-        for(int i = 0; i < tracksInSection.size(); i++){
-            sectionTracks[i] = tracksInSection.get(i);
-        }
-
-        // Empty out the tracks
-        tracksInSection.clear();
-
-        Section s = new Section(curSectionID,100,sectionTracks);//TODO do length later
-
-        // Set the Section to be from the one before
-        s.setFrom(sectionsForTrack.size()-1);
-        DrawableSection ds = new DrawableSection(s);
-
-        if(alternate){
-            ds.getSection().setCandetect(shouldDetect);
-            shouldDetect = !shouldDetect;
-        }
-
-        sectionsForTrack.add(ds);
-        curSectionID++;
-    }
-
-    public void newSection1(){
         if(tracksInSection.size() == 0){
             new ErrorDialog("There are no tracks in this section", "Invalid Section");
             return;
         }
+
         DefaultTrack[] sectionTracks = new DefaultTrack[tracksInSection.size()];
 
         // Copy over the created tracks into to section
@@ -327,6 +299,7 @@ public class TrackBuilder implements MouseEvents{
         sectionsForTrack.add(ds);
         curSectionID++;
     }
+
 
     /**
      * Toggle the checkbox for alternating exampleTracks
@@ -335,7 +308,6 @@ public class TrackBuilder implements MouseEvents{
         alternate.setSelected(!this.alternate);
         this.alternate = !this.alternate;
     }
-
 
     /**
      * Start the simulation by changing the mode in the controller and passing in
@@ -459,7 +431,9 @@ public class TrackBuilder implements MouseEvents{
             if(oneShownPanel(x, y)){
                 if(e.getButton().equals(MouseButton.PRIMARY)){
                     selectPiece(x, y);
+                    curId++;
                     DefaultTrack t = getFirstPiece();
+
                     allTracks.add(t);//TODO not sure if the best way will have to remove if not valid
                     mouseSelectedPeice = t;
                     mouseSelectedPeice.setSelected(true);
@@ -470,9 +444,14 @@ public class TrackBuilder implements MouseEvents{
 
     @Override
     public void mouseReleased(double x, double y, MouseEvent e) {
+        int numbSections = allTracks.size();
         if(mouseSelectedPeice != null){
             mouseSelectedPeice.setSelected(false);
             placeTrack(mouseSelectedPeice);
+        }
+
+        if(allTracks.size() < numbSections){
+            curId--;//StraightTrack was removed can free vup ID
         }
     }
 
@@ -959,6 +938,5 @@ public class TrackBuilder implements MouseEvents{
             }
         }
     }
-
 }
 
