@@ -94,6 +94,9 @@ public class TrackBuilder implements MouseEvents{
     private JunctionTrack selectedJunctionTrack;
     private DefaultTrack currentSelectedTrack;
 
+    // If the next section should detect or not
+    private boolean shouldDetect = true;
+
 
     /**
      * Constructs a new TrackBuilder object
@@ -428,15 +431,22 @@ public class TrackBuilder implements MouseEvents{
     @Override
     public void mousePressed(double x, double y, MouseEvent e) {
         if(e.getButton().equals(MouseButton.PRIMARY)){
+
+            // Check if the click is on the track panel
             if(oneShownPanel(x, y)){
                 if(e.getButton().equals(MouseButton.PRIMARY)){
+                    // Set the selected box
                     selectPiece(x, y);
-                    curId++;
-                    DefaultTrack t = getFirstPiece();
 
-                    allTracks.add(t);//TODO not sure if the best way will have to remove if not valid
-                    mouseSelectedPeice = t;
-                    mouseSelectedPeice.setSelected(true);
+                    // Check is mouse pressed on a box
+                    if(selectedBox !=-1){
+                        curId++;
+                        DefaultTrack t = getSelectedTrackFromPanel();
+
+                        allTracks.add(t);
+                        mouseSelectedPeice = t;
+                        mouseSelectedPeice.setSelected(true);
+                    }
                 }
             }
         }
@@ -540,7 +550,10 @@ public class TrackBuilder implements MouseEvents{
     @Override
     public void mouseClicked(double x, double y, MouseEvent e){
         if(e.getButton().equals(MouseButton.SECONDARY)){
-
+            DefaultTrack s = getTrack(x,y);
+            if(e.getClickCount() == 2 && s!= null){
+                showTrackMenu(s);
+            }
         }
 
         if(sectionMode){
@@ -549,59 +562,6 @@ public class TrackBuilder implements MouseEvents{
                 s.setSelected(true);
                 tracksInSection.add(s);
             }
-        }
-
-        if(1==1)return;
-        int numbSections = allTracks.size();
-
-        if(e.getButton().equals(MouseButton.PRIMARY)){
-            DefaultTrack s = getTrack(x,y);
-            if(e.getClickCount() == 2 && s!= null){
-                showTrackMenu(s);
-            }
-            else {
-                if(s != null){ // A track was clicked on
-
-                    // If the track clicked on is a junction track check both places it could go to
-                    if(s instanceof JunctionTrack){
-                        JunctionTrack j = (JunctionTrack)s;
-
-                        if(s.equals(selectedJunctionTrack)){
-                            selectedJunctionTrack.setThrown(!selectedJunctionTrack.getThrown());// Alternate Thrown
-                            j.setSelected(true);// Just to update the colors
-                            return;
-                        }
-
-                        if(j.getOutboundToThrown() == 0 || j.getInboundFrom() == 0){
-                            j.setSelected(true);
-                            selectedJunctionTrack = j;
-                            currentSelectedTrack.setSelected(false);
-                            currentSelectedTrack = s;
-                        }
-                    }
-                    else if(s.getTo() == 0) {
-                        currentSelectedTrack.setSelected(false);
-                        s.setSelected(true);
-                        currentSelectedTrack = s;
-                    }
-                }
-            }
-        }
-
-        if(oneShownPanel(x, y)){
-            selectPiece(x, y);
-            if(e.getButton().equals(MouseButton.PRIMARY)){
-                if(e.getClickCount() == 2){
-                    addPiece();
-                }
-            }
-        }
-
-        if(allTracks.size() < numbSections){
-            curId--;//StraightTrack was removed can free vup ID
-        }
-        else if(allTracks.size() > numbSections){
-            curId++;//Added a track need to increment the ID
         }
     }
 
@@ -650,154 +610,39 @@ public class TrackBuilder implements MouseEvents{
         }
     }
 
-    public DefaultTrack getFirstPiece(){
+    private DefaultTrack[] trackChoices = new DefaultTrack[]{
+            new StraightHoriz((int)trackStartX,(int)trackStartY, (int)pieceSize,0,curId, "RIGHT"),
+            new Quart1((int)trackStartX,(int)trackStartY, (int)pieceSize*2,1, "RIGHT", curId),
+            new Quart2((int)trackStartX,(int)trackStartY, (int)pieceSize*2,2, "DOWN", curId),
+            new Quart3((int)trackStartX,(int)trackStartY, (int)pieceSize*2,3, "LEFT", curId),
+            new Quart4((int)trackStartX,(int)trackStartY, (int)pieceSize*2,4, "UP", curId),
+            new StraightVert((int)trackStartX,(int)trackStartY, (int)pieceSize,5, "DOWN",curId),
+            new JunctionTrack((int)trackStartX,(int)trackStartY, (int)pieceSize,curId, 6, "RIGHT",false,true),
+            new JunctionTrack((int)trackStartX,(int)trackStartY, (int)pieceSize,curId, 6, "RIGHT",false,false)
+    };
+
+    public DefaultTrack getSelectedTrackFromPanel(){
         DefaultTrack ds0 = null;
 
-        if(selectedBox == 0){
-            ds0 = new StraightHoriz((int)trackStartX,(int)trackStartY, (int)pieceSize,0,curId, "RIGHT");
-        }
-        else if(selectedBox == 1){
-            ds0 = new Quart1((int)trackStartX,(int)trackStartY, (int)pieceSize*2,1, "RIGHT", curId);
+        DefaultTrack[] trackChoices = new DefaultTrack[]{
+                new StraightHoriz((int)trackStartX,(int)trackStartY, (int)pieceSize,0,curId, "RIGHT"),
+                new Quart1((int)trackStartX,(int)trackStartY, (int)pieceSize*2,1, "RIGHT", curId),
+                new Quart2((int)trackStartX,(int)trackStartY, (int)pieceSize*2,2, "DOWN", curId),
+                new Quart3((int)trackStartX,(int)trackStartY, (int)pieceSize*2,3, "LEFT", curId),
+                new Quart4((int)trackStartX,(int)trackStartY, (int)pieceSize*2,4, "UP", curId),
+                new StraightVert((int)trackStartX,(int)trackStartY, (int)pieceSize,5, "DOWN",curId),
+                new JunctionTrack((int)trackStartX,(int)trackStartY, (int)pieceSize,curId, 6, "RIGHT",false,true),
+                new JunctionTrack((int)trackStartX,(int)trackStartY, (int)pieceSize,curId, 6, "RIGHT",false,false)
+        };
 
-        }
-        else if(selectedBox == 2){
-            ds0 = new Quart2((int)trackStartX,(int)trackStartY, (int)pieceSize*2,2, "DOWN", curId);
-        }
-        else if(selectedBox == 3){
-            ds0 = new Quart3((int)trackStartX,(int)trackStartY, (int)pieceSize*2,3, "LEFT", curId);
-        }
-        else if(selectedBox == 4){
-            ds0 = new Quart4((int)trackStartX,(int)trackStartY, (int)pieceSize*2,4, "UP", curId);
-        }
-        else if(selectedBox == 5){
-            ds0 = new StraightVert((int)trackStartX,(int)trackStartY, (int)pieceSize,5, "DOWN",curId);
-        }
-        else if(selectedBox == 6){
-            ds0 = new JunctionTrack((int)trackStartX,(int)trackStartY, (int)pieceSize,curId, 6, "RIGHT",false,true);
-        }
-        else if(selectedBox == 7){
-            ds0 = new JunctionTrack((int)trackStartX,(int)trackStartY, (int)pieceSize,curId, 6, "RIGHT",false,false);
-        }
-        else{
-            // No boxes were selected so don't add null
-            return null;
-        }
-        return  ds0;
+        return trackChoices[selectedBox];
     }
 
 
-    public void addFirstPiece(){
-        DefaultTrack ds0 = null;
-
-        if(selectedBox == 0){
-            ds0 = new StraightHoriz((int)trackStartX,(int)trackStartY, (int)pieceSize,0,curId, "RIGHT");
-        }
-        else if(selectedBox == 1){
-            ds0 = new Quart1((int)trackStartX,(int)trackStartY, (int)pieceSize*2,1, "RIGHT", curId);
-
-        }
-        else if(selectedBox == 2){
-            ds0 = new Quart2((int)trackStartX,(int)trackStartY, (int)pieceSize*2,2, "DOWN", curId);
-        }
-        else if(selectedBox == 3){
-            ds0 = new Quart3((int)trackStartX,(int)trackStartY, (int)pieceSize*2,3, "DOWN", curId);
-        }
-        else if(selectedBox == 4){
-            ds0 = new Quart4((int)trackStartX,(int)trackStartY, (int)pieceSize*2,4, "UP", curId);
-        }
-        else if(selectedBox == 5){
-            ds0 = new StraightVert((int)trackStartX,(int)trackStartY, (int)pieceSize,5, "DOWN",curId);
-        }
-        else if(selectedBox == 6){
-            ds0 = new JunctionTrack((int)trackStartX,(int)trackStartY, (int)pieceSize,curId, 6, "RIGHT",false,true);
-        }
-        else if(selectedBox == 7){
-            ds0 = new JunctionTrack((int)trackStartX,(int)trackStartY, (int)pieceSize,curId, 6, "RIGHT",false,false);
-        }
-        else {
-            return; // No box selected
-        }
-
-        allTracks.add(ds0);
-        tracksInSection.add(ds0);
-
-        // Set the track to be selected
-        currentSelectedTrack = ds0;
-        ds0.setSelected(true);
-    }
-
-    private boolean shouldDetect = true;
 
 
 
 
-    public void addPiece(){
-        if(allTracks.size() == 0){
-            addFirstPiece();
-            return;
-        }
-
-        int length = 100;
-
-        DefaultTrack ds1 = null;
-
-        if(selectedBox == 0){
-            ds1 = new StraightHoriz(length, 0, curId);
-        }
-        else if(selectedBox == 1){
-            ds1 = new Quart1(length*2, 1, curId);
-        }
-        else if(selectedBox == 2){
-            ds1 = new Quart2(length*2, 2, curId);
-        }
-        else if(selectedBox == 3){
-            ds1 = new Quart3(length*2, 3, curId);
-        }
-        else if(selectedBox == 4){
-            ds1 = new Quart4(length*2, 4, curId);
-        }
-        else if(selectedBox == 5){
-            ds1 = new StraightVert(length, 5, curId);
-        }
-        else if(selectedBox == 6){
-            ds1 = new JunctionTrack(length, 6, curId,false,true);
-        }
-        else if(selectedBox == 7){
-            ds1 = new JunctionTrack(length, 6, curId,false,false);
-        }
-        else {
-            return; // No box selected
-        }
-
-        allTracks.add(ds1);
-        tracksInSection.add(ds1);
-
-        // Check if a junction track is currently selected
-        if(selectedJunctionTrack != null){
-            if(selectedJunctionTrack.getThrown()){
-                ds1.setStart(selectedJunctionTrack.getTrackThrown());
-            }
-            else{// Junction track but not thrown
-                ds1.setStart(selectedJunctionTrack.getStraightTrack());
-            }
-            selectedJunctionTrack.setOutboundToThrown(allTracks.size()-1);
-            selectedJunctionTrack.setSelected(false);
-            selectedJunctionTrack = null;// TODO means no junction can go from a junction
-        } else {
-            ds1.setStart(allTracks.get(getTrackIndex(currentSelectedTrack)));
-
-            // Un select the current track
-            currentSelectedTrack.setSelected(false);
-
-            // Set the to and from for the tracks
-            allTracks.get(getTrackIndex(currentSelectedTrack)).setTo(allTracks.size()-1);
-            allTracks.get(allTracks.size()-1).setFrom(getTrackIndex(currentSelectedTrack));
-        }
-
-        // Select the added track
-        currentSelectedTrack = ds1;
-        ds1.setSelected(true);
-    }
 
     public int getTrackIndex(DefaultTrack track){
         for(int i = 0; i < allTracks.size(); i++){
@@ -932,7 +777,7 @@ public class TrackBuilder implements MouseEvents{
                 if(selectedBox == 7)selectedBox = 0;
                 else selectedBox++;
                 allTracks.remove(allTracks.size()-1);
-                DefaultTrack t = getFirstPiece();
+                DefaultTrack t = getSelectedTrackFromPanel();
                 allTracks.add(t);
                 mouseSelectedPeice = t;
             }
