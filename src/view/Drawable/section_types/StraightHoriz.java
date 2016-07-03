@@ -32,7 +32,7 @@ public class StraightHoriz extends DefaultTrack {
         double startX = 0;
         double startY = 0;
 
-        System.out.println(from);
+
 
         if(from.getDirection().equals("RIGHT")){
             super.setDirection("RIGHT");

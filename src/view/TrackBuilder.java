@@ -480,7 +480,6 @@ public class TrackBuilder implements MouseEvents{
             else {
                 if(t.canConnect(track)){
                     t.setTo(allTracks.size()-1);
-//                    t.setFrom(i);
                     track.setStart(t);
                     track.setFrom(i);
 

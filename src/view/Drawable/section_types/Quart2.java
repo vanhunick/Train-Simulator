@@ -141,6 +141,13 @@ public class Quart2 extends DefaultTrack {
         return null;
     }
 
+
+    public void setMid(){
+        radius = getLength()/2;
+        midPointX = getStartX()  + radius - TRACK_WIDTH/2;
+        midPointY = getStartY()  + radius + TRACK_WIDTH/2;
+    }
+
     public void setMid(double x, double y){
         setStartX(x - getLength()*0.75);
         setStartY(y - getLength()/4);

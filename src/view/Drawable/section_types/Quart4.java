@@ -77,9 +77,7 @@ public class Quart4 extends DefaultTrack {
         setStartX(startX);
         setStartY(startY);
 
-        radius = getLength()/2;
-        midPointX = getStartX() + radius + TRACK_WIDTH/2;
-        midPointY = getStartY() + radius - TRACK_WIDTH/2;
+        setMid();
     }
 
     public boolean canConnect(DefaultTrack trackToConnect){
@@ -175,6 +173,14 @@ public class Quart4 extends DefaultTrack {
         setStartX(x - getLength()/4);
         setStartY(y - getLength()*0.75);
 
+        radius = getLength()/2;
+        midPointX = getStartX() + radius + TRACK_WIDTH/2;
+        midPointY = getStartY() + radius - TRACK_WIDTH/2;
+
+        setMid();
+    }
+
+    public void setMid(){
         radius = getLength()/2;
         midPointX = getStartX() + radius + TRACK_WIDTH/2;
         midPointY = getStartY() + radius - TRACK_WIDTH/2;

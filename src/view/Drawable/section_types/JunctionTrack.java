@@ -44,6 +44,7 @@ public class JunctionTrack extends DefaultTrack {
 
     private List<DefaultTrack> junctionTracks;
 
+
     /**
      * Constructor for a piece that connects to another piece
      * */
@@ -104,6 +105,7 @@ public class JunctionTrack extends DefaultTrack {
      * Constructor for the starting piece
      * */
     public JunctionTrack(int startX, int startY, int length, int drawID,int id, String direction, boolean thrown, boolean inbound){
+
         super(startX,startY,length,drawID,id, direction);
         this.thrown = thrown;
         this.inbound = inbound;
@@ -111,52 +113,23 @@ public class JunctionTrack extends DefaultTrack {
 
         straightTrack = new StraightHoriz(startX,startY,length,0,1,"RIGHT");
         createAndAddTracks(length);
-
-        if(inbound){
-            inRight.setStartX(straightTrack.getStartX() + straightTrack.getLength() - ((inRight.getLength()-TRACK_WIDTH/2)/2) - TRACK_WIDTH);
-            inRight.setStartY(straightTrack.getStartY() - inRight.getLength() + TRACK_WIDTH);
-
-            inRight.setDirection("UP");// Direction not actually left but it means we can use the method to connect the next peice
-            inDown.setStart(inRight);
-            inDown.setDirection("DOWN");
-            inRight.setDirection("RIGHT");// Change the direction back to what it is supposed to be
-        }
-        else{
-            outUpTrack.setStartX(straightTrack.getStartX() - ((outUpTrack.getLength()-TRACK_WIDTH/2)/2));
-            outUpTrack.setStartY(straightTrack.getStartY() - outUpTrack.getLength() + TRACK_WIDTH);
-            outUpTrack.setDirection("UP");
-            outUpTrack.setMid();
-            outRightTrack.setStart(outUpTrack);
-        }
+        setLocation(null,direction,startX,startY);
     }
 
-    public void updateLocation(double startX, double startY){
-        straightTrack.setStartX(startX);
-        straightTrack.setStartY(startY);
-
-        if(inbound){
-            inRight.setStartX(straightTrack.getStartX() + straightTrack.getLength() - ((inRight.getLength()-TRACK_WIDTH/2)/2) - TRACK_WIDTH);
-            inRight.setStartY(straightTrack.getStartY() - inRight.getLength() + TRACK_WIDTH);
-
-            inRight.setDirection("UP");// Direction not actually left but it means we can use the method to connect the next peice
-            inDown.setStart(inRight);
-            inDown.setDirection("DOWN");
-            inRight.setDirection("RIGHT");// Change the direction back to what it is supposed to be
+    public void setLocation(DefaultTrack from, String direction, double startX, double startY){
+        if(from != null){
+            direction = from.getDirection();
+            straightTrack.setStart(from);
         }
-        else{
-            outUpTrack.setStartX(straightTrack.getStartX() - ((outUpTrack.getLength()-TRACK_WIDTH/2)/2));
-            outUpTrack.setStartY(straightTrack.getStartY() - outUpTrack.getLength() + TRACK_WIDTH);
-            outUpTrack.setDirection("UP");
-            outUpTrack.setMid();
-            outRightTrack.setStart(outUpTrack);
+        else {
+            straightTrack.setStartX(startX);
+            straightTrack.setStartY(startY);
         }
-    }
 
-    public void setStart(DefaultTrack from){
-        if(from.getDirection().equals("RIGHT")){
+        if(direction.equals("RIGHT")){
             super.setDirection("RIGHT");
             straightTrack.setDirection("RIGHT");
-            straightTrack.setStart(from);
+
 
             if(inbound){
                 inRight.setStartX(straightTrack.getStartX() + straightTrack.getLength() - ((inRight.getLength()-TRACK_WIDTH/2)/2) - TRACK_WIDTH);
@@ -166,6 +139,8 @@ public class JunctionTrack extends DefaultTrack {
                 inDown.setStart(inRight);
                 inDown.setDirection("DOWN");
                 inRight.setDirection("RIGHT");// Change the direction back to what it is supposed to be
+                inRight.setMid();
+                inDown.setMid();
             }
             else{
                 outUpTrack.setStartX(straightTrack.getStartX() - ((outUpTrack.getLength()-TRACK_WIDTH/2)/2));
@@ -173,12 +148,15 @@ public class JunctionTrack extends DefaultTrack {
                 outUpTrack.setDirection("UP");
                 outUpTrack.setMid();
                 outRightTrack.setStart(outUpTrack);
+                outRightTrack.setMid();
+                outUpTrack.setMid();
             }
         }
-        else if(from.getDirection().equals("LEFT")){
+        else if(direction.equals("LEFT")){
             super.setDirection("LEFT");
             straightTrack.setDirection("LEFT");
-            straightTrack.setStart(from);
+            straightTrack.setStartX(startX);
+            straightTrack.setStartY(startY);
 
             if(inbound){
                 outUpTrack.setStartX(straightTrack.getStartX() - outUpTrack.getLength()/2);
@@ -186,6 +164,12 @@ public class JunctionTrack extends DefaultTrack {
                 outUpTrack.setDirection("UP");
 
                 outRightTrack.setStart(outUpTrack);
+
+                // Need to change direction
+                outRightTrack.setDirection("DOWN");
+                outUpTrack.setDirection("LEFT");
+                outRightTrack.setMid();
+                outUpTrack.setMid();
             }
             else{
                 inRight.setStartX(straightTrack.getStartX() + straightTrack.getLength() - inRight.getLength()/2);
@@ -193,12 +177,35 @@ public class JunctionTrack extends DefaultTrack {
 
                 inRight.setDirection("UP");// Direction not actually left but it means we can use the method to connect the next peice
                 inDown.setStart(inRight);
-                inRight.setDirection("RIGHT");// Change the direction back to what it is supposed to be
+                inDown.setMid();
+                inRight.setMid();
             }
         }
 
         super.setStartX(straightTrack.getStartX());
         super.setStartY(straightTrack.getStartY());
+
+
+    }
+
+    public void updateLocation(double startX, double startY){
+        setLocation(null,getDirection(),startX,startY);
+    }
+
+    @Override
+    public void toggleDirection(){
+        if(getDirection().equals("LEFT")){
+            setDirection("RIGHT");
+            straightTrack.setDirection("RIGHT");
+        }
+        else{
+            setDirection("LEFT");
+            straightTrack.setDirection("LEFT");
+        }
+    }
+
+    public void setStart(DefaultTrack from){
+        setLocation(from,getDirection(),0,0);
     }
 
     public boolean canConnect(DefaultTrack trackToConnect){
@@ -243,7 +250,6 @@ public class JunctionTrack extends DefaultTrack {
     }
 
     private void setTrackColors(boolean thrown){
-//        if (1 ==1 )return;
         if(thrown){
             inDown.setColor(Color.BLUE);
             inRight.setColor(Color.BLUE);
@@ -267,9 +273,6 @@ public class JunctionTrack extends DefaultTrack {
     public void draw(GraphicsContext g){
         straightTrack.draw(g);
         setTrackColors(thrown);
-
-        g.strokeText("Thrown " + thrown,super.getStartX(),super.getStartY() - 20);//TODO update with colors later
-
 
         if(super.getDirection().equals("RIGHT")){
             if(inbound){
