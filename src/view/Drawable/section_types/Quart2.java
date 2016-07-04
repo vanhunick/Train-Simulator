@@ -237,8 +237,6 @@ public class Quart2 extends DefaultTrack {
     }
 
     public boolean checkOnAfterUpdate(Point curPoint, double curRot, double rotationDone, double speed, Movable movable){
-        boolean nat = movable.getOrientation();
-        boolean forward = movable.getDirection();
 
         getNextPoint(curPoint, curRot,rotationDone, speed, movable);
 
