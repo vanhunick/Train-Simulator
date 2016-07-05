@@ -14,12 +14,12 @@ import java.util.List;
  */
 public class JunctionTrack extends DefaultTrack {
 
-    // Inbound Fields
+    // Inbound Fields indexes
     private int inboundFromThrown;
     private int inboundFromStraight;
     private int inboundTo;
 
-    // Outbound Fields
+    // Outbound Fields indexes
     private int outboundToThrown;
     private int outBoundTotraight;
     private int outboundFrom;

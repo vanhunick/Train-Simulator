@@ -469,6 +469,7 @@ public class TrackBuilder implements MouseEvents{
         if(allTracks.size() < numbSections){
             curId--;//StraightTrack was removed can free vup ID
         }
+        mouseSelectedPeice = null;
     }
 
     /**

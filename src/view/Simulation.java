@@ -53,7 +53,6 @@ public class Simulation implements MouseEvents {
     // The tracks
     private DefaultTrack tracks[];
 
-
     // Last time the logic was updated
     private long lastUpdate;
 
@@ -69,11 +68,6 @@ public class Simulation implements MouseEvents {
         this.movable = new ArrayList<>();
         this.UI = UI;
     }
-
-    public boolean getStarted(){
-        return this.started;
-    }
-
 
 
 
@@ -677,5 +671,9 @@ public class Simulation implements MouseEvents {
         if(UI != null){
             UI.sendToeventLog(event, status);
         }
+    }
+
+    public boolean getStarted(){
+        return this.started;
     }
 }

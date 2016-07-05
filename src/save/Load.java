@@ -11,9 +11,7 @@ import view.Drawable.section_types.*;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 /**
  * Created by Nicky on 4/06/2016.
@@ -66,9 +64,13 @@ public class Load {
 
                     int from = trackObject.getInt("from");
                     int to = trackObject.getInt("to");
+                    int toJunc = trackObject.getInt("toJunc");
+                    int fromJunc = trackObject.getInt("fromJunc");
 
                     track.setFrom(from);
                     track.setTo(to);
+                    track.setJuncFrom(fromJunc);
+                    track.setJuncTo(toJunc);
                     tracks.add(track);
                     tracksInSection[j] = track;
                 }
@@ -81,17 +83,27 @@ public class Load {
                 int from = sectionObject.getInt("from");
                 int to = sectionObject.getInt("to");
                 boolean detect = sectionObject.getBoolean("detect");
+                int junctionIndex = 0;
+                if(sectionObject.getBoolean("hasJunc")){
+                    junctionIndex = sectionObject.getInt("junctionIndex");
+                }
 
                 sections[i] = new DrawableSection(new Section(id,length,from,to,tracksInSection));//TODO node sure if will work
                 sections[i].getSection().setCandetect(detect);
+                sections[i].getSection().setJuncSectionIndex(junctionIndex);
             }
 
 
 
 
             // Set the starts of the tracks
-            setUpStartingLocations(tracks.toArray(new DefaultTrack[tracks.size()]),startingTrack,0);
+//            setUpStartingLocations(tracks.toArray(new DefaultTrack[tracks.size()]),startingTrack,0);
 
+            Set<Integer> s = new HashSet<>();
+            for(int i = 1; i < tracks.size(); i++){
+                s.add(i);
+            }
+            setupTracks(tracks.get(0),tracks.toArray(new DefaultTrack[tracks.size()]),s);
 
             // Load the trains and rolling stocks
             List<DrawableTrain> trains = loadTrains(obj, sections);
@@ -153,16 +165,66 @@ public class Load {
         return trains;
     }
 
+    public void setupTracks(DefaultTrack currentTrack, DefaultTrack[] tracks, Set<Integer> todo){
+        if(currentTrack instanceof JunctionTrack){
+            JunctionTrack jt = (JunctionTrack)currentTrack;
+            int toIndex = 0;
+            if(jt.inBound()){
+                toIndex = jt.getInboundTo();
+            } else {
+                toIndex = jt.getTo();
+            }
+            System.out.println(toIndex);
+            if(todo.contains(toIndex)){
+                tracks[toIndex].setStart(jt);
+                todo.remove(toIndex);
+                setupTracks(tracks[toIndex], tracks,todo);
+            }
+
+            if(!jt.inBound() && todo.contains(jt.getOutboundToThrown())){
+                tracks[jt.getOutboundToThrown()].setStart(jt.getTrackThrown());
+                setupTracks(tracks[jt.getOutboundToThrown()], tracks,todo);
+            }
+
+        }
+        else {
+            if(todo.contains(currentTrack.getTo())){
+                tracks[currentTrack.getTo()].setStart(currentTrack);
+                setupTracks(tracks[currentTrack.getTo()], tracks,todo);
+            }
+        }
+    }
+
+
+
 
     public void setUpStartingLocations(DefaultTrack[] tracks, int startTrackIndex, int count){
         if(count == tracks.length-1){
             return;
         }
+
+        //thing at starting index has been created
         for(int i = 0; i < tracks.length; i++){
             if(tracks[i].getFrom() == startTrackIndex){
-                tracks[i].setStart(tracks[startTrackIndex]);
+                if(tracks[startTrackIndex] instanceof JunctionTrack){
+                    JunctionTrack jt = (JunctionTrack)tracks[startTrackIndex];
+
+                    if(!jt.inBound()){
+                        if(jt.getOutboundToThrown() == i){
+                            tracks[i].setStart(jt.getTrackThrown());
+                        }else {
+                            tracks[i].setStart(jt.getStraightTrack());// TODO NOT SURE IF WILL WORK IN ALL SITUATIONS
+                        }
+                    }
+                }
+                else {
+                    tracks[i].setStart(tracks[startTrackIndex]);
+                }
+
                 count++;
+
                 setUpStartingLocations(tracks,i,count);
+
                 return;
             }
         }
@@ -187,7 +249,17 @@ public class Load {
                 return new StraightVert(length,5,id);
             case "Junction":
                 boolean inbound = trackObject.getBoolean("inbound");
-                return new JunctionTrack(length,6,id,false,inbound);
+
+                JunctionTrack junctionTrack = new JunctionTrack(length,6,id,false,inbound);
+                int thrownIndex = trackObject.getInt("thrown");
+                if(!inbound){
+                    junctionTrack.setOutboundToThrown(thrownIndex);
+                } else{
+                  junctionTrack.setInboundFromThrown(thrownIndex);
+                }
+
+                return junctionTrack;
+
             default:
                 System.out.println("No Match for type");
         }
@@ -214,10 +286,9 @@ public class Load {
             case "Straight horizontal":
                 return new StraightHoriz(x,y,length,0,id,"RIGHT");
             case "Straight vertical":
-//                return new StraightVert(x,y,length,0,id,"RIGHT");
-                return null;//TODO fix later
+                return new StraightVert(x,y,length,5,"RIGHT",id);
             case "Junction":
-                boolean inbound = trackObject.getBoolean("inbound");
+                boolean inbound = trackObject.getBoolean("inbound");//TODO
                 return new JunctionTrack(x,y,length,6,id,"RIGHT",false,inbound);
             default:
                 System.out.println("No Match for type");

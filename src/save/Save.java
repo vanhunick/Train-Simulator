@@ -66,7 +66,12 @@ public class Save {
             sectionObject.put("from",s.getSection().getFrom());
             sectionObject.put("length",s.getSection().getLength());
             sectionObject.put("to",s.getSection().getTo());
-            sectionObject.put("junction",0);//TODO implement later
+            sectionObject.put("hasJunc",s.getSection().hasJunctionTrack());
+
+            if(s.getSection().hasJunctionTrack()){
+                sectionObject.put("junctionIndex",s.getSection().getJuncSectionIndex());
+            }
+
 
             JSONArray trackArray = new JSONArray();
 
@@ -75,10 +80,20 @@ public class Save {
                 trackObject.put("type", getTrackType(t));
                 trackObject.put("id",t.getId());
                 trackObject.put("to",t.getTo());
+                trackObject.put("toJunc",t.getJuncTo());
+                trackObject.put("fromJunc",t.getJuncFrom());
+
                 trackObject.put("from",t.getFrom());
                 trackObject.put("length",t.getLength());
                 if(getTrackType(t).equals("Junction")){
-                    trackObject.put("inbound",((JunctionTrack)t).inBound());
+                    JunctionTrack jt = (JunctionTrack)t;
+                    trackObject.put("inbound",jt.inBound());
+                    if(jt.inBound()){
+                        trackObject.put("thrown",jt.getInboundFromThrown());
+                    }
+                    else {
+                        trackObject.put("thrown",jt.getOutboundToThrown());
+                    }
                 }
                 trackArray.put(trackObject);
             }
