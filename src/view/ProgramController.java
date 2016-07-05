@@ -5,6 +5,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.input.MouseEvent;
+import save.Load;
 import save.LoadedRailway;
 import view.Drawable.DrawableRollingStock;
 import view.Drawable.DrawableTrain;
@@ -50,6 +51,15 @@ public class ProgramController implements MouseEvents {
         this.canvas = canvas;
         simulationUI.addUIElementsToLayout(borderPane);
         setMode(ProgramController.VISUALISATION_MODE);
+    }
+
+    public boolean setSimulationFromBuilder(){
+        LoadedRailway l = trackBuilder.getLoadedRailway();
+        if(l != null){
+            simulationUI.getSim().setFromBuilderMode(l);
+            return true;
+        }
+        return false;
     }
 
 

@@ -24,7 +24,6 @@ public class JunctionTrack extends DefaultTrack {
     private int outBoundTotraight;
     private int outboundFrom;
 
-
     // If the junction is thrown
     private boolean thrown;
 
@@ -115,8 +114,7 @@ public class JunctionTrack extends DefaultTrack {
                 inRight.setDirection("RIGHT");// Change the direction back to what it is supposed to be
                 inRight.setMid();
                 inDown.setMid();
-            }
-            else{
+            } else{
                 outUpTrack.setStartX(straightTrack.getStartX() - ((outUpTrack.getLength()-TRACK_WIDTH/2)/2));
                 outUpTrack.setStartY(straightTrack.getStartY() - outUpTrack.getLength() + TRACK_WIDTH);
                 outUpTrack.setDirection("UP");
@@ -125,8 +123,7 @@ public class JunctionTrack extends DefaultTrack {
                 outRightTrack.setMid();
                 outUpTrack.setMid();
             }
-        }
-        else if(direction.equals("LEFT")){
+        } else if(direction.equals("LEFT")){
             super.setDirection("LEFT");
             straightTrack.setDirection("LEFT");
             straightTrack.setStartX(startX);
@@ -144,8 +141,7 @@ public class JunctionTrack extends DefaultTrack {
                 outUpTrack.setDirection("LEFT");
                 outRightTrack.setMid();
                 outUpTrack.setMid();
-            }
-            else{
+            } else{
                 inRight.setStartX(straightTrack.getStartX() + straightTrack.getLength() - inRight.getLength()/2);
                 inRight.setStartY(straightTrack.getStartY() - inRight.getLength() + TRACK_WIDTH);
 
@@ -155,7 +151,6 @@ public class JunctionTrack extends DefaultTrack {
                 inRight.setMid();
             }
         }
-
         super.setStartX(straightTrack.getStartX());
         super.setStartY(straightTrack.getStartY());
     }
@@ -253,12 +248,10 @@ public class JunctionTrack extends DefaultTrack {
         }
     }
 
-
     public double getNextPoint(Movable dt, double moveBy){
         double p = dt.getJuncTrack().getNextPoint(dt.getCurrentLocation(),dt.getCurRotation(),dt.getDegDone(),moveBy, dt);
         return p;
     }
-
 
     /**
      * Junctions tracks need to be able to change the lastsubable and need to be able to change the orientation
@@ -273,14 +266,11 @@ public class JunctionTrack extends DefaultTrack {
             if(getDirection().equals("RIGHT") && (id == 0 || id == 1 || id == 4)){
                 dt.setJuncTrack(null);
                 return false;
-            }
-            else if(getDirection().equals("LEFT") && (id == 0 || id == 2 || id == 3)){
+            } else if(getDirection().equals("LEFT") && (id == 0 || id == 2 || id == 3)){
                 dt.setJuncTrack(null);
                 return false;
-
             }
-        }
-        else {
+        } else {
             if(getDirection().equals("LEFT") && (id == 0 || id == 1 || id == 4)){
                 dt.setJuncTrack(null);
                 return false;
@@ -290,9 +280,8 @@ public class JunctionTrack extends DefaultTrack {
                 return false;
             }
         }
-        dt.setDegDone(0);
-
         // At this point we know we are still in the junction track but switching internally
+        dt.setDegDone(0);
         switch (id){
             case 1:
                 dt.setJuncTrack(outUpTrack);
@@ -315,7 +304,6 @@ public class JunctionTrack extends DefaultTrack {
     public void setMid(double x, double y){
         updateLocation(x - getLength()/2,y + getLength()/2);
     }
-
 
     public boolean forwardWithTrack(Movable t){
         return t.getOrientation() && t.getDirection() || !t.getOrientation() && !t.getDirection();
@@ -352,117 +340,6 @@ public class JunctionTrack extends DefaultTrack {
     }
 
     /**
-     *
-//     * */
-//    public Point getConnectionPoint(){
-//        return straightTrack.getConnectionPoint();
-//    }
-
-
-    /**
-     * Gets the connection point for a track connected in the direction the
-     * straight track is going
-     * */
-    public Point getConnectionPointTo(){
-        return straightTrack.getConnectionPointTo();
-    }
-
-    public Point getConnectionPointFrom(){
-        return straightTrack.getConnectionPointFrom();
-    }
-
-    public DefaultTrack getInboundThrownJuncTrack(){
-        return inDown;
-    }
-
-    public DefaultTrack getInboundThrownNotNatJuncTrack(){
-        return inRight;
-    }
-
-    public DefaultTrack getOutBoundThrownJuncTrack(){
-        return outUpTrack;
-    }
-
-    public DefaultTrack getOutBoundNotNatThrownJuncTrack(){
-        return outRightTrack;
-    }
-
-
-    public DefaultTrack getStraightTrack(){
-        return straightTrack;
-    }
-
-
-    // Inbound getters
-    public int getInboundFromThrown() {return inboundFromThrown;}
-    public int getInboundFromStraight() {
-        return inboundFromStraight;
-    }
-    public int getInboundTo() {
-        return inboundTo;
-    }
-
-    // Outbound getters
-    public int getOutboundToThrown() {
-        return outboundToThrown;
-    }
-    public int getOutBoundTotraight() {
-        return outBoundTotraight;
-    }
-    public int getOutboundFrom() {
-        return outboundFrom;
-    }
-
-
-    // Inbound setters
-    public void setInboundFromThrown(int inboundFromThrown) {
-        this.inboundFromThrown = inboundFromThrown;
-    }
-    public void setInboundFromStraight(int inboundFromStraight) {
-        this.inboundFromStraight = inboundFromStraight;
-    }
-    public void setInboundTo(int inboundTo) {
-        this.inboundTo = inboundTo;
-    }
-
-    // Outbound setters
-    public void setOutBoundTotraight(int outBoundTotraight) {
-        this.outBoundTotraight = outBoundTotraight;
-    }
-    public void setOutboundToThrown(int outboundToThrown) {
-        this.outboundToThrown = outboundToThrown;
-    }
-    public void setOutboundFrom(int outboundFrom) {
-        this.outboundFrom = outboundFrom;
-    }
-
-
-    // Setts or gets if the juncton is thrown or not
-    public void setThrown(boolean thrown){
-        this.thrown = thrown;
-    }
-    public boolean getThrown(){
-        return this.thrown;
-    }
-
-    // Returns if the track is inbound or not
-    public boolean inBound(){
-        return this.inbound;
-    }
-
-
-
-    public boolean containsPoint(double x, double y){
-        if(inbound){
-            return straightTrack.containsPoint(x,y) || inDown.containsPoint(x,y) || inRight.containsPoint(x,y);
-        }
-        else {
-            return straightTrack.containsPoint(x,y) || outUpTrack.containsPoint(x,y) || outRightTrack.containsPoint(x,y);
-        }
-    }
-
-
-    /**
      * Returns the track
      * */
     public DefaultTrack getTrackThrown(){
@@ -479,12 +356,64 @@ public class JunctionTrack extends DefaultTrack {
             else {
                 return inDown;
             }
+        }
+    }
 
+    /**
+     * Gets the connection point for a track connected in the direction the
+     * straight track is going
+     * */
+    public Point getConnectionPointTo(){return straightTrack.getConnectionPointTo();}
+
+    public Point getConnectionPointFrom(){return straightTrack.getConnectionPointFrom();}
+
+    public DefaultTrack getInboundThrownJuncTrack(){return inDown;}
+
+    public DefaultTrack getInboundThrownNotNatJuncTrack(){return inRight;}
+
+    public DefaultTrack getOutBoundThrownJuncTrack(){return outUpTrack;}
+
+    public DefaultTrack getOutBoundNotNatThrownJuncTrack(){return outRightTrack;}
+
+    public DefaultTrack getStraightTrack(){return straightTrack;}
+
+    // Inbound getters
+    public int getInboundFromThrown() {return inboundFromThrown;}
+    public int getInboundFromStraight() {return inboundFromStraight;}
+    public int getInboundTo() {return inboundTo;}
+
+    // Outbound getters
+    public int getOutboundToThrown() {return outboundToThrown;}
+    public int getOutBoundTotraight() {return outBoundTotraight;}
+    public int getOutboundFrom() {return outboundFrom;}
+
+    // Inbound setters
+    public void setInboundFromThrown(int inboundFromThrown) {this.inboundFromThrown = inboundFromThrown;}
+    public void setInboundFromStraight(int inboundFromStraight) {this.inboundFromStraight = inboundFromStraight;}
+    public void setInboundTo(int inboundTo) {this.inboundTo = inboundTo;}
+
+    // Outbound setters
+    public void setOutBoundTotraight(int outBoundTotraight) {this.outBoundTotraight = outBoundTotraight;}
+    public void setOutboundToThrown(int outboundToThrown) {this.outboundToThrown = outboundToThrown;}
+    public void setOutboundFrom(int outboundFrom) {this.outboundFrom = outboundFrom;}
+
+    // Setts or gets if the juncton is thrown or not
+    public void setThrown(boolean thrown){this.thrown = thrown;}
+    public boolean getThrown(){return this.thrown;}
+
+    // Returns if the track is inbound or not
+    public boolean inBound(){return this.inbound;}
+
+    @Override
+    public boolean containsPoint(double x, double y){
+        if(inbound){
+            return straightTrack.containsPoint(x,y) || inDown.containsPoint(x,y) || inRight.containsPoint(x,y);
+        }
+        else {
+            return straightTrack.containsPoint(x,y) || outUpTrack.containsPoint(x,y) || outRightTrack.containsPoint(x,y);
         }
     }
 
     @Override
-    public String getDirection(){
-        return straightTrack.getDirection();
-    }
+    public String getDirection(){return straightTrack.getDirection();}
 }

@@ -130,6 +130,34 @@ public class TrackBuilder implements MouseEvents{
         this.exampleTracks = setUpDrawPieces();
     }
 
+    public LoadedRailway getLoadedRailway(){
+        if(sectionsForTrack.size() <= 0){
+            new ErrorDialog("No railway to simulate", "Not read to simulate");
+            return null;
+        }
+
+        // Check if there are tracks that have not been added to a section yet
+        if(tracksInSection.size() > 0){
+            newSection();// Act like the next section button is clicked
+        }
+        // Looks at junctions
+        finishConnectingUpSections();
+
+        // Sections
+        DrawableSection[] sections = new DrawableSection[sectionsForTrack.size()];
+        sectionsForTrack.toArray(sections);
+
+        // Tracks
+        DefaultTrack[] tracks = new DefaultTrack[allTracks.size()];
+        allTracks.toArray(tracks);
+
+        tracks[0].setFrom(tracks.length-1);
+
+        LoadedRailway railway = new LoadedRailway(sections,tracks,trains,stocks);
+
+        return railway;
+    }
+
     /**
      * Called to redraw all of the elements on the screen
      *
@@ -149,14 +177,9 @@ public class TrackBuilder implements MouseEvents{
         drawShownPanel(gc);
 
         // Draw the example tracks
-        for(DefaultTrack t : exampleTracks){
-            t.draw(gc);
-        }
-
+        exampleTracks.forEach(t -> t.draw(gc));
         // Draw the trains
-        for(DrawableTrain dt : trains){
-            dt.draw(gc);
-        }
+        trains.forEach(t -> t.draw(gc));
 
         // Show the direction of the piece being dragged
         if(mouseSelectedPeice != null){
@@ -200,22 +223,7 @@ public class TrackBuilder implements MouseEvents{
 
 
     public void save(){
-        // Check if there are tracks that have not been added to a section yet
-        if(tracksInSection.size() > 0){
-            newSection();// Act like the next section button is clicked
-        }
-
-        // Sections
-        DrawableSection[] sections = new DrawableSection[sectionsForTrack.size()];
-        sectionsForTrack.toArray(sections);
-
-        // Tracks
-        DefaultTrack[] tracks = new DefaultTrack[allTracks.size()];
-        allTracks.toArray(tracks);
-
-        tracks[0].setFrom(tracks.length-1);
-
-        LoadedRailway railway = new LoadedRailway(sections,tracks,trains,stocks);
+        LoadedRailway railway = getLoadedRailway();
 
         // Get user to enter a file location to save to
         FileChooser fileChooser = new FileChooser();
@@ -270,6 +278,23 @@ public class TrackBuilder implements MouseEvents{
 
         sectionsForTrack.add(ds);
         curSectionID++;
+    }
+
+    public void finishConnectingUpSections(){
+        for(DrawableSection s : sectionsForTrack){
+            for(DefaultTrack t : s.getTracks()){
+                if(t instanceof JunctionTrack){
+                    s.getSection().setHasJunctionTrack(true);
+                    JunctionTrack jt = (JunctionTrack)t;
+                    if(((JunctionTrack) t).inBound()){
+                        s.getSection().setJuncSectionIndex(jt.getInboundFrom());
+                    }
+                    else {
+                        s.getSection().setJuncSectionIndex(jt.getOutboundToThrown());//TODO not sure if correct
+                    }
+                }
+            }
+        }
     }
 
 
@@ -541,7 +566,7 @@ public class TrackBuilder implements MouseEvents{
             }
         }
 
-        if(sectionMode){
+        if(sectionMode && e.getButton().equals(MouseButton.PRIMARY)){
             DefaultTrack s = getTrack(x,y);
             if(s!=null){
                 s.setSelected(true);

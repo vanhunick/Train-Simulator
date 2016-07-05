@@ -75,7 +75,9 @@ public class TopMenuBar extends MenuBar {
     public void logToggled(ActionEvent e){controller.toggleLogView();}
 
     public void handleSimulatePressed(ActionEvent e){
-        controller.setMode(ProgramController.VISUALISATION_MODE);
+        if(controller.setSimulationFromBuilder()){
+            controller.setMode(ProgramController.VISUALISATION_MODE);
+        }
     }
 
     // TODO implement

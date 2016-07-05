@@ -1,8 +1,5 @@
 package model;
 
-import com.sun.org.apache.xpath.internal.SourceTree;
-import view.Drawable.section_types.JunctionTrack;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -332,7 +329,7 @@ public class DeadLockController implements Controller {
         }
 
         public Junction createJunction(Section s){
-            return new Junction(s.getJunction().getThrown(), s.getFromID(), s.getToID(),s.getJunction().getId(),  s.toJuncSectionID,s.getJunction().inBound());
+            return new Junction(s.getJunction().getThrown(), s.getFromID(), s.getToID(),s.getJunction().getId(),  s.getJuncSectionIndex(),s.getJunction().inBound());
         }
 
         public ControllerSection getNextSection(ControllerTrain train){

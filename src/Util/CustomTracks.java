@@ -132,85 +132,85 @@ public class CustomTracks {
         // Set up Section connections
 
         // First outside straight section
-        railway[0].getSection().setToId(1);
-        railway[0].getSection().setFromId(7);// 7 should be second junction
+        railway[0].getSection().setToIndex(1);
+        railway[0].getSection().setFromIndex(7);// 7 should be second junction
 
         // Second outside straight section
-        railway[1].getSection().setToId(2);
-        railway[1].getSection().setFromId(1);
+        railway[1].getSection().setToIndex(2);
+        railway[1].getSection().setFromIndex(1);
 
         // First outside turn with junction at the start
-        railway[2].getSection().setToId(3);
-        railway[2].getSection().setFromId(1);
+        railway[2].getSection().setToIndex(3);
+        railway[2].getSection().setFromIndex(1);
         railway[2].getSection().setHasJunctionTrack(true);
-        railway[2].getSection().setToJuncSectionID(9); // The inbound junction
+        railway[2].getSection().setJuncSectionIndex(9); // The inbound junction
 
         // Second outside turn
-        railway[3].getSection().setToId(4);
-        railway[3].getSection().setFromId(2);
+        railway[3].getSection().setToIndex(4);
+        railway[3].getSection().setFromIndex(2);
 
         // First top outside straight
-        railway[4].getSection().setToId(5);
-        railway[4].getSection().setFromId(3);
+        railway[4].getSection().setToIndex(5);
+        railway[4].getSection().setFromIndex(3);
 
         // Second top outside straight
-        railway[5].getSection().setToId(6);
-        railway[5].getSection().setFromId(4);
+        railway[5].getSection().setToIndex(6);
+        railway[5].getSection().setFromIndex(4);
 
         // Third outside corner
-        railway[6].getSection().setToId(7);
-        railway[6].getSection().setFromId(5);
+        railway[6].getSection().setToIndex(7);
+        railway[6].getSection().setFromIndex(5);
 
         // Fourth corner with junction
-        railway[7].getSection().setToId(0);
-        railway[7].getSection().setFromId(6);
+        railway[7].getSection().setToIndex(0);
+        railway[7].getSection().setFromIndex(6);
         railway[7].getSection().setHasJunctionTrack(true);
-        railway[7].getSection().setToJuncSectionID(8); // The outbound junction
+        railway[7].getSection().setJuncSectionIndex(8); // The outbound junction
 
         // First inside straight
-        railway[8].getSection().setToId(9);
-        railway[8].getSection().setFromId(7);
+        railway[8].getSection().setToIndex(9);
+        railway[8].getSection().setFromIndex(7);
 
 
         // Second inside straight
-        railway[9].getSection().setToId(10);
-        railway[9].getSection().setFromId(8);
+        railway[9].getSection().setToIndex(10);
+        railway[9].getSection().setFromIndex(8);
 
         // First inside corner
-        railway[10].getSection().setToId(11);
-        railway[10].getSection().setFromId(9);
+        railway[10].getSection().setToIndex(11);
+        railway[10].getSection().setFromIndex(9);
         railway[10].getSection().setHasJunctionTrack(true);
-        railway[10].getSection().setToJuncSectionID(17); // The inbound junction
+        railway[10].getSection().setJuncSectionIndex(17); // The inbound junction
 
         // Second inside corner
-        railway[11].getSection().setToId(10);
-        railway[11].getSection().setFromId(12);
+        railway[11].getSection().setToIndex(10);
+        railway[11].getSection().setFromIndex(12);
 
         // First inside top straight
-        railway[12].getSection().setToId(13);
-        railway[12].getSection().setFromId(11);
+        railway[12].getSection().setToIndex(13);
+        railway[12].getSection().setFromIndex(11);
 
         // Second inside top straight
-        railway[13].getSection().setToId(14);
-        railway[13].getSection().setFromId(12);
+        railway[13].getSection().setToIndex(14);
+        railway[13].getSection().setFromIndex(12);
 
         // Third inside corner
-        railway[14].getSection().setToId(15);
-        railway[14].getSection().setFromId(13);
+        railway[14].getSection().setToIndex(15);
+        railway[14].getSection().setFromIndex(13);
 
         //Fourth inside corner with junction
-        railway[15].getSection().setToId(8);// first inside straight
-        railway[15].getSection().setFromId(14);
+        railway[15].getSection().setToIndex(8);// first inside straight
+        railway[15].getSection().setFromIndex(14);
         railway[15].getSection().setHasJunctionTrack(true);
-        railway[15].getSection().setToJuncSectionID(16); // The inbound junction
+        railway[15].getSection().setJuncSectionIndex(16); // The inbound junction
 
         // First most inside straight
-        railway[16].getSection().setToId(17);
-        railway[16].getSection().setFromId(15);
+        railway[16].getSection().setToIndex(17);
+        railway[16].getSection().setFromIndex(15);
 
         // First most inside straight
-        railway[17].getSection().setToId(15);
-        railway[17].getSection().setFromId(13);
+        railway[17].getSection().setToIndex(15);
+        railway[17].getSection().setFromIndex(13);
 
 
 
@@ -641,8 +641,8 @@ public class CustomTracks {
         sections[1] = new DrawableSection(new Section(1,200,new DefaultTrack[]{tracks[1]}));
         sections[0].getSection().setCandetect(true);
 
-        sections[0].getSection().setToId(1);
-        sections[1].getSection().setFromId(0);
+        sections[0].getSection().setToIndex(1);
+        sections[1].getSection().setFromIndex(0);
 
         tracks[1].setStart(tracks[0]);
 

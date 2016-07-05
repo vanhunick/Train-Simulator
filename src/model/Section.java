@@ -11,15 +11,17 @@ public class Section {
     // Length of the section
     private double length;
 
+    //TODO indexes I think
     // Section it came from
     private int from;
 
     // Section it goes to
     private int to;
 
-    private int toId;
-    private int fromId;
-    int toJuncSectionID;
+    // IDs
+    private int toIndex;
+    private int fromIndex;
+    private int juncSectionIndex;
 
     // Tracks in the section
     private DefaultTrack[] tracks;
@@ -76,6 +78,10 @@ public class Section {
         this.tracks = tracks;
     }
 
+    public int getJuncSectionIndex(){
+        return this.juncSectionIndex;
+    }
+
     /**
      * Returns the tracks in the section
      *
@@ -123,7 +129,7 @@ public class Section {
      *
      * */
     public int getToID(){
-        if(!containJunction)return toId;
+        if(!containJunction)return toIndex;
 
         JunctionTrack jt;
         if(tracks[tracks.length-1] instanceof JunctionTrack){
@@ -136,14 +142,14 @@ public class Section {
 
         if(jt.getThrown() && !jt.inBound()){
             // The track is thrown so return to id track trown
-            return toJuncSectionID;
+            return juncSectionIndex;
         }
 
-        return toId; // Error
+        return toIndex; // Error
     }
 
     public int getFromID(){
-        if(!containJunction)return  fromId;
+        if(!containJunction)return fromIndex;
 
         JunctionTrack jt;
         if(tracks[tracks.length-1] instanceof JunctionTrack){
@@ -155,21 +161,21 @@ public class Section {
 
 
         if(jt.getThrown() && jt.inBound()){
-            return toJuncSectionID;
+            return juncSectionIndex;
         }
-        return fromId;
+        return fromIndex;
     }
 
-    public void setToId(int toId){
-        this.toId = toId;
+    public void setToIndex(int toIndex){
+        this.toIndex = toIndex;
     }
 
-    public void setFromId(int fromId){
-        this.fromId = fromId;
+    public void setFromIndex(int fromIndex){
+        this.fromIndex = fromIndex;
     }
 
-    public void setToJuncSectionID(int juncID){
-        this.toJuncSectionID = juncID;
+    public void setJuncSectionIndex(int juncID){
+        this.juncSectionIndex = juncID;
     }
 
     public JunctionTrack getJunction(){

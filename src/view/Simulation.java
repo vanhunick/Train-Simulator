@@ -89,11 +89,15 @@ public class Simulation implements MouseEvents {
         trains = CustomTracks.getDefaultTrains(railway);
         movable = CustomTracks.createMovableList(trains,drawableRollingStocks);
 
+        this.modelTrack = new ModelTrack(getTrains(), getSections());
+    }
 
-        // Connected to test
-//        trains = CustomTracks.getConnectTestTrains(railway,this);
-//        drawableRollingStocks = CustomTracks.getConnectTestRollingStock(railway);
-//        movable = CustomTracks.createMovableList(trains,drawableRollingStocks);
+    public void setFromBuilderMode(LoadedRailway loadedRailway){
+        tracks = loadedRailway.tracks;
+        railway = loadedRailway.sections;
+        trains = loadedRailway.trains;
+        drawableRollingStocks = loadedRailway.stocks;
+        movable = CustomTracks.createMovableList(trains,drawableRollingStocks);
 
         this.modelTrack = new ModelTrack(getTrains(), getSections());
     }
