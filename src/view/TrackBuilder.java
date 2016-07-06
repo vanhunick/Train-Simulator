@@ -135,6 +135,7 @@ public class TrackBuilder implements MouseEvents{
             new ErrorDialog("No railway to simulate", "Not read to simulate");
             return null;
         }
+        System.out.println("Grabbing Railway");
 
         // Check if there are tracks that have not been added to a section yet
         if(tracksInSection.size() > 0){

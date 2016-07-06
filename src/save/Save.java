@@ -56,7 +56,7 @@ public class Save {
             sectionObject.put("id",s.getSection().getID());
             if(start){
                 sectionObject.put("start",true);
-                start = false;
+
             }
             else{
                 sectionObject.put("start",false);
@@ -83,6 +83,13 @@ public class Save {
                 trackObject.put("toJunc",t.getJuncTo());
                 trackObject.put("fromJunc",t.getJuncFrom());
 
+                if(start){
+                    trackObject.put("x",t.getStartX());
+                    trackObject.put("y",t.getStartY());
+                    start = false;
+                }
+
+
                 trackObject.put("from",t.getFrom());
                 trackObject.put("length",t.getLength());
                 if(getTrackType(t).equals("Junction")){
@@ -101,6 +108,7 @@ public class Save {
 
             // Put the section in the section array
             sectionArray.put(sectionObject);
+            start = false;
         }
         return sectionArray;
     }

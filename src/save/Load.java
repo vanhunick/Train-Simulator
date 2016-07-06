@@ -271,8 +271,8 @@ public class Load {
     public static DefaultTrack getStartTrackFromObject(JSONObject trackObject){
         int id = trackObject.getInt("id");
         int length = trackObject.getInt("length");
-        int x = 300;
-        int y = 100;
+        int x = trackObject.getInt("x");
+        int y = trackObject.getInt("y");
 
         switch (trackObject.getString("type")){
             case "Q1":
@@ -303,7 +303,6 @@ public class Load {
     public static void main(String[] args){
         Load load = new Load();
         LoadedRailway l = load.loadFromFile("src/tracks/atrackandtrains.json");
-//         l = load.loadFromFile("src/tracks/simple_track.json");
 
         for(DefaultTrack t : l.tracks){
             System.out.println(t);

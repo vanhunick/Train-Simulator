@@ -214,7 +214,6 @@ public class DrawableTrain implements Movable{
             if(acceleration < 0.25){
                 engineForce += 1000;
             }
-
         }
 
 
