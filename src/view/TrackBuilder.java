@@ -33,7 +33,7 @@ public class TrackBuilder implements MouseEvents{
     public static final int WIDTH = 150;
 
     // The number of possible different track pieces you can create
-    public static final int NUMB_PIECES = 8;
+    public static final int NUMB_PIECES = 10;
 
     // Represents the currently selected track piece
     private int selectedBox;
@@ -636,8 +636,10 @@ public class TrackBuilder implements MouseEvents{
                 new Quart3(x,y, (int)pieceSize*2,3, "LEFT", curId),
                 new Quart4(x,y, (int)pieceSize*2,4, "UP", curId),
                 new StraightVert(x,y, (int)pieceSize,5, "DOWN",curId),
-                new JunctionTrack(x,y, (int)pieceSize, 6,curId, "RIGHT",false,true),
-                new JunctionTrack(x,y, (int)pieceSize, 6,curId, "RIGHT",false,false)
+                new JunctionTrack(x,y, (int)pieceSize, 6,curId, "RIGHT",false,true, "UP"),
+                new JunctionTrack(x,y, (int)pieceSize, 6,curId, "RIGHT",false,false, "UP"),
+                new JunctionTrack(x,y, (int)pieceSize, 6,curId, "RIGHT",false,true, "DOWN"),
+                new JunctionTrack(x,y, (int)pieceSize, 6,curId, "RIGHT",false,false, "DOWN")
         };
 
         return trackChoices[selectedBox];
@@ -694,8 +696,10 @@ public class TrackBuilder implements MouseEvents{
                 new Quart3((int)x,(int)y, (int)size,3,"RIGHT",0 ),
                 new Quart4((int)x,(int)y, (int)size,4,"RIGHT",0 ),
                 new StraightVert((int)x,(int)y, (int)size,5,"RIGHT",0),
-                new JunctionTrack((int)x,(int)y, (int)size/2,7,0,"RIGHT",false,true),
-                new JunctionTrack((int)x,(int)y, (int)size/2,7,0,"RIGHT",false,false)
+                new JunctionTrack((int)x,(int)y, (int)size/2,7,0,"RIGHT",false,true, "UP"),
+                new JunctionTrack((int)x,(int)y, (int)size/2,7,0,"RIGHT",false,false, "UP"),
+                new JunctionTrack((int)x,(int)y, (int)size/2,7,0,"RIGHT",false,true, "DOWN"),
+                new JunctionTrack((int)x,(int)y, (int)size/2,7,0,"RIGHT",false,false, "DOWN")
         };
 
         for(DefaultTrack track : trackChoices){
@@ -720,7 +724,7 @@ public class TrackBuilder implements MouseEvents{
         // Use R to rotate through the selectable pieces
         if(code.equals("R")){
             if(mouseSelectedPeice != null){
-                if(selectedBox == 7)selectedBox = 0;
+                if(selectedBox == 9)selectedBox = 0;
                 else selectedBox++;
                 allTracks.remove(allTracks.size()-1);
                 DefaultTrack t = getSelectedTrackFromPanel((int)mouseLocation.getX(),(int)mouseLocation.getY());//TODO possibly use cur mouse loc

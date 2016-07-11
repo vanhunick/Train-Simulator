@@ -53,7 +53,7 @@ public class CustomTracks {
                 // s2
                 new StraightHoriz(200,0,curID++), // 1
                 // s3
-                new JunctionTrack(50,6,curID++,false,true), // 2
+                new JunctionTrack(50,6,curID++,false,true, "UP"), // 2
                 new Quart3(400,3,curID++), // 3
                 // s4
                 new Quart2(400,2,curID++),// 4
@@ -65,13 +65,13 @@ public class CustomTracks {
                 new Quart1(400,1,curID++),// 7
                 // s8
                 new Quart4(400,4,curID++),// 8
-                new JunctionTrack(50,6,curID++,false,false), // 9
+                new JunctionTrack(50,6,curID++,false,false,"UP"), // 9
                 // s9
                 new StraightHoriz(200,0,curID++), // 10
                 // s10
                 new StraightHoriz(200,0,curID++), // 11
                 // s11
-                new JunctionTrack(50,6,curID++,false,true), // 12
+                new JunctionTrack(50,6,curID++,false,true,"UP"), // 12
                 new Quart3(400 - innerOffset,3,curID++), // 13
                 // s12
                 new Quart2(400 - innerOffset,2,curID++),// 14
@@ -83,7 +83,7 @@ public class CustomTracks {
                 new Quart1(400 - innerOffset,1,curID++),// 17
                 // s16
                 new Quart4(400 - innerOffset,4,curID++),// 18
-                new JunctionTrack(50,6,curID++,false,false), // 19
+                new JunctionTrack(50,6,curID++,false,false,"UP"), // 19
                 // s17
                 new StraightHoriz(200,0,curID++), // 20
                 // s18
@@ -359,18 +359,18 @@ public class CustomTracks {
         int curID = 0;
         return  new DefaultTrack[]{
                 new StraightHoriz(300,600,200,0,curID++,"RIGHT"),
-                new JunctionTrack(100,6,curID++,false, false),
+                new JunctionTrack(100,6,curID++,false, false,"UP"),
 
                 new StraightHoriz(200,0,curID++),
-                new JunctionTrack(100,6,curID++,false, true),
+                new JunctionTrack(100,6,curID++,false, true,"UP"),
                 new StraightHoriz(200,0,curID++),
 
                 // Left tracks
                 new StraightHoriz(900,200,200,0,curID++,"LEFT"),
-                new JunctionTrack(100,6,curID++,false, false),
+                new JunctionTrack(100,6,curID++,false, false,"UP"),
 
                 new StraightHoriz(200,0,curID++),
-                new JunctionTrack(100,6,curID++,false, true),
+                new JunctionTrack(100,6,curID++,false, true,"UP"),
                 new StraightHoriz(200,0,curID++),
         };
     }
@@ -419,11 +419,11 @@ public class CustomTracks {
                 new StraightHoriz(200,0,curID++),
                 new Quart1(400,1,curID++),
                 new Quart4(400,4,curID++),
-                new JunctionTrack(100,6,curID++,false, false),
+                new JunctionTrack(100,6,curID++,false, false,"UP"),
                 new StraightHoriz(200,0,curID++),
                 new StraightHoriz(100,0,curID++),
 
-                new JunctionTrack(100,6,curID++,false, true),
+                new JunctionTrack(100,6,curID++,false, true,"UP"),
         };
     }
 

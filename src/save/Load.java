@@ -249,8 +249,8 @@ public class Load {
                 return new StraightVert(length,5,id);
             case "Junction":
                 boolean inbound = trackObject.getBoolean("inbound");
-
-                JunctionTrack junctionTrack = new JunctionTrack(length,6,id,false,inbound);
+                String drawDirection = trackObject.getString("draw");
+                JunctionTrack junctionTrack = new JunctionTrack(length,6,id,false,inbound,drawDirection);
                 int thrownIndex = trackObject.getInt("thrown");
                 if(!inbound){
                     junctionTrack.setOutboundToThrown(thrownIndex);
@@ -273,6 +273,7 @@ public class Load {
         int length = trackObject.getInt("length");
         int x = trackObject.getInt("x");
         int y = trackObject.getInt("y");
+        String drawDirection = trackObject.getString("draw");
 
         switch (trackObject.getString("type")){
             case "Q1":
@@ -289,7 +290,7 @@ public class Load {
                 return new StraightVert(x,y,length,5,"RIGHT",id);
             case "Junction":
                 boolean inbound = trackObject.getBoolean("inbound");//TODO
-                return new JunctionTrack(x,y,length,6,id,"RIGHT",false,inbound);
+                return new JunctionTrack(x,y,length,6,id,"RIGHT",false,inbound, drawDirection);
             default:
                 System.out.println("No Match for type");
         }

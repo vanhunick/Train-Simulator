@@ -8,6 +8,7 @@ import model.Train;
 import org.junit.Test;
 import view.Drawable.DrawableRollingStock;
 import view.Drawable.DrawableTrain;
+import view.Drawable.section_types.JunctionTrack;
 import view.Simulation;
 
 
@@ -24,6 +25,7 @@ public class JunctionTests {
 
     @Test
     public void exitEventTest(){
+        if(1==1)return;
         Simulation simulation = getSimulation();
         CustomTracks.Railway railway = CustomTracks.getHorizontalRailWay();
 
@@ -58,5 +60,70 @@ public class JunctionTests {
             }
         }
         assert (success);
+    }
+
+    @Test
+    public void testEndTrackMethod(){
+
+
+//        int startX, int startY, int length, int drawID,int id, String direction, boolean thrown, boolean inbound, String drawDirection
+
+
+        // Inbound
+        JunctionTrack j = new JunctionTrack(0,0,200,6, 0,"RIGHT", false,true,"UP");
+        assert (j.getEndTrack().getDrawID() == 4);
+
+        j = new JunctionTrack(0,0,200,6, 0,"RIGHT", false,true,"DOWN");
+        assert (j.getEndTrack().getDrawID() == 1);
+
+        j = new JunctionTrack(0,0,200,6, 0,"LEFT", false,true,"UP");
+        assert (j.getEndTrack().getDrawID() == 3);
+
+        j = new JunctionTrack(0,0,200,6, 0,"LEFT", false,true,"DOWN");
+        assert (j.getEndTrack().getDrawID() == 2);
+
+        // Outbound
+        j = new JunctionTrack(0,0,200,6, 0,"RIGHT", false,false,"UP");
+        assert (j.getEndTrack().getDrawID() == 1);
+
+        j = new JunctionTrack(0,0,200,6, 0,"RIGHT", false,false,"DOWN");
+        assert (j.getEndTrack().getDrawID() == 4);
+
+        j = new JunctionTrack(0,0,200,6, 0,"LEFT", false,false,"UP");
+        assert (j.getEndTrack().getDrawID() == 2);
+
+        j = new JunctionTrack(0,0,200,6, 0,"LEFT", false,false,"DOWN");
+        assert (j.getEndTrack().getDrawID() == 3);
+
+    }
+
+    @Test
+    public void testInnerTrackMethod(){
+
+        // Inbound
+        JunctionTrack j = new JunctionTrack(0,0,200,6, 0,"RIGHT", false,true,"UP");
+        assert (j.getInnerTrack().getDrawID() == 2);
+
+        j = new JunctionTrack(0,0,200,6, 0,"RIGHT", false,true,"DOWN");
+        assert (j.getInnerTrack().getDrawID() == 3);
+
+        j = new JunctionTrack(0,0,200,6, 0,"LEFT", false,true,"UP");
+        assert (j.getInnerTrack().getDrawID() == 1);
+
+        j = new JunctionTrack(0,0,200,6, 0,"LEFT", false,true,"DOWN");
+        assert (j.getInnerTrack().getDrawID() == 4);
+
+        // Outbound
+        j = new JunctionTrack(0,0,200,6, 0,"RIGHT", false,false,"UP");
+        assert (j.getInnerTrack().getDrawID() == 3);
+
+        j = new JunctionTrack(0,0,200,6, 0,"RIGHT", false,false,"DOWN");
+        assert (j.getInnerTrack().getDrawID() == 2);
+
+        j = new JunctionTrack(0,0,200,6, 0,"LEFT", false,false,"UP");
+        assert (j.getInnerTrack().getDrawID() == 4);
+
+        j = new JunctionTrack(0,0,200,6, 0,"LEFT", false,false,"DOWN");
+        assert (j.getInnerTrack().getDrawID() == 1);
     }
 }
