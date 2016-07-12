@@ -1,12 +1,13 @@
 package view.Drawable.section_types;
 
+
+import Util.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 
 import javafx.scene.paint.Color;
-import view.Drawable.DrawableTrain;
 import view.Drawable.Movable;
 
-import java.awt.*;
+
 
 /**
  * Created by Nicky on 25/03/2016.
@@ -60,7 +61,7 @@ public abstract class DefaultTrack {
         return false;
     }
 
-    public Point getConnectionPointFrom(){
+    public Point2D getConnectionPointFrom(){
         System.out.println("point null should be implemented in subclass");
         return null;
     }
@@ -69,7 +70,7 @@ public abstract class DefaultTrack {
         System.out.println("toggle direction should be implemented in subclass");
     }
 
-    public Point getConnectionPointTo(){
+    public Point2D getConnectionPointTo(){
         System.out.println("point from should be implemented in subclass");
         return null;
     }
@@ -93,7 +94,7 @@ public abstract class DefaultTrack {
         this.juncTo = -1;
     }
 
-    public Point getConnectionPoint(){
+    public Point2D getConnectionPoint(){
         System.out.println("Should be implemented in subclass getConnectionPoint");
         return null;
     }
@@ -168,9 +169,9 @@ public abstract class DefaultTrack {
         System.out.println("Should be implemented in subclass");
     }
 
-    public boolean checkOnAfterUpdate(Point curPoint,double curRot, double rotationDone, double speed, Movable movable){System.out.println("Should be implemented in subclass checkOnAdterUpate");return true;}
+    public boolean checkOnAfterUpdate(Point2D curPoint,double curRot, double rotationDone, double speed, Movable movable){System.out.println("Should be implemented in subclass checkOnAdterUpate");return true;}
 
-    public double getNextPoint(Point curPoint,double curRot, double rotationDone, double speed, Movable movable){
+    public double getNextPoint(Point2D curPoint,double curRot, double rotationDone, double speed, Movable movable){
         System.out.println("Should be implemented in subclass getNextPoint");
         return 0;
     }

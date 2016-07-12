@@ -1,8 +1,8 @@
 package view.Drawable.section_types;
 
+import Util.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import model.Section;
 import view.Drawable.Movable;
 import view.SimulationUI;
 
@@ -95,12 +95,12 @@ public class StraightVert extends DefaultTrack {
                 y >= super.getStartY() && y <= super.getStartY() + super.getLength();
     }
 
-    public Point getConnectionPoint(){
+    public Point2D getConnectionPoint(){
         if(super.getDirection().equals("UP")){
-            return new Point((int)(super.getStartX()+ TRACK_WIDTH/2),(int) (getStartY()));
+            return new Point2D((int)(super.getStartX()+ TRACK_WIDTH/2),(int) (getStartY()));
         }
         else if(super.getDirection().equals("DOWN")){
-            return new Point((int)(super.getStartX() + TRACK_WIDTH/2),(int) (getStartY() + getLength()));
+            return new Point2D((int)(super.getStartX() + TRACK_WIDTH/2),(int) (getStartY() + getLength()));
         }
         return null;
     }
@@ -114,22 +114,22 @@ public class StraightVert extends DefaultTrack {
         }
     }
 
-    public Point getConnectionPointFrom(){
+    public Point2D getConnectionPointFrom(){
         if(super.getDirection().equals("UP")){
-            return new Point((int)(super.getStartX() + TRACK_WIDTH/2),(int) (getStartY() + getLength()));
+            return new Point2D((int)(super.getStartX() + TRACK_WIDTH/2),(int) (getStartY() + getLength()));
         }
         else if(super.getDirection().equals("DOWN")){
-            return new Point((int)(super.getStartX()+ TRACK_WIDTH/2),(int) (getStartY()));
+            return new Point2D((int)(super.getStartX()+ TRACK_WIDTH/2),(int) (getStartY()));
         }
         return null;
     }
 
-    public Point getConnectionPointTo(){
+    public Point2D getConnectionPointTo(){
         if(super.getDirection().equals("UP")){
-            return new Point((int)(super.getStartX()+ TRACK_WIDTH/2),(int) (getStartY()));
+            return new Point2D((int)(super.getStartX()+ TRACK_WIDTH/2),(int) (getStartY()));
         }
         else if(super.getDirection().equals("DOWN")){
-            return new Point((int)(super.getStartX() + TRACK_WIDTH/2),(int) (getStartY() + getLength()));
+            return new Point2D((int)(super.getStartX() + TRACK_WIDTH/2),(int) (getStartY() + getLength()));
         }
         return null;
     }

@@ -1,9 +1,10 @@
 package view.Drawable.section_types;
 
+import Util.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import view.Drawable.Movable;
-import view.Simulation;
+
 import view.SimulationUI;
 
 import java.awt.*;
@@ -111,7 +112,7 @@ public class StraightHoriz extends DefaultTrack {
     }
 
 
-    public double getNextPoint(Point cur, double curRot, double rotDone, double moveBy, Movable movable){
+    public double getNextPoint(Point2D cur, double curRot, double rotDone, double moveBy, Movable movable){
         cur.setLocation(getNextX(cur.getX(),moveBy,movable.getOrientation(), movable.getDirection()),getNextY(cur.getY(),moveBy,movable.getOrientation()));
         return getNextRotation(curRot,moveBy,movable.getOrientation(),movable.getDirection());
     }
@@ -194,38 +195,38 @@ public class StraightHoriz extends DefaultTrack {
         return super.getStartY() + TRACK_WIDTH/2;
     }
 
-    public boolean checkOnAfterUpdate(Point curPoint, double rotation,double rotDone, double dist, Movable movable){
+    public boolean checkOnAfterUpdate(Point2D curPoint, double rotation,double rotDone, double dist, Movable movable){
         if(getNextX(curPoint.getX(),dist, movable.getOrientation(), movable.getDirection()) == -1 )return false;
         if(getNextY(curPoint.getY(),dist, movable.getOrientation()) == -1 )return false;
         return true;
     }
 
-    public Point getConnectionPoint(){
+    public Point2D getConnectionPoint(){
         if(super.getDirection().equals("RIGHT")){
-            return new Point((int)(super.getStartX()+ getLength()),(int) (getStartY() + TRACK_WIDTH/2));
+            return new Point2D((int)(super.getStartX()+ getLength()),(int) (getStartY() + TRACK_WIDTH/2));
         }
         else if(super.getDirection().equals("LEFT")){
-            return new Point((int)(super.getStartX()),(int) (getStartY() + TRACK_WIDTH/2));
+            return new Point2D((int)(super.getStartX()),(int) (getStartY() + TRACK_WIDTH/2));
         }
         return null;
     }
 
-    public Point getConnectionPointFrom(){
+    public Point2D getConnectionPointFrom(){
         if(super.getDirection().equals("RIGHT")){
-            return new Point((int)(super.getStartX()),(int) (getStartY() + TRACK_WIDTH/2));
+            return new Point2D((int)(super.getStartX()),(int) (getStartY() + TRACK_WIDTH/2));
         }
         else if(super.getDirection().equals("LEFT")){
-            return new Point((int)(super.getStartX()+ getLength()),(int) (getStartY() + TRACK_WIDTH/2));
+            return new Point2D((int)(super.getStartX()+ getLength()),(int) (getStartY() + TRACK_WIDTH/2));
         }
         return null;
     }
 
-    public Point getConnectionPointTo(){
+    public Point2D getConnectionPointTo(){
         if(super.getDirection().equals("RIGHT")){
-            return new Point((int)(super.getStartX()+ getLength()),(int) (getStartY() + TRACK_WIDTH/2));
+            return new Point2D((int)(super.getStartX()+ getLength()),(int) (getStartY() + TRACK_WIDTH/2));
         }
         else if(super.getDirection().equals("LEFT")){
-            return new Point((int)(super.getStartX()),(int) (getStartY() + TRACK_WIDTH/2));
+            return new Point2D((int)(super.getStartX()),(int) (getStartY() + TRACK_WIDTH/2));
         }
         return null;
     }

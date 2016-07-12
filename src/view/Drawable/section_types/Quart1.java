@@ -1,13 +1,13 @@
 package view.Drawable.section_types;
 
+import Util.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
-import view.Drawable.DrawableTrain;
 import view.Drawable.Movable;
 import view.SimulationUI;
 
-import java.awt.*;
+
 
 /**
  * Created by Nicky on 25/03/2016.
@@ -118,33 +118,33 @@ public class Quart1 extends DefaultTrack {
                 y >= super.getStartY() && y <= super.getStartY() + super.getLength()/2;
     }
 
-    public Point getConnectionPoint(){
+    public Point2D getConnectionPoint(){
         if(super.getDirection().equals("RIGHT")){
-            return new Point((int)(super.getStartX()+getLength()/2),(int) (getStartY() + TRACK_WIDTH/2));
+            return new Point2D((int)(super.getStartX()+getLength()/2),(int) (getStartY() + TRACK_WIDTH/2));
         }
         else if(super.getDirection().equals("DOWN")){
-            return new Point((int)(super.getStartX()+ TRACK_WIDTH/2),(int) (getStartY() + getLength()/2));
+            return new Point2D((int)(super.getStartX()+ TRACK_WIDTH/2),(int) (getStartY() + getLength()/2));
         }
         return null;
     }
 
 
-    public Point getConnectionPointFrom(){
+    public Point2D getConnectionPointFrom(){
         if(super.getDirection().equals("RIGHT")){
-            return new Point((int)(super.getStartX()+ TRACK_WIDTH/2),(int) (getStartY() + getLength()/2));
+            return new Point2D((int)(super.getStartX()+ TRACK_WIDTH/2),(int) (getStartY() + getLength()/2));
         }
         else if(super.getDirection().equals("DOWN")){
-            return new Point((int)(super.getStartX()+getLength()/2),(int) (getStartY() + TRACK_WIDTH/2));
+            return new Point2D((int)(super.getStartX()+getLength()/2),(int) (getStartY() + TRACK_WIDTH/2));
         }
         return null;
     }
 
-    public Point getConnectionPointTo(){
+    public Point2D getConnectionPointTo(){
         if(super.getDirection().equals("RIGHT")){
-            return new Point((int)(super.getStartX()+getLength()/2),(int) (getStartY() + TRACK_WIDTH/2));
+            return new Point2D((int)(super.getStartX()+getLength()/2),(int) (getStartY() + TRACK_WIDTH/2));
         }
         else if(super.getDirection().equals("DOWN")){
-            return new Point((int)(super.getStartX()+ TRACK_WIDTH/2),(int) (getStartY() + getLength()/2));
+            return new Point2D((int)(super.getStartX()+ TRACK_WIDTH/2),(int) (getStartY() + getLength()/2));
         }
         return null;
     }
@@ -196,8 +196,8 @@ public class Quart1 extends DefaultTrack {
 
 
 
-
-    public double getNextPoint(Point curPoint,double curRot, double rotationDone, double speed, Movable movable){
+    @Override
+    public double getNextPoint(Point2D curPoint,double curRot, double rotationDone, double speed, Movable movable){
         // Need to minus the degrees to change
         double degreesToMove = (90/lengthOfQuater()/2) * speed;
 
@@ -231,9 +231,9 @@ public class Quart1 extends DefaultTrack {
         return curRot;
     }
 
-    public boolean checkOnAfterUpdate(Point curPoint,double curRot, double rotationDone, double speed, Movable movable){
+    public boolean checkOnAfterUpdate(Point2D curPoint,double curRot, double rotationDone, double speed, Movable movable){
         getNextPoint(curPoint, curRot, rotationDone, speed, movable);
-        Point p = curPoint;
+        Point2D p = curPoint;
 
         if(super.getDirection().equals("DOWN")){
             if(forwardWithTrack(movable)){

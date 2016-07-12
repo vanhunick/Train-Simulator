@@ -1,10 +1,9 @@
 package view.Drawable.section_types;
 
+import Util.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import view.Drawable.Movable;
-
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -371,7 +370,7 @@ public class JunctionTrack extends DefaultTrack {
         }
     }
 
-    public Point getConnectionThrown(){
+    public Point2D getConnectionThrown(){
         if(getDirection().equals("RIGHT")){
             return outRightTrack.getConnectionPointTo();
         }
@@ -481,9 +480,9 @@ public class JunctionTrack extends DefaultTrack {
      * Gets the connection point for a track connected in the direction the
      * straight track is going
      * */
-    public Point getConnectionPointTo(){return straightTrack.getConnectionPointTo();}
+    public Point2D getConnectionPointTo(){return straightTrack.getConnectionPointTo();}
 
-    public Point getConnectionPointFrom(){return straightTrack.getConnectionPointFrom();}
+    public Point2D getConnectionPointFrom(){return straightTrack.getConnectionPointFrom();}
 
     public DefaultTrack getInboundThrownJuncTrack(){return inDown;}
 

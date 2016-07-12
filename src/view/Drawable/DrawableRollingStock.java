@@ -1,5 +1,6 @@
 package view.Drawable;
 
+import Util.Point2D;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -11,7 +12,6 @@ import view.Drawable.section_types.DefaultTrack;
 import view.Drawable.section_types.JunctionTrack;
 import view.Simulation;
 
-import java.awt.Point;
 
 /**
  * Created by vanhunick on 21/04/16.
@@ -41,7 +41,7 @@ public class DrawableRollingStock implements Movable{
     private Circle backConnection; // Circle representing back where a connection with a stock or train can be make
     private DefaultTrack juncTrack; // The junction track is is on if it is on one
     private DefaultTrack curTrack; // The current track it is on
-    private Point currentLocation;// The location of the rolling stock
+    private Point2D currentLocation;// The location of the rolling stock
     private double degDone = 0; // The degrees through the curve
 
 
@@ -93,7 +93,7 @@ public class DrawableRollingStock implements Movable{
      * */
     public void setStartNotConnected(DefaultTrack startingTrack){
         this.curTrack = startingTrack;
-        this.currentLocation = new Point((int) curTrack.getInitialX(20),(int) curTrack.getInitialY(20));
+        this.currentLocation = new Point2D((int) curTrack.getInitialX(20),(int) curTrack.getInitialY(20));
         setConnectionsLocatons();
     }
 
@@ -108,12 +108,12 @@ public class DrawableRollingStock implements Movable{
      *
      * @param vis the visualisation used to simulate the movement back
      * */
-    public void setStart(Point startPointOfConnection, Simulation vis){
+    public void setStart(Point2D startPointOfConnection, Simulation vis){
         // Reverse direction so we can reverse it away from the train
         this.direction = !direction;
 
         // the middle of the train it is connected to
-        this.currentLocation = new Point((int)startPointOfConnection.getX(),(int)startPointOfConnection.getY());
+        this.currentLocation = new Point2D((int)startPointOfConnection.getX(),(int)startPointOfConnection.getY());
 
         double len = getLengthPixels() + 40;
         double increment = len/40;
@@ -370,7 +370,7 @@ public class DrawableRollingStock implements Movable{
     }
 
     @Override
-    public Point getCurrentLocation(){
+    public Point2D getCurrentLocation(){
         return  this.currentLocation;
     }
 

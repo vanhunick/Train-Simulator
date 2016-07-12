@@ -1,5 +1,7 @@
 package view.Drawable.section_types;
 
+
+import Util.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
@@ -149,22 +151,22 @@ public class Quart4 extends DefaultTrack {
     }
 
 
-    public Point getConnectionPointFrom(){
+    public Point2D getConnectionPointFrom(){
         if(super.getDirection().equals("UP")){
-            return new Point((int)(super.getStartX()+ getLength()/2),(int) (getStartY() + getLength() - TRACK_WIDTH/2));
+            return new Point2D((int)(super.getStartX()+ getLength()/2),(int) (getStartY() + getLength() - TRACK_WIDTH/2));
         }
         else if(super.getDirection().equals("RIGHT")){
-            return new Point((int)(super.getStartX()+TRACK_WIDTH/2),(int) (getStartY() + getLength()/2));
+            return new Point2D((int)(super.getStartX()+TRACK_WIDTH/2),(int) (getStartY() + getLength()/2));
         }
         return null;
     }
 
-    public Point getConnectionPointTo(){
+    public Point2D getConnectionPointTo(){
         if(super.getDirection().equals("UP")){
-            return new Point((int)(super.getStartX()+TRACK_WIDTH/2),(int) (getStartY() + getLength()/2));
+            return new Point2D((int)(super.getStartX()+TRACK_WIDTH/2),(int) (getStartY() + getLength()/2));
         }
         else if(super.getDirection().equals("RIGHT")){
-            return new Point((int)(super.getStartX()+ getLength()/2),(int) (getStartY() + getLength() - TRACK_WIDTH/2));
+            return new Point2D((int)(super.getStartX()+ getLength()/2),(int) (getStartY() + getLength() - TRACK_WIDTH/2));
         }
         return null;
     }
@@ -186,7 +188,7 @@ public class Quart4 extends DefaultTrack {
         midPointY = getStartY() + radius - TRACK_WIDTH/2;
     }
 
-    public double getNextPoint(Point curPoint,double curRot, double rotationDone, double speed, Movable movable){
+    public double getNextPoint(Point2D curPoint,double curRot, double rotationDone, double speed, Movable movable){
         radius = getLength()/2;
         midPointX = getStartX() + radius + TRACK_WIDTH/2;
         midPointY = getStartY() + radius - TRACK_WIDTH/2;
@@ -227,9 +229,9 @@ public class Quart4 extends DefaultTrack {
     }
 
 
-    public boolean checkOnAfterUpdate(Point curPoint,double curRot, double rotationDone, double speed, Movable movable){
+    public boolean checkOnAfterUpdate(Point2D curPoint,double curRot, double rotationDone, double speed, Movable movable){
         getNextPoint(curPoint, curRot,rotationDone, speed, movable);
-        Point p = curPoint;
+        Point2D p = curPoint;
 
         if(super.getDirection().equals("RIGHT")){
             if(forwardWithTrack(movable)){

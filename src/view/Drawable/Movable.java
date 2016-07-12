@@ -1,10 +1,10 @@
 package view.Drawable;
 
+
+import Util.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 import view.Drawable.section_types.DefaultTrack;
-import view.Drawable.section_types.JunctionTrack;
 
-import java.awt.*;
 
 /**
  * Created by Nicky on 9/05/2016.
@@ -60,7 +60,7 @@ public interface Movable {
      *
      * @return location
      * */
-    public Point getCurrentLocation();
+    public Point2D getCurrentLocation();
 
     /**
      * Returns the orientation of the movable

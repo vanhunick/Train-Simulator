@@ -3,6 +3,7 @@ package view.Drawable;
 
 
 
+import Util.Point2D;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -12,8 +13,6 @@ import javafx.scene.shape.Circle;
 import model.Train;
 import view.Drawable.section_types.*;
 import view.Simulation;
-
-import java.awt.*;
 
 
 /**
@@ -44,7 +43,7 @@ public class DrawableTrain implements Movable{
     private Image trainImage; // Image of the train
     private ImageView trainImageView; // Image view of the train
     private double curRotation = 90;  // The current rotation of the train image
-    private Point currentLocation; // Current location of the train
+    private Point2D currentLocation; // Current location of the train
     private SnapshotParameters params; // Params of the train image
     private Circle connection;
 
@@ -68,7 +67,7 @@ public class DrawableTrain implements Movable{
         this.curSection = curSection;
         this.train = train;
         this.curTrack = curTrack;
-        this.currentLocation = new Point((int) curTrack.getInitialX(width),(int) curTrack.getInitialY(width));
+        this.currentLocation = new Point2D((int) curTrack.getInitialX(width),(int) curTrack.getInitialY(width));
         this.lastDirection = train.getDirection();
         this.currentSpeed = 0;
 
@@ -421,7 +420,7 @@ public class DrawableTrain implements Movable{
     }
 
     @Override
-    public Point getCurrentLocation(){
+    public Point2D getCurrentLocation(){
         return this.currentLocation;
     }
 
