@@ -49,7 +49,7 @@ public class CustomTracks {
         int innerOffset = 100;
         return  new DefaultTrack[]{
                 // s1
-                new StraightHoriz(350,600,200,0,curID++,"RIGHT"), // 0
+                new StraightHoriz(550,600,200,0,curID++,"RIGHT"), // 0
                 // s2
                 new StraightHoriz(200,0,curID++), // 1
                 // s3

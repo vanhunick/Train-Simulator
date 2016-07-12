@@ -3,6 +3,7 @@ package view;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
@@ -53,18 +54,26 @@ public class SimulationUI implements MouseEvents{
     private List<Slider> physicsSliders;
     private List<Label> physicsLabels;
 
+    private Canvas canvas;
+
+
 
     /**
      * Constructs a new visualisation object with a default track and trains
      * */
     public SimulationUI(){
+        this.pyhsSliders = false;
         this.physicsSliders = getPhysicsSliders();
         this.physicsLabels = getPhysicsLabels();
         this.sim = new Simulation(this);
         sim.setDefault();
-        this.logShown = true;
+        this.logShown = false;
         this.vBox = getVisualisationButtons();
         this.eventLog = new EventLog();
+    }
+
+    public void setCanvas(Canvas canvas){
+        this.canvas = canvas;
     }
 
     /**
@@ -154,6 +163,19 @@ public class SimulationUI implements MouseEvents{
 
     final ToggleGroup mode = new ToggleGroup();
 
+    public void setSelectedMode(String mode){
+
+        if(mode.contains("Test")){
+            selectedMode = Simulation.MODE_TEST;
+        }
+        else if(mode.contains("Controller")){
+            selectedMode = Simulation.MODE_CONTROLLER;
+        }
+        else if(mode.contains("User")){
+            selectedMode = Simulation.MODE_USER;
+        }
+    }
+
     /**
      * Creates the buttons for the visualisation and sets up the listners
      * */
@@ -201,9 +223,11 @@ public class SimulationUI implements MouseEvents{
 
     private boolean pyhsSliders = false;
 
-    public void showPhysicsSliders(){
+    public void showPhysicsSliders(BorderPane borderPane){
         if(pyhsSliders){
             pyhsSliders = false;
+            borderPane.getChildren().remove(vBox);
+            canvas.setWidth(canvas.getWidth() + WIDTH);
             for(int i = 0; i < physicsSliders.size(); i++){
                 vBox.getChildren().remove(physicsLabels.get(i));
                 vBox.getChildren().remove(physicsSliders.get(i));
@@ -211,10 +235,13 @@ public class SimulationUI implements MouseEvents{
         }
         else {
             pyhsSliders = true;
+            borderPane.setLeft(vBox);
+            canvas.setWidth(canvas.getWidth() - WIDTH);
             for(int i = 0; i < physicsSliders.size(); i++){
                 vBox.getChildren().add(physicsLabels.get(i));
                 vBox.getChildren().add(physicsSliders.get(i));
             }
+
         }
     }
 
@@ -306,8 +333,12 @@ public class SimulationUI implements MouseEvents{
      * Adds the UI elements for the visualisation from the pane. Used when switching mode
      * */
     public void addUIElementsToLayout(BorderPane bp){
-        bp.setLeft(vBox);
-        bp.setRight(eventLog);
+        if(logShowing()){
+            bp.setRight(eventLog);
+        }
+        if(pyhsSliders){
+            bp.setLeft(vBox);
+        }
     }
 
 
@@ -326,12 +357,18 @@ public class SimulationUI implements MouseEvents{
     public void toggleLog(BorderPane bp){
         if(logShown){
             bp.getChildren().remove(eventLog);
+            canvas.setWidth(canvas.getWidth()+eventLog.WIDTH);
             logShown = !logShown;
         }
         else {
+            canvas.setWidth(canvas.getWidth()-eventLog.WIDTH);
             bp.setRight(eventLog);
             logShown = !logShown;
         }
+    }
+
+    public void toggleHbOX(){
+
     }
 
 

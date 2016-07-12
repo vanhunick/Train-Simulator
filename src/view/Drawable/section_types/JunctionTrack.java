@@ -95,6 +95,7 @@ public class JunctionTrack extends DefaultTrack {
             if(direction.equals("RIGHT")){
                 straightTrack.setDirection("RIGHT");
 
+
                 inRight.setStartX(straightTrack.getStartX() + straightTrack.getLength() - ((inRight.getLength()-TRACK_WIDTH/2)/2) - TRACK_WIDTH);
                 inRight.setStartY(straightTrack.getStartY() - inRight.getLength() + TRACK_WIDTH);
 
@@ -197,6 +198,7 @@ public class JunctionTrack extends DefaultTrack {
         else {
             straightTrack.setStartX(startX);
             straightTrack.setStartY(startY);
+            straightTrack.setMid(startX,startY);
         }
         straightTrack.setDirection(direction);
         setStartX(straightTrack.getStartX());
@@ -342,7 +344,13 @@ public class JunctionTrack extends DefaultTrack {
     }
 
     public void setMid(double x, double y){
-        updateLocation(x - getLength()/2,y + getLength()/2);
+        if(drawDirection.equals("DOWN")){
+            y-= 5;
+        }
+        else {
+            y+=5;
+        }
+        updateLocation(x,y);
     }
 
     public boolean forwardWithTrack(Movable t){

@@ -10,6 +10,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import view.ProgramController;
+import view.SimulationUI;
 
 import java.io.File;
 
@@ -29,6 +30,8 @@ public class TopToolBar extends ToolBar {
     Button saveBut;
     Button clear;
 
+
+
     /**
      * The top tool bar on the user interface used to control the program
      *
@@ -40,37 +43,6 @@ public class TopToolBar extends ToolBar {
 
         //Icon made by Freepik from www.flaticon.com
 
-
-//TODO Just wanted to see an alternative way of adding buttons
-//        String[] paths = new String[]{"file:src/res/play.png",
-//                "file:src/res/pause.png",
-//                "file:src/res/stop.png",
-//                "file:src/res/event.png",
-//                "file:src/res/save.png",
-//                "file:src/res/clear.png",
-//                "file:src/res/train-rails.png",
-//                "file:src/res/undo.png",
-//                "file:src/res/metro.png"
-//        };
-//
-//        String[] tips = new String[]{
-//                "Starts the Simulation",
-//                "Pauses the Simulation",
-//                "Stops and resets the Simulation",
-//                "Opens the event generation menu",
-//                "End this section and start the next one",
-//                "Undo the last added track",
-//                "Starts the Simulation with the created track",
-//                "Save the current track to file",
-//                "Clears the entire track"
-//        };
-//
-//        Button[] buttons = new Button[paths.length];
-//
-//        for(int i = 0; i < paths.length; i++){
-//            buttons[i] = new Button("",new ImageView(new Image(paths[i],imageSize,imageSize,false,false)));
-//            buttons[i].setTooltip(new Tooltip(tips[i]));
-//        }
 
         // Simulation Icons
         Image playImage = new Image("file:src/res/play.png",imageSize,imageSize,false,false);

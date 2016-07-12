@@ -6,12 +6,14 @@ import javafx.scene.control.*;
 import save.Load;
 import save.LoadedRailway;
 import view.ProgramController;
+import view.SimulationUI;
 
 /**
  * Created by Nicky on 2/04/2016.
  */
 public class TopMenuBar extends MenuBar {
     private ProgramController controller;
+
 
     public static final int HEIGHT= 20;
 
@@ -25,6 +27,7 @@ public class TopMenuBar extends MenuBar {
         Menu menuFile = new Menu("File");
         Menu menuEdit = new Menu("Edit");
         Menu menuView = new Menu("View");
+        Menu modeView = new Menu("Mode");
 
         //List for file
         MenuItem newTrackItem = new MenuItem("New Track");
@@ -43,6 +46,37 @@ public class TopMenuBar extends MenuBar {
         // List for View
         MenuItem log = new MenuItem("Log view");
 
+        // List for Mode
+        CheckMenuItem testItem = new CheckMenuItem("Test");
+
+        // The default setting
+        testItem.setSelected(true);
+
+        CheckMenuItem userItem = new CheckMenuItem("User Control");
+        CheckMenuItem controllerItem = new CheckMenuItem("Controller");
+
+        modeView.getItems().add(testItem);
+        modeView.getItems().add(userItem);
+        modeView.getItems().add(controllerItem);
+
+        testItem.setOnAction(e -> {
+            userItem.setSelected(false);
+            controllerItem.setSelected(false);
+            controller.setSimulationMode("Test");
+        });
+
+        userItem.setOnAction(e -> {
+            controllerItem.setSelected(false);
+            testItem.setSelected(false);
+            controller.setSimulationMode("User");
+        });
+
+        controllerItem.setOnAction(e -> {
+            userItem.setSelected(false);
+            testItem.setSelected(false);
+            controller.setSimulationMode("Controller");
+        });
+
         // Actions for view items
         log.setOnAction(e -> logToggled(e));
 
@@ -59,7 +93,7 @@ public class TopMenuBar extends MenuBar {
 
 
         //Add to the menu bar
-        this.getMenus().addAll(menuFile, menuEdit, menuView);
+        this.getMenus().addAll(menuFile, menuEdit, menuView, modeView);
 
     }
 
@@ -80,7 +114,19 @@ public class TopMenuBar extends MenuBar {
         }
     }
 
-    // TODO implement
+    public void handleTestModePressed(){
+
+    }
+
+    public void handleUserModePressed(){
+
+    }
+
+    public void handleControllerModePressed(){
+
+    }
+
+
     public void handleLoadTrackPressed(ActionEvent e){
         LoadPane l = new LoadPane();
 

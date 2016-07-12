@@ -104,7 +104,6 @@ public class Simulation implements MouseEvents {
             modelTrack.setSpeed(t.getTrain().getId(), 28);
         }
         modelTrack.setSpeed(trains.get(0).getTrain().getId(), 27);
-//        modelTrack.setSpeed(trains.get(1).getTrain().getId(), 500);
 
         started = true;
     }
@@ -545,7 +544,6 @@ public class Simulation implements MouseEvents {
     public boolean onMovable(double x, double y){
         for(Movable m : movable){
             if(m.containsPoint(x,y)){
-                System.out.println("Contains Point");
                 if(m instanceof DrawableTrain){
                     UI.setSelectedTrain((DrawableTrain)m);
                 }

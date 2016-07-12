@@ -184,7 +184,7 @@ public class StraightHoriz extends DefaultTrack {
 
     public void setMid(double x, double y){
         setStartX(x - getLength()/2);
-        setStartY(y - TRACK_WIDTH/2);
+        setStartY(y - (TRACK_WIDTH/2));
     }
 
 

@@ -36,20 +36,29 @@ public class ProgramController implements MouseEvents {
     private BorderPane borderPane;
 
     private TopToolBar toolBar;
+    private Canvas canvas;
+
 
     public ProgramController(){
-        simulationUI = new SimulationUI();
         trackBuilder = new TrackBuilder(this);
+        simulationUI = new SimulationUI();
+    }
+
+    public void setSimulationMode(String mode){
+        if(!mode.equals(VISUALISATION_MODE))return;// TODO not in vis mode
+
+        simulationUI.setSelectedMode(mode);
     }
 
     // Canvas
-    private Canvas canvas;
+
     /**
      * The default mode is the simulationUI mode with it default track and trains
      * */
     public void setDefMode(BorderPane borderPane, Canvas canvas){
         this.canvas = canvas;
-        simulationUI.addUIElementsToLayout(borderPane);
+        simulationUI.setCanvas(canvas);
+//        simulationUI.addUIElementsToLayout(borderPane);
         setMode(ProgramController.VISUALISATION_MODE);
     }
 
@@ -73,7 +82,11 @@ public class ProgramController implements MouseEvents {
 
         if(modeToSet.equals(VISUALISATION_MODE)){
             curMode = simulationUI;
-            setVisualisationMode(null,null,null);//TODO change later
+            // Reset canvas
+            canvas.setWidth(Main.SCREEN_WIDTH);
+            canvas.setHeight(Main.SCREEN_HEIGHT);
+
+            setVisualisationMode(null,null,null);
             toolBar.enableButtons(true);
             this.mode = VISUALISATION_MODE;
         }
@@ -81,6 +94,11 @@ public class ProgramController implements MouseEvents {
             toolBar.enableButtons(false);
             this.mode = BUILDER_MODE;
             setBuilderMode();
+
+            // Reset canvas
+            canvas.setWidth(Main.SCREEN_WIDTH);
+            canvas.setHeight(Main.SCREEN_HEIGHT);
+
             trackBuilder.updateSize();
             this.curMode = trackBuilder;
         }
@@ -122,6 +140,10 @@ public class ProgramController implements MouseEvents {
         trackBuilder.removeUIElementsFromLayout(borderPane);
         simulationUI.addUIElementsToLayout(borderPane);
 
+        if(simulationUI.logShowing()){
+            canvas.setWidth(canvas.getWidth() - EventLog.WIDTH);
+        }
+
     }
 
 
@@ -133,10 +155,8 @@ public class ProgramController implements MouseEvents {
         trackBuilder.addUIElementsToLayout(borderPane);
 
         if(simulationUI.logShowing()){
-            canvas.setWidth(canvas.getWidth() + EventLog.WIDTH);
+//            canvas.setWidth(canvas.getWidth() + EventLog.WIDTH);
         }
-
-//        setMode(BUILDER_MODE);
     }
 
     public void setLoadedRailway(LoadedRailway railway){
@@ -147,7 +167,7 @@ public class ProgramController implements MouseEvents {
 
     public void handlePhysicsPressed(ActionEvent e){
         if(mode.equals(VISUALISATION_MODE)){
-            simulationUI.showPhysicsSliders();
+            simulationUI.showPhysicsSliders(borderPane);
         }
         else{
             new ErrorDialog("You need to be in the Simulation mode to change physics settings", "Invalid Mode");
@@ -193,13 +213,6 @@ public class ProgramController implements MouseEvents {
     public void toggleLogView(){
         if(mode.equals(VISUALISATION_MODE)){
             simulationUI.toggleLog(borderPane);
-
-            if(simulationUI.logShowing()){
-                canvas.setWidth(canvas.getWidth() - EventLog.WIDTH);
-            }
-            else {
-                canvas.setWidth(canvas.getWidth() + EventLog.WIDTH);
-            }
         }
     }
 

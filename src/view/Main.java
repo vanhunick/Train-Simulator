@@ -48,6 +48,7 @@ public class Main extends Application {
         Scene scene = new Scene(root, SCREEN_WIDTH, SCREEN_HEIGHT, Color.rgb(0, 0, 0));
         Canvas canvas = new Canvas();
 
+
         // Responds to a key being pressed
         scene.setOnKeyPressed(e -> {String code = e.getCode().toString();if ( !input.contains(code) ){
             input.add( code );
@@ -97,12 +98,13 @@ public class Main extends Application {
         primaryStage.setHeight(SCREEN_HEIGHT);
         primaryStage.setWidth(SCREEN_WIDTH);
 
-//        bl.setTop(topMenuBar);//Need to add first as it is being used to calculate offset
         bl.setTop(barBox);//Need to add first as it is being used to calculate offset
         bl.setCenter(canvas);
-
-        canvas.setWidth(SCREEN_WIDTH- EventLog.WIDTH - Simulation.WIDTH);
-        canvas.setHeight(SCREEN_HEIGHT - TopMenuBar.HEIGHT);
+//
+//        canvas.setWidth(SCREEN_WIDTH - EventLog.WIDTH - Simulation.WIDTH);
+//        canvas.setHeight(SCREEN_HEIGHT - TopMenuBar.HEIGHT);
+        canvas.setWidth(SCREEN_WIDTH);
+        canvas.setHeight(SCREEN_HEIGHT);
 
 
         root.getChildren().add(bl);

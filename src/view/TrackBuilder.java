@@ -122,12 +122,21 @@ public class TrackBuilder implements MouseEvents{
      * Called when the screen size changes to make sure all the elements still fit
      * */
     public void updateSize(){
-        this.screenWidth = controller.getCanvasWidth();
-        this.screenHeight = controller.getCanvasHeight();
-        this.shownPanelStartX = screenWidth - boxSize - boxGap*2;
-        shownPanelStartX = screenWidth - (boxSize - (boxGap*2));
-        this.boxSize = ((screenHeight - 50 - ((NUMB_PIECES*boxGap)+boxGap))/NUMB_PIECES);
+//        this.screenWidth = controller.getCanvasWidth();
+        this.screenWidth = Main.SCREEN_WIDTH;
+//        this.screenHeight = controller.getCanvasHeight();
+        this.screenHeight = Main.SCREEN_HEIGHT;
+        this.boxSize = ((screenHeight - 80 - ((NUMB_PIECES*boxGap)+boxGap*2))/NUMB_PIECES);
+        this.shownPanelStartX = screenWidth - (boxSize + (boxGap*2) + offsetFromExtraElements());
         this.exampleTracks = setUpDrawPieces();
+    }
+
+    //TODO might need this later if I want to add a left panel
+    /**
+     * Returns the pixel offset from any elements on the screen next to the canvas
+     * */
+    public double offsetFromExtraElements(){
+        return 0;
     }
 
     public LoadedRailway getLoadedRailway(){
@@ -170,9 +179,10 @@ public class TrackBuilder implements MouseEvents{
             d.draw(gc);
         }
 
+
         // Set the sizes
-        this.boxSize = ((screenHeight - 50 - ((NUMB_PIECES*boxGap)+boxGap))/NUMB_PIECES);
-        this.shownPanelStartX = screenWidth - (boxSize + (boxGap*2));
+        this.boxSize = ((screenHeight - 80 - ((NUMB_PIECES*boxGap)+boxGap*2))/NUMB_PIECES);
+        this.shownPanelStartX = screenWidth - (boxSize + (boxGap*2) + offsetFromExtraElements());
 
         // Draw the piece selection panel
         drawShownPanel(gc);
@@ -461,7 +471,7 @@ public class TrackBuilder implements MouseEvents{
         int numbSections = allTracks.size();
 
         // Check if there is a piece to put down
-        if(mouseSelectedPeice != null){
+        if(mouseSelectedPeice != null ){
             mouseSelectedPeice.setSelected(false);
             placeTrack(mouseSelectedPeice);
         }
@@ -478,7 +488,6 @@ public class TrackBuilder implements MouseEvents{
      * location for the track
      * */
     public boolean placeTrack(DefaultTrack track){
-
         // The first track can be placed anywhere
         if(allTracks.size() == 1){
             return true;
@@ -685,7 +694,7 @@ public class TrackBuilder implements MouseEvents{
     public List<DefaultTrack> setUpDrawPieces(){
         List<DefaultTrack> sections = new ArrayList<>();
 
-        double x = (screenWidth - boxSize - boxGap) + (boxSize/2);//Start of the box to draw in
+        double x = (shownPanelStartX + (boxSize/2) + boxGap);//Start of the box to draw in
         double y = 10 + boxGap + (boxSize/2) - DefaultTrack.TRACK_WIDTH/2;
         double size = boxSize - (boxGap);
 
@@ -741,7 +750,9 @@ public class TrackBuilder implements MouseEvents{
      * @param bp the border pane to add elements to
      * */
     public void addUIElementsToLayout(BorderPane bp){
-        bp.setLeft(vBox);
+
+        //bp.setLeft(vBox); TODO DO not think this is required
+
     }
 
 
