@@ -30,8 +30,8 @@ public abstract class DefaultTrack {
     private boolean startPiece;
     private String direction;
 
-    private int to;
-    private int from;
+    private int to = -1;
+    private int from = -1;
 
     private int juncFrom;
     private int juncTo;
@@ -54,6 +54,8 @@ public abstract class DefaultTrack {
         this.id = id;
         this.juncFrom = -1;
         this.juncTo = -1;
+        this.to = -1;
+        this.from = - 1;
     }
 
     public boolean canConnect(DefaultTrack track){
@@ -92,6 +94,7 @@ public abstract class DefaultTrack {
         this.direction = direction;
         this.juncFrom = -1;
         this.juncTo = -1;
+        this.from = -1;
     }
 
     public Point2D getConnectionPoint(){

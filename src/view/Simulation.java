@@ -420,13 +420,22 @@ public class Simulation implements MouseEvents {
 
             // If the train is going forward along the natural orientation of the current track
             if(forwardWithTrack(t)){
+
+                // The track is the end
+                if(curTrack.getTo() == -1){
+                    t.setCrashed(true);
+                    return;
+                }
                 destinationTrack = tracks[curTrack.getTo()];
 
                 if(curTrack.getJuncTo() != -1 && ((JunctionTrack) tracks[curTrack.getJuncTo()]).getThrown()) {// Check if it is possible it is going to a junction track
                     destinationTrack = tracks[curTrack.getJuncTo()];
                 }
-            }
-            else{
+            } else{
+                if(curTrack.getFrom() == -1){
+                    t.setCrashed(true);
+                    return;
+                }
                 destinationTrack = tracks[curTrack.getFrom()];// There is only one track coming from it
                 if(curTrack.getJuncFrom() != -1 && ((JunctionTrack)tracks[curTrack.getJuncFrom()]).getThrown()){
                     destinationTrack = tracks[curTrack.getJuncFrom()];

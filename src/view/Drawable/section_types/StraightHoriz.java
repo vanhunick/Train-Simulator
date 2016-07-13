@@ -7,8 +7,6 @@ import view.Drawable.Movable;
 
 import view.SimulationUI;
 
-import java.awt.*;
-
 
 /**
  * Created by Nicky on 25/03/2016.
@@ -81,14 +79,43 @@ public class StraightHoriz extends DefaultTrack {
     public boolean canConnect(DefaultTrack trackToConnect){
         int id = trackToConnect.getDrawID();
 
+
         if(getDirection().equals("RIGHT")){
-            if(id == 0 || id == 2 || id == 3 || id == 6){
+            if(id == 0 || id == 2 || id == 3 || id == 6 || id == 7 || id == 8 || id == 9){
+                if(trackToConnect instanceof JunctionTrack){
+                    JunctionTrack j = (JunctionTrack)trackToConnect;
+
+                    // TODO REMOVE ALL THIS JUNCTION STUFF
+                    // We can only connect
+                    if(j.inBound() && j.getDirection().equals("RIGHT")){
+
+                        double conX = j.getInnerTrack().getConnectionPointFrom().getX();
+                        double conY = j.getInnerTrack().getConnectionPointFrom().getY();
+
+                        if(Math.abs(getConnectionPointTo().getX() - conX) < DefaultTrack.CONNECT_SENS &&
+                                Math.abs(getConnectionPointTo().getY() - conY) < DefaultTrack.CONNECT_SENS)return true;
+                    }
+                }
+
                 if(Math.abs(getConnectionPointTo().getX() - trackToConnect.getConnectionPointFrom().getX()) < DefaultTrack.CONNECT_SENS &&
                         Math.abs(getConnectionPointTo().getY() - trackToConnect.getConnectionPointFrom().getY()) < DefaultTrack.CONNECT_SENS)return true;
             }
         }
         else if(getDirection().equals("LEFT")){
-            if(id == 0 || id == 1 || id == 4 || id == 6){
+            if(id == 0 || id == 1 || id == 4 || id == 6 || id == 7 || id == 8 || id == 9){
+                if(trackToConnect instanceof JunctionTrack){
+                    JunctionTrack j = (JunctionTrack)trackToConnect;
+
+                    // We can only connect
+                    if(j.inBound() && j.getDirection().equals("LEFT")){
+                        double conX = j.getInnerTrack().getConnectionPointFrom().getX();
+                        double conY = j.getInnerTrack().getConnectionPointFrom().getY();
+
+                        if(Math.abs(getConnectionPointTo().getX() - conX) < DefaultTrack.CONNECT_SENS &&
+                                Math.abs(getConnectionPointTo().getY() - conY) < DefaultTrack.CONNECT_SENS)return true;
+                    }
+                }
+
                 if(Math.abs(getConnectionPointTo().getX() - trackToConnect.getConnectionPointFrom().getX()) < DefaultTrack.CONNECT_SENS &&
                         Math.abs(getConnectionPointTo().getY() - trackToConnect.getConnectionPointFrom().getY()) < DefaultTrack.CONNECT_SENS)return true;
             }

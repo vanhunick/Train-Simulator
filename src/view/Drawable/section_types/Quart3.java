@@ -81,6 +81,20 @@ public class Quart3 extends DefaultTrack {
 
         if(getDirection().equals("LEFT")){
             if(id == 0 || id == 4 || id == 1){
+                if(trackToConnect instanceof JunctionTrack){
+                    JunctionTrack j = (JunctionTrack)trackToConnect;
+
+                    // We can only connect
+                    if(j.inBound() && j.getDirection().equals("LEFT")){
+                        double conX = j.getInnerTrack().getConnectionPointFrom().getX();
+                        double conY = j.getInnerTrack().getConnectionPointFrom().getY();
+
+                        if(Math.abs(getConnectionPointTo().getX() - conX) < DefaultTrack.CONNECT_SENS &&
+                                Math.abs(getConnectionPointTo().getY() - conY) < DefaultTrack.CONNECT_SENS)return true;
+                    }
+                }
+
+
                 if(Math.abs(getConnectionPointTo().getX() - trackToConnect.getConnectionPointFrom().getX()) < DefaultTrack.CONNECT_SENS &&
                         Math.abs(getConnectionPointTo().getY() - trackToConnect.getConnectionPointFrom().getY()) < DefaultTrack.CONNECT_SENS)return true;
             }

@@ -14,14 +14,14 @@ import java.util.List;
 public class JunctionTrack extends DefaultTrack {
 
     // Inbound Fields indexes
-    private int inboundFromThrown;
-    private int inboundFromStraight;
-    private int inboundTo;
+    private int inboundFromThrown = -1;
+    private int inboundFromStraight = -1;
+    private int inboundTo = -1;
 
     // Outbound Fields indexes
-    private int outboundToThrown;
-    private int outBoundTotraight;
-    private int outboundFrom;
+    private int outboundToThrown = -1;
+    private int outBoundTotraight = -1;
+    private int outboundFrom = -1;
 
     // If the junction is thrown
     private boolean thrown;
@@ -211,6 +211,8 @@ public class JunctionTrack extends DefaultTrack {
             setOutBoundLocation(direction);
         }
 
+        setStartX(straightTrack.getStartX());
+        setStartX(straightTrack.getStartY());
     }
 
     public void updateLocation(double startX, double startY){
@@ -260,7 +262,7 @@ public class JunctionTrack extends DefaultTrack {
     public boolean canConnectThrown(DefaultTrack trackToConnect){
         int id = trackToConnect.getDrawID();
 
-        // If it is inbound only
+        // If it is not inbound only
         if(!inBound()) {
 
             DefaultTrack endTrack = getEndTrack();

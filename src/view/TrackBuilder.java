@@ -117,18 +117,30 @@ public class TrackBuilder implements MouseEvents{
         this.mouseLocation = new Point(0,0);
     }
 
+    /**
+     * Track Builder Constructor for Testing
+     * */
+    public TrackBuilder(){
+        this.tracksInSection = new ArrayList<>();
+        this.trains = new ArrayList<>();
+        this.stocks = new ArrayList<>();
+        this.sectionsForTrack = new ArrayList<>();
+        this.allTracks = new ArrayList<>();
+    }
 
     /**
      * Called when the screen size changes to make sure all the elements still fit
      * */
     public void updateSize(){
-//        this.screenWidth = controller.getCanvasWidth();
         this.screenWidth = Main.SCREEN_WIDTH;
-//        this.screenHeight = controller.getCanvasHeight();
         this.screenHeight = Main.SCREEN_HEIGHT;
         this.boxSize = ((screenHeight - 80 - ((NUMB_PIECES*boxGap)+boxGap*2))/NUMB_PIECES);
         this.shownPanelStartX = screenWidth - (boxSize + (boxGap*2) + offsetFromExtraElements());
         this.exampleTracks = setUpDrawPieces();
+    }
+
+    public List<DefaultTrack> getAllTracks(){
+        return this.allTracks;
     }
 
     //TODO might need this later if I want to add a left panel
@@ -144,7 +156,10 @@ public class TrackBuilder implements MouseEvents{
             new ErrorDialog("No railway to simulate", "Not read to simulate");
             return null;
         }
-        System.out.println("Grabbing Railway");
+
+        for(DefaultTrack t : allTracks){
+            System.out.println(t.getFrom());
+        }
 
         // Check if there are tracks that have not been added to a section yet
         if(tracksInSection.size() > 0){
@@ -161,7 +176,7 @@ public class TrackBuilder implements MouseEvents{
         DefaultTrack[] tracks = new DefaultTrack[allTracks.size()];
         allTracks.toArray(tracks);
 
-        tracks[0].setFrom(tracks.length-1);
+//        tracks[0].setFrom(tracks.length-1);
 
         LoadedRailway railway = new LoadedRailway(sections,tracks,trains,stocks);
 
@@ -473,7 +488,12 @@ public class TrackBuilder implements MouseEvents{
         // Check if there is a piece to put down
         if(mouseSelectedPeice != null ){
             mouseSelectedPeice.setSelected(false);
-            placeTrack(mouseSelectedPeice);
+            if(mouseSelectedPeice instanceof JunctionTrack){
+                placeJunctionTrack((JunctionTrack) mouseSelectedPeice);
+            }
+            else {
+                placeTrack(mouseSelectedPeice);
+            }
         }
 
         // The mouse was released but the location for the track was not valid
@@ -481,6 +501,42 @@ public class TrackBuilder implements MouseEvents{
             curId--;//StraightTrack was removed can free vup ID
         }
         mouseSelectedPeice = null;
+    }
+
+    public boolean placeJunctionTrack(JunctionTrack jTrack){
+        boolean placed = false;
+
+        for(int i = 0; i < allTracks.size(); i++){
+            DefaultTrack t = allTracks.get(i);
+
+            // Check if can connect to both
+            if(jTrack.inBound() && t.canConnect(jTrack.getInnerTrack())){
+                jTrack.setInboundFromThrown(i);
+                t.setTo(allTracks.size()-1);
+            }
+
+            // Check if connecting to straight piece
+            if(t.canConnect(jTrack.getStraightTrack())){
+                jTrack.setStart(allTracks.get(i));
+                jTrack.setFrom(i);
+                if(jTrack.inBound()){
+                    jTrack.setInboundFromStraight(i);
+                }
+                if(!jTrack.inBound()){
+                    jTrack.setOutboundFrom(i);
+                }
+
+                placed = true;
+                t.setTo(allTracks.size()-1);
+            }
+        }
+
+        if(!placed){
+            // User did not place it so remove it
+            allTracks.remove(allTracks.size()-1);
+            mouseSelectedPeice = null;
+        }
+        return placed;
     }
 
     /**
@@ -510,6 +566,13 @@ public class TrackBuilder implements MouseEvents{
                     track.setStart(j.getStraightTrack());
                     track.setFrom(i);
                     j.setTo(allTracks.size()-1);
+                    if(!j.inBound()){
+                        j.setOutBoundTotraight(allTracks.size()-1);
+                    }
+
+                    if(j.inBound()){
+                        j.setInboundTo(allTracks.size()-1);
+                    }
                     return true;
                 }
             }
@@ -532,30 +595,33 @@ public class TrackBuilder implements MouseEvents{
     }
 
     public void connectDestinations(){
+        // Go through all tracks checking if they have a destination -1 indicated it does not
         for(int i = 0; i < allTracks.size(); i++){
             DefaultTrack t = allTracks.get(i);
-            if(t instanceof JunctionTrack){
-                if(t.getTo() == 0){
-                    findTrackForConnection(t);
-                }
-            }
-        }
-
-        // Connect the start piece
-        for(DefaultTrack t : allTracks){
-            if(t.canConnect(allTracks.get(0))){
-                allTracks.get(0).setFrom(getTrackIndex(t));
-                //TODO to should already be set
+            if(t.getTo() == -1){
+                findTrackForConnection(t);
             }
         }
     }
 
     public DefaultTrack findTrackForConnection(DefaultTrack trackWithoutTo){
+        if(trackWithoutTo instanceof JunctionTrack){
+            // Try connect the trown bit
+            JunctionTrack j = (JunctionTrack)trackWithoutTo;
+            for(int i = 0; i < allTracks.size(); i++){
+                if(j.canConnectThrown(allTracks.get(i))){
+                    j.setOutboundToThrown(i);
+                    allTracks.get(i).setFrom(getTrackIndex(j));// TODO not sure how to find if it's junc from or from
+                }
+            }
+        }
+
+
         for(int i = 0; i < allTracks.size(); i++){
             if(allTracks.get(i) instanceof JunctionTrack){
                 if (trackWithoutTo.canConnect(allTracks.get(i))) {//TODO not done
                     trackWithoutTo.setTo(i);
-                    allTracks.get(i).setFrom(getTrackIndex(trackWithoutTo));
+                    ((JunctionTrack) allTracks.get(i)).setInboundFromThrown(getTrackIndex(trackWithoutTo));//TODO THROWN OR NOT?
                 }
             }
             else {
@@ -684,8 +750,7 @@ public class TrackBuilder implements MouseEvents{
      * Returns if the x point is on the track panel
      * */
     public boolean onTrackPanel(double x){
-        if(x > shownPanelStartX)return true;
-        return false;
+        return  x > shownPanelStartX;
     }
 
     /**
@@ -749,11 +814,7 @@ public class TrackBuilder implements MouseEvents{
      *
      * @param bp the border pane to add elements to
      * */
-    public void addUIElementsToLayout(BorderPane bp){
-
-        //bp.setLeft(vBox); TODO DO not think this is required
-
-    }
+    public void addUIElementsToLayout(BorderPane bp){}//bp.setLeft(vBox); TODO DO not think this is required}
 
 
     /**
@@ -775,6 +836,8 @@ public class TrackBuilder implements MouseEvents{
 
         CheckBox alternate = new CheckBox("Alternate");
         alternate.setSelected(true);
+
+
         alternate.setOnAction(e -> alternateCheckBoxEvent(alternate));
 
         vBox.getChildren().addAll(alternate);

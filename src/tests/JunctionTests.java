@@ -8,8 +8,13 @@ import model.Train;
 import org.junit.Test;
 import view.Drawable.DrawableRollingStock;
 import view.Drawable.DrawableTrain;
+import view.Drawable.section_types.DefaultTrack;
 import view.Drawable.section_types.JunctionTrack;
+import view.Drawable.section_types.StraightHoriz;
 import view.Simulation;
+import view.TrackBuilder;
+
+import java.util.List;
 
 
 /**
@@ -64,10 +69,7 @@ public class JunctionTests {
 
     @Test
     public void testEndTrackMethod(){
-
-
 //        int startX, int startY, int length, int drawID,int id, String direction, boolean thrown, boolean inbound, String drawDirection
-
 
         // Inbound
         JunctionTrack j = new JunctionTrack(0,0,200,6, 0,"RIGHT", false,true,"UP");
@@ -125,5 +127,58 @@ public class JunctionTests {
 
         j = new JunctionTrack(0,0,200,6, 0,"LEFT", false,false,"DOWN");
         assert (j.getInnerTrack().getDrawID() == 1);
+    }
+
+    @Test
+    public void testConnectionMethodStraightPiece() {
+
+        // Create the track builder object
+        TrackBuilder tb = new TrackBuilder();
+
+        StraightHoriz s1 = new StraightHoriz(0,0,100,0,0,"RIGHT");
+
+        StraightHoriz s2 = new StraightHoriz(100,0,100,0,1,"RIGHT");
+
+        List<DefaultTrack> tracks = tb.getAllTracks();
+        tracks.add(s1);
+        tracks.add(s2);
+
+
+        System.out.println(s2.getFrom());
+        tb.connectDestinations();
+
+        // The track s1 should now be connected to s2
+        assert (s1.getTo() == 1);
+
+
+
+    }
+
+    @Test
+    public void testConnectionMethodJunctionPiece() {
+
+        // Create the track builder object
+        TrackBuilder tb = new TrackBuilder();
+
+        StraightHoriz s1 = new StraightHoriz(0,0,47,0,0,"RIGHT");
+
+        JunctionTrack j = new JunctionTrack(100,100,100,6,1,"RIGHT",false,true,"UP");
+
+        List<DefaultTrack> tracks = tb.getAllTracks();
+        tracks.add(s1);
+        tracks.add(j);
+
+        System.out.println(j.getInnerTrack().getStartX() + j.getInnerTrack().getLength()/2);
+        System.out.println(j.getInnerTrack().getConnectionPointFrom().getX());
+        System.out.println(j.getInnerTrack().getStartY());
+
+        tb.connectDestinations();
+
+        System.out.println("TO " + s1.getTo());
+        // The track s1 should now be connected to s2
+        assert (s1.getTo() == 1);
+
+
+
     }
 }
