@@ -47,6 +47,9 @@ public class DrawableTrain implements Movable{
     private SnapshotParameters params; // Params of the train image
     private Circle connection;
 
+    // Applied when changing direction or slowing down
+    private boolean braking;
+
     private double engineForce = 494000;
     private double maxEngineForce = 700000;
     private double minEngineForce = 220000;
@@ -120,6 +123,7 @@ public class DrawableTrain implements Movable{
         g.fillRect(conX - 5, conY - 5, 10, 10);
     }
 
+    public int brakePower;
 
     public double  getAcceleration(){
         // Normal force needed for friction mass * gravity since it's always horizontal
@@ -127,24 +131,18 @@ public class DrawableTrain implements Movable{
         // Force = train power - (coStaticFriction * (mass*gravity)
         // if train is moving use kinetic friction else use the static friction
 
-        double friction = 0;
-        if(currentSpeed > 0){
-            friction = DefaultTrack.KINETIC_FRICTION;
-        }
-        else {
-            friction = DefaultTrack.STATIC_FRICTRION;
+
+        double  friction = currentSpeed > 0 ? DefaultTrack.KINETIC_FRICTION : DefaultTrack.STATIC_FRICTRION;
+
+
+        double netForce = engineForce - (friction * ((train.getWeight()+getRollingstockWeights()) * 9.88) );
+
+
+        netForce = netForce - airResistance();
+        if(braking){
+            netForce = netForce - brakePower;
         }
 
-        double netForce = 0;
-        if(engineForce < 0){
-            netForce = engineForce + (friction * (train.getWeight() * 9.88) );
-
-        }
-        else {
-            netForce = engineForce - (friction * ((train.getWeight()+getRollingstockWeights()) * 9.88) );
-            netForce = netForce - airResistance();
-
-        }
 
         // acceleration = force / mass
         return netForce / (train.getWeight() + getRollingstockWeights());
@@ -172,6 +170,11 @@ public class DrawableTrain implements Movable{
         connection.setRadius(10);
     }
 
+    public void directionChanged(){
+        braking = true;// Start braking
+        engineForce = 0;
+    }
+
     /**
      * Updates the location of the train
      * */
@@ -190,37 +193,49 @@ public class DrawableTrain implements Movable{
         long timeChanged = curTime - lastUpdate;
         timeChanged = 20;//milli second
 
+        // Check if direction has changed
+        if(lastDirection != train.getDirection()){
+            directionChanged();
+
+
+            if(rollingStockConnected != null){
+                rollingStockConnected.setDirection(train.getDirection());
+            }
+        }
+        lastDirection = train.getDirection();
+
+        // after changing direction the speed has reached zero so we can go in the other direction
+        if(braking && currentSpeed <=0 ){
+            braking = false;
+            engineForce = 494000;
+            degDone = Math.abs(90 - degDone);
+        }
+
         double acceleration = getAcceleration();// Metres per second per second
 
-        if(train.getDirection() == true){
-            if(currentSpeed + (acceleration* (timeChanged/1000.0)) < 0){
-                currentSpeed = 0;
-            }
-            else {
-                currentSpeed += acceleration * (timeChanged/1000.0);// Convert Millisecond to second
-            }
+
+        if(currentSpeed + (acceleration* (timeChanged/1000.0)) < 0){
+            System.out.println("Called");
+            currentSpeed = 0;
+        }
+        else {
+            currentSpeed += acceleration * (timeChanged/1000.0);// Convert Millisecond to second
         }
 
 
 
-        if(currentSpeed > train.getTargetSpeed()){
+
+        if(currentSpeed > train.getTargetSpeed() && !braking){
             if(engineForce - 1000 >= 0){
                 engineForce -= 1000;
             }
         }
 
-        if(currentSpeed < train.getTargetSpeed()){
+        if(currentSpeed < train.getTargetSpeed() && !braking){
             if(acceleration < 0.25){
                 engineForce += 1000;
             }
         }
-
-
-        int i = 0;
-        int j = 0;
-
-        i += 1;//3
-        j = j + 1;// 3
 
 
         double pixelsToMove = ((timeChanged/1000.0)* (currentSpeed * Simulation.METER_MULTIPLIER));// Converts from metres to pixels
@@ -228,7 +243,8 @@ public class DrawableTrain implements Movable{
 
         // Check if direction has changed
         if(lastDirection != train.getDirection()){
-            degDone = Math.abs(90- degDone);//TODO test
+
+            degDone = Math.abs(90 - degDone);
 
             if(rollingStockConnected != null){
                 rollingStockConnected.setDirection(train.getDirection());
@@ -412,7 +428,12 @@ public class DrawableTrain implements Movable{
 
     @Override
     public boolean getDirection() {
+        if(braking){
+            return !this.getTrain().getDirection();
+        }
+
         return this.getTrain().getDirection();
+
     }
 
     public void setDirection(boolean forward){

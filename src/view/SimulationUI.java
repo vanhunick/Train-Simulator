@@ -255,10 +255,10 @@ public class SimulationUI implements MouseEvents{
         int startY = 20;
 
         g.setFill(Color.BLACK);
-        g.fillRect(startX,startY,150,150);
+        g.fillRect(startX,startY,200,150);
         g.setFill(new Color(0,0,0.96,1));
         g.setLineWidth(1);
-        g.strokeRect(startX,startY,150,150);
+        g.strokeRect(startX,startY,200,150);
 
         g.strokeText("Crashed: " + selectedTrain.isCrashed(),startX+5,startY+=15);
         g.strokeText("Direction: " + selectedTrain.getDirection(),startX+5,startY+=15);
