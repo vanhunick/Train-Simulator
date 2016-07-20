@@ -179,7 +179,7 @@ public class Quart1 extends DefaultTrack {
 
         g.setFill(DefaultTrack.BACKGROUND_COLOR);
 
-        double degreesToMove = (90/lengthOfQuater()) * SimulationUI.RAIL_SEP*1.5;
+        double degreesToMove = (90/ lengthOfQuarter()) * SimulationUI.RAIL_SEP*1.5;
 
         g.setStroke(DefaultTrack.TIE_COLOR);
         for(int deg = 180; deg < 270; deg+=degreesToMove) {
@@ -212,7 +212,7 @@ public class Quart1 extends DefaultTrack {
     @Override
     public double getNextPoint(Point2D curPoint,double curRot, double rotationDone, double speed, Movable movable){
         // Need to minus the degrees to change
-        double degreesToMove = (90/lengthOfQuater()/2) * speed;
+        double degreesToMove = (90/ lengthOfQuarter()/2) * speed;
 
         double nextRotation = 0;
         if(super.getDirection().equals("RIGHT")){

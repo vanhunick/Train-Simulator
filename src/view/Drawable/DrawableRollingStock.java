@@ -126,6 +126,7 @@ public class DrawableRollingStock implements Movable{
 
         // While we have not moved back enough to account for our length keep updating
         while(total < len){
+            System.out.println("Moving");
             vis.onSectionCheck(this,increment);
 
             if(curTrack instanceof JunctionTrack){
@@ -185,7 +186,7 @@ public class DrawableRollingStock implements Movable{
 
         if(connected){
             if(connectedToTrain != null){
-                this.currentSpeed= connectedToTrain.getForce();
+                this.currentSpeed= connectedToTrain.getPixelsMoved();
             }
             else {
                 this.currentSpeed = connectedToStock.getForce();//TODO check if theis is how I want to work
@@ -358,7 +359,6 @@ public class DrawableRollingStock implements Movable{
 
     @Override
     public boolean getOrientation() {
-        System.out.println(this.rollingStock.getRollID());
         if(connected){
             if(connectedToStock != null){
                return connectedToStock.getOrientation();

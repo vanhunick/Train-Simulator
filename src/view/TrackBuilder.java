@@ -481,27 +481,7 @@ public class TrackBuilder implements MouseEvents{
         }
     }
 
-    @Override
-    public void mouseReleased(double x, double y, MouseEvent e) {
-        int numbSections = allTracks.size();
 
-        // Check if there is a piece to put down
-        if(mouseSelectedPeice != null ){
-            mouseSelectedPeice.setSelected(false);
-            if(mouseSelectedPeice instanceof JunctionTrack){
-                placeJunctionTrack((JunctionTrack) mouseSelectedPeice);
-            }
-            else {
-                placeTrack(mouseSelectedPeice);
-            }
-        }
-
-        // The mouse was released but the location for the track was not valid
-        if(allTracks.size() < numbSections){
-            curId--;//StraightTrack was removed can free vup ID
-        }
-        mouseSelectedPeice = null;
-    }
 
     public boolean placeJunctionTrack(JunctionTrack jTrack){
         boolean placed = false;
@@ -520,10 +500,10 @@ public class TrackBuilder implements MouseEvents{
                 jTrack.setStart(allTracks.get(i));
                 jTrack.setFrom(i);
                 if(jTrack.inBound()){
-                    jTrack.setInboundFromStraight(i);
+                    jTrack.setFrom(i);
                 }
                 if(!jTrack.inBound()){
-                    jTrack.setOutboundFrom(i);
+                    jTrack.setFrom(i);//TODO might be different
                 }
 
                 placed = true;
@@ -567,7 +547,7 @@ public class TrackBuilder implements MouseEvents{
                     track.setFrom(i);
                     j.setTo(allTracks.size()-1);
                     if(!j.inBound()){
-                        j.setOutBoundTotraight(allTracks.size()-1);
+                        j.setTo(allTracks.size()-1);
                     }
 
                     if(j.inBound()){
@@ -604,7 +584,15 @@ public class TrackBuilder implements MouseEvents{
         }
     }
 
+
+
+    /**
+     * It searches the tracks in the tracks array for a track that matches up with the end
+     * of the track passed in.
+     * */
     public DefaultTrack findTrackForConnection(DefaultTrack trackWithoutTo){
+
+        // Check if the track without a destination is a junction track
         if(trackWithoutTo instanceof JunctionTrack){
             // Try connect the trown bit
             JunctionTrack j = (JunctionTrack)trackWithoutTo;
@@ -635,7 +623,35 @@ public class TrackBuilder implements MouseEvents{
     }
 
     @Override
+    public void mouseReleased(double x, double y, MouseEvent e) {
+        int numbTracks = allTracks.size();
+
+        // Nothing is selected so nothing to put down
+        if(mouseSelectedPeice == null)return;
+
+        // Check if there is a piece to put down
+        mouseSelectedPeice.setSelected(false);
+
+        // Check for special case of placing down junction track
+        if(mouseSelectedPeice instanceof JunctionTrack){
+            placeJunctionTrack((JunctionTrack) mouseSelectedPeice);
+        }
+        else {
+            placeTrack(mouseSelectedPeice);
+        }
+
+
+        // The mouse was released but the location for the track was not valid
+        if(allTracks.size() < numbTracks){
+            curId--;//StraightTrack was removed can free vup ID
+        }
+        mouseSelectedPeice = null;
+    }
+
+    @Override
     public void mouseClicked(double x, double y, MouseEvent e){
+
+        // Check is a user double clicks on a track if so show track menu
         if(e.getButton().equals(MouseButton.SECONDARY)){
             DefaultTrack s = getTrack(x,y);
             if(e.getClickCount() == 2 && s!= null){
@@ -643,6 +659,7 @@ public class TrackBuilder implements MouseEvents{
             }
         }
 
+        // If the user is setting the sections set the section selected
         if(sectionMode && e.getButton().equals(MouseButton.PRIMARY)){
             DefaultTrack s = getTrack(x,y);
             if(s!=null){
@@ -652,18 +669,16 @@ public class TrackBuilder implements MouseEvents{
         }
     }
 
-
-
     @Override
     public void mouseMoved(double x, double y, MouseEvent e){
-        for(DefaultTrack d : allTracks){
-            if(d.containsPoint(x,y)){
-                d.setMouseOn(true);
+        // Selects a track if the mouse is on it
+        allTracks.forEach(t -> {
+            if(t.containsPoint(x,y)){
+                t.setMouseOn(true);
+            } else {
+                t.setMouseOn(false);
             }
-            else{
-                d.setMouseOn(false);
-            }
-        }
+        });
     }
 
     @Override
@@ -672,29 +687,32 @@ public class TrackBuilder implements MouseEvents{
 
         // Highlights the selected piece red or green based on if it is valid to place
         if(mouseSelectedPeice != null){
+
+            // Set where t he piece should be drawn
             mouseSelectedPeice.setMid(x,y);
 
+            // The current track is the only track so any placement is valid
             if(allTracks.size() == 1){
                 DefaultTrack.SELECTED_COLOR = Color.GREEN;
                 return;
             }
+
             DefaultTrack.SELECTED_COLOR = Color.RED;
             for(int i = 0; i < allTracks.size(); i++){
                 DefaultTrack t = allTracks.get(i);
 
+                // Special case for junction track
                 if(t instanceof JunctionTrack){
                     JunctionTrack j = (JunctionTrack)t;
-                    if(j.canConnectThrown(mouseSelectedPeice)){
+                    if(j.canConnectThrown(mouseSelectedPeice) || j.canConnect(mouseSelectedPeice)){
                         DefaultTrack.SELECTED_COLOR = Color.GREEN;
-                    }
-                    if(j.canConnect(mouseSelectedPeice)){
-                        DefaultTrack.SELECTED_COLOR = Color.GREEN;
+                        return;
                     }
                 }
-                else {
-                    if(t.canConnect(mouseSelectedPeice)){
-                        DefaultTrack.SELECTED_COLOR = Color.GREEN;
-                    }
+
+                if(t.canConnect(mouseSelectedPeice)){
+                    DefaultTrack.SELECTED_COLOR = Color.GREEN;
+                    return;
                 }
             }
         }
@@ -798,15 +816,25 @@ public class TrackBuilder implements MouseEvents{
         // Use R to rotate through the selectable pieces
         if(code.equals("R")){
             if(mouseSelectedPeice != null){
-                if(selectedBox == 9)selectedBox = 0;
-                else selectedBox++;
-                allTracks.remove(allTracks.size()-1);
-                DefaultTrack t = getSelectedTrackFromPanel((int)mouseLocation.getX(),(int)mouseLocation.getY());//TODO possibly use cur mouse loc
-                t.setMid(mouseLocation.getX(),mouseLocation.getY());
-                allTracks.add(t);
-                mouseSelectedPeice = t;
+                mouseSelectedPeice = rotatePiece();
             }
         }
+    }
+
+    /**
+     * Returns the next track based on the currently selected track
+     *
+     * @return the next track in the list
+     * */
+    public DefaultTrack rotatePiece(){
+        if(selectedBox == 9)selectedBox = 0;
+        else selectedBox++;
+        allTracks.remove(allTracks.size()-1);
+        DefaultTrack t = getSelectedTrackFromPanel((int)mouseLocation.getX(),(int)mouseLocation.getY());
+        t.setMid(mouseLocation.getX(),mouseLocation.getY());
+        allTracks.add(t);
+        mouseSelectedPeice = t;
+        return t;
     }
 
     /**
@@ -814,8 +842,7 @@ public class TrackBuilder implements MouseEvents{
      *
      * @param bp the border pane to add elements to
      * */
-    public void addUIElementsToLayout(BorderPane bp){}//bp.setLeft(vBox); TODO DO not think this is required}
-
+    public void addUIElementsToLayout(BorderPane bp){}
 
     /**
      * Removes the appropriate UI elements for the builder to the border pane
@@ -826,9 +853,10 @@ public class TrackBuilder implements MouseEvents{
         bp.getChildren().remove(vBox);
     }
 
-
     /**
      * Creates the buttons for the track builder and sets of action listeners for them
+     *
+     * @return The VBox holding the buttons
      * */
     private VBox createBuilderButtons(){
         VBox vBox = new VBox(8);
@@ -836,8 +864,6 @@ public class TrackBuilder implements MouseEvents{
 
         CheckBox alternate = new CheckBox("Alternate");
         alternate.setSelected(true);
-
-
         alternate.setOnAction(e -> alternateCheckBoxEvent(alternate));
 
         vBox.getChildren().addAll(alternate);

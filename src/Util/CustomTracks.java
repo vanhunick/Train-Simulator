@@ -252,25 +252,25 @@ public class CustomTracks {
         // Set up Junctions 2 , 9 , 12 19
         JunctionTrack jt1 = (JunctionTrack)tracks[2];
         jt1.setInboundFromThrown(11);
-        jt1.setInboundFromStraight(1);
-        jt1.setInboundTo(3);
+        jt1.setTo(3);
+        jt1.setFrom(1);
+
 
         JunctionTrack jt2 = (JunctionTrack)tracks[9];
-        jt2.setOutboundFrom(8);
         jt2.setOutboundToThrown(10);
-        jt2.setOutBoundTotraight(0);
+        jt2.setFrom(8);
+        jt2.setTo(0);
+
 
         JunctionTrack jt3 = (JunctionTrack)tracks[12];
         jt3.setInboundFromThrown(21);
-        jt3.setInboundFromStraight(11);
-        jt3.setInboundTo(13);
-
+        jt3.setTo(13);
+        jt3.setFrom(11);
 
         JunctionTrack jt4 = (JunctionTrack)tracks[19];
-        jt4.setOutboundFrom(18);
         jt4.setOutboundToThrown(20);
-        jt4.setOutBoundTotraight(10);
-
+        jt4.setTo(10);
+        jt4.setFrom(18);
 
         // Setup normal tracks
 

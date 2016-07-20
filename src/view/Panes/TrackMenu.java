@@ -30,6 +30,8 @@ public class TrackMenu {
     private CheckBox addTrain;
     private CheckBox addRollingstock;
 
+    private  int numbRollingStock;
+
     private DefaultTrack section;
 
     public TrackMenu(DefaultTrack section) {
@@ -103,11 +105,18 @@ public class TrackMenu {
         grid.add(new Label("Length:"), 0, 2);
         grid.add(length, 1, 2);
 
+
+
         grid.add(new Label("Add Train:"), 0, 3);
         grid.add(trainSelectComboBox,1,3);
 
         grid.add(addTrain,1,4);
         grid.add(addRollingstock,1,5);
+
+        TextField numbStock = new TextField();
+        numbStock.setPromptText("Number of Rolling stock");
+        grid.add(new Label("Number of Rolling stock:"), 0, 6);
+        grid.add(numbStock, 1, 6);
 
         dialog.getDialogPane().setContent(grid);
 
@@ -125,10 +134,15 @@ public class TrackMenu {
                     this.length = Double.parseDouble(length.getText());
                 }
 
+                if(!numbStock.getText().equals("")){
+                    this.numbRollingStock = Integer.parseInt(length.getText());
+                }
+
                 this.canDetect = Boolean.parseBoolean(curDetectSelection);
             }
             return null;
         });
+
 
         dialog.showAndWait();
     }
@@ -157,6 +171,10 @@ public class TrackMenu {
     }
 
     public String getCurTrainSelection(){return this.curTrainSelection;}
+
+    public int getNumbRollingStock(){
+        return this.numbRollingStock;
+    }
 
     public double getLength(){
         return this.length;

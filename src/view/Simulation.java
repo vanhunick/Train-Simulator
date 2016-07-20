@@ -1,6 +1,7 @@
 package view;
 
 import Util.CustomTracks;
+import Util.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 
 import javafx.scene.input.MouseButton;
@@ -28,12 +29,11 @@ public class Simulation implements MouseEvents {
     public static final String MODE_CONTROLLER = "controller";
     public static final String NO_MODE = "controller";
 
+    public static final int MAX_CONNECTION_SPEED = 10;
+
     private String currentMode = NO_MODE;
 
-    private Movable seclectedMovable;
-
-    //Width of buttons
-    public static final int WIDTH = 150;
+    private Movable selectedMovable;
 
     // Each pixel is 1/5 of a meter
     public static final double METER_MULTIPLIER = 5;
@@ -56,6 +56,7 @@ public class Simulation implements MouseEvents {
     // Last time the logic was updated
     private long lastUpdate;
 
+
     private SimulationUI UI;
 
 
@@ -68,7 +69,6 @@ public class Simulation implements MouseEvents {
         this.movable = new ArrayList<>();
         this.UI = UI;
     }
-
 
 
     /**
@@ -109,13 +109,10 @@ public class Simulation implements MouseEvents {
     }
 
     public void loadRailway(LoadedRailway loadedRailway) {
-        System.out.println("Loading Railway In simulation");
         this.railway = loadedRailway.sections;
         this.tracks = loadedRailway.tracks;
         this.trains = loadedRailway.trains;
         this.drawableRollingStocks = loadedRailway.stocks;
-
-
 
         // Set up the images for the trains and stocks
         trains.forEach(t -> t.setUpImage());
@@ -180,17 +177,17 @@ public class Simulation implements MouseEvents {
      * */
     public void update(){
         if(started){
-            for(DrawableTrain t : trains){
+            trains.forEach(t -> {
                 checkCollision();
                 onSectionCheck(t,0);
                 t.update();
-            }
+            });
 
-        for(DrawableRollingStock r : drawableRollingStocks){
-            onSectionCheck(r,r.getCurrentSpeed());
-            checkCollision();
-            r.update();
-            }
+            drawableRollingStocks.forEach(r -> {
+                checkCollision();
+                onSectionCheck(r,r.getCurrentSpeed());
+                r.update();
+            });
         }
     }
 
@@ -199,8 +196,6 @@ public class Simulation implements MouseEvents {
      * Redraws all the elements on the screen
      * */
     public void refresh(GraphicsContext g){
-        g.setStroke(Color.WHITE);
-
         // Draw the sections which will draw the tracks
         for(DrawableSection d : railway){
             d.draw(g);
@@ -210,7 +205,10 @@ public class Simulation implements MouseEvents {
         movable.forEach(m -> m.draw(g));
     }
 
-
+    /**
+     * Checks if a movable object will still be on the junction track after it has moved.
+     * Sets the track it should be on if no longer on it.
+     * */
     public void onSectionCheckJunction(Movable t, double pixelsToMove, JunctionTrack jt){
 
         // Check if it will be on the junction after it moves
@@ -220,7 +218,7 @@ public class Simulation implements MouseEvents {
             // Check if the train is going along the nat track orientation
             if(forwardWithTrack(t)){
                 if(jt.inBound()){
-                    destinationTrack = tracks[jt.getInboundTo()];
+                    destinationTrack = tracks[jt.getTo()];
                 }
                 else{
                     destinationTrack = tracks[jt.getToOutbound()];// Not inbound and going forward
@@ -231,7 +229,7 @@ public class Simulation implements MouseEvents {
                     destinationTrack = tracks[jt.getInboundFrom()];
                 }
                 else {
-                    destinationTrack = tracks[jt.getOutboundFrom()];
+                    destinationTrack = tracks[jt.getFrom()];
                 }
             }
             t.setCurTrack(destinationTrack);
@@ -268,13 +266,16 @@ public class Simulation implements MouseEvents {
         }
     }
 
-    private double collisionsThreshold = 500;//TODO make it something realistic
 
+    /**
+     * Called when two movable items collide into each other. Connects rolling stock to train
+     * if possible
+     * */
     public void collided(Movable movable1, Movable movable2){
         if(!notConnected(movable1,movable2))return;
 
         // First check the speed of the collision if they are going to fast the rest does not matter
-        if(movable1.getCurrentSpeed() + movable2.getCurrentSpeed() > collisionsThreshold){
+        if(movable1.getCurrentSpeed() + movable2.getCurrentSpeed() > Simulation.MAX_CONNECTION_SPEED){
             movable1.setCrashed(true);
             movable2.setCrashed(true);
             sendEventToUI("Collision ", 2);
@@ -326,7 +327,9 @@ public class Simulation implements MouseEvents {
         }
     }
 
-    //TODO CHANGE THIS LATER IT'S VERY BAD
+    /**
+     * Returns if the two movable items are connected
+     * */
     public boolean notConnected(Movable m1, Movable m2){
         if(m1 instanceof DrawableTrain && m2 instanceof DrawableTrain)return true;
         if(m2.getRollingStockConnected() != null){
@@ -337,7 +340,6 @@ public class Simulation implements MouseEvents {
         }
         return true;// they are connected
     }
-
 
     /**
      * Returns if the train is going along with the natural orientation of the track
@@ -401,9 +403,7 @@ public class Simulation implements MouseEvents {
             DrawableTrain dt = (DrawableTrain)t;
             curSection = dt.getCurSection();
 
-            if(pixelsToMove == 0){
-                pixelsToMove = getDistanceToMoveFromTrain(dt);
-            }
+            pixelsToMove = getDistanceToMoveFromTrain(dt);
         }
 
         DefaultTrack curTrack = t.getCurTrack();
@@ -414,7 +414,6 @@ public class Simulation implements MouseEvents {
 
         // Check if the train will be on another track after the update
         if(!curTrack.checkOnAfterUpdate(t.getCurrentLocation(),t.getCurRotation(),t.getDegDone() ,pixelsToMove,t)){
-
 
             DefaultTrack destinationTrack = null;
 
@@ -443,42 +442,13 @@ public class Simulation implements MouseEvents {
             }
 
             // Sets the next track
-            int prevTrackID = curTrack.getId();
+            int prevTrackID = getTrackIndex(curTrack);
             t.setCurTrack(destinationTrack);
 
             // If the destination is a junction we need to work out which track inside the junction track it goes to
             if(destinationTrack instanceof JunctionTrack){
                 JunctionTrack jt = (JunctionTrack)destinationTrack;
-
-                t.setJuncTrack(jt.getStraightTrack());
-
-                // Train going along the track orientation
-                if(forwardWithTrack(t)){
-
-                    if(jt.inBound()){
-                        if(prevTrackID == jt.getInboundFromThrown()){
-                            t.setJuncTrack(jt.getInboundThrownJuncTrack());
-                        }
-                    }
-                    // Not inbound
-                    else {
-                        if(jt.getThrown()){
-                            t.setJuncTrack(jt.getOutBoundThrownJuncTrack());
-                        }
-                    }
-                }
-                else {// Not going a along with track
-                    if(jt.inBound()){
-                        if(jt.getThrown()){
-                            t.setJuncTrack(jt.getInboundThrownNotNatJuncTrack());
-                        }
-                    }
-                    else {// Not inbound
-                        if(prevTrackID == jt.getOutboundToThrown()){
-                            t.setJuncTrack(jt.getOutBoundNotNatThrownJuncTrack());
-                        }
-                    }
-                }
+                t.setJuncTrack(jt.getTrackToStartOn(prevTrackID));
             }
 
             // Check if the track it moves to is in a different section
@@ -486,6 +456,13 @@ public class Simulation implements MouseEvents {
                 checkSectionChangedEvent((DrawableTrain)t,curSection,destinationTrack);
             }
         }
+    }
+
+    public int getTrackIndex(DefaultTrack track){
+        for(int i = 0; i < tracks.length; i++){
+            if(tracks[i].equals(track))return i;
+        }
+        return -1;
     }
 
     /**
@@ -527,7 +504,6 @@ public class Simulation implements MouseEvents {
         this.trains = trains;
     }
 
-
     /**
      * If the point clicked is on a Junction it toggles the junction on that point
      *
@@ -556,7 +532,7 @@ public class Simulation implements MouseEvents {
                 if(m instanceof DrawableTrain){
                     UI.setSelectedTrain((DrawableTrain)m);
                 }
-                seclectedMovable = m;
+                selectedMovable = m;
                 return true;
             }
         }
@@ -591,18 +567,12 @@ public class Simulation implements MouseEvents {
         return maxID;
     }
 
-    public void moveTrain(boolean forward){
-        if(seclectedMovable != null){
-            seclectedMovable.setDirection(forward);
-
-            for(int i = 0; i < 100; i++){
-                seclectedMovable.update();
-            }
-        }
-    }
-
     // New methods
-    public void addTraintoSimulation(DrawableTrain train){
+    public void addTraintoSimulation(DrawableTrain train, int numberOfRollingStock){
+        if(numberOfRollingStock > 0){
+
+        }
+
         train.setUpImage();
         trains.add(train);
         movable.add(train);
@@ -611,6 +581,35 @@ public class Simulation implements MouseEvents {
     public void addRollingStocktoSimulation(DrawableRollingStock stock){
         drawableRollingStocks.add(stock);
         movable.add(stock);
+    }
+
+    public void addRollingStocksToTrain(DrawableTrain train, int numberOfRollingStock){
+        DefaultTrack trainTrack = train.getCurTrack();
+
+        // Grab the track behind the train
+
+        train.setPixelsMoved(5);// Move 5 pixels at a time
+
+
+        // TODO figure out if I want a rolling stock id
+
+        Point2D conPoint = train.getCurrentLocation();
+
+        for(int i = 0; i < numberOfRollingStock; i++){
+
+
+            RollingStock rollingStock = new RollingStock(15,i,1000);
+            DrawableRollingStock drawableRollingStock = new DrawableRollingStock(rollingStock, null, true);
+
+            drawableRollingStock.setStart(conPoint, this);
+
+            drawableRollingStock.setUpImage();
+
+            addRollingStocktoSimulation(drawableRollingStock);
+
+            conPoint = drawableRollingStock.getCurrentLocation();
+        }
+
     }
 
     public ModelTrack getModelTrack(){

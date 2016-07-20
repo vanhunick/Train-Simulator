@@ -15,13 +15,10 @@ public class JunctionTrack extends DefaultTrack {
 
     // Inbound Fields indexes
     private int inboundFromThrown = -1;
-    private int inboundFromStraight = -1;
     private int inboundTo = -1;
 
     // Outbound Fields indexes
     private int outboundToThrown = -1;
-    private int outBoundTotraight = -1;
-    private int outboundFrom = -1;
 
     // If the junction is thrown
     private boolean thrown;
@@ -79,7 +76,6 @@ public class JunctionTrack extends DefaultTrack {
         inDown        = new Quart2(length+(TRACK_WIDTH/2),2,1);
         outUpTrack    = new Quart3(length+(TRACK_WIDTH/2),3,1);
         inRight       = new Quart4(length+(TRACK_WIDTH/2),4,1);
-
         junctionTracks = new ArrayList<>(Arrays.asList(outRightTrack,inDown,outUpTrack,inRight,straightTrack));
     }
 
@@ -185,6 +181,55 @@ public class JunctionTrack extends DefaultTrack {
             }
         }
 
+    }
+
+    public DefaultTrack getTrackToStartOn(int originTrackID){
+
+        // outbound condition
+        if(!inbound){
+
+            // Coming into the junction wrong way
+            if(originTrackID == getTo()){
+                return straightTrack;
+            }
+
+            // Coming into the junction wrong way
+            if(originTrackID == getOutboundToThrown()){
+                return getEndTrack();
+            }
+
+            if(originTrackID == getFrom()){
+                if(thrown){
+                    return getInnerTrack();
+                } else {
+                    return straightTrack;
+                }
+            }
+        }
+
+        // inbound condition
+        if(inbound){
+
+            // Coming into the junction wrong way through straight
+            if(originTrackID == getFrom()){
+                return straightTrack;
+            }
+
+            // Coming into the junction wrong through thrown
+            if(originTrackID == getInboundFromThrown()){
+                return getInnerTrack();
+            }
+
+            if(originTrackID == getTo()){
+                if(thrown){
+                    return getEndTrack();
+                } else {
+                    return straightTrack;
+                }
+            }
+        }
+
+        return straightTrack;
     }
 
     /**
@@ -364,7 +409,7 @@ public class JunctionTrack extends DefaultTrack {
             return outboundToThrown;
         }
         else{
-            return outBoundTotraight;
+            return getTo();
         }
     }
 
@@ -376,7 +421,7 @@ public class JunctionTrack extends DefaultTrack {
             return inboundFromThrown;
         }
         else{
-            return inboundFromStraight;
+            return getFrom();
         }
     }
 
@@ -494,35 +539,22 @@ public class JunctionTrack extends DefaultTrack {
 
     public Point2D getConnectionPointFrom(){return straightTrack.getConnectionPointFrom();}
 
-    public DefaultTrack getInboundThrownJuncTrack(){return inDown;}
-
-    public DefaultTrack getInboundThrownNotNatJuncTrack(){return inRight;}
-
-    public DefaultTrack getOutBoundThrownJuncTrack(){return outUpTrack;}
-
-    public DefaultTrack getOutBoundNotNatThrownJuncTrack(){return outRightTrack;}
-
     public DefaultTrack getStraightTrack(){return straightTrack;}
 
     // Inbound getters
     public int getInboundFromThrown() {return inboundFromThrown;}
-    public int getInboundFromStraight() {return inboundFromStraight;}
     public int getInboundTo() {return inboundTo;}
 
     // Outbound getters
     public int getOutboundToThrown() {return outboundToThrown;}
-    public int getOutBoundTotraight() {return outBoundTotraight;}
-    public int getOutboundFrom() {return outboundFrom;}
 
     // Inbound setters
     public void setInboundFromThrown(int inboundFromThrown) {this.inboundFromThrown = inboundFromThrown;}
-    public void setInboundFromStraight(int inboundFromStraight) {this.inboundFromStraight = inboundFromStraight;}
     public void setInboundTo(int inboundTo) {this.inboundTo = inboundTo;}
 
     // Outbound setters
-    public void setOutBoundTotraight(int outBoundTotraight) {this.outBoundTotraight = outBoundTotraight;}
     public void setOutboundToThrown(int outboundToThrown) {this.outboundToThrown = outboundToThrown;}
-    public void setOutboundFrom(int outboundFrom) {this.outboundFrom = outboundFrom;}
+
 
     // Setts or gets if the juncton is thrown or not
     public void setThrown(boolean thrown){this.thrown = thrown;}

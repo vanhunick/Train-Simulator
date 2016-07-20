@@ -8,8 +8,6 @@ import javafx.scene.shape.ArcType;
 import view.Drawable.Movable;
 import view.SimulationUI;
 
-import java.awt.*;
-
 /**
  * Created by Nicky on 25/03/2016.
  */
@@ -136,7 +134,7 @@ public class Quart4 extends DefaultTrack {
         // Set The background Color
         g.setFill(DefaultTrack.BACKGROUND_COLOR);
 
-        double degreesToMove = (90/lengthOfQuater()) * SimulationUI.RAIL_SEP*1.5;
+        double degreesToMove = (90/ lengthOfQuarter()) * SimulationUI.RAIL_SEP*1.5;
 
         g.setStroke(DefaultTrack.TIE_COLOR);
         for(int deg = 90; deg < 180; deg+=degreesToMove) {
@@ -207,7 +205,7 @@ public class Quart4 extends DefaultTrack {
         midPointY = getStartY() + radius - TRACK_WIDTH/2;
 
         // Need to minus the degrees to change
-        double degreesToMove = (90/lengthOfQuater()/2) * speed;
+        double degreesToMove = (90/ lengthOfQuarter()/2) * speed;
 
         double nextRotation = 0;
         if(super.getDirection().equals("RIGHT")){

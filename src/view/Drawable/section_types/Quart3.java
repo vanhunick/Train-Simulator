@@ -128,7 +128,7 @@ public class Quart3 extends DefaultTrack {
     public double getNextPoint(Point2D curPoint, double curRot, double rotationDone, double speed, Movable movable){
 
         // Need to minus the degrees to change
-        double degreesToMove = (90/lengthOfQuater()/2) * speed;
+        double degreesToMove = (90/ lengthOfQuarter()/2) * speed;
 
         double nextRotation = 0;
         if(super.getDirection().equals("UP")){
@@ -263,7 +263,7 @@ public class Quart3 extends DefaultTrack {
         // Set The background Color
         g.setFill(DefaultTrack.BACKGROUND_COLOR);
 
-        double degreesToMove = (90/lengthOfQuater()) * SimulationUI.RAIL_SEP*1.5;
+        double degreesToMove = (90/ lengthOfQuarter()) * SimulationUI.RAIL_SEP*1.5;
 
 
         // Set The background Color

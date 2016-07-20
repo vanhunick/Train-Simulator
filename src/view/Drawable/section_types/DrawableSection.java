@@ -1,41 +1,46 @@
 package view.Drawable.section_types;
 
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
 import model.Section;
 
 /**
  * Created by vanhunick on 16/04/16.
  */
 public class DrawableSection {
-    private Section section;
 
+    private Section section; // Section the drawable section represents
 
+    /**
+     * Constructs DrawableSection object
+     *
+     * @param section Section to draw
+     * */
     public DrawableSection(Section section){
         this.section = section;
     }
 
-
+    /**
+     * Draws the section on the graphics context
+     * */
     public void draw(GraphicsContext g){
         for(DefaultTrack track : section.getTracks()){
-            if(section.getTrainOn())track.setColor(Color.BLUE);
-            else track.setColor(Color.WHITE);
             track.draw(g);
         }
     }
 
+    /**
+     * Returns the tracks in the section
+     * */
     public DefaultTrack[] getTracks(){return section.getTracks();}
 
+    /**
+     * Returns the section
+     * */
     public Section getSection(){return this.section;}
 
-    public double getInitialX(double width){
-        return section.getTracks()[0].getInitialX(width);//Check with the first track in the section
-    }
-
-    public double getInitialY(double width){
-        return section.getTracks()[0].getInitialY(width);//Check with the first track in the section
-    }
-
+    /**
+     * Returns true if the track is in the section false if not
+     * */
     public boolean containsTrack(DefaultTrack track){
         for(DefaultTrack t : section.getTracks()){
             if(t.equals(track))return true;
@@ -43,6 +48,10 @@ public class DrawableSection {
         return false;
     }
 
+    /**
+     * Returns the track in the section given the id.
+     * null if it does not exist
+     * */
     public DefaultTrack getTrackWithID(int id){
         for(DefaultTrack t : section.getTracks()){
             if (t.getId() == id){
@@ -52,8 +61,10 @@ public class DrawableSection {
         return null;
     }
 
+    /**
+     * Sets the section for to draw
+     * */
     public void setSection(Section section){
         this.section = section;
     }
-
 }

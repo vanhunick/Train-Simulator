@@ -39,7 +39,7 @@ public interface Movable {
      *
      * @param direction sets the direction the movable should move in
      * */
-    public void setDirection(boolean direction);
+//    public void setDirection(boolean direction);
 
     /**
      * Returns the current track it is on
