@@ -152,19 +152,17 @@ public class TrackBuilder implements MouseEvents{
     }
 
     public LoadedRailway getLoadedRailway(){
+        if(tracksInSection.size() > 0){
+            newSection();// Act like the next section button is clicked
+        }
+
         if(sectionsForTrack.size() <= 0){
             new ErrorDialog("No railway to simulate", "Not read to simulate");
             return null;
         }
 
-        for(DefaultTrack t : allTracks){
-            System.out.println(t.getFrom());
-        }
-
         // Check if there are tracks that have not been added to a section yet
-        if(tracksInSection.size() > 0){
-            newSection();// Act like the next section button is clicked
-        }
+
         // Looks at junctions
         finishConnectingUpSections();
 
@@ -306,6 +304,12 @@ public class TrackBuilder implements MouseEvents{
         curSectionID++;
     }
 
+    public void switchingModes(){
+        sectionMode = false;
+        allTracks.clear();
+        trains.clear();
+    }
+
     public void finishConnectingUpSections(){
         for(DrawableSection s : sectionsForTrack){
             for(DefaultTrack t : s.getTracks()){
@@ -360,7 +364,7 @@ public class TrackBuilder implements MouseEvents{
      * Removes all added tracks from the list
      * */
     public void clear(){
-        tracksInSection.clear();
+        allTracks.clear();
     }
 
 
