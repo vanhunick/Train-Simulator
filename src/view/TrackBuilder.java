@@ -161,6 +161,8 @@ public class TrackBuilder implements MouseEvents{
             return null;
         }
 
+        allTracks.forEach(t -> t.setSelected(false));
+
         // Check if there are tracks that have not been added to a section yet
 
         // Looks at junctions
