@@ -313,10 +313,10 @@ public class TrackBuilder implements MouseEvents{
                     s.getSection().setHasJunctionTrack(true);
                     JunctionTrack jt = (JunctionTrack)t;
                     if(((JunctionTrack) t).inBound()){
-                        s.getSection().setJuncSectionIndex(jt.getInboundFrom());
+                        s.getSection().setJuncSectionIndex(jt.getInboundFromThrown());
                     }
                     else {
-                        s.getSection().setJuncSectionIndex(jt.getOutboundToThrown());//TODO not sure if correct
+                        s.getSection().setJuncSectionIndex(jt.getOutboundToThrown());
                     }
                 }
             }

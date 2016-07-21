@@ -258,7 +258,7 @@ public class Quart1 extends DefaultTrack {
                 }
             }
             else{
-                if(p.getX() > super.getStartX() + super.getLength()/2){//TODO
+                if(p.getX() > super.getStartX() + super.getLength()/2){
                     return false;//No longer in this section
                 }
                 if(p.getY() < super.getStartY() - super.getLength()/2){
@@ -268,15 +268,15 @@ public class Quart1 extends DefaultTrack {
         }
         else if(super.getDirection().equals("RIGHT")){
             if(forwardWithTrack(movable)){
-                if(p.getY() < super.getStartY()){// + super.getLength()/2
+                if(p.getY() < super.getStartY()){
                     return false;//No longer in this section
                 }
-                if(p.getX() > super.getStartX() + super.getLength()/2 ){//TODO just changed
+                if(p.getX() > super.getStartX() + super.getLength()/2 ){
                     return false;//No longer in this section
                 }
             }
             else {
-                if(p.getX() < super.getStartX()){//TODO
+                if(p.getX() < super.getStartX()){
                     return false;//No longer in this section
                 }
                 if(p.getY() > super.getStartY() + super.getLength()/2){

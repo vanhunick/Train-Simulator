@@ -184,7 +184,7 @@ public class DrawableTrain implements Movable{
         currentSpeed += acceleration * (timeChanged/1000.0);// Convert Millisecond to second
 
         if(currentSpeed > train.getTargetSpeed() && !braking && engineForce - 1000 >= 0){
-            engineForce -= 1000;
+            engineForce = Math.max(engineForce -= 1000,0);
         }
 
         if(currentSpeed < train.getTargetSpeed() && !braking && acceleration < 0.25){

@@ -63,9 +63,13 @@ public class Quart3 extends DefaultTrack {
             }
             else if(from.getDrawID() == 1){
                 startX = from.getStartX() + from.getLength()/2 - super.getLength()/2;
-                startY = from.getStartY() - super.getLength()/2 - from.getLength()/2 + TRACK_WIDTH;
+                startY = from.getStartY() - super.getLength() + TRACK_WIDTH;
             }
             else if(from.getDrawID() == 4){
+                startX = from.getStartX() + from.getLength()/2 - super.getLength()/2;
+                startY = from.getStartY();
+            }
+            else if(from.getDrawID() == 6){// Junction
                 startX = from.getStartX() + from.getLength()/2 - super.getLength()/2;
                 startY = from.getStartY();
             }
