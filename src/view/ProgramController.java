@@ -14,6 +14,7 @@ import view.Panes.ErrorDialog;
 import view.Panes.EventLog;
 import view.Panes.TopToolBar;
 
+import java.io.File;
 import java.util.List;
 
 public class ProgramController implements MouseEvents {
@@ -159,9 +160,9 @@ public class ProgramController implements MouseEvents {
         }
     }
 
-    public void setLoadedRailway(LoadedRailway railway){
+    public void setLoadedRailway(File file, LoadedRailway railway){
         if(mode.equals(VISUALISATION_MODE)){
-            simulationUI.startWithLoadedRailway(railway);
+            simulationUI.startWithLoadedRailway(file, railway);
         }
     }
 

@@ -22,7 +22,7 @@ public class Load {
 
 
 
-    public LoadedRailway loadFromFile(String filePath){
+    public LoadedRailway loadFromFile(File file, String filePath){
         System.out.println("Loading File");
         try {
             // Load in the JSON file into a string
@@ -109,7 +109,7 @@ public class Load {
             List<DrawableTrain> trains = loadTrains(obj, sections);
             List<DrawableRollingStock> stocks = loadRollingStocks(obj,sections);
 
-            LoadedRailway railway = new LoadedRailway(sections,tracks.toArray(new DefaultTrack[tracks.size()]),trains,stocks);
+            LoadedRailway railway = new LoadedRailway(file,sections,tracks.toArray(new DefaultTrack[tracks.size()]),trains,stocks);
 
             System.out.println("Success Loading Railway File");
             return railway;
@@ -273,7 +273,8 @@ public class Load {
         int length = trackObject.getInt("length");
         int x = trackObject.getInt("x");
         int y = trackObject.getInt("y");
-        String drawDirection = trackObject.getString("draw");
+
+
 
         switch (trackObject.getString("type")){
             case "Q1":
@@ -290,6 +291,7 @@ public class Load {
                 return new StraightVert(x,y,length,5,"RIGHT",id);
             case "Junction":
                 boolean inbound = trackObject.getBoolean("inbound");//TODO
+                String drawDirection = trackObject.getString("draw");
                 return new JunctionTrack(x,y,length,6,id,"RIGHT",false,inbound, drawDirection);
             default:
                 System.out.println("No Match for type");
@@ -303,7 +305,9 @@ public class Load {
 
     public static void main(String[] args){
         Load load = new Load();
-        LoadedRailway l = load.loadFromFile("src/tracks/atrackandtrains.json");
+        File f = new File("src/tracks/atrackandtrains.json");
+
+        LoadedRailway l = load.loadFromFile(f,"src/tracks/atrackandtrains.json");
 
         for(DefaultTrack t : l.tracks){
             System.out.println(t);

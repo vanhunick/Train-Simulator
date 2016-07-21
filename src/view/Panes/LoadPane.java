@@ -18,7 +18,6 @@ public class LoadPane {
     public void loadRailway(){
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Select Track File");
-//        fileChooser.showOpenDialog(null);
 
         File file = fileChooser.showOpenDialog(null);
         if (file != null) {
@@ -28,7 +27,7 @@ public class LoadPane {
 
     public void parseFile(File file){
         Load load = new Load();
-        railway = load.loadFromFile(file.getAbsolutePath());
+        railway = load.loadFromFile(file,file.getAbsolutePath());
     }
 
     public LoadedRailway getRailway(){

@@ -259,7 +259,7 @@ public class Quart3 extends DefaultTrack {
 
     public void draw(GraphicsContext g) {
         g.setStroke(super.getColor());
-        if(super.getMouseOn() ){//|| super.getSection().getTrainOn()
+        if(super.getMouseOn() ){
             g.setStroke(Color.GREEN);
         }
 

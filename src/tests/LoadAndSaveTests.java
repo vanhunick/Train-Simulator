@@ -18,7 +18,8 @@ public class LoadAndSaveTests {
     @Test
     public void loadAndSaveEqaulity(){
         Load load = new Load();
-        LoadedRailway l = load.loadFromFile("src/tracks/simple_track.json");
+        File f = new File("src/tracks/simple_track.json");
+        LoadedRailway l = load.loadFromFile(f,"src/tracks/simple_track.json");
 
 
         String str = "";

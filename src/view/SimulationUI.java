@@ -21,6 +21,7 @@ import view.Panes.EventGen;
 import view.Panes.EventLog;
 import view.Panes.TrackMenu;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -327,8 +328,8 @@ public class SimulationUI implements MouseEvents{
         return labels;
     }
 
-    public void startWithLoadedRailway(LoadedRailway railway){
-        sim.loadRailway(railway);
+    public void startWithLoadedRailway(File file, LoadedRailway railway){
+        sim.loadRailway(file, railway);
     }
 
 

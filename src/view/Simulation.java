@@ -8,6 +8,7 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import model.*;
+import save.Load;
 import save.LoadedRailway;
 import view.Drawable.DrawableRollingStock;
 import view.Drawable.DrawableTrain;
@@ -15,6 +16,7 @@ import view.Drawable.Movable;
 import view.Drawable.section_types.*;
 
 
+import java.io.File;
 import java.util.*;
 
 
@@ -49,6 +51,9 @@ public class Simulation implements MouseEvents {
     private List<DrawableRollingStock> drawableRollingStocks;
     private DrawableSection[] railway;
     private List<Movable> movable;
+
+    // Used when restarting a loaded track
+    private File loadedFile;
 
     // The tracks
     private DefaultTrack tracks[];
@@ -108,7 +113,10 @@ public class Simulation implements MouseEvents {
         started = true;
     }
 
-    public void loadRailway(LoadedRailway loadedRailway) {
+
+
+    public void loadRailway(File file, LoadedRailway loadedRailway) {
+        this.loadedFile = file;
         this.railway = loadedRailway.sections;
         this.tracks = loadedRailway.tracks;
         this.trains = loadedRailway.trains;
@@ -159,6 +167,14 @@ public class Simulation implements MouseEvents {
 
     public void restart(){
         started = false;// Stop the updates
+
+        // Reload the file if simulation started from file
+        if(loadedFile != null){
+            Load load = new Load();
+            LoadedRailway railway = load.loadFromFile(loadedFile,loadedFile.getAbsolutePath());
+            loadRailway(loadedFile,railway);
+        }
+
     }
 
     /**

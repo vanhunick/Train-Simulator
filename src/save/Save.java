@@ -6,6 +6,7 @@ import view.Drawable.DrawableRollingStock;
 import view.Drawable.DrawableTrain;
 import view.Drawable.section_types.*;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
@@ -190,7 +191,8 @@ public class Save {
 
     public static void main(String[] args){
         Load load = new Load();
-        LoadedRailway l = load.loadFromFile("src/tracks/simple_track.json");
+        File f = new File("src/tracks/simple_track.json");
+        LoadedRailway l = load.loadFromFile(f,"src/tracks/simple_track.json");
 
         Save save = new Save();
         save.save(l,"src/tracks/test_save");

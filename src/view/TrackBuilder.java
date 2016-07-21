@@ -178,7 +178,7 @@ public class TrackBuilder implements MouseEvents{
 
 //        tracks[0].setFrom(tracks.length-1);
 
-        LoadedRailway railway = new LoadedRailway(sections,tracks,trains,stocks);
+        LoadedRailway railway = new LoadedRailway(null,sections,tracks,trains,stocks); // null because not loaded from file
 
         return railway;
     }
@@ -840,6 +840,7 @@ public class TrackBuilder implements MouseEvents{
         t.setMid(mouseLocation.getX(),mouseLocation.getY());
         allTracks.add(t);
         mouseSelectedPeice = t;
+        mouseSelectedPeice.setSelected(true);
         return t;
     }
 
