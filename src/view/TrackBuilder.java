@@ -396,7 +396,7 @@ public class TrackBuilder implements MouseEvents{
      * @param dt the track to modify or add a train or stock to
      * */
     public void showTrackMenu(DefaultTrack dt){
-        TrackMenu menu = new TrackMenu(dt);
+        TrackMenu menu = new TrackMenu(dt, null);
 
         // Checks if a train should be added to the track
         if(menu.addTrain()){

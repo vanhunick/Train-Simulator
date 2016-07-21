@@ -481,6 +481,13 @@ public class Simulation implements MouseEvents {
         return -1;
     }
 
+    public boolean validTrainID(int id){
+        for(DrawableTrain t : trains){
+            if(t.getTrain().getId() == id)return false;
+        }
+        return true;
+    }
+
     /**
      * Used for testing
      * */
@@ -585,13 +592,14 @@ public class Simulation implements MouseEvents {
 
     // New methods
     public void addTraintoSimulation(DrawableTrain train, int numberOfRollingStock){
-        if(numberOfRollingStock > 0){
-
-        }
+//        if(numberOfRollingStock > 0){
+//
+//        }
 
         train.setUpImage();
         trains.add(train);
         movable.add(train);
+        train.getTrain().setTargetSpeed(27);
     }
 
     public void addRollingStocktoSimulation(DrawableRollingStock stock){

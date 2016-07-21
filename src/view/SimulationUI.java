@@ -11,7 +11,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import model.*;
-import save.Load;
 import save.LoadedRailway;
 import view.Drawable.DrawableRollingStock;
 import view.Drawable.DrawableTrain;
@@ -133,15 +132,14 @@ public class SimulationUI implements MouseEvents{
      * @param dt the track to modify or add a train or stock to
      * */
     public void showTrackMenu(DefaultTrack dt){
-        TrackMenu menu = new TrackMenu(dt);
+        TrackMenu menu = new TrackMenu(dt, sim);
 
         // Checks if a train should be added to the track
         if(menu.addTrain()){
             String selectedTrain = menu.getCurTrainSelection();
             if(selectedTrain.equals("British Rail Class 25")){
-                Train train1 = new Train(sim.getNextTrainID(), 15, 500, true,true,71000);
+                Train train1 = new Train(menu.getId(), 15, 500, true, menu.naturalOrientation(),71000);
                 DrawableTrain drawableTrain1 = new DrawableTrain(train1, sim.getSection(dt),dt);
-
                 sim.addTraintoSimulation(drawableTrain1,menu.getNumbRollingStock());
             }
             else if(selectedTrain.equals("British Rail Class 108 (DMU)")){

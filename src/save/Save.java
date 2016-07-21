@@ -57,7 +57,6 @@ public class Save {
             sectionObject.put("id",s.getSection().getID());
             if(start){
                 sectionObject.put("start",true);
-
             }
             else{
                 sectionObject.put("start",false);
@@ -90,7 +89,6 @@ public class Save {
                     start = false;
                 }
 
-
                 trackObject.put("from",t.getFrom());
                 trackObject.put("length",t.getLength());
                 if(getTrackType(t).equals("Junction")){
@@ -102,6 +100,7 @@ public class Save {
                     else {
                         trackObject.put("thrown",jt.getOutboundToThrown());
                     }
+                    trackObject.put("draw",jt.getDrawDirection());
                 }
                 trackArray.put(trackObject);
             }

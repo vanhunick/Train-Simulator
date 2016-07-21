@@ -10,6 +10,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Modality;
 import view.Drawable.section_types.DefaultTrack;
+import view.Simulation;
 
 
 /**
@@ -23,28 +24,30 @@ public class TrackMenu {
     // The length of section in pixels
     private double length;
 
-    private boolean canDetect;
-    private String curDetectSelection;
+    // The train they want to create
     private String curTrainSelection;
 
+    // If they want to add a train
     private CheckBox addTrain;
+
+    // If they want to add a rolling stock
     private CheckBox addRollingstock;
 
+    // The orientation of the train to be created
+    private CheckBox natural;
+
+    // The number of rolling stock to connect to the train
     private  int numbRollingStock;
 
-    private DefaultTrack section;
 
-    public TrackMenu(DefaultTrack section) {
-        this.section = section;
-
+    public TrackMenu(DefaultTrack section, Simulation sim) {
         Dialog dialog = new Dialog<>();
         dialog.initModality(Modality.WINDOW_MODAL);
-        dialog.setTitle("Edit StraightTrack ID: " + section.getId());
-
-        dialog.setHeaderText("Enter track details");
+        dialog.setTitle("Add Train or Stock to section ID: " + section.getId());
+        dialog.setHeaderText("Enter Train and Stock details");
 
         // Set the button types.
-        ButtonType addButton = new ButtonType("Save", ButtonBar.ButtonData.OK_DONE);
+        ButtonType addButton = new ButtonType("Add", ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(addButton, ButtonType.CANCEL);
 
         // Create the username and password labels and fields.
@@ -52,7 +55,6 @@ public class TrackMenu {
         grid.setHgap(10);
         grid.setVgap(10);
         grid.setPadding(new Insets(20, 150, 10, 10));
-
 
         ObservableList<String> trainOptions = FXCollections.observableArrayList("British Rail Class 25","British Rail Class 108 (DMU)","British Rail Class 101 (DMU)");
 
@@ -66,57 +68,65 @@ public class TrackMenu {
             }
         });
 
-        // Create an option box for the trains
-        ObservableList<String> options = FXCollections.observableArrayList("Yes","No");
-        curDetectSelection = "True";
-
-        ComboBox trainComboBox = new ComboBox(options);
-
-        trainComboBox.setValue("Yes");
-
-        trainComboBox.valueProperty().addListener(new ChangeListener<String>() {
-            @Override public void changed(ObservableValue ov, String t, String t1) {
-                valChanged(ov,t,t1);
-            }
-        });
-
-
         // Create checkbox for adding a train
         addTrain = new CheckBox("Add train");
         addTrain.setIndeterminate(false);
 
-        // Create a checkbox for adding a rollingstock
+        // Create checkbox for orientation
+        natural= new CheckBox("Natural Orientation");
+        natural.setIndeterminate(false);
+
+        // Create a checkbox for adding a rolling stock
         addRollingstock = new CheckBox("Add Rolling stock");
         addRollingstock.setIndeterminate(false);
 
-
-        grid.add(new Label("Can Detect:"), 0, 0);
-        grid.add(trainComboBox,1,0);
-
-
+        // ID
         TextField id = new TextField();
         id.setPromptText("ID");
-        grid.add(new Label("Train ID:"), 0, 1);
-        grid.add(id, 1, 1);
+        id.setText(""+sim.getNextTrainID());// get the next valid ID
+        grid.add(new Label("Train ID:"), 0, 0);
+        grid.add(id, 1, 0);
+        id.setText(""+sim.getNextTrainID());
 
-
+        // Length of train
         TextField length = new TextField();
         length.setPromptText("Length");
         grid.add(new Label("Length:"), 0, 2);
         grid.add(length, 1, 2);
+        length.setText("15");
 
-
-
-        grid.add(new Label("Add Train:"), 0, 3);
-        grid.add(trainSelectComboBox,1,3);
-
-        grid.add(addTrain,1,4);
-        grid.add(addRollingstock,1,5);
-
+        // Number of stock
         TextField numbStock = new TextField();
         numbStock.setPromptText("Number of Rolling stock");
-        grid.add(new Label("Number of Rolling stock:"), 0, 6);
-        grid.add(numbStock, 1, 6);
+        grid.add(new Label("Number of Rolling stock:"), 0, 3);
+        grid.add(numbStock, 1, 3);
+
+        // Add train
+        grid.add(new Label("Add Train:"), 0, 4);
+        grid.add(trainSelectComboBox,1,4);
+
+        grid.add(addTrain,1,5);
+        grid.add(addRollingstock,1,6);
+        grid.add(natural,1,7);
+
+        numbStock.textProperty().addListener((observable, oldValue, newValue) -> {
+            if(!validateNumber(newValue)){
+                numbStock.setText("");
+            }
+        });
+
+        // validation
+        length.textProperty().addListener((observable, oldValue, newValue) -> {
+            if(!validateNumber(newValue)){
+                length.setText(oldValue);
+            }
+        });
+
+        id.textProperty().addListener((observable, oldValue, newValue) -> {
+            if(!validateNumber(newValue)){
+                id.setText(oldValue);
+            }
+        });
 
         dialog.getDialogPane().setContent(grid);
 
@@ -127,8 +137,14 @@ public class TrackMenu {
             if (dialogButton == addButton) {
                 //set the fields to return
 
+
                 if(!id.getText().equals("")){
                     this.id = Integer.parseInt(id.getText());
+
+                    if(!sim.validTrainID(this.id)){
+                        new ErrorDialog( "A unique ID has been assigned for you.","Invalid train ID");
+                        this.id = sim.getNextTrainID();
+                    }
                 }
                 if(!length.getText().equals("")){
                     this.length = Double.parseDouble(length.getText());
@@ -138,7 +154,7 @@ public class TrackMenu {
                     this.numbRollingStock = Integer.parseInt(length.getText());
                 }
 
-                this.canDetect = Boolean.parseBoolean(curDetectSelection);
+
             }
             return null;
         });
@@ -147,9 +163,7 @@ public class TrackMenu {
         dialog.showAndWait();
     }
 
-    public void valChanged(ObservableValue ov, String t, String t1){
-        this.curDetectSelection = t1;
-    }
+    public boolean validateNumber(String string){return string.matches("[0-9]*");}
 
     public void valChangedTrain(ObservableValue ov, String t, String t1){
         this.curTrainSelection = t1;
@@ -158,17 +172,17 @@ public class TrackMenu {
     public boolean addTrain(){
         return addTrain.isSelected();
     }
+
     public boolean addRollingStocl(){
         return addRollingstock.isSelected();
     }
+
+    public boolean naturalOrientation(){return natural.isSelected();}
 
     public int getId(){
         return this.id;
     }
 
-    public boolean canDetect(){
-        return this.canDetect;
-    }
 
     public String getCurTrainSelection(){return this.curTrainSelection;}
 

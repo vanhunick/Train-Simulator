@@ -65,12 +65,19 @@ public class DrawableTrain implements Movable{
         this.currentSpeed = 0;
         this.curRotation = 270;// Not nat orientation
 
-        if(train.getOrientation()){
-            if(curTrack.getDirection().equals("LEFT")){
-                this.curRotation = 270;// Not nat orientation
-            }
-            else {
+        if(curTrack.getDirection().equals("RIGHT")){
+            if(train.getOrientation()){
                 this.curRotation = 90;// Nat orientation
+            } else {
+                this.curRotation = 270;// Nat orientation
+            }
+        }
+
+        if(curTrack.getDirection().equals("LEFT")){
+            if(train.getOrientation()) {
+                this.curRotation = 270;// Not nat orientation
+            } else {
+                this.curRotation = 90;
             }
         }
         setConnectionLocation(); // Sets up connection location based on position

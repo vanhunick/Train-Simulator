@@ -563,6 +563,8 @@ public class JunctionTrack extends DefaultTrack {
     // Returns if the track is inbound or not
     public boolean inBound(){return this.inbound;}
 
+    public String getDrawDirection(){return this.drawDirection;}
+
     @Override
     public boolean containsPoint(double x, double y){
         return straightTrack.containsPoint(x,y) || getInnerTrack().containsPoint(x,y) || getEndTrack().containsPoint(x,y);
