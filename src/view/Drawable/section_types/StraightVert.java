@@ -68,8 +68,8 @@ public class StraightVert extends DefaultTrack {
             }
         }
 
-        super.setStartX(startX);
-        super.setStartY(startY);
+        setStartX(startX);
+        setStartY(startY);
     }
 
     public boolean canConnect(DefaultTrack trackToConnect){
@@ -141,9 +141,7 @@ public class StraightVert extends DefaultTrack {
     }
 
 
-
-
-    public boolean checkOnAfterUpdate(Point curPoint, double rotation,double rotDone, double dist, Movable movable){
+    public boolean checkOnAfterUpdate(Point2D curPoint, double rotation,double rotDone, double dist, Movable movable){
         if(getNextY(curPoint.getY(),dist, movable.getOrientation(), movable.getDirection()) == -1 )return false;
         if(getNextX(curPoint.getX(),dist, movable.getOrientation()) == -1 )return false;
         return true;
@@ -162,7 +160,7 @@ public class StraightVert extends DefaultTrack {
         return 0;
     }
 
-    public double getNextPoint(Point cur, double curRot, double rotDone, double moveBy, Movable movable){
+    public double getNextPoint(Point2D cur, double curRot, double rotDone, double moveBy, Movable movable){
         cur.setLocation(getNextX(cur.getX(),moveBy,movable.getOrientation()),getNextY(cur.getY(),moveBy,movable.getOrientation(), movable.getDirection()));
         return getNextRotation(curRot,moveBy,movable.getOrientation(),movable.getDirection());
     }

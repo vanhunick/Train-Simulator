@@ -70,7 +70,6 @@ public class Quart1 extends DefaultTrack {
                 startY = from.getStartY() + (from.getLength()/2) + super.getLength()/2 - TRACK_WIDTH;
             }
         }
-
         setStartX(startX);
         setStartY(startY);
 
@@ -82,20 +81,7 @@ public class Quart1 extends DefaultTrack {
         int id = trackToConnect.getDrawID();
 
         if(getDirection().equals("RIGHT")){
-            if(id == 0 || id == 2 || id == 3 || id == 6 || id == 7 || id == 8 || id ==9){
-                if(trackToConnect instanceof JunctionTrack){
-                    JunctionTrack j = (JunctionTrack)trackToConnect;
-
-                    // We can only connect
-                    if(j.inBound() && j.getDirection().equals("RIGHT")){
-                        double conX = j.getInnerTrack().getConnectionPointFrom().getX();
-                        double conY = j.getInnerTrack().getConnectionPointFrom().getY();
-
-                        if(Math.abs(getConnectionPointTo().getX() - conX) < DefaultTrack.CONNECT_SENS &&
-                                Math.abs(getConnectionPointTo().getY() - conY) < DefaultTrack.CONNECT_SENS)return true;
-                    }
-                }
-
+            if(id == 0 || id == 2 || id == 3 || id == 6){
                 if(Math.abs(getConnectionPointTo().getX() - trackToConnect.getConnectionPointFrom().getX()) < DefaultTrack.CONNECT_SENS &&
                         Math.abs(getConnectionPointTo().getY() - trackToConnect.getConnectionPointFrom().getY()) < DefaultTrack.CONNECT_SENS)return true;
             }
@@ -110,12 +96,7 @@ public class Quart1 extends DefaultTrack {
     }
 
     public void toggleDirection(){
-        if(getDirection().equals("RIGHT")){
-            setDirection("DOWN");
-        }
-        else {
-            setDirection("RIGHT");
-        }
+        setDirection(getDirection().equals("RIGHT") ? "DOWN" : "RIGHT");
     }
 
     public void setMid(){
@@ -124,21 +105,9 @@ public class Quart1 extends DefaultTrack {
         midPointY = getStartY()  + radius + TRACK_WIDTH/2;
     }
 
-
-
     public boolean containsPoint(double x, double y){
         return x >= super.getStartX() && x <= super.getStartX() + super.getLength()/2 &&
                 y >= super.getStartY() && y <= super.getStartY() + super.getLength()/2;
-    }
-
-    public Point2D getConnectionPoint(){
-        if(super.getDirection().equals("RIGHT")){
-            return new Point2D((int)(super.getStartX()+getLength()/2),(int) (getStartY() + TRACK_WIDTH/2));
-        }
-        else if(super.getDirection().equals("DOWN")){
-            return new Point2D((int)(super.getStartX()+ TRACK_WIDTH/2),(int) (getStartY() + getLength()/2));
-        }
-        return null;
     }
 
 
@@ -166,17 +135,10 @@ public class Quart1 extends DefaultTrack {
     public void setMid(double x, double y){
         setStartX(x - getLength()/4);
         setStartY(y - getLength()/4);
-
         setMid();
     }
 
     public void draw(GraphicsContext g) {
-        g.setStroke(super.getColor());
-
-        if(super.getMouseOn()){// ||super.getSection().getTrainOn()
-            g.setStroke(Color.GREEN);
-        }
-
         g.setFill(DefaultTrack.BACKGROUND_COLOR);
 
         double degreesToMove = (90/ lengthOfQuarter()) * SimulationUI.RAIL_SEP*1.5;
@@ -194,7 +156,6 @@ public class Quart1 extends DefaultTrack {
             g.strokeLine(sX,sY,eX,eY);
         }
 
-
         g.setLineWidth(2);
         if(super.getSelected()){
             g.setStroke(DefaultTrack.SELECTED_COLOR);
@@ -206,7 +167,6 @@ public class Quart1 extends DefaultTrack {
         g.strokeArc(super.getStartX(), super.getStartY(), super.getLength(), super.getLength(), 90, 90, ArcType.OPEN);
         g.strokeArc(super.getStartX() + TRACK_WIDTH, super.getStartY()+ TRACK_WIDTH, super.getLength() - (TRACK_WIDTH* 2), super.getLength() - (TRACK_WIDTH* 2), 90, 90, ArcType.OPEN);
     }
-
 
 
     @Override
@@ -248,40 +208,20 @@ public class Quart1 extends DefaultTrack {
         getNextPoint(curPoint, curRot, rotationDone, speed, movable);
         Point2D p = curPoint;
 
-        if(super.getDirection().equals("DOWN")){
-            if(forwardWithTrack(movable)){
-                if(p.getY() > super.getStartY() + super.getLength()/2){
-                    return false;//No longer in this section
-                }
-                if(p.getX()< super.getStartX() ){
-                    return false;//No longer in this section
-                }
+        if(getDirection().equals("DOWN")){
+            if(forwardWithTrack(movable) && (p.getY() > getStartY() + getLength()/2 || p.getX()< getStartX())){
+                return false;//No longer in this section
             }
-            else{
-                if(p.getX() > super.getStartX() + super.getLength()/2){
-                    return false;//No longer in this section
-                }
-                if(p.getY() < super.getStartY() - super.getLength()/2){
-                    return false;//No longer in this section
-                }
+            else if(!forwardWithTrack(movable) && (p.getX() > getStartX() + getLength()/2 || p.getY() < getStartY() - getLength()/2)){
+                return false;
             }
         }
-        else if(super.getDirection().equals("RIGHT")){
-            if(forwardWithTrack(movable)){
-                if(p.getY() < super.getStartY()){
-                    return false;//No longer in this section
-                }
-                if(p.getX() > super.getStartX() + super.getLength()/2 ){
-                    return false;//No longer in this section
-                }
+        else if(getDirection().equals("RIGHT")){
+            if(forwardWithTrack(movable) && (p.getY() < getStartY() || p.getX() > getStartX() + getLength()/2 )){
+                return false;
             }
-            else {
-                if(p.getX() < super.getStartX()){
-                    return false;//No longer in this section
-                }
-                if(p.getY() > super.getStartY() + super.getLength()/2){
-                    return false;//No longer in this section
-                }
+            else if(!forwardWithTrack(movable) && (p.getX() < getStartX() || p.getY() > getStartY() + getLength()/2)){
+                return false;
             }
         }
         return true;

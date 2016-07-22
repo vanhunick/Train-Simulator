@@ -228,16 +228,6 @@ public class StraightHoriz extends DefaultTrack {
         return true;
     }
 
-    public Point2D getConnectionPoint(){
-        if(super.getDirection().equals("RIGHT")){
-            return new Point2D((int)(super.getStartX()+ getLength()),(int) (getStartY() + TRACK_WIDTH/2));
-        }
-        else if(super.getDirection().equals("LEFT")){
-            return new Point2D((int)(super.getStartX()),(int) (getStartY() + TRACK_WIDTH/2));
-        }
-        return null;
-    }
-
     public Point2D getConnectionPointFrom(){
         if(super.getDirection().equals("RIGHT")){
             return new Point2D((int)(super.getStartX()),(int) (getStartY() + TRACK_WIDTH/2));
