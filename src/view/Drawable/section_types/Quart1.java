@@ -45,27 +45,22 @@ public class Quart1 extends DefaultTrack {
             if(from.getDrawID() == 3){
                 startX = from.getStartX() + from.getLength() - TRACK_WIDTH;
                 startY = from.getStartY();
-            }
-            else if(from.getDrawID() == 4){
+            } else if(from.getDrawID() == 4){
                 startX = from.getStartX();
                 startY = from.getStartY()  - super.getLength()/2 + from.getLength()/2;
-            }
-            else if(from.getDrawID() == 5){
+            } else if(from.getDrawID() == 5){
                 startX = from.getStartX() - TRACK_WIDTH;
                 startY = from.getStartY()  - super.getLength()/2;
             }
-        }
-        else if(from.getDirection().equals("LEFT")){
+        } else if(from.getDirection().equals("LEFT")){
             super.setDirection("DOWN");
             if(from.getDrawID() == 0){
                 startY = from.getStartY();
                 startX = from.getStartX() - super.getLength()/2;
-            }
-            else if(from.getDrawID() == 2){
+            } else if(from.getDrawID() == 2){
                 startY = from.getStartY();
                 startX = from.getStartX() + from.getLength()/2 - (super.getLength()/2);
-            }
-            else if(from.getDrawID() == 3){
+            } else if(from.getDrawID() == 3){
                 startX = from.getStartX() + from.getLength()/2 - super.getLength()/2;
                 startY = from.getStartY() + (from.getLength()/2) + super.getLength()/2 - TRACK_WIDTH;
             }

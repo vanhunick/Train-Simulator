@@ -13,9 +13,9 @@ import view.SimulationUI;
  */
 public class Quart2 extends DefaultTrack {
 
-    private double radius = getLength()/2;
-    private double midPointX = getStartX()  + radius - TRACK_WIDTH/2;
-    private double midPointY = getStartY()  + radius + TRACK_WIDTH/2;
+    private double radius;
+    private double midPointX;
+    private double midPointY;
 
     /**
      * Constructor for a piece that connects to another piece
@@ -71,19 +71,12 @@ public class Quart2 extends DefaultTrack {
 
         setStartX(startX);
         setStartY(startY);
-
-        radius = getLength()/2;
-        midPointX = getStartX()  + radius - TRACK_WIDTH/2;
-        midPointY = getStartY()  + radius + TRACK_WIDTH/2;
+        setMid();
     }
 
+
     public void toggleDirection(){
-        if(getDirection().equals("DOWN")){
-            setDirection("LEFT");
-        }
-        else {
-            setDirection("DOWN");
-        }
+        setDirection(getDirection().equals("DOWN") ? "LEFT" : "DOWN");
     }
 
     public boolean canConnect(DefaultTrack trackToConnect){
@@ -96,20 +89,7 @@ public class Quart2 extends DefaultTrack {
             }
         }
         else if(getDirection().equals("LEFT")){
-            if(id == 0 || id == 1 || id == 4 || id == 6 || id == 7 || id == 8 || id == 9){
-                if(trackToConnect instanceof JunctionTrack){
-                    JunctionTrack j = (JunctionTrack)trackToConnect;
-
-                    // We can only connect
-                    if(j.inBound() && j.getDirection().equals("LEFT")){
-                        double conX = j.getInnerTrack().getConnectionPointFrom().getX();
-                        double conY = j.getInnerTrack().getConnectionPointFrom().getY();
-
-                        if(Math.abs(getConnectionPointTo().getX() - conX) < DefaultTrack.CONNECT_SENS &&
-                                Math.abs(getConnectionPointTo().getY() - conY) < DefaultTrack.CONNECT_SENS)return true;
-                    }
-                }
-
+            if(id == 0 || id == 1 || id == 4 || id == 6){
                 if(Math.abs(getConnectionPointTo().getX() - trackToConnect.getConnectionPointFrom().getX()) < DefaultTrack.CONNECT_SENS &&
                         Math.abs(getConnectionPointTo().getY() - trackToConnect.getConnectionPointFrom().getY()) < DefaultTrack.CONNECT_SENS)return true;
             }
@@ -120,16 +100,6 @@ public class Quart2 extends DefaultTrack {
     public boolean containsPoint(double x, double y){
         return x >= super.getStartX() + super.getLength()/2 && x <= super.getStartX() + super.getLength() &&
                 y >= super.getStartY() && y <= super.getStartY() + super.getLength()/2;
-    }
-
-    public Point2D getConnectionPoint(){
-        if(super.getDirection().equals("DOWN")){
-            return new Point2D((int)(super.getStartX()+getLength() - TRACK_WIDTH),(int) (getStartY() + getLength()/2));
-        }
-        else if(super.getDirection().equals("LEFT")){
-            return new Point2D((int)(super.getStartX()+ getLength()/2),(int) (getStartY() + TRACK_WIDTH/2));
-        }
-        return null;
     }
 
     public Point2D getConnectionPointFrom(){
@@ -169,28 +139,14 @@ public class Quart2 extends DefaultTrack {
     }
 
     public void draw(GraphicsContext g) {
-        g.setStroke(super.getColor());
-        if(super.getMouseOn() ){
-            g.setStroke(Color.GREEN);
-        }
-
-        g.setStroke(DefaultTrack.BACKGROUND_COLOR);
         double degreesToMove = (90/ lengthOfQuarter()) * SimulationUI.RAIL_SEP*1.5;
-
-            //TODO later still usefull
-//        g.setLineWidth(TRACK_WIDTH+20);
-//        g.strokeArc(getStartX()+10, super.getStartY()+5, getLength()-20, getLength()-20, 360, 90, ArcType.OPEN);
-
-
 
         g.setStroke(DefaultTrack.TIE_COLOR);
         for(int deg = 270; deg < 360; deg+=degreesToMove) {
             double sX = (int) (midPointX + TRACK_WIDTH/2 + ((radius+5) * (Math.cos(Math.toRadians(deg)))));
             double sY = (int) (midPointY - TRACK_WIDTH/2 + ((radius+5) * (Math.sin(Math.toRadians(deg)))));
-
             double eX = (int) (midPointX + TRACK_WIDTH/2 + ((radius - TRACK_WIDTH-5) * (Math.cos(Math.toRadians(deg)))));
             double eY = (int) (midPointY - TRACK_WIDTH/2 + ((radius - TRACK_WIDTH-5) * (Math.sin(Math.toRadians(deg)))));
-
 
             g.setLineWidth(3);
             g.strokeLine(sX,sY,eX,eY);
