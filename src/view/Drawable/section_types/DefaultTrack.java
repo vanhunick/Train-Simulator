@@ -179,15 +179,24 @@ public abstract class DefaultTrack {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof DefaultTrack)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
+
         DefaultTrack that = (DefaultTrack) o;
-        if (getMouseOn() != that.getMouseOn()) return false;
-        if (Double.compare(that.getStartX(), getStartX()) != 0) return false;
-        if (Double.compare(that.getStartY(), getStartY()) != 0) return false;
-        if (Double.compare(that.getLength(), getLength()) != 0) return false;
-        if (isStartPiece() != that.isStartPiece()) return false;
-        if (getDrawID() != that.getDrawID()) return false;
-        return getDirection().equals(that.getDirection());
+
+        if (mouseOn != that.mouseOn) return false;
+        if (Double.compare(that.startX, startX) != 0) return false;
+        if (Double.compare(that.startY, startY) != 0) return false;
+        if (Double.compare(that.length, length) != 0) return false;
+        if (startPiece != that.startPiece) return false;
+        if (to != that.to) return false;
+        if (from != that.from) return false;
+        if (juncFrom != that.juncFrom) return false;
+        if (juncTo != that.juncTo) return false;
+        if (drawID != that.drawID) return false;
+        if (id != that.id) return false;
+        if (selected != that.selected) return false;
+        if (color != null ? !color.equals(that.color) : that.color != null) return false;
+        return direction != null ? direction.equals(that.direction) : that.direction == null;
 
     }
 
@@ -195,16 +204,23 @@ public abstract class DefaultTrack {
     public int hashCode() {
         int result;
         long temp;
-        result = (getMouseOn() ? 1 : 0);
-        temp = Double.doubleToLongBits(getStartX());
+        result = (mouseOn ? 1 : 0);
+        result = 31 * result + (color != null ? color.hashCode() : 0);
+        temp = Double.doubleToLongBits(startX);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
-        temp = Double.doubleToLongBits(getStartY());
+        temp = Double.doubleToLongBits(startY);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
-        temp = Double.doubleToLongBits(getLength());
+        temp = Double.doubleToLongBits(length);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
-        result = 31 * result + (isStartPiece() ? 1 : 0);
-        result = 31 * result + getDirection().hashCode();
-        result = 31 * result + getDrawID();
+        result = 31 * result + (startPiece ? 1 : 0);
+        result = 31 * result + (direction != null ? direction.hashCode() : 0);
+        result = 31 * result + to;
+        result = 31 * result + from;
+        result = 31 * result + juncFrom;
+        result = 31 * result + juncTo;
+        result = 31 * result + drawID;
+        result = 31 * result + id;
+        result = 31 * result + (selected ? 1 : 0);
         return result;
     }
 }

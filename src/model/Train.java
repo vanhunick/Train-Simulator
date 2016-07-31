@@ -26,10 +26,10 @@ public class Train {
 
     private double width = 4;// In metres
 
-    // Train attributes
-    private double acceleration;
-    private double deceleration;
     private double weight;
+
+    private int destinationID;
+    private int srcID;
 
 
 
@@ -120,12 +120,21 @@ public class Train {
         this.direction = direction;
     }
 
-    /**
-     * Gets the acceleration of the train
-     * */
-    public double getAcceleration(){return this.acceleration;}
+    public void setDestinationID(int id){
+        this.destinationID = id;
+    }
 
-    public double getDeceleration(){return this.deceleration;}
+    public void setSrcID(int id){
+        this.srcID = id;
+    }
+
+    public int getDestinationID(){
+        return destinationID;
+    }
+
+    public int getSrcID(){
+        return srcID;
+    }
 
     public void setTargetSpeed(double speed){
         this.targetSpeed = speed;
@@ -150,8 +159,7 @@ public class Train {
         if (direction != train.direction) return false;
         if (Double.compare(train.maxSpeed, maxSpeed) != 0) return false;
         if (Double.compare(train.targetSpeed, targetSpeed) != 0) return false;
-        return Double.compare(train.acceleration, acceleration) == 0;
-
+        return true;
     }
 
     @Override
@@ -167,7 +175,6 @@ public class Train {
         result = 31 * result + (int) (temp ^ (temp >>> 32));
         temp = Double.doubleToLongBits(targetSpeed);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
-        temp = Double.doubleToLongBits(acceleration);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
         return result;
     }

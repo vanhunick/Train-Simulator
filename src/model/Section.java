@@ -3,6 +3,8 @@ package model;
 import view.Drawable.section_types.DefaultTrack;
 import view.Drawable.section_types.JunctionTrack;
 
+import java.util.Arrays;
+
 /**
  * Created by vanhunick on 22/03/16.
  */
@@ -128,7 +130,7 @@ public class Section {
     /**
      *
      * */
-    public int getToID(){
+    public int getToIndex(){
         if(!containJunction)return toIndex;
 
         JunctionTrack jt;
@@ -148,7 +150,7 @@ public class Section {
         return toIndex; // Error
     }
 
-    public int getFromID(){
+    public int getFromIndex(){
         if(!containJunction)return fromIndex;
 
         JunctionTrack jt;
@@ -163,6 +165,7 @@ public class Section {
         if(jt.getThrown() && jt.inBound()){
             return juncSectionIndex;
         }
+
         return fromIndex;
     }
 
@@ -249,4 +252,45 @@ public class Section {
     }
 
 
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Section section = (Section) o;
+
+        if (Double.compare(section.length, length) != 0) return false;
+        if (from != section.from) return false;
+        if (to != section.to) return false;
+        if (toIndex != section.toIndex) return false;
+        if (fromIndex != section.fromIndex) return false;
+        if (juncSectionIndex != section.juncSectionIndex) return false;
+        if (id != section.id) return false;
+        if (trainOn != section.trainOn) return false;
+        if (canDetect != section.canDetect) return false;
+        if (containJunction != section.containJunction) return false;
+        // Probably incorrect - comparing Object[] arrays with Arrays.equals
+        return Arrays.equals(tracks, section.tracks);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result;
+        long temp;
+        temp = Double.doubleToLongBits(length);
+        result = (int) (temp ^ (temp >>> 32));
+        result = 31 * result + from;
+        result = 31 * result + to;
+        result = 31 * result + toIndex;
+        result = 31 * result + fromIndex;
+        result = 31 * result + juncSectionIndex;
+        result = 31 * result + Arrays.hashCode(tracks);
+        result = 31 * result + id;
+        result = 31 * result + (trainOn ? 1 : 0);
+        result = 31 * result + (canDetect ? 1 : 0);
+        result = 31 * result + (containJunction ? 1 : 0);
+        return result;
+    }
 }
