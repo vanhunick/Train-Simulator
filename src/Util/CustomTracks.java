@@ -137,7 +137,7 @@ public class CustomTracks {
 
         // Second outside straight section
         railway[1].getSection().setToIndex(2);
-        railway[1].getSection().setFromIndex(1);
+        railway[1].getSection().setFromIndex(0);
 
         // First outside turn with junction at the start
         railway[2].getSection().setToIndex(3);
@@ -175,7 +175,7 @@ public class CustomTracks {
         // Second inside straight
         railway[9].getSection().setToIndex(10);
         railway[9].getSection().setFromIndex(8);
-
+        System.out.println(railway[9].getSection().getID());
         // First inside corner
         railway[10].getSection().setToIndex(11);
         railway[10].getSection().setFromIndex(9);
@@ -536,13 +536,13 @@ public class CustomTracks {
                 Train train = new Train(1, 15, 100, true,true,71000);
                 DrawableTrain drawableTrain = new DrawableTrain(train, ds,ds.getTracks()[0]);
                  drawableTrain.setUpImage();
-              //  trains.add(drawableTrain);
+                trains.add(drawableTrain);
 
             }
             if(ds.getSection().getID() == 101){
                 Train train1 = new Train(2, 15, 100, true,true,71000);
                 DrawableTrain drawableTrain1 = new DrawableTrain(train1, ds,ds.getTracks()[0]);
-                trains.add(drawableTrain1);
+                //trains.add(drawableTrain1);
                 drawableTrain1.setUpImage();
             }
         }

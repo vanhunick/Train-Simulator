@@ -2,6 +2,9 @@ package view;
 
 import Util.CustomTracks;
 import Util.Point2D;
+import controllers.DeadLockController;
+import controllers.DefaultController;
+import controllers.RoutingController;
 import javafx.scene.canvas.GraphicsContext;
 
 import javafx.scene.input.MouseButton;
@@ -140,7 +143,9 @@ public class Simulation implements MouseEvents {
             startMap.put(train.getTrain(), train.getCurSection().getSection().getID());
         }
 
-        DeadLockController c = new DeadLockController(startMap,getSections(),modelTrack);
+        //DefaultController c = new DeadLockController(startMap,getSections(),modelTrack);
+        DefaultController c = new RoutingController(startMap,getSections(),modelTrack);
+
         modelTrack.setController(c);
         modelTrack.useController(true);
         c.startControlling();

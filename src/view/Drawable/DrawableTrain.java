@@ -29,7 +29,7 @@ public class DrawableTrain implements Movable{
     private double currentSpeed; // The current speed of the train metres per second
     private boolean braking;// Applied when changing direction or slowing down
     private double engineForce = 494000; // The engine force (could change to vary)
-    public int brakePower = 0; // The power when braking
+    public int brakePower = 50000; // The power when braking
 
     // Drawing fields
     private Image trainImage; // Image of the train

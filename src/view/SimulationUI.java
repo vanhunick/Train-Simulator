@@ -67,6 +67,7 @@ public class SimulationUI implements MouseEvents{
         this.physicsLabels = getPhysicsLabels();
         this.sim = new Simulation(this);
         sim.setDefault();
+        sim.controlMode();
         this.logShown = false;
         this.vBox = getVisualisationButtons();
         this.eventLog = new EventLog();
