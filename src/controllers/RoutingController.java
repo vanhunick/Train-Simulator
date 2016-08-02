@@ -35,6 +35,15 @@ public class RoutingController extends DefaultController implements Controller {
     public void startTrains(){
         for(ControllerTrain t : getTrains()){
             model.setSpeed(t.id, 27);
+
+            if(t.id == 1){
+                System.out.println("Setting train 1");
+                t.destinationID = 7;
+            }
+            if(t.id == 2){
+                System.out.println("Setting train 2");
+                t.destinationID = 2;
+            }
         }
     }
 
@@ -49,10 +58,8 @@ public class RoutingController extends DefaultController implements Controller {
 
         for(ControllerSection cs : getContrlSections()){
             if(cs.id == sectionID){
-
                 // Section Exit Event
                 if(cs.on){
-//                    System.out.println("Controller section Exit " + cs.id);
                     // There is no longer a train on the current section
                     cs.on = false;
 
@@ -66,7 +73,6 @@ public class RoutingController extends DefaultController implements Controller {
                 }
                 // Section Entry Event
                 else {
-//                    System.out.println("Controller section Entry " + cs.id);
                     // There is now something on the track
                     cs.on = true;
 
@@ -90,13 +96,11 @@ public class RoutingController extends DefaultController implements Controller {
         for(ControllerTrain t : getTrains()){
             // Find the route for the train
             //getSection(t.destinationSection)
-            List<Integer> route = routes.getRoute(getSection(t.curSection),getSection(7),forwardWithTrack(t));
+            List<Integer> route = routes.getRoute(getSection(t.curSection),getSection(t.destinationID),forwardWithTrack(t));
+            System.out.println("Train " + t.id + " Route " + route);
 
-            System.out.println(route);
-
-            if(route.size() == 1){
+            if(t.curSection ==  getSection(t.destinationID).getID()){
                 model.setSpeed(t.id, 0);// Stop the train for now
-                System.out.println("Stopping train");
             } else if(route.size() > 2){ // might have to toggle a junction
                 if(getSection(route.get(1)).hasJunctionTrack()){// the next track is junction track
                     Section juncSection = getSection(route.get(1));

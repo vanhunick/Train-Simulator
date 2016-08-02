@@ -22,7 +22,8 @@ public class ControllerTrain {
         int lockNext;
 
 
-        int destinationSection;
+        // The id of the section that is the destination
+        int destinationID;
 
         int srcSection;
 
@@ -36,12 +37,12 @@ public class ControllerTrain {
          *
          * @param orientation if the train is going along the natural orientation or against
          * */
-        public ControllerTrain(int id, boolean direction, boolean orientation, int startingSection, int destinationSection){
+        public ControllerTrain(int id, boolean direction, boolean orientation, int startingSection, int destinationID){
             this.id = id;
             this.direction = direction;
             this.orientation = orientation;
             this.curSection = startingSection;
-            this.destinationSection = destinationSection;
+            this.destinationID = destinationID;
             this.srcSection = curSection;
             this.lockNext = -1;
             this.lockCur = -1;

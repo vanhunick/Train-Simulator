@@ -120,21 +120,11 @@ public class Train {
         this.direction = direction;
     }
 
-    public void setDestinationID(int id){
-        this.destinationID = id;
-    }
-
-    public void setSrcID(int id){
-        this.srcID = id;
-    }
 
     public int getDestinationID(){
         return destinationID;
     }
 
-    public int getSrcID(){
-        return srcID;
-    }
 
     public void setTargetSpeed(double speed){
         this.targetSpeed = speed;

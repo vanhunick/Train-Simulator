@@ -175,7 +175,7 @@ public class CustomTracks {
         // Second inside straight
         railway[9].getSection().setToIndex(10);
         railway[9].getSection().setFromIndex(8);
-        System.out.println(railway[9].getSection().getID());
+
         // First inside corner
         railway[10].getSection().setToIndex(11);
         railway[10].getSection().setFromIndex(9);
@@ -542,7 +542,7 @@ public class CustomTracks {
             if(ds.getSection().getID() == 101){
                 Train train1 = new Train(2, 15, 100, true,true,71000);
                 DrawableTrain drawableTrain1 = new DrawableTrain(train1, ds,ds.getTracks()[0]);
-                //trains.add(drawableTrain1);
+                trains.add(drawableTrain1);
                 drawableTrain1.setUpImage();
             }
         }

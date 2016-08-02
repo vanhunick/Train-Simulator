@@ -29,7 +29,7 @@ public class DrawableTrain implements Movable{
     private double currentSpeed; // The current speed of the train metres per second
     private boolean braking;// Applied when changing direction or slowing down
     private double engineForce = 494000; // The engine force (could change to vary)
-    public int brakePower = 50000; // The power when braking
+    public int brakePower = 800000; // The power when braking
 
     // Drawing fields
     private Image trainImage; // Image of the train
@@ -111,7 +111,13 @@ public class DrawableTrain implements Movable{
     public double  getAcceleration(){
         // Set friction co-efficient based on whether it is moving or not
         double  friction = currentSpeed > 0 ? DefaultTrack.KINETIC_FRICTION : DefaultTrack.STATIC_FRICTION;
+
+        if(currentSpeed <= 0 && engineForce == 0)return 0;
+
         double netForce = engineForce - (friction * ((train.getWeight()+getRollingstockWeights()) * 9.88) ) - airResistance();
+
+        // Apply air resistance when moving
+        if(currentSpeed > 0)netForce = netForce - airResistance();
 
         // Apply brake power
         if(braking){ netForce = netForce - brakePower; }
@@ -160,6 +166,15 @@ public class DrawableTrain implements Movable{
     }
 
     /**
+     * Stops the train
+     * */
+    public void stopTrain(){
+
+    }
+
+
+
+    /**
      * Updates the location of the train
      * */
     public void update(){
@@ -174,7 +189,7 @@ public class DrawableTrain implements Movable{
         }
 
         // after changing direction the speed has reached zero so we can go in the other direction
-        if(braking && currentSpeed <=0 ){
+        if(braking && currentSpeed <=0 && train.getTargetSpeed() != 0){
             braking = false;
             engineForce = 494000;
             degDone = Math.abs(90 - degDone);
@@ -185,6 +200,12 @@ public class DrawableTrain implements Movable{
                 rollingStockConnected.setDirection(targetDirection);
             }
         }
+        if(train.getTargetSpeed() == 0){
+            braking = true;
+            engineForce = 0;
+        }
+
+        if(currentSpeed < 0 )currentSpeed = 0;// TODO find a better way to fix
 
         double acceleration = getAcceleration();// Metres per second per second
 
@@ -194,9 +215,13 @@ public class DrawableTrain implements Movable{
             engineForce = Math.max(engineForce -= 1000,0);
         }
 
+
+
         if(currentSpeed < train.getTargetSpeed() && !braking && acceleration < 0.25){
             engineForce += 1000;
         }
+
+
 
         distMoved = ((timeChanged/1000.0)* (currentSpeed * Simulation.METER_MULTIPLIER)); // Work out the distance to move in pixels
 
