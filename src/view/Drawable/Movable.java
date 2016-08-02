@@ -35,13 +35,6 @@ public interface Movable {
     public void update();
 
     /**
-     * Sets the direction the movable should move in
-     *
-     * @param direction sets the direction the movable should move in
-     * */
-//    public void setDirection(boolean direction);
-
-    /**
      * Returns the current track it is on
      *
      * @return track

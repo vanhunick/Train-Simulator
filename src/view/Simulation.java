@@ -309,11 +309,11 @@ public class Simulation implements MouseEvents {
 
             if(r1.isConnected()){
                 r1.setRollingStockConToUs(r2);
-                r2.setStockConnection(r1);
+                r2.setConnection(r1);
             }
             else {
                 r2.setRollingStockConToUs(r1);
-                r1.setStockConnection(r2);
+                r1.setConnection(r2);
             }
         }
         else if(movable1 instanceof DrawableRollingStock){
@@ -322,7 +322,7 @@ public class Simulation implements MouseEvents {
 
             // Check if they are colliding on the connection point
             if(r.getFrontConnection().intersects(t.getConnection().getLayoutBounds()) || r.getBackConnection().intersects(t.getConnection().getLayoutBounds()) ){
-                r.setTrainConnection(t);
+                r.setConnection(t);
                 t.setRollingStockConnected(r);
             }
             else {
@@ -337,7 +337,7 @@ public class Simulation implements MouseEvents {
 
             // Check if they are colliding on the connection point
             if(r.getFrontConnection().intersects(t.getConnection().getLayoutBounds()) || r.getBackConnection().intersects(t.getConnection().getLayoutBounds()) ){
-                r.setTrainConnection(t);
+                r.setConnection(t);
                 t.setRollingStockConnected(r);
             }
             else{
@@ -601,7 +601,10 @@ public class Simulation implements MouseEvents {
 //
 //        }
 
-        train.setUpImage();
+        if(UI != null){
+            train.setUpImage();
+        }
+
         trains.add(train);
         movable.add(train);
         train.getTrain().setTargetSpeed(27);
@@ -640,19 +643,6 @@ public class Simulation implements MouseEvents {
         }
 
     }
-
-    public ModelTrack getModelTrack(){
-        return this.modelTrack;
-    }
-
-    @Override
-    public void keyPressed(String code) {}
-
-    @Override
-    public void mousePressed(double x, double y, MouseEvent e) {}
-
-    @Override
-    public void mouseReleased(double x, double y, MouseEvent e) {}
 
     @Override
     public void mouseMoved(double x, double y, MouseEvent e) {
@@ -711,4 +701,17 @@ public class Simulation implements MouseEvents {
     public boolean getStarted(){
         return this.started;
     }
+
+    public ModelTrack getModelTrack(){
+        return this.modelTrack;
+    }
+
+    @Override
+    public void keyPressed(String code) {}
+
+    @Override
+    public void mousePressed(double x, double y, MouseEvent e) {}
+
+    @Override
+    public void mouseReleased(double x, double y, MouseEvent e) {}
 }
