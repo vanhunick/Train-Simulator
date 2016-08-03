@@ -74,7 +74,7 @@ public class SectionEventTests {
         DrawableTrain dt = new DrawableTrain(t,railway.sections[1],railway.tracks[1]);
 
         RollingStock rollingStock = new RollingStock(15,2,0.9);
-        DrawableRollingStock drawableRollingStock = new DrawableRollingStock(rollingStock,null,true);
+        DrawableRollingStock drawableRollingStock = new DrawableRollingStock(rollingStock,null,true, true);
 
         drawableRollingStock.setStartNotConnected(railway.tracks[0]);
 
@@ -117,7 +117,7 @@ public class SectionEventTests {
         DrawableTrain dt = new DrawableTrain(t,railway.sections[1],railway.tracks[1]);
 
         RollingStock rollingStock = new RollingStock(15,2,0.9);
-        DrawableRollingStock drawableRollingStock = new DrawableRollingStock(rollingStock,null,true);
+        DrawableRollingStock drawableRollingStock = new DrawableRollingStock(rollingStock,null,true, true);
 
         drawableRollingStock.setStartNotConnected(railway.tracks[0]);
 

@@ -125,4 +125,10 @@ public interface Movable {
      * Returns the speed of the movable
      * */
     public double getCurrentSpeed();
+
+
+    /**
+     * Returns the last distance moved in pixels of the train
+     * */
+    public double getDistanceMoved();
 }

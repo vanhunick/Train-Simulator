@@ -90,7 +90,7 @@ public class DrawableTrain implements Movable{
         this.trainImage= new Image("file:src/res/train.gif", train.getWidth() * Simulation.METER_MULTIPLIER, train.getLength() * Simulation.METER_MULTIPLIER, false, false);
         this.trainImageView = new ImageView(trainImage);
         this.params = new SnapshotParameters();
-        params.setFill(Color.TRANSPARENT);
+//        params.setFill(Color.TRANSPARENT);
     }
 
     /**
@@ -178,7 +178,11 @@ public class DrawableTrain implements Movable{
      * Updates the location of the train
      * */
     public void update(){
-        if(crashed)return;
+        if(crashed){
+            distMoved = 0;
+            currentSpeed = 0;
+            return;
+        }
 
         setConnectionLocation(); // Updates the connection location based on the new position
 
@@ -216,11 +220,9 @@ public class DrawableTrain implements Movable{
         }
 
 
-
         if(currentSpeed < train.getTargetSpeed() && !braking && acceleration < 0.25){
             engineForce += 1000;
         }
-
 
 
         distMoved = ((timeChanged/1000.0)* (currentSpeed * Simulation.METER_MULTIPLIER)); // Work out the distance to move in pixels
@@ -306,6 +308,11 @@ public class DrawableTrain implements Movable{
         return this.currentSpeed;
     }
 
+    @Override
+    public double getDistanceMoved() {
+        return this.distMoved;
+    }
+
     /**
      * Returns the length of the train in pixels
      * */
@@ -320,12 +327,6 @@ public class DrawableTrain implements Movable{
         return train.getLength();
     }
 
-    /**
-     * Returns the last distance moved in pixels of the train
-     * */
-    public double getPixelsMoved(){
-        return distMoved;
-    }
 
     /**
      * Used to connect rolling stock to train before starting simulation

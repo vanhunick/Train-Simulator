@@ -560,7 +560,7 @@ public class CustomTracks {
                 DrawableTrain drawableTrain = new DrawableTrain(train, ds,ds.getTracks()[0]);
                 drawableTrain.setUpImage();
                 RollingStock rollingStock = new RollingStock(80,5,0.9);
-                DrawableRollingStock drawableRollingStock = new DrawableRollingStock(rollingStock,drawableTrain,drawableTrain.getTrain().getDirection());
+                DrawableRollingStock drawableRollingStock = new DrawableRollingStock(rollingStock,drawableTrain,drawableTrain.getTrain().getDirection(),train.getOrientation());
                 drawableRollingStock.setStart(drawableTrain.getCurrentLocation(),sim);
 
 //                drawableTrain.setRollingStockConnected(drawableRollingStock);
@@ -583,7 +583,7 @@ public class CustomTracks {
             if (ds.getSection().getID() == 99) {
 
                 RollingStock rollingStock = new RollingStock(15,828282,50000);
-                DrawableRollingStock drawableRollingStock = new DrawableRollingStock(rollingStock,null,true);
+                DrawableRollingStock drawableRollingStock = new DrawableRollingStock(rollingStock,null,true, true);
                 drawableRollingStock.setUpImage();
 
                 drawableRollingStock.setStartNotConnected(ds.getSection().getTracks()[0]);
@@ -592,7 +592,7 @@ public class CustomTracks {
             }
             if (ds.getSection().getID() == 101) {
                 RollingStock rollingStock = new RollingStock(15,28282,50000);
-                DrawableRollingStock drawableRollingStock = new DrawableRollingStock(rollingStock,null,true);
+                DrawableRollingStock drawableRollingStock = new DrawableRollingStock(rollingStock,null,true, true);
                 drawableRollingStock.setUpImage();
 
                 drawableRollingStock.setStartNotConnected(ds.getSection().getTracks()[0]);

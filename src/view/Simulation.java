@@ -206,7 +206,7 @@ public class Simulation implements MouseEvents {
 
             drawableRollingStocks.forEach(r -> {
                 checkCollision();
-                onSectionCheck(r,r.getCurrentSpeed());
+                onSectionCheck(r,r.getDistanceMoved());
                 r.update();
             });
         }
@@ -299,6 +299,7 @@ public class Simulation implements MouseEvents {
         if(movable1.getCurrentSpeed() + movable2.getCurrentSpeed() > Simulation.MAX_CONNECTION_SPEED){
             movable1.setCrashed(true);
             movable2.setCrashed(true);
+
             sendEventToUI("Collision ", 2);
         }
 
@@ -597,51 +598,49 @@ public class Simulation implements MouseEvents {
 
     // New methods
     public void addTraintoSimulation(DrawableTrain train, int numberOfRollingStock){
-//        if(numberOfRollingStock > 0){
-//
-//        }
 
-        if(UI != null){
-            train.setUpImage();
+        // Add a rolling stock if the user enters a amount
+        if(numberOfRollingStock > 0){
+
+            // Always create one
+            DrawableRollingStock drawableRollingStock = new DrawableRollingStock(new RollingStock(15,1,50000), train, train.getDirection(), train.getOrientation());
+
+            // Places it on the location of the train in from of it and reverses until in place
+            drawableRollingStock.setStart(train.getCurrentLocation(),this);
+
+            movable.add(drawableRollingStock);
+            drawableRollingStocks.add(drawableRollingStock);
+            drawableRollingStock.setUpImage();
+
+            // Connect it to the train
+            train.setRollingStockConnected(drawableRollingStock);
+
+            // Used to connect the next rolling stock to this one
+            DrawableRollingStock currentRollingStock = drawableRollingStock;
+
+            // If the user enters a number greater than one make more
+            for(int i = 1; i < numberOfRollingStock; i++){
+                DrawableRollingStock nRS = new DrawableRollingStock(new RollingStock(15,1,10000), currentRollingStock, train.getDirection(),train.getOrientation());
+                nRS.setStart(currentRollingStock.getCurrentLocation(), this);
+                currentRollingStock = nRS;
+
+                // Add rolling stock to simulation
+                movable.add(nRS);
+                drawableRollingStocks.add(nRS);
+                nRS.setUpImage();
+            }
         }
 
+        // Add the train to simulation
+        train.setUpImage();
         trains.add(train);
         movable.add(train);
-        train.getTrain().setTargetSpeed(27);
+        train.getTrain().setTargetSpeed(27);//TODO replace with what the user specifies
     }
 
     public void addRollingStocktoSimulation(DrawableRollingStock stock){
         drawableRollingStocks.add(stock);
         movable.add(stock);
-    }
-
-    public void addRollingStocksToTrain(DrawableTrain train, int numberOfRollingStock){
-        DefaultTrack trainTrack = train.getCurTrack();
-
-        // Grab the track behind the train
-
-        train.setPixelsMoved(5);// Move 5 pixels at a time
-
-
-        // TODO figure out if I want a rolling stock id
-
-        Point2D conPoint = train.getCurrentLocation();
-
-        for(int i = 0; i < numberOfRollingStock; i++){
-
-
-            RollingStock rollingStock = new RollingStock(15,i,1000);
-            DrawableRollingStock drawableRollingStock = new DrawableRollingStock(rollingStock, null, true);
-
-            drawableRollingStock.setStart(conPoint, this);
-
-            drawableRollingStock.setUpImage();
-
-            addRollingStocktoSimulation(drawableRollingStock);
-
-            conPoint = drawableRollingStock.getCurrentLocation();
-        }
-
     }
 
     @Override

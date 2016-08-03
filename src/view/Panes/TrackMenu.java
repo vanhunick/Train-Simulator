@@ -151,7 +151,7 @@ public class TrackMenu {
                 }
 
                 if(!numbStock.getText().equals("")){
-                    this.numbRollingStock = Integer.parseInt(length.getText());
+                    this.numbRollingStock = Integer.parseInt(numbStock.getText());
                 }
 
 
@@ -187,6 +187,7 @@ public class TrackMenu {
     public String getCurTrainSelection(){return this.curTrainSelection;}
 
     public int getNumbRollingStock(){
+        System.out.println(this.numbRollingStock);
         return this.numbRollingStock;
     }
 

@@ -67,7 +67,7 @@ public class SimulationUI implements MouseEvents{
         this.physicsLabels = getPhysicsLabels();
         this.sim = new Simulation(this);
         sim.setDefault();
-        sim.controlMode();
+//        sim.controlMode();
         this.logShown = false;
         this.vBox = getVisualisationButtons();
         this.eventLog = new EventLog();
@@ -141,6 +141,7 @@ public class SimulationUI implements MouseEvents{
             if(selectedTrain.equals("British Rail Class 25")){
                 Train train1 = new Train(menu.getId(), 15, 500, true, menu.naturalOrientation(),71000);
                 DrawableTrain drawableTrain1 = new DrawableTrain(train1, sim.getSection(dt),dt);
+
                 sim.addTraintoSimulation(drawableTrain1,menu.getNumbRollingStock());
             }
             else if(selectedTrain.equals("British Rail Class 108 (DMU)")){
@@ -153,11 +154,7 @@ public class SimulationUI implements MouseEvents{
 
         // Checks if a rolling stock should be added to the track
         if(menu.addRollingStocl()){
-            RollingStock rollingStock = new RollingStock(15,100,0.8);
-            DrawableRollingStock drawableRollingStock = new DrawableRollingStock(rollingStock, null, true);
-            drawableRollingStock.setStartNotConnected(dt);
-            drawableRollingStock.setUpImage();
-            sim.addRollingStocktoSimulation(drawableRollingStock);
+            // Rolling stock should be added TODO WHEN THERE IS NOT TRAIN TO ADD ONLY STOCK
         }
     }
 

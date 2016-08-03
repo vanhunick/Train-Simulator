@@ -35,6 +35,7 @@ public class DrawableRollingStock implements Movable{
     private boolean connected; // Connected to a train or not
     private boolean isCrashed; // Currently crashed or not
     private boolean direction; // Forward or backwards direction
+    private boolean orientation;
     private double currentSpeed; // The current speed of the stock
     private Circle frontConnection; // Circle representing front where a connection with a stock or train can be make
     private Circle backConnection; // Circle representing back where a connection with a stock or train can be make
@@ -53,10 +54,11 @@ public class DrawableRollingStock implements Movable{
      *
      * @param direction the direction it is traveling
      * */
-    public DrawableRollingStock(RollingStock rollingStock, Movable connectedToMovable, boolean direction){
+    public DrawableRollingStock(RollingStock rollingStock, Movable connectedToMovable, boolean direction, boolean orientation){
         this.rollingStock = rollingStock;
         this.connectedToMovable = connectedToMovable;
         this.direction = direction;
+        this.orientation = orientation;
         this.curRotation = 90;
         this.frontConnection = new Circle();
         this.backConnection = new Circle();
@@ -105,14 +107,18 @@ public class DrawableRollingStock implements Movable{
      *
      * @param startPointOfConnection the start of the train
      *
-     * @param vis the visualisation used to simulate the movement back
+     * @param sim the visualisation used to simulate the movement back
      * */
-    public void setStart(Point2D startPointOfConnection, Simulation vis){
+    public void setStart(Point2D startPointOfConnection, Simulation sim){
         // Reverse direction so we can reverse it away from the train
         this.direction = !direction;
 
         // the middle of the train it is connected to
+        System.out.println(startPointOfConnection);
         this.currentLocation = new Point2D((int)startPointOfConnection.getX(),(int)startPointOfConnection.getY());
+        System.out.println(connectedToMovable.getCurRotation());
+        this.degDone = Math.abs(connectedToMovable.getDegDone() -90);
+        this.curRotation = connectedToMovable.getCurRotation();
 
         double len = getLengthPixels() + 40;
         double increment = len/40;
@@ -125,8 +131,7 @@ public class DrawableRollingStock implements Movable{
 
         // While we have not moved back enough to account for our length keep updating
         while(total < len){
-            System.out.println("Moving");
-            vis.onSectionCheck(this,increment);
+            sim.onSectionCheck(this,increment);
 
             if(curTrack instanceof JunctionTrack){
                 JunctionTrack jt = (JunctionTrack)curTrack;
@@ -140,7 +145,6 @@ public class DrawableRollingStock implements Movable{
         }
         // Set the direction back to normal
         setDirection(!this.direction);
-
     }
 
     private void setConnectionsLocatons(){
@@ -184,18 +188,22 @@ public class DrawableRollingStock implements Movable{
         setConnectionsLocatons();
 
         if(connected){
-            this.currentSpeed = connectedToMovable.getCurrentSpeed();
+            this.distMoved = connectedToMovable.getDistanceMoved();
         }
 
         if(curTrack instanceof JunctionTrack){
             JunctionTrack jt = (JunctionTrack)curTrack;
-            this.curRotation = jt.getNextPoint(this,currentSpeed);
-        }
-        else{
-            this.curRotation = curTrack.getNextPoint(currentLocation,curRotation, degDone,currentSpeed, this);
+            this.curRotation = jt.getNextPoint(this,distMoved);
+        } else{
+            this.curRotation = curTrack.getNextPoint(currentLocation,curRotation, degDone,distMoved, this);
         }
     }
 
+    private double distMoved;
+
+    public double getDistanceMoved(){
+        return this.distMoved;
+    }
 
     /**
      * Redraws the rolling stock on the screen
@@ -313,11 +321,7 @@ public class DrawableRollingStock implements Movable{
 
     @Override
     public boolean getOrientation() {
-        if(connected){
-            return connectedToMovable.getOrientation();
-        }
-
-        return true;//TODO fix later should be our own orientation
+        return orientation;
     }
 
     @Override
@@ -366,9 +370,6 @@ public class DrawableRollingStock implements Movable{
 
     @Override
     public boolean getDirection(){
-        if(connected){
-            return connectedToMovable.getDirection();
-        }
         return this.direction;
     }
 
