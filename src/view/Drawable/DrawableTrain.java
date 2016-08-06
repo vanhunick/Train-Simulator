@@ -7,6 +7,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
 import model.Train;
 import view.Drawable.section_types.*;
 import view.Simulation;
@@ -91,6 +92,7 @@ public class DrawableTrain implements Movable{
         this.trainImageView = new ImageView(trainImage);
         this.params = new SnapshotParameters();
 //        params.setFill(Color.TRANSPARENT);
+
     }
 
     /**
@@ -103,6 +105,52 @@ public class DrawableTrain implements Movable{
         trainImageView.setRotate(curRotation);
         trainImage = trainImageView.snapshot(params, null);
         g.drawImage(trainImage, currentLocation.getX() - trainImage.getWidth()/2, currentLocation.getY() - trainImage.getHeight()/2);
+
+        g.strokeRect(boundingBox.getX(),boundingBox.getY(),boundingBox.getWidth(),boundingBox.getHeight());
+
+
+        double frontX = this.getCurrentLocation().getX() + ((getLengthPixels()/2) * (Math.cos(Math.toRadians(this.getCurRotation()-90+180))));
+        double frontY = this.getCurrentLocation().getY() + ((getLengthPixels()/ 2) * (Math.sin(Math.toRadians(this.getCurRotation() - 90 + 180))));
+
+        double frontX1 = this.getCurrentLocation().getX() - ((getLengthPixels()/2) * (Math.cos(Math.toRadians(this.getCurRotation()-90+180))));
+        double frontY1 = this.getCurrentLocation().getY() - ((getLengthPixels()/ 2) * (Math.sin(Math.toRadians(this.getCurRotation() - 90 + 180))));
+
+        double angle = this.getCurRotation()-90+180;
+
+        double x = this.getCurrentLocation().getX() + ((getLengthPixels()/ 2) * Math.cos(Math.toRadians(angle))) + ((width / 2) * Math.sin(angle));
+        double y = this.getCurrentLocation().getY() + ((getLengthPixels() / 2) * Math.sin(Math.toRadians(angle))) - ((width / 2) * Math.sin(angle));
+
+        //x2 = x0+(x-x0)*cos(theta)+(y-y0)*sin(theta)
+        //y2 = y0-(x-x0)*sin(theta)+(y-y0)*cos(theta)
+
+        // http://www.willperone.net/Code/coderr.php
+
+        // (x,y,'z'), 1/2 * trainWidth * normalise ((frontX-backX,frontY-backY,0)  cross product (0,0,1)) = cornerOffset.
+        // frontPoint - cornerOffset = one corner, frontPoint + cornerOffset = other front corner, same for back
+
+        //        double normal = Math.sqrt()
+
+
+        g.setFill(Color.YELLOW);
+        g.fillOval(frontX1 - 2.5,frontY1 - 2.5,5,5);
+
+        g.setFill(Color.YELLOW);
+        g.fillOval(frontX - 2.5,frontY- 2.5,5,5);
+
+        g.setFill(Color.BLUE);
+        g.fillOval(x - 2.5,y- 2.5,5,5);
+        System.out.println(x + " " + y);
+
+        double gradient =  + ( frontY - currentLocation.getY() ) / ( frontX - currentLocation.getX());
+
+
+
+
+
+
+
+
+
     }
 
     /**
@@ -242,7 +290,27 @@ public class DrawableTrain implements Movable{
         double startX = currentLocation.getX() - getLengthPixels()/2;// Might be width
         double startY = currentLocation.getY() - getLengthPixels()/2;
 
-        return (x >= startX && x <= startX + getLengthPixels()   && y > startY && y < startY + getLengthPixels());
+//        return (x >= startX && x <= startX + getLengthPixels()   && y > startY && y < startY + getLengthPixels());
+
+        boundingBox.setWidth(getLengthPixels());
+        boundingBox.setHeight(width);
+        boundingBox.setX(currentLocation.getX()- getLengthPixels()/2);
+        boundingBox.setY(currentLocation.getY()- width/2);
+        boundingBox.setRotate(trainImageView.getRotate());
+
+        return boundingBox.contains(x,y);
+    }
+
+    private Rectangle boundingBox = new Rectangle();
+
+    public boolean containPointAccurate(double x, double y){
+        boundingBox.setWidth(width);
+        boundingBox.setHeight(getLengthPixels());
+        boundingBox.setX(trainImageView.getX());
+        boundingBox.setY(trainImageView.getY());
+        boundingBox.setRotate(trainImageView.getRotate());
+
+        return boundingBox.contains(x,y);
     }
 
     /**

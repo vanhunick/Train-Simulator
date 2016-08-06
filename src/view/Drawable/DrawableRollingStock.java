@@ -114,7 +114,6 @@ public class DrawableRollingStock implements Movable{
         this.direction = !direction;
 
         // the middle of the train it is connected to
-        System.out.println(startPointOfConnection);
         this.currentLocation = new Point2D((int)startPointOfConnection.getX(),(int)startPointOfConnection.getY());
         System.out.println(connectedToMovable.getCurRotation());
         this.degDone = Math.abs(connectedToMovable.getDegDone() -90);
@@ -183,7 +182,7 @@ public class DrawableRollingStock implements Movable{
      * Updates the location of the rolling stock
      * */
     public void update(){
-        if(!connected)return;
+        if(!connected || isCrashed)return;
 
         setConnectionsLocatons();
 
