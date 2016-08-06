@@ -91,8 +91,7 @@ public class DrawableTrain implements Movable{
         this.trainImage= new Image("file:src/res/train.gif", train.getWidth() * Simulation.METER_MULTIPLIER, train.getLength() * Simulation.METER_MULTIPLIER, false, false);
         this.trainImageView = new ImageView(trainImage);
         this.params = new SnapshotParameters();
-//        params.setFill(Color.TRANSPARENT);
-
+        params.setFill(Color.TRANSPARENT);
     }
 
     /**
@@ -105,52 +104,6 @@ public class DrawableTrain implements Movable{
         trainImageView.setRotate(curRotation);
         trainImage = trainImageView.snapshot(params, null);
         g.drawImage(trainImage, currentLocation.getX() - trainImage.getWidth()/2, currentLocation.getY() - trainImage.getHeight()/2);
-
-        g.strokeRect(boundingBox.getX(),boundingBox.getY(),boundingBox.getWidth(),boundingBox.getHeight());
-
-
-        double frontX = this.getCurrentLocation().getX() + ((getLengthPixels()/2) * (Math.cos(Math.toRadians(this.getCurRotation()-90+180))));
-        double frontY = this.getCurrentLocation().getY() + ((getLengthPixels()/ 2) * (Math.sin(Math.toRadians(this.getCurRotation() - 90 + 180))));
-
-        double frontX1 = this.getCurrentLocation().getX() - ((getLengthPixels()/2) * (Math.cos(Math.toRadians(this.getCurRotation()-90+180))));
-        double frontY1 = this.getCurrentLocation().getY() - ((getLengthPixels()/ 2) * (Math.sin(Math.toRadians(this.getCurRotation() - 90 + 180))));
-
-        double angle = this.getCurRotation()-90+180;
-
-        double x = this.getCurrentLocation().getX() + ((getLengthPixels()/ 2) * Math.cos(Math.toRadians(angle))) + ((width / 2) * Math.sin(angle));
-        double y = this.getCurrentLocation().getY() + ((getLengthPixels() / 2) * Math.sin(Math.toRadians(angle))) - ((width / 2) * Math.sin(angle));
-
-        //x2 = x0+(x-x0)*cos(theta)+(y-y0)*sin(theta)
-        //y2 = y0-(x-x0)*sin(theta)+(y-y0)*cos(theta)
-
-        // http://www.willperone.net/Code/coderr.php
-
-        // (x,y,'z'), 1/2 * trainWidth * normalise ((frontX-backX,frontY-backY,0)  cross product (0,0,1)) = cornerOffset.
-        // frontPoint - cornerOffset = one corner, frontPoint + cornerOffset = other front corner, same for back
-
-        //        double normal = Math.sqrt()
-
-
-        g.setFill(Color.YELLOW);
-        g.fillOval(frontX1 - 2.5,frontY1 - 2.5,5,5);
-
-        g.setFill(Color.YELLOW);
-        g.fillOval(frontX - 2.5,frontY- 2.5,5,5);
-
-        g.setFill(Color.BLUE);
-        g.fillOval(x - 2.5,y- 2.5,5,5);
-        System.out.println(x + " " + y);
-
-        double gradient =  + ( frontY - currentLocation.getY() ) / ( frontX - currentLocation.getX());
-
-
-
-
-
-
-
-
-
     }
 
     /**
@@ -212,14 +165,6 @@ public class DrawableTrain implements Movable{
         braking = true;// Start braking
         engineForce = 0;
     }
-
-    /**
-     * Stops the train
-     * */
-    public void stopTrain(){
-
-    }
-
 
 
     /**
@@ -290,27 +235,65 @@ public class DrawableTrain implements Movable{
         double startX = currentLocation.getX() - getLengthPixels()/2;// Might be width
         double startY = currentLocation.getY() - getLengthPixels()/2;
 
-//        return (x >= startX && x <= startX + getLengthPixels()   && y > startY && y < startY + getLengthPixels());
-
-        boundingBox.setWidth(getLengthPixels());
-        boundingBox.setHeight(width);
-        boundingBox.setX(currentLocation.getX()- getLengthPixels()/2);
-        boundingBox.setY(currentLocation.getY()- width/2);
-        boundingBox.setRotate(trainImageView.getRotate());
-
-        return boundingBox.contains(x,y);
+        if((x >= startX && x <= startX + getLengthPixels()   && y > startY && y < startY + getLengthPixels())){
+            return containPointAccurate(x,y);// Check the more expensive way
+        }
+        return false;
     }
 
-    private Rectangle boundingBox = new Rectangle();
-
     public boolean containPointAccurate(double x, double y){
-        boundingBox.setWidth(width);
-        boundingBox.setHeight(getLengthPixels());
-        boundingBox.setX(trainImageView.getX());
-        boundingBox.setY(trainImageView.getY());
-        boundingBox.setRotate(trainImageView.getRotate());
 
-        return boundingBox.contains(x,y);
+        double backX = this.getCurrentLocation().getX() + ((getLengthPixels()/2) * (Math.cos(Math.toRadians(this.getCurRotation()-90+180))));
+        double backY = this.getCurrentLocation().getY() + ((getLengthPixels()/ 2) * (Math.sin(Math.toRadians(this.getCurRotation() - 90 + 180))));
+
+        double frontX = this.getCurrentLocation().getX() - ((getLengthPixels()/2) * (Math.cos(Math.toRadians(this.getCurRotation()-90+180))));
+        double frontY = this.getCurrentLocation().getY() - ((getLengthPixels()/2) * (Math.sin(Math.toRadians(this.getCurRotation() - 90 + 180))));
+
+        // Cross product
+        double x1 = ((backY - frontY)*1) - (0*0);
+        double y1 = (0*0) - ((backX - frontX)*1);
+
+        // Find the magnitude
+        double mag = Math.sqrt((x1*x1) + (y1*y1));
+
+        // 21 is the width of the image
+        double xOffset = (0.5 * 21) * (x1/mag);
+        double yOffset = (0.5 * 21) * (y1/mag);
+
+        
+        double aX = frontX - xOffset;//A
+        double aY = frontY - yOffset;
+
+        double bX = frontX + xOffset;// B
+        double bY = frontY + yOffset;
+
+        double cX = backX + xOffset; // C
+        double cY = backY + yOffset;
+
+        double dX = backX - xOffset; // D
+        double dY = backY - yOffset;
+
+        // ABP
+        double t1 = 0.5 * Math.abs((aX*(bY - y)) + (bX*(y - aY)) + (x*(aY - bY)));
+
+        // BCP
+        double t2 = 0.5 * Math.abs((bX*(cY - y)) + (cX*(y - bY)) + (x*(bY - cY)));
+
+        // CDP
+        double t3 = 0.5 * Math.abs((cX*(dY - y)) + (dX*(y - cY)) + (x*(cY - dY)));
+
+        // DAP
+        double t4 = 0.5 * Math.abs((dX*(aY - y)) + (aX*(y - dY)) + (x*(dY - aY)));
+
+        double rectArea = 21 * getLengthPixels(); //TODO should be the width of the image instead of 21
+
+        // if area is bigger point outside the rectangle
+        if(t1 + t2 + t3 + t4 > rectArea){
+            return false;
+        }
+        else {
+            return true;
+        }
     }
 
     /**
