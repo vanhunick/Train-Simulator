@@ -178,7 +178,10 @@ public class Simulation implements MouseEvents {
             Load load = new Load();
             LoadedRailway railway = load.loadFromFile(loadedFile,loadedFile.getAbsolutePath());
             loadRailway(loadedFile,railway);
+        }else {
+            setDefault();
         }
+
 
     }
 
@@ -308,14 +311,16 @@ public class Simulation implements MouseEvents {
             DrawableRollingStock r1 = (DrawableRollingStock)movable1;
             DrawableRollingStock r2 = (DrawableRollingStock)movable2;
 
-            if(r1.isConnected()){
-                r1.setRollingStockConToUs(r2);
-                r2.setConnection(r1);
-            }
-            else {
-                r2.setRollingStockConToUs(r1);
-                r1.setConnection(r2);
-            }
+
+            // FIXME: 8/08/16
+//            if(r1.isConnected()){
+//                r1.setRollingStockConToUs(r2);
+//                r2.setConnection(r1);
+//            }
+//            else {
+//                r2.setRollingStockConToUs(r1);
+//                r1.setConnection(r2);
+//            }
         }
         else if(movable1 instanceof DrawableRollingStock){
             DrawableRollingStock r = (DrawableRollingStock)movable1;

@@ -349,6 +349,7 @@ public class DrawableRollingStock implements Movable{
 
     @Override
     public  void setCrashed(boolean crashed){
+        System.out.println("Crashed");
         this.isCrashed = crashed;
     }
 

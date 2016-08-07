@@ -679,11 +679,11 @@ public class TrackBuilder implements MouseEvents{
     public void mouseMoved(double x, double y, MouseEvent e){
         // Selects a track if the mouse is on it
         allTracks.forEach(t -> {
-            if(t.containsPoint(x,y)){
-                t.setMouseOn(true);
-            } else {
-                t.setMouseOn(false);
-            }
+//            if(t.containsPoint(x,y)){
+//                t.setMouseOn(true);
+//            } else {
+//                t.setMouseOn(false);
+//            }
         });
     }
 
