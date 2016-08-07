@@ -79,7 +79,7 @@ public class DrawableRollingStock implements Movable{
      * Sets up the image and image params for the rolling stock
      * */
     public void setUpImage(){
-        this.rollingStockImage = new Image("file:src/res/rolling_stock.png", 20, 80, false, false);
+        this.rollingStockImage = new Image("file:src/res/rolling_stock.gif", 20, 80, false, false);
         this.trainImageView = new ImageView(rollingStockImage);
         this.params = new SnapshotParameters();
         params.setFill(javafx.scene.paint.Color.TRANSPARENT);
@@ -119,7 +119,7 @@ public class DrawableRollingStock implements Movable{
         this.degDone = Math.abs(connectedToMovable.getDegDone() -90);
         this.curRotation = connectedToMovable.getCurRotation();
 
-        double len = getLengthPixels() + 40;
+        double len = getLengthPixels()/2 + 40;
         double increment = len/40;
 
         // set current track to the train we are connected to current track

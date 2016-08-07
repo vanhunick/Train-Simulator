@@ -9,7 +9,6 @@ import view.Drawable.Movable;
  * Created by Nicky on 25/03/2016.
  */
 public abstract class DefaultTrack {
-    private boolean mouseOn;
     private Color color = Color.WHITE;
 
     public static final double STATIC_FRICTION = 0.7;
@@ -98,9 +97,7 @@ public abstract class DefaultTrack {
     public void setColor(Color color){
         this.color = color;
     }
-    public void setMouseOn(boolean on){
-        this.mouseOn = on;
-    }
+
     public void setLength(double length){this.length = length;}
     public void setTo(int to){this.to = to;}
     public void setFrom(int from){this.from = from;}
@@ -146,11 +143,6 @@ public abstract class DefaultTrack {
     public double getInitialX(double trainWidth){System.out.println("Should be implemented in subclass");return 0;}
     public double getInitialY(double trainWidth){System.out.println("Should be implemented in subclass"); return 0;}
 
-    // Checks
-    public boolean isStartPiece() {
-        return startPiece;
-    }
-    public boolean getMouseOn(){return  this.mouseOn;}
 
     // Abstract Methods
     public abstract boolean canConnect(DefaultTrack track);
@@ -183,7 +175,7 @@ public abstract class DefaultTrack {
 
         DefaultTrack that = (DefaultTrack) o;
 
-        if (mouseOn != that.mouseOn) return false;
+
         if (Double.compare(that.startX, startX) != 0) return false;
         if (Double.compare(that.startY, startY) != 0) return false;
         if (Double.compare(that.length, length) != 0) return false;
@@ -202,9 +194,8 @@ public abstract class DefaultTrack {
 
     @Override
     public int hashCode() {
-        int result;
+        int result = 0;
         long temp;
-        result = (mouseOn ? 1 : 0);
         result = 31 * result + (color != null ? color.hashCode() : 0);
         temp = Double.doubleToLongBits(startX);
         result = 31 * result + (int) (temp ^ (temp >>> 32));

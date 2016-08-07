@@ -27,9 +27,7 @@ public class StraightVert extends DefaultTrack {
         super(startX,startY,length,drawID,id, direction );
     }
 
-    /**
-     * Workds out where to start drawing the piece based on the piece it came from
-     * */
+    @Override
     public void setStart(DefaultTrack from){
         double startX = 0;
         double startY = 0;
@@ -72,6 +70,7 @@ public class StraightVert extends DefaultTrack {
         setStartY(startY);
     }
 
+    @Override
     public boolean canConnect(DefaultTrack trackToConnect){
         int id = trackToConnect.getDrawID();
 
@@ -90,30 +89,18 @@ public class StraightVert extends DefaultTrack {
         return false;
     }
 
+    @Override
     public boolean containsPoint(double x, double y){
         return x >= super.getStartX() && x <= super.getStartX() + TRACK_WIDTH &&
                 y >= super.getStartY() && y <= super.getStartY() + super.getLength();
     }
 
-    public Point2D getConnectionPoint(){
-        if(super.getDirection().equals("UP")){
-            return new Point2D((int)(super.getStartX()+ TRACK_WIDTH/2),(int) (getStartY()));
-        }
-        else if(super.getDirection().equals("DOWN")){
-            return new Point2D((int)(super.getStartX() + TRACK_WIDTH/2),(int) (getStartY() + getLength()));
-        }
-        return null;
-    }
-
+    @Override
     public void toggleDirection(){
-        if(getDirection().equals("UP")){
-            setDirection("DOWN");
-        }
-        else {
-            setDirection("UP");
-        }
+        setDirection(getDirection().equals("UP") ? "DOWN" : "UP");
     }
 
+    @Override
     public Point2D getConnectionPointFrom(){
         if(super.getDirection().equals("UP")){
             return new Point2D((int)(super.getStartX() + TRACK_WIDTH/2),(int) (getStartY() + getLength()));
@@ -124,6 +111,7 @@ public class StraightVert extends DefaultTrack {
         return null;
     }
 
+    @Override
     public Point2D getConnectionPointTo(){
         if(super.getDirection().equals("UP")){
             return new Point2D((int)(super.getStartX()+ TRACK_WIDTH/2),(int) (getStartY()));
@@ -134,19 +122,20 @@ public class StraightVert extends DefaultTrack {
         return null;
     }
 
-
+    @Override
     public void setMid(double x, double y){
         setStartX(x + TRACK_WIDTH/2);
         setStartY(y - getLength()/2);
     }
 
-
+    @Override
     public boolean checkOnAfterUpdate(Point2D curPoint, double rotation,double rotDone, double dist, Movable movable){
         if(getNextY(curPoint.getY(),dist, movable.getOrientation(), movable.getDirection()) == -1 )return false;
         if(getNextX(curPoint.getX(),dist, movable.getOrientation()) == -1 )return false;
         return true;
     }
 
+    @Override
     public double getNextRotation(double curRotation, double speed, boolean nat, boolean forward){
         if(super.getDirection().equals("DOWN")){
             if(nat)return 180;
@@ -160,10 +149,12 @@ public class StraightVert extends DefaultTrack {
         return 0;
     }
 
+    @Override
     public double getNextPoint(Point2D cur, double curRot, double rotDone, double moveBy, Movable movable){
         cur.setLocation(getNextX(cur.getX(),moveBy,movable.getOrientation()),getNextY(cur.getY(),moveBy,movable.getOrientation(), movable.getDirection()));
         return getNextRotation(curRot,moveBy,movable.getOrientation(),movable.getDirection());
     }
+
 
     public double getNextY(double curY, double moveBy, boolean nat, boolean forward){
         if(super.getDirection().equals("DOWN")){
@@ -212,12 +203,6 @@ public class StraightVert extends DefaultTrack {
 
 
     public void draw(GraphicsContext g) {
-        g.setStroke(super.getColor());
-        if(super.getMouseOn() ){//|| super.getSection().getTrainOn()
-            g.setStroke(Color.GREEN);
-        }
-
-
         g.setStroke(DefaultTrack.TIE_COLOR);
         g.setLineWidth(3);
 

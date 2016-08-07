@@ -140,7 +140,7 @@ public class Quart1 extends DefaultTrack {
 
         g.setStroke(DefaultTrack.TIE_COLOR);
         for(int deg = 180; deg < 270; deg+=degreesToMove) {
-            double sX = (int) (midPointX -TRACK_WIDTH/2 + ((radius+5) * (Math.cos(Math.toRadians(deg)))));
+            double sX = (int) (midPointX -TRACK_WIDTH/2 + ((radius+5) * (Math.cos(Math.toRadians(deg))))); //TODO can get rid of + 5 for interesting affect
             double sY = (int) (midPointY  - TRACK_WIDTH/2 + ((radius+5) * (Math.sin(Math.toRadians(deg)))));
 
             double eX = (int) (midPointX - TRACK_WIDTH/2 + ((radius - TRACK_WIDTH-5) * (Math.cos(Math.toRadians(deg)))));

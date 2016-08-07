@@ -126,12 +126,6 @@ public class Quart4 extends DefaultTrack {
     }
 
     public void draw(GraphicsContext g) {
-        g.setStroke(super.getColor());
-        if(super.getMouseOn() ){
-            g.setStroke(Color.GREEN);
-        }
-
-        // Set The background Color
         g.setFill(DefaultTrack.BACKGROUND_COLOR);
 
         double degreesToMove = (90/ lengthOfQuarter()) * SimulationUI.RAIL_SEP*1.5;
