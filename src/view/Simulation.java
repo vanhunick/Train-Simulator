@@ -1,8 +1,6 @@
 package view;
 
 import Util.CustomTracks;
-import Util.Point2D;
-import controllers.DeadLockController;
 import controllers.DefaultController;
 import controllers.RoutingController;
 import javafx.scene.canvas.GraphicsContext;
@@ -34,7 +32,7 @@ public class Simulation implements MouseEvents {
     public static final String MODE_CONTROLLER = "controller";
     public static final String NO_MODE = "controller";
 
-    public static final int MAX_CONNECTION_SPEED = 10;
+    public static final int MAX_CONNECTION_SPEED = 2;
 
     private String currentMode = NO_MODE;
 
@@ -65,17 +63,17 @@ public class Simulation implements MouseEvents {
     private long lastUpdate;
 
 
-    private SimulationUI UI;
+    private SimulationUI userInterface;
 
 
     /**
      * Constructs a new visualisation object with a default track and trains
      * */
-    public Simulation(SimulationUI UI){
+    public Simulation(SimulationUI userInterface){
         this.trains = new ArrayList<>();
         this.drawableRollingStocks = new ArrayList<>();
         this.movable = new ArrayList<>();
-        this.UI = UI;
+        this.userInterface = userInterface;
     }
 
 
@@ -112,7 +110,6 @@ public class Simulation implements MouseEvents {
             modelTrack.setSpeed(t.getTrain().getId(), 28);
         }
         modelTrack.setSpeed(trains.get(0).getTrain().getId(), 27);
-
         started = true;
     }
 
@@ -154,7 +151,7 @@ public class Simulation implements MouseEvents {
     }
 
     public void start(){
-        String mode = UI.getSelectedMode();
+        String mode = userInterface.getSelectedMode();
         // If the section the train is on can detect set on to be true
         for(DrawableTrain t : trains){
             if(t.getCurSection().getSection().canDetect()){
@@ -181,8 +178,6 @@ public class Simulation implements MouseEvents {
         }else {
             setDefault();
         }
-
-
     }
 
     /**
@@ -243,16 +238,13 @@ public class Simulation implements MouseEvents {
             if(forwardWithTrack(t)){
                 if(jt.inBound()){
                     destinationTrack = tracks[jt.getTo()];
-                }
-                else{
+                } else{
                     destinationTrack = tracks[jt.getToOutbound()];// Not inbound and going forward
                 }
-            }
-            else{// Going backwards or forwards but against nat orientation
+            } else{// Going backwards or forwards but against nat orientation
                 if(jt.inBound()){
                     destinationTrack = tracks[jt.getInboundFrom()];
-                }
-                else {
+                } else {
                     destinationTrack = tracks[jt.getFrom()];
                 }
             }
@@ -271,18 +263,9 @@ public class Simulation implements MouseEvents {
      * */
     public void checkCollision(){
         for(int i = 0; i < movable.size(); i++){
-
-            // Find the front of the train
-            double frontX = movable.get(i).getCurrentLocation().getX() + ((movable.get(i).getLengthPixels()/2) * (Math.cos(Math.toRadians(movable.get(i).getCurRotation()-90))));
-            double frontY = movable.get(i).getCurrentLocation().getY() + ((movable.get(i).getLengthPixels()/2) * (Math.sin(Math.toRadians(movable.get(i).getCurRotation()-90))));
-
-            // Find the back of the train
-            double backX = movable.get(i).getCurrentLocation().getX() + ((movable.get(i).getLengthPixels()/2) * (Math.cos(Math.toRadians(movable.get(i).getCurRotation()-90+180))));
-            double backY = movable.get(i).getCurrentLocation().getY() + ((movable.get(i).getLengthPixels()/2) * (Math.sin(Math.toRadians(movable.get(i).getCurRotation()-90+180))));
-
             for(int j = 0; j < movable.size(); j++){
                 if(j !=i){
-                    if((movable.get(j).containsPoint(frontX,frontY) || movable.get(j).containsPoint(backX,backY))){
+                    if((movable.get(j).containsPoint(movable.get(i).getFront().getX(),movable.get(i).getFront().getY()) || movable.get(j).containsPoint(movable.get(i).getBack().getX(),movable.get(i).getBack().getY()))){
                         collided(movable.get(i), movable.get(j));
                     }
                 }
@@ -299,73 +282,40 @@ public class Simulation implements MouseEvents {
         if(!notConnected(movable1,movable2))return;
 
         // First check the speed of the collision if they are going to fast the rest does not matter
-        if(movable1.getCurrentSpeed() + movable2.getCurrentSpeed() > Simulation.MAX_CONNECTION_SPEED){
-            movable1.setCrashed(true);
-            movable2.setCrashed(true);
-
-            sendEventToUI("Collision ", 2);
+        if(movable1.getCurrentSpeed() + movable2.getCurrentSpeed() > Simulation.MAX_CONNECTION_SPEED || movable1 instanceof DrawableTrain && movable2 instanceof DrawableTrain){
+            crash(movable1,movable2);
+            return;
         }
 
-        if(movable1 instanceof DrawableRollingStock && movable2 instanceof DrawableRollingStock){
-            // Need to check is the rolling stock is connecting to the back of the train
-            DrawableRollingStock r1 = (DrawableRollingStock)movable1;
-            DrawableRollingStock r2 = (DrawableRollingStock)movable2;
-
-
-            // FIXME: 8/08/16
-//            if(r1.isConnected()){
-//                r1.setRollingStockConToUs(r2);
-//                r2.setConnection(r1);
-//            }
-//            else {
-//                r2.setRollingStockConToUs(r1);
-//                r1.setConnection(r2);
-//            }
+        if(movable1 instanceof DrawableRollingStock && movable2 instanceof DrawableRollingStock){// TODO put something in here that checks if the rolling stocks are contained in the same unit
+            return;
         }
-        else if(movable1 instanceof DrawableRollingStock){
-            DrawableRollingStock r = (DrawableRollingStock)movable1;
-            DrawableTrain t = (DrawableTrain)movable2;
 
-            // Check if they are colliding on the connection point
-            if(r.getFrontConnection().intersects(t.getConnection().getLayoutBounds()) || r.getBackConnection().intersects(t.getConnection().getLayoutBounds()) ){
-                r.setConnection(t);
-                t.setRollingStockConnected(r);
-            }
-            else {
-                r.setCrashed(true);
-                t.setCrashed(true);
-                sendEventToUI("Collision ", 2);
-            }
-        }
-        else if(movable2 instanceof DrawableRollingStock){
-            DrawableRollingStock r = (DrawableRollingStock)movable2;
-            DrawableTrain t = (DrawableTrain)movable1;
+        DrawableTrain t = movable1 instanceof DrawableTrain ? (DrawableTrain) movable1 : (DrawableTrain)movable2;
+        DrawableRollingStock r = movable1 instanceof DrawableRollingStock ? (DrawableRollingStock) movable1 : (DrawableRollingStock) movable2;
 
-            // Check if they are colliding on the connection point
-            if(r.getFrontConnection().intersects(t.getConnection().getLayoutBounds()) || r.getBackConnection().intersects(t.getConnection().getLayoutBounds()) ){
-                r.setConnection(t);
-                t.setRollingStockConnected(r);
-            }
-            else{
-                r.setCrashed(true);
-                t.setCrashed(true);
-                sendEventToUI("Collision ", 2);
-            }
+        if(r.getFrontConnection().intersects(t.getConnection().getLayoutBounds()) || r.getBackConnection().intersects(t.getConnection().getLayoutBounds()) ){
+            r.setConnection(t);
+            t.setRollingStockConnected(r);
+        } else {
+            crash(movable1,movable2);
         }
     }
 
+    private void crash(Movable m1, Movable m2 ){
+        m1.setCrashed(true);
+        m2.setCrashed(true);
+        sendEventToUI("Collision ", 2);
+    }
+
     /**
-     * Returns if the two movable items are connected
+     * Returns if the two movable items are not connected
      * */
     public boolean notConnected(Movable m1, Movable m2){
         if(m1 instanceof DrawableTrain && m2 instanceof DrawableTrain)return true;
-        if(m2.getRollingStockConnected() != null){
-            if(m2.getRollingStockConnected().equals(m1))return false;
-        }
-        if(m1.getRollingStockConnected() != null){
-            if(m1.getRollingStockConnected().equals(m2))return false;
-        }
-        return true;// they are connected
+        if(m2.getRollingStockConnected() != null && m2.getRollingStockConnected().equals(m1))return false;
+        if(m1.getRollingStockConnected() != null && m1.getRollingStockConnected().equals(m2))return false;
+        return true;// they are not connected
     }
 
     /**
@@ -387,8 +337,8 @@ public class Simulation implements MouseEvents {
 
             // If the current section can detect we must send an event since it has changed state
             if(curSection.getSection().canDetect()){
-                if(UI != null){
-                    UI.sendToeventLog(updateTrainOnSection(t.getTrain(), curSection.getSection(),curSection.getSection()),1);
+                if(userInterface != null){
+                    userInterface.sendToeventLog(updateTrainOnSection(t.getTrain(), curSection.getSection(),curSection.getSection()),1);
                 }
                 modelTrack.sectionChanged(curSection.getSection().getID());
             }
@@ -564,7 +514,7 @@ public class Simulation implements MouseEvents {
         for(Movable m : movable){
             if(m.containsPoint(x,y)){
                 if(m instanceof DrawableTrain){
-                    UI.setSelectedTrain((DrawableTrain)m);
+                    userInterface.setSelectedTrain((DrawableTrain)m);
                 }
                 selectedMovable = m;
                 return true;
@@ -670,12 +620,12 @@ public class Simulation implements MouseEvents {
                 toggleJunctionOnPoint(x,y);
                 if(getOnTrack(x,y) != null){
                     DefaultTrack dt = getOnTrack(x,y);
-                    UI.showTrackMenu(dt);
+                    userInterface.showTrackMenu(dt);
                 }
             }
             else{
                 if(onMovable(x,y)){
-                    UI.sendToeventLog("Train Selected",1);
+                    userInterface.sendToeventLog("Train Selected",1);
                 }
             }
         }
@@ -697,8 +647,8 @@ public class Simulation implements MouseEvents {
      * test are run
      */
     public void sendEventToUI(String event, int status){
-        if(UI != null){
-            UI.sendToeventLog(event, status);
+        if(userInterface != null){
+            userInterface.sendToeventLog(event, status);
         }
     }
 

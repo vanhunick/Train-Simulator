@@ -147,18 +147,11 @@ public class DrawableRollingStock implements Movable{
     }
 
     private void setConnectionsLocatons(){
-        double frontX = currentLocation.getX() + ((80/2) * (Math.cos(Math.toRadians(curRotation-90))));
-        double frontY = currentLocation.getY() + ((80/2) * (Math.sin(Math.toRadians(curRotation-90))));
-
-        double backX = currentLocation.getX() + ((getLengthPixels()/2) * (Math.cos(Math.toRadians(getCurRotation()-90+180))));
-        double backY = currentLocation.getY() + ((getLengthPixels()/2) * (Math.sin(Math.toRadians(getCurRotation()-90+180))));
-
-        frontConnection.setCenterX(frontX);
-        frontConnection.setCenterY(frontY);
+        frontConnection.setCenterX(getFront().getX());
+        frontConnection.setCenterY(getFront().getY());
         frontConnection.setRadius(20);
-
-        backConnection.setCenterX(backX);
-        backConnection.setCenterY(backY);
+        backConnection.setCenterX(getBack().getX());
+        backConnection.setCenterY(getBack().getY());
         backConnection.setRadius(20);
     }
 
@@ -262,6 +255,23 @@ public class DrawableRollingStock implements Movable{
         this.direction = movable.getDirection();
         this.currentSpeed = movable.getCurrentSpeed();
         this.connected = true;
+    }
+
+    private Point2D front = new Point2D(0,0);
+    private Point2D back = new Point2D(0,0);
+
+    @Override
+    public Point2D getFront(){
+        front.x = currentLocation.getX() + (getLengthPixels()/2) * (Math.cos(Math.toRadians(curRotation-90)));
+        front.y = currentLocation.getY() + ((getLengthPixels()/2) * (Math.sin(Math.toRadians(curRotation-90))));
+        return front;
+    }
+
+    @Override
+    public Point2D getBack(){
+        back.x = currentLocation.getX() + ((getLengthPixels()/2) * (Math.cos(Math.toRadians(curRotation-90+180))));
+        back.y = currentLocation.getY() + ((getLengthPixels()/2) * (Math.sin(Math.toRadians(curRotation-90+180))));
+        return back;
     }
 
 

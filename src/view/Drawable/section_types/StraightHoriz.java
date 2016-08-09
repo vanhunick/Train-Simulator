@@ -250,8 +250,8 @@ public class StraightHoriz extends DefaultTrack {
         g.setStroke(DefaultTrack.TIE_COLOR);
         g.setLineWidth(3);
 
-        double y = super.getStartY() -5;
-        double ey = super.getStartY() + TRACK_WIDTH +5;
+        double y = super.getStartY() -DefaultTrack.RAIL_OFFSET;
+        double ey = super.getStartY() + TRACK_WIDTH +DefaultTrack.RAIL_OFFSET;
 
         for(double x = super.getStartX(); x < super.getStartX() + super.getLength(); x+= SimulationUI.RAIL_SEP){
             g.strokeLine(x,y,x,ey);

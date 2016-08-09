@@ -32,7 +32,6 @@ public class SimulationUI implements MouseEvents{
 
     // Width of buttons
     public static final int WIDTH = 150;
-
     public static final int RAIL_SEP = 12;
 
     // Gui pane to send events to for user
@@ -366,11 +365,6 @@ public class SimulationUI implements MouseEvents{
             logShown = !logShown;
         }
     }
-
-    public void toggleHbOX(){
-
-    }
-
 
     /**
      * Returns if the log is showing or not

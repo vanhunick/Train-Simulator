@@ -46,48 +46,51 @@ public class CustomTracks {
 
     public DefaultTrack[] getFullTracks(){
         int curID = 0;
-        int innerOffset = 100;
+
+        int length = 260;
+        int innerOffset = length/2;
+        int lQ = length*2;
         return  new DefaultTrack[]{
                 // s1
-                new StraightHoriz(550,600,200,0,curID++,"RIGHT"), // 0
+                new StraightHoriz(550,650,length,0,curID++,"RIGHT"), // 0
                 // s2
-                new StraightHoriz(200,0,curID++), // 1
+                new StraightHoriz(length,0,curID++), // 1
                 // s3
-                new JunctionTrack(50,6,curID++,false,true, "UP"), // 2
-                new Quart3(400,3,curID++), // 3
+                new JunctionTrack(65,6,curID++,false,true, "UP"), // 2
+                new Quart3(lQ,3,curID++), // 3
                 // s4
-                new Quart2(400,2,curID++),// 4
+                new Quart2(lQ,2,curID++),// 4
                 // s5
-                new StraightHoriz(250,0,curID++), // 5
+                new StraightHoriz(length + length/4,0,curID++), // 5
                 // s6
-                new StraightHoriz(250,0,curID++), // 6
+                new StraightHoriz(length + length/4,0,curID++), // 6
                 // s7
-                new Quart1(400,1,curID++),// 7
+                new Quart1(lQ,1,curID++),// 7
                 // s8
-                new Quart4(400,4,curID++),// 8
-                new JunctionTrack(50,6,curID++,false,false,"UP"), // 9
+                new Quart4(lQ,4,curID++),// 8
+                new JunctionTrack(length/4,6,curID++,false,false,"UP"), // 9
                 // s9
-                new StraightHoriz(200,0,curID++), // 10
+                new StraightHoriz(length,0,curID++), // 10
                 // s10
-                new StraightHoriz(200,0,curID++), // 11
+                new StraightHoriz(length,0,curID++), // 11
                 // s11
-                new JunctionTrack(50,6,curID++,false,true,"UP"), // 12
-                new Quart3(400 - innerOffset,3,curID++), // 13
+                new JunctionTrack(length/4,6,curID++,false,true,"UP"), // 12
+                new Quart3(lQ - innerOffset,3,curID++), // 13
                 // s12
-                new Quart2(400 - innerOffset,2,curID++),// 14
+                new Quart2(lQ - innerOffset,2,curID++),// 14
                 // s13
-                new StraightHoriz(250,0,curID++), // 15
+                new StraightHoriz(length + length/4,0,curID++), // 15
                 // s14
-                new StraightHoriz(250,0,curID++), // 16
+                new StraightHoriz(length + length/4,0,curID++), // 16
                 // s15
-                new Quart1(400 - innerOffset,1,curID++),// 17
+                new Quart1(lQ - innerOffset,1,curID++),// 17
                 // s16
-                new Quart4(400 - innerOffset,4,curID++),// 18
-                new JunctionTrack(50,6,curID++,false,false,"UP"), // 19
+                new Quart4(lQ - innerOffset,4,curID++),// 18
+                new JunctionTrack(length/4,6,curID++,false,false,"UP"), // 19
                 // s17
-                new StraightHoriz(200,0,curID++), // 20
+                new StraightHoriz(length,0,curID++), // 20
                 // s18
-                new StraightHoriz(200,0,curID++), // 21
+                new StraightHoriz(length,0,curID++), // 21
         };
     }
 

@@ -65,7 +65,6 @@ public class StraightVert extends DefaultTrack {
                 startY = from.getStartY() - super.getLength();
             }
         }
-
         setStartX(startX);
         setStartY(startY);
     }
@@ -137,16 +136,7 @@ public class StraightVert extends DefaultTrack {
 
     @Override
     public double getNextRotation(double curRotation, double speed, boolean nat, boolean forward){
-        if(super.getDirection().equals("DOWN")){
-            if(nat)return 180;
-            return 0;
-        }
-        else if(super.getDirection().equals("UP")){
-            if(nat)return 0;
-            return 180;
-        }
-        // Error
-        return 0;
+        return getDirection().equals("DOWN") ? nat ? 180 : 0 : nat ? 0 : 180;
     }
 
     @Override
@@ -159,38 +149,27 @@ public class StraightVert extends DefaultTrack {
     public double getNextY(double curY, double moveBy, boolean nat, boolean forward){
         if(super.getDirection().equals("DOWN")){
             if(nat && forward || !nat && !forward){
-                if(curY + moveBy > super.getStartY() + super.getLength()){
+                if(curY + moveBy > getStartY() + getLength()){
                     return -1;//No longer in this section
                 }
-                else{
-                    return curY + moveBy;
-                }
-            }
-            else{
+                return curY + moveBy;
+            } else{
                 if(curY - moveBy < super.getStartY()){
                     return -1;//No longer in this section
                 }
-                else{
-                    return curY - moveBy;
-                }
+                return curY - moveBy;
             }
-        }
-        else if(super.getDirection().equals("UP")){
+        } else if(super.getDirection().equals("UP")){
             if(nat && forward || !nat && !forward){
                 if(curY - moveBy < super.getStartY()){
                     return -1;//No longer in this section
                 }
-                else{
-                    return curY - moveBy;
-                }
-            }
-            else{
+                return curY - moveBy;
+            } else{
                 if(curY + moveBy > (super.getStartY() + super.getLength())){
                     return -1;//No longer in this section
                 }
-                else{
-                    return curY + moveBy;
-                }
+                return curY + moveBy;
             }
         }
         return -1;
@@ -206,30 +185,17 @@ public class StraightVert extends DefaultTrack {
         g.setStroke(DefaultTrack.TIE_COLOR);
         g.setLineWidth(3);
 
-        double x = super.getStartX() - 5 - TRACK_WIDTH;
-        double eX = super.getStartX() + 5;
+        double x = super.getStartX() - DefaultTrack.RAIL_OFFSET - TRACK_WIDTH;
+        double eX = super.getStartX() + DefaultTrack.RAIL_OFFSET;
 
-        for(double y = super.getStartY(); y < super.getStartY() + super.getLength(); y += SimulationUI.RAIL_SEP){
+        for(double y = getStartY(); y < getStartY() + getLength(); y += SimulationUI.RAIL_SEP){
             g.strokeLine(x,y,eX,y);
         }
 
         g.setStroke(DefaultTrack.RAIL_COLOR);
         g.setLineWidth(2);
-
-        double startX = super.getStartX();
-        double startY = super.getStartY();
-        double length = super.getLength();
-
-
-        if(super.getSelected()){
-            g.setStroke(DefaultTrack.SELECTED_COLOR);
-        }
-        else {
-            g.setStroke(DefaultTrack.RAIL_COLOR);
-        }
-        g.strokeLine(startX, startY, startX, startY + length);
-        g.strokeLine(startX - TRACK_WIDTH, startY, startX - TRACK_WIDTH, startY + length);
-
-        g.setStroke(Color.WHITE);
+        g.setStroke(getSelected() ? DefaultTrack.SELECTED_COLOR : DefaultTrack.RAIL_COLOR);
+        g.strokeLine(getStartX(), getStartY(), getStartX(), getStartY() + getLength());
+        g.strokeLine(getStartX() - TRACK_WIDTH, getStartY(), getStartX() - TRACK_WIDTH, getStartY() + getLength());
     }
 }

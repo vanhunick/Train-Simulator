@@ -425,15 +425,6 @@ public class JunctionTrack extends DefaultTrack {
         }
     }
 
-    public Point2D getConnectionThrown(){
-        if(getDirection().equals("RIGHT")){
-            return outRightTrack.getConnectionPointTo();
-        }
-        else {
-            return inDown.getConnectionPointTo();
-        }
-    }
-
     /**
      * Returns the track
      * */
@@ -443,12 +434,10 @@ public class JunctionTrack extends DefaultTrack {
                 return this.inDown;
             }
             return outRightTrack;
-        }
-        else{
+        } else{
             if(getDirection().equals("RIGHT")){
                 return outRightTrack;
-            }
-            else {
+            } else {
                 return inDown;
             }
         }
@@ -462,15 +451,13 @@ public class JunctionTrack extends DefaultTrack {
             if(getDirection().equals("RIGHT")){
                 if(drawDirection.equals("UP")){
                     return  inRight;
-                }
-                else {
+                } else {
                     return  outRightTrack;
                 }
             } else {
                 if(drawDirection.equals("UP")){
                     return outUpTrack;
-                }
-                else {
+                } else {
                     return inDown;
                 }
             }
@@ -478,16 +465,13 @@ public class JunctionTrack extends DefaultTrack {
             if(getDirection().equals("RIGHT")){
                 if(drawDirection.equals("UP")){
                     return outRightTrack;
-                }
-                else {
+                } else {
                     return inRight;
                 }
-            }
-            else {
+            } else {
                 if(drawDirection.equals("UP")){
                     return inDown;
-                }
-                else {
+                } else {
                     return outUpTrack;
                 }
             }
@@ -499,15 +483,13 @@ public class JunctionTrack extends DefaultTrack {
             if(getDirection().equals("RIGHT")){
                 if(drawDirection.equals("UP")){
                     return  inDown;
-                }
-                else {
+                } else {
                     return outUpTrack;
                 }
             } else {
                 if(drawDirection.equals("UP")){
                     return outRightTrack;
-                }
-                else {
+                } else {
                     return inRight;
                 }
             }
@@ -515,16 +497,13 @@ public class JunctionTrack extends DefaultTrack {
             if(getDirection().equals("RIGHT")){
                 if(drawDirection.equals("UP")){
                     return outUpTrack;
-                }
-                else {
+                } else {
                     return inDown;
                 }
-            }
-            else {
+            } else {
                 if(drawDirection.equals("UP")){
                     return inRight;
-                }
-                else {
+                } else {
                     return outRightTrack;
                 }
             }
@@ -554,7 +533,6 @@ public class JunctionTrack extends DefaultTrack {
 
     // Outbound setters
     public void setOutboundToThrown(int outboundToThrown) {this.outboundToThrown = outboundToThrown;}
-
 
     // Setts or gets if the juncton is thrown or not
     public void setThrown(boolean thrown){this.thrown = thrown;}

@@ -133,11 +133,11 @@ public class Quart4 extends DefaultTrack {
         g.setStroke(DefaultTrack.TIE_COLOR);
         for(int deg = 90; deg < 180; deg+=degreesToMove) {
 
-            double sX = (int) (midPointX - TRACK_WIDTH/2 + ((radius+5) * (Math.cos(Math.toRadians(deg)))));
-            double sY = (int) (midPointY + TRACK_WIDTH/2 + ((radius+5) * (Math.sin(Math.toRadians(deg)))));
+            double sX = (int) (midPointX - TRACK_WIDTH/2 + ((radius+DefaultTrack.RAIL_OFFSET) * (Math.cos(Math.toRadians(deg)))));
+            double sY = (int) (midPointY + TRACK_WIDTH/2 + ((radius+DefaultTrack.RAIL_OFFSET) * (Math.sin(Math.toRadians(deg)))));
 
-            double eX = (int) (midPointX - TRACK_WIDTH/2 + ((radius - TRACK_WIDTH-5) * (Math.cos(Math.toRadians(deg)))));
-            double eY = (int) (midPointY + TRACK_WIDTH/2 + ((radius - TRACK_WIDTH-5) * (Math.sin(Math.toRadians(deg)))));
+            double eX = (int) (midPointX - TRACK_WIDTH/2 + ((radius - TRACK_WIDTH-DefaultTrack.RAIL_OFFSET) * (Math.cos(Math.toRadians(deg)))));
+            double eY = (int) (midPointY + TRACK_WIDTH/2 + ((radius - TRACK_WIDTH-DefaultTrack.RAIL_OFFSET) * (Math.sin(Math.toRadians(deg)))));
 
             g.setLineWidth(3);
             g.strokeLine(sX,sY,eX,eY);

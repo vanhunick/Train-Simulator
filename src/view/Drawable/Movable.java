@@ -131,4 +131,10 @@ public interface Movable {
      * Returns the last distance moved in pixels of the train
      * */
     public double getDistanceMoved();
+
+    public Point2D getFront();
+
+    public Point2D getBack();
+
+
 }

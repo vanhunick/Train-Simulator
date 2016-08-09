@@ -10,7 +10,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import view.Panes.EventLog;
 import view.Panes.TopMenuBar;
 import view.Panes.TopToolBar;
 
@@ -66,11 +65,8 @@ public class Main extends Application {
         canvas.setOnMouseMoved(e -> controller.mouseMoved(e.getX(), e.getY(),e));
         canvas.setOnMouseDragged(e -> controller.mouseDragged(e.getX(), e.getY(),e));
 
-
-
         setupGUI(primaryStage, scene, root,canvas);
         controller.setDefMode(bl,canvas);
-
 
         lastTime = System.nanoTime();
         setupAnimationTimer(primaryStage,canvas);
@@ -100,12 +96,9 @@ public class Main extends Application {
 
         bl.setTop(barBox);//Need to add first as it is being used to calculate offset
         bl.setCenter(canvas);
-//
-//        canvas.setWidth(SCREEN_WIDTH - EventLog.WIDTH - Simulation.WIDTH);
-//        canvas.setHeight(SCREEN_HEIGHT - TopMenuBar.HEIGHT);
+
         canvas.setWidth(SCREEN_WIDTH);
         canvas.setHeight(SCREEN_HEIGHT);
-
 
         root.getChildren().add(bl);
         primaryStage.setResizable(false);
@@ -162,7 +155,6 @@ public class Main extends Application {
             }
         }.start();
     }
-
 
     public static void main(String[] args) {
         Application.launch(args);

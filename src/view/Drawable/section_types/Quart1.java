@@ -2,7 +2,6 @@ package view.Drawable.section_types;
 
 import Util.Point2D;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
 import view.Drawable.Movable;
 import view.SimulationUI;
@@ -14,9 +13,9 @@ import view.SimulationUI;
  */
 public class Quart1 extends DefaultTrack {
 
-    private double radius;
-    private double midPointX;
-    private double midPointY;
+    private double radius; // The radius of the quart
+    private double midPointX; // The middle of the track x value
+    private double midPointY;// The middle of the track y value
 
     /**
      * Constructor for a piece that connects to another piece
@@ -32,16 +31,12 @@ public class Quart1 extends DefaultTrack {
         super(startX,startY,length,drawID,id, direction );
     }
 
-    /**
-     * Works out where to start drawing the piece based on the piece it came from
-     * */
+    @Override
     public void setStart(DefaultTrack from){
-        double startX = 0;
-        double startY = 0;
+        double startX = 0; double startY = 0;
 
         if(from.getDirection().equals("UP")){
             super.setDirection("RIGHT");
-
             if(from.getDrawID() == 3){
                 startX = from.getStartX() + from.getLength() - TRACK_WIDTH;
                 startY = from.getStartY();
@@ -67,32 +62,25 @@ public class Quart1 extends DefaultTrack {
         }
         setStartX(startX);
         setStartY(startY);
-
-        // Train fields once start is known
         setMid();
     }
 
+    @Override
     public boolean canConnect(DefaultTrack trackToConnect){
         int id = trackToConnect.getDrawID();
+        if(getDirection().equals("RIGHT") && (id == 0 || id == 2 || id == 3 || id == 6)){
+            if(Math.abs(getConnectionPointTo().getX() - trackToConnect.getConnectionPointFrom().getX()) < DefaultTrack.CONNECT_SENS &&
+                        Math.abs(getConnectionPointTo().getY() - trackToConnect.getConnectionPointFrom().getY()) < DefaultTrack.CONNECT_SENS)return true;
 
-        if(getDirection().equals("RIGHT")){
-            if(id == 0 || id == 2 || id == 3 || id == 6){
-                if(Math.abs(getConnectionPointTo().getX() - trackToConnect.getConnectionPointFrom().getX()) < DefaultTrack.CONNECT_SENS &&
+        } else if(getDirection().equals("DOWN") && (id == 3 || id == 4 || id == 5)){
+            if(Math.abs(getConnectionPointTo().getX() - trackToConnect.getConnectionPointFrom().getX()) < DefaultTrack.CONNECT_SENS &&
                         Math.abs(getConnectionPointTo().getY() - trackToConnect.getConnectionPointFrom().getY()) < DefaultTrack.CONNECT_SENS)return true;
-            }
-        }
-        else if(getDirection().equals("DOWN")){
-            if(id == 3 || id == 4 || id == 5){
-                if(Math.abs(getConnectionPointTo().getX() - trackToConnect.getConnectionPointFrom().getX()) < DefaultTrack.CONNECT_SENS &&
-                        Math.abs(getConnectionPointTo().getY() - trackToConnect.getConnectionPointFrom().getY()) < DefaultTrack.CONNECT_SENS)return true;
-            }
         }
         return false;
     }
 
-    public void toggleDirection(){
-        setDirection(getDirection().equals("RIGHT") ? "DOWN" : "RIGHT");
-    }
+    @Override
+    public void toggleDirection(){setDirection(getDirection().equals("RIGHT") ? "DOWN" : "RIGHT");}
 
     public void setMid(){
         radius = getLength()/2;
@@ -100,105 +88,77 @@ public class Quart1 extends DefaultTrack {
         midPointY = getStartY()  + radius + TRACK_WIDTH/2;
     }
 
+    @Override
     public boolean containsPoint(double x, double y){
-        return x >= super.getStartX() && x <= super.getStartX() + super.getLength()/2 &&
-                y >= super.getStartY() && y <= super.getStartY() + super.getLength()/2;
+        return x >= super.getStartX() && x <= super.getStartX() + super.getLength()/2 && y >= super.getStartY() && y <= super.getStartY() + super.getLength()/2;
     }
 
-
+    @Override
     public Point2D getConnectionPointFrom(){
-        if(super.getDirection().equals("RIGHT")){
-            return new Point2D((int)(super.getStartX()+ TRACK_WIDTH/2),(int) (getStartY() + getLength()/2));
-        }
-        else if(super.getDirection().equals("DOWN")){
-            return new Point2D((int)(super.getStartX()+getLength()/2),(int) (getStartY() + TRACK_WIDTH/2));
-        }
-        return null;
+        return getDirection().equals("RIGHT") ? new Point2D((int)(super.getStartX()+ TRACK_WIDTH/2),(int) (getStartY() + getLength()/2)) :
+                new Point2D((int)(super.getStartX()+getLength()/2),(int) (getStartY() + TRACK_WIDTH/2));
     }
 
+    @Override
     public Point2D getConnectionPointTo(){
-        if(super.getDirection().equals("RIGHT")){
-            return new Point2D((int)(super.getStartX()+getLength()/2),(int) (getStartY() + TRACK_WIDTH/2));
-        }
-        else if(super.getDirection().equals("DOWN")){
-            return new Point2D((int)(super.getStartX()+ TRACK_WIDTH/2),(int) (getStartY() + getLength()/2));
-        }
-        return null;
+        return getDirection().equals("RIGHT") ? new Point2D((int)(super.getStartX()+getLength()/2),(int) (getStartY() + TRACK_WIDTH/2)) :
+                new Point2D((int)(super.getStartX()+ TRACK_WIDTH/2),(int) (getStartY() + getLength()/2));
     }
 
-
+    @Override
     public void setMid(double x, double y){
         setStartX(x - getLength()/4);
         setStartY(y - getLength()/4);
         setMid();
     }
 
+    @Override
     public void draw(GraphicsContext g) {
         g.setFill(DefaultTrack.BACKGROUND_COLOR);
-
-        double degreesToMove = (90/ lengthOfQuarter()) * SimulationUI.RAIL_SEP*1.5;
-
         g.setStroke(DefaultTrack.TIE_COLOR);
-        for(int deg = 180; deg < 270; deg+=degreesToMove) {
-            double sX = (int) (midPointX -TRACK_WIDTH/2 + ((radius+5) * (Math.cos(Math.toRadians(deg))))); //TODO can get rid of + 5 for interesting affect
-            double sY = (int) (midPointY  - TRACK_WIDTH/2 + ((radius+5) * (Math.sin(Math.toRadians(deg)))));
-
-            double eX = (int) (midPointX - TRACK_WIDTH/2 + ((radius - TRACK_WIDTH-5) * (Math.cos(Math.toRadians(deg)))));
-            double eY = (int) (midPointY - TRACK_WIDTH/2 + ((radius - TRACK_WIDTH-5) * (Math.sin(Math.toRadians(deg)))));
-
+        for(int deg = 180; deg < 270; deg+=(90/ lengthOfQuarter()) * SimulationUI.RAIL_SEP*1.5) {
             g.setStroke(DefaultTrack.TIE_COLOR);
             g.setLineWidth(3);
-            g.strokeLine(sX,sY,eX,eY);
+            g.strokeLine((int) (midPointX -TRACK_WIDTH/2 + ((radius+DefaultTrack.RAIL_OFFSET) * (Math.cos(Math.toRadians(deg))))),
+                    (int) (midPointY  - TRACK_WIDTH/2 + ((radius+DefaultTrack.RAIL_OFFSET) * (Math.sin(Math.toRadians(deg))))),
+                    (int) (midPointX - TRACK_WIDTH/2 + ((radius - TRACK_WIDTH-DefaultTrack.RAIL_OFFSET) * (Math.cos(Math.toRadians(deg))))),
+                    (int) (midPointY - TRACK_WIDTH/2 + ((radius - TRACK_WIDTH-DefaultTrack.RAIL_OFFSET) * (Math.sin(Math.toRadians(deg))))));
         }
-
         g.setLineWidth(2);
-        if(super.getSelected()){
-            g.setStroke(DefaultTrack.SELECTED_COLOR);
-        }
-        else {
-            g.setStroke(DefaultTrack.RAIL_COLOR);
-        }
-
-        g.strokeArc(super.getStartX(), super.getStartY(), super.getLength(), super.getLength(), 90, 90, ArcType.OPEN);
-        g.strokeArc(super.getStartX() + TRACK_WIDTH, super.getStartY()+ TRACK_WIDTH, super.getLength() - (TRACK_WIDTH* 2), super.getLength() - (TRACK_WIDTH* 2), 90, 90, ArcType.OPEN);
+        g.setStroke(getSelected() ? DefaultTrack.SELECTED_COLOR : DefaultTrack.RAIL_COLOR);
+        g.strokeArc(getStartX(), getStartY(), getLength(), getLength(), 90, 90, ArcType.OPEN);
+        g.strokeArc(getStartX() + TRACK_WIDTH, getStartY()+ TRACK_WIDTH, getLength() - (TRACK_WIDTH* 2), getLength() - (TRACK_WIDTH* 2), 90, 90, ArcType.OPEN);
     }
-
 
     @Override
     public double getNextPoint(Point2D curPoint,double curRot, double rotationDone, double speed, Movable movable){
-        // Need to minus the degrees to change
-        double degreesToMove = (90/ lengthOfQuarter()/2) * speed;
+        double degreesToMove = (90/ lengthOfQuarter()/2) * speed;// Need to minus the degrees to change
 
         double nextRotation = 0;
         if(super.getDirection().equals("RIGHT")){
             if(forwardWithTrack(movable)){
                 nextRotation = 180 + (degreesToMove + rotationDone) ;// 180
                 curRot+= degreesToMove*2;
-            }
-            else {
+            } else {
                 nextRotation = 270 - (degreesToMove + rotationDone) ;
                 curRot-= degreesToMove*2;
             }
-        }
-        else if(super.getDirection().equals("DOWN")){
+        } else if(super.getDirection().equals("DOWN")){
             if(forwardWithTrack(movable)){
                 nextRotation = 270 - (degreesToMove + rotationDone) ;
                 curRot-= degreesToMove*2;
-            }
-            else {
+            } else {
                 nextRotation = 180 + (degreesToMove + rotationDone) ;// 180
                 curRot+= degreesToMove*2;
             }
         }
-
         // Set the new point values
         curPoint.x = (int)(midPointX + (radius * (Math.cos(Math.toRadians(nextRotation)))));
         curPoint.y = (int)(midPointY + (radius * (Math.sin(Math.toRadians(nextRotation)))));
-
         movable.setDegDone(rotationDone + degreesToMove);
         return curRot;
     }
-
+    @Override
     public boolean checkOnAfterUpdate(Point2D curPoint,double curRot, double rotationDone, double speed, Movable movable){
         getNextPoint(curPoint, curRot, rotationDone, speed, movable);
         Point2D p = curPoint;
@@ -206,16 +166,13 @@ public class Quart1 extends DefaultTrack {
         if(getDirection().equals("DOWN")){
             if(forwardWithTrack(movable) && (p.getY() > getStartY() + getLength()/2 || p.getX()< getStartX())){
                 return false;//No longer in this section
-            }
-            else if(!forwardWithTrack(movable) && (p.getX() > getStartX() + getLength()/2 || p.getY() < getStartY() - getLength()/2)){
+            } else if(!forwardWithTrack(movable) && (p.getX() > getStartX() + getLength()/2 || p.getY() < getStartY() - getLength()/2)){
                 return false;
             }
-        }
-        else if(getDirection().equals("RIGHT")){
+        } else if(getDirection().equals("RIGHT")){
             if(forwardWithTrack(movable) && (p.getY() < getStartY() || p.getX() > getStartX() + getLength()/2 )){
                 return false;
-            }
-            else if(!forwardWithTrack(movable) && (p.getX() < getStartX() || p.getY() > getStartY() + getLength()/2)){
+            } else if(!forwardWithTrack(movable) && (p.getX() < getStartX() || p.getY() > getStartY() + getLength()/2)){
                 return false;
             }
         }
