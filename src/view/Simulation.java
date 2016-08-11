@@ -617,6 +617,7 @@ public class Simulation implements MouseEvents {
         train.setUpImage();
         trains.add(train);
         movable.add(train);
+        modelTrack.addTrain(train.getTrain());
         train.getTrain().setTargetSpeed(27);//TODO replace with what the user specifies
     }
 

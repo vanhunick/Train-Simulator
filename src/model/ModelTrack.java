@@ -113,5 +113,8 @@ public class ModelTrack implements Events{
         this.useController = use;
     }
 
+    public void addTrain(Train train){
+        trains.add(train);
+    }
 
 }
