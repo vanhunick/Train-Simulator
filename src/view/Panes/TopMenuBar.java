@@ -6,6 +6,7 @@ import javafx.scene.control.*;
 import save.Load;
 import save.LoadedRailway;
 import view.ProgramController;
+import view.Simulation;
 import view.SimulationUI;
 
 /**
@@ -16,6 +17,7 @@ public class TopMenuBar extends MenuBar {
 
 
     public static final int HEIGHT= 20;
+
 
     public TopMenuBar(ProgramController controller){
         super();
@@ -115,11 +117,11 @@ public class TopMenuBar extends MenuBar {
     }
 
     public void handleTestModePressed(){
-
+        controller.setModeOfSimulation("Test");
     }
 
     public void handleUserModePressed(){
-
+        controller.setModeOfSimulation("User");
     }
 
     public void handleControllerModePressed(){

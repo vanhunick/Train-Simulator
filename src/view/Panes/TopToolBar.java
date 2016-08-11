@@ -29,6 +29,7 @@ public class TopToolBar extends ToolBar {
     Button undoBut;
     Button saveBut;
     Button clear;
+    Button control;
 
 
 
@@ -41,7 +42,10 @@ public class TopToolBar extends ToolBar {
         // The size of the buttons
         int imageSize = 20;
 
-        //Icon made by Freepik from www.flaticon.com
+        //Icons made by Freepik from www.flaticon.com
+
+        // Controller icon
+        //Icon made by  Madebyoliver from www.flaticon.com
 
 
         // Simulation Icons
@@ -51,6 +55,7 @@ public class TopToolBar extends ToolBar {
         Image eventImage = new Image("file:src/res/event.png",imageSize,imageSize,false,false);
         Image saveImage = new Image("file:src/res/save.png",imageSize,imageSize,false,false);
         Image clearImage = new Image("file:src/res/clear.png",imageSize,imageSize,false,false);
+        Image controlImage = new Image("file:src/res/control.png",imageSize,imageSize,false,false);
 
         // Track Builder Icons
         Image newSection = new Image("file:src/res/train-rails.png",imageSize,imageSize,false,false);
@@ -67,6 +72,7 @@ public class TopToolBar extends ToolBar {
         sim = new Button("",new ImageView(simImage));
         saveBut = new Button("",new ImageView(saveImage));
         clear = new Button("",new ImageView(clearImage));
+        control = new Button("", new ImageView(controlImage));
 
         // Tool tips
         Tooltip playTip = new Tooltip("Starts the Simulation");
@@ -78,6 +84,7 @@ public class TopToolBar extends ToolBar {
         Tooltip simTip = new Tooltip("Starts the Simulation with the created track");
         Tooltip saveTip = new Tooltip("Save the current track to file");
         Tooltip clearTip = new Tooltip("Clears the entire track");
+        Tooltip controlTip = new Tooltip("Select a controller");
 
         // Add the tooltips to buttons
         play.setTooltip(playTip);
@@ -89,18 +96,29 @@ public class TopToolBar extends ToolBar {
         sim.setTooltip(simTip);
         saveBut.setTooltip(saveTip);
         clear.setTooltip(clearTip);
+        control.setTooltip(controlTip);
 
         // use horizontal box to separate out the buttons
         HBox buttonBox = new HBox(5);
         buttonBox.setPrefWidth(this.getPrefWidth());
         buttonBox.setAlignment(Pos.BASELINE_RIGHT);
-        buttonBox.getChildren().addAll(sim,clear,saveBut,newSec,undoBut,event,play,stop,pause);
+        buttonBox.getChildren().addAll(control,sim,clear,saveBut,newSec,undoBut,event,play,stop,pause);
         HBox.setHgrow( buttonBox, Priority.ALWAYS );
 
         // Checks which mode the program is in the see which buttons should be disabled
         if(!controller.gerMode().equals(ProgramController.VISUALISATION_MODE)){
             enableButtons(false);
         }
+
+        control.setOnAction(e -> {
+            if(controller.gerMode().equals(ProgramController.VISUALISATION_MODE)){
+                if(controller.getSimulationUI().getSim().getStarted()){
+                    new ErrorDialog("Cannot change controller while simulation is running. Please stop simulation", "Simulation Started");
+                    return;
+                }
+                controller.getSimulationUI().startControlerDialog();
+            }
+        });
 
         event.setOnAction(e -> {
             if(controller.gerMode().equals(ProgramController.VISUALISATION_MODE)){

@@ -73,6 +73,7 @@ public class Main extends Application {
     }
 
 
+
     public void setupGUI(Stage primaryStage, Scene scene, Group root, Canvas canvas){
         primaryStage.setTitle("Train Simulator");
 

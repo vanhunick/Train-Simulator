@@ -175,6 +175,13 @@ public class ProgramController implements MouseEvents {
         }
     }
 
+
+    public void setModeOfSimulation(String mode){
+        if(!mode.equals(ProgramController.VISUALISATION_MODE))return;
+
+        simulationUI.getSim().setMode(mode);
+    }
+
     public void setToolBar(TopToolBar toolBar){
         this.toolBar = toolBar;
     }

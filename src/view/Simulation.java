@@ -1,6 +1,7 @@
 package view;
 
 import Util.CustomTracks;
+import controllers.DeadLockController;
 import controllers.DefaultController;
 import controllers.RoutingController;
 import javafx.scene.canvas.GraphicsContext;
@@ -76,6 +77,33 @@ public class Simulation implements MouseEvents {
         this.userInterface = userInterface;
     }
 
+    public void setMode(String mode){
+        if(mode.equals("User")){
+            sendEventToUI("Controlled by user events",0);
+
+        } else if(mode.equals("Locking")){
+            sendEventToUI("Controlling with Locking controller",0);
+
+            controlMode(new DeadLockController(getStartMap(),getSections(),modelTrack));
+
+        } else if(mode.equals("Routing")){
+            sendEventToUI("Controlling with routing controller",0);
+            controlMode(new RoutingController(getStartMap(),getSections(),modelTrack));
+        }
+    }
+
+    /**
+     * Returns the available list of controllers for the user interface
+     * */
+    public List<String> getControllers(){
+        List<String> controllers = new ArrayList<>();
+        controllers.add("User");
+        controllers.add("Locking");
+        controllers.add("Routing");
+        return controllers;
+    }
+
+
 
     /**
      * Sets the default track and trains
@@ -134,20 +162,19 @@ public class Simulation implements MouseEvents {
         this.modelTrack = new ModelTrack(getTrains(), getSections());
     }
 
-    public void controlMode(){
+    public Map<Train, Integer> getStartMap(){
         Map<Train, Integer> startMap = new HashMap<>();
         for(DrawableTrain train : trains){
             startMap.put(train.getTrain(), train.getCurSection().getSection().getID());
         }
 
-        //DefaultController c = new DeadLockController(startMap,getSections(),modelTrack);
-        DefaultController c = new RoutingController(startMap,getSections(),modelTrack);
+        return  startMap;
+    }
 
+    public void controlMode(DefaultController c){
         modelTrack.setController(c);
         modelTrack.useController(true);
         c.startControlling();
-
-        started = true;
     }
 
     public void start(){
@@ -160,7 +187,7 @@ public class Simulation implements MouseEvents {
         }
 
         if(mode.equals(MODE_CONTROLLER)){
-            controlMode();
+//            controlMode();
         }
         else if(mode.equals(MODE_TEST)){
             testMode();

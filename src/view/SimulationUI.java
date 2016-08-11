@@ -15,10 +15,7 @@ import save.LoadedRailway;
 import view.Drawable.DrawableRollingStock;
 import view.Drawable.DrawableTrain;
 import view.Drawable.section_types.DefaultTrack;
-import view.Panes.ErrorDialog;
-import view.Panes.EventGen;
-import view.Panes.EventLog;
-import view.Panes.TrackMenu;
+import view.Panes.*;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -70,6 +67,14 @@ public class SimulationUI implements MouseEvents{
         this.logShown = false;
         this.vBox = getVisualisationButtons();
         this.eventLog = new EventLog();
+    }
+
+    public void startControlerDialog(){
+        System.out.println("Starting dialog");
+        ControllerSeclection s = new ControllerSeclection(sim);
+        String selection = s.getCurLockingSelection();
+
+        sim.setMode(selection);
     }
 
     public void setCanvas(Canvas canvas){
