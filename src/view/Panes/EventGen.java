@@ -78,7 +78,7 @@ public class EventGen {
         });
 
         TextField speed = new TextField();
-        speed.setPromptText("Speed");
+        speed.setPromptText("Speed %");
 
         // Create an option box for the trains
         ObservableList<String> optionsDirection = FXCollections.observableArrayList("Forward","Reverse");
@@ -104,7 +104,11 @@ public class EventGen {
 
         dialog.getDialogPane().setContent(grid);
 
-
+        speed.textProperty().addListener((observable, oldValue, newValue) -> {
+            if(!validatePercent(newValue)){
+                speed.setText(oldValue);
+            }
+        });
 
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == addButton) {
@@ -112,6 +116,9 @@ public class EventGen {
                 int id = Integer.parseInt(trainId);
                 if(!speed.getText().equals("")){
                     double speedValue = Double.parseDouble(speed.getText());
+
+
+
                     model.setSpeed(id,speedValue);
                 }
 
@@ -129,6 +136,15 @@ public class EventGen {
         });
 
         dialog.showAndWait();
+    }
+
+    public boolean validatePercent(String value){
+        if(value.matches("[0-9]*")){
+            if(value.equals(""))return true;
+            double number = Double.parseDouble(value);
+            return number >=0 && number <= 100;
+        }
+        return  false;// Not a number
     }
 
     public void valChangedDir(ObservableValue ov, String t, String t1){

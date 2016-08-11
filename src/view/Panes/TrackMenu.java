@@ -159,7 +159,6 @@ public class TrackMenu {
             return null;
         });
 
-
         dialog.showAndWait();
     }
 
