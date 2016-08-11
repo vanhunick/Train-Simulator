@@ -142,6 +142,9 @@ public class Save {
             stockObject.put("length",t.getStock().getLength());
             stockObject.put("direction",t.getDirection());
             stockObject.put("orientation",t.getOrientation());
+            stockObject.put("curTrack",t.getCurTrack().getId());
+            stockObject.put("weight",t.getStock().getWeight());
+
 
             if(t.getRollingStockConnected() !=null){
                 stockObject.put("conToUs",t.getRollingStockConnected().getStock().getRollID());

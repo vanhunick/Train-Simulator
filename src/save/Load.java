@@ -1,6 +1,7 @@
 package save;
 
 import com.sun.org.apache.xpath.internal.SourceTree;
+import model.RollingStock;
 import model.Section;
 import model.Train;
 import org.json.JSONArray;
@@ -107,7 +108,7 @@ public class Load {
 
             // Load the trains and rolling stocks
             List<DrawableTrain> trains = loadTrains(obj, sections);
-            List<DrawableRollingStock> stocks = loadRollingStocks(obj,sections);
+            List<DrawableRollingStock> stocks = loadRollingStocks(obj,sections, trains);
 
             LoadedRailway railway = new LoadedRailway(file,sections,tracks.toArray(new DefaultTrack[tracks.size()]),trains,stocks);
 
@@ -156,13 +157,68 @@ public class Load {
         return trains;
     }
 
-    public List<DrawableRollingStock> loadRollingStocks(JSONObject obj, DrawableSection[] sections){
-        List<DrawableRollingStock> trains = new ArrayList<>();
+    public List<DrawableRollingStock> loadRollingStocks(JSONObject obj, DrawableSection[] sections, List<DrawableTrain> trains){
+        List<DrawableRollingStock> stocks = new ArrayList<>();
 
         JSONArray rollingStockArray = obj.getJSONArray("stocks");
 
+        for(int i = 0; i < rollingStockArray.length(); i++){
+            JSONObject stockObject = rollingStockArray.getJSONObject(i);
 
-        return trains;
+            int id = stockObject.getInt("id");
+            int curTrack = stockObject.getInt("curTrack");
+            int length = stockObject.getInt("length");
+            boolean dir = stockObject.getBoolean("direction");
+            boolean ori = stockObject.getBoolean("orientation");
+            double weight = stockObject.getDouble("weight");
+
+            RollingStock stock = new RollingStock(length, id, weight);
+
+            DrawableRollingStock drawStock = new DrawableRollingStock(stock,null,dir,ori);
+
+            DefaultTrack track = null;
+            for(DrawableSection s : sections){
+                if(s.getTrackWithID(curTrack) != null){
+                    track = s.getTrackWithID(curTrack);
+                    break;
+                }
+            }
+            drawStock.setCurTrack(track);
+            stocks.add(drawStock);
+        }
+
+        // We have to go through again to connect them all up
+        for(int i = 0; i < rollingStockArray.length(); i++){
+            JSONObject stockObject = rollingStockArray.getJSONObject(i);
+
+            // Get the id of the stock we are connected to
+            int conToUs = stockObject.getInt("conToUs");
+            int conTo = stockObject.getInt("conTo");
+
+
+            for(DrawableRollingStock s : stocks){
+                if(conToUs != -1 && s.getStock().getRollID() == conToUs){
+                    stocks.get(i).setRollingStockConToUs(s);// I has to be the same in the list as the array
+
+                }
+                if(conTo != -1 &&s.getStock().getRollID() == conTo){
+                    stocks.get(i).setConnection(s);// I has to be the same in the list as the array
+                }
+            }
+
+            // Connect to train
+            for(DrawableTrain t : trains){
+                if(conToUs != -1 && t.getTrain().getId() == conTo){
+                    stocks.get(i).setConnection(t);// I has to be the same in the list as the array
+                }
+            }
+        }
+
+        return stocks;
+    }
+
+    public void connectTrainsAndStocks(){
+
     }
 
     public void setupTracks(DefaultTrack currentTrack, DefaultTrack[] tracks, Set<Integer> todo){
