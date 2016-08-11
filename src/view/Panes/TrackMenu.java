@@ -40,7 +40,7 @@ public class TrackMenu {
     private  int numbRollingStock;
 
 
-    public TrackMenu(DefaultTrack section, Simulation sim) {
+    public TrackMenu(DefaultTrack section, int validID) {
         Dialog dialog = new Dialog<>();
         dialog.initModality(Modality.WINDOW_MODAL);
         dialog.setTitle("Add Train or Stock to section ID: " + section.getId());
@@ -83,10 +83,10 @@ public class TrackMenu {
         // ID
         TextField id = new TextField();
         id.setPromptText("ID");
-        id.setText(""+sim.getNextTrainID());// get the next valid ID
+        id.setText(""+validID);// get the next valid ID
         grid.add(new Label("Train ID:"), 0, 0);
         grid.add(id, 1, 0);
-        id.setText(""+sim.getNextTrainID());
+        id.setText(""+validID);
 
         // Length of train
         TextField length = new TextField();
@@ -128,6 +128,8 @@ public class TrackMenu {
             }
         });
 
+        id.setDisable(true);
+
         dialog.getDialogPane().setContent(grid);
 
         // Request focus on the id field by default
@@ -139,12 +141,12 @@ public class TrackMenu {
 
 
                 if(!id.getText().equals("")){
-                    this.id = Integer.parseInt(id.getText());
+//                    this.id = Integer.parseInt(id.getText());
 
-                    if(!sim.validTrainID(this.id)){
+//                    if(!sim.validTrainID(this.id)){
                         new ErrorDialog( "A unique ID has been assigned for you.","Invalid train ID");
-                        this.id = sim.getNextTrainID();
-                    }
+                        this.id = validID;
+//                    }
                 }
                 if(!length.getText().equals("")){
                     this.length = Double.parseDouble(length.getText());

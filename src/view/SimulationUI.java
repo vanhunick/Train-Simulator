@@ -137,7 +137,7 @@ public class SimulationUI implements MouseEvents{
      * @param dt the track to modify or add a train or stock to
      * */
     public void showTrackMenu(DefaultTrack dt){
-        TrackMenu menu = new TrackMenu(dt, sim);
+        TrackMenu menu = new TrackMenu(dt, sim.getNextTrainID());
 
         // Checks if a train should be added to the track
         if(menu.addTrain()){
