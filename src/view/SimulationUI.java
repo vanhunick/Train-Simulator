@@ -12,7 +12,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import model.*;
 import save.LoadedRailway;
-import view.Drawable.DrawableRollingStock;
 import view.Drawable.DrawableTrain;
 import view.Drawable.section_types.DefaultTrack;
 import view.Panes.*;
@@ -137,7 +136,7 @@ public class SimulationUI implements MouseEvents{
      * @param dt the track to modify or add a train or stock to
      * */
     public void showTrackMenu(DefaultTrack dt){
-        TrackMenu menu = new TrackMenu(dt, sim.getNextTrainID());
+        AddTrainMenu menu = new AddTrainMenu(dt, sim.getNextTrainID());
 
         // Checks if a train should be added to the track
         if(menu.addTrain()){

@@ -16,7 +16,7 @@ import view.Simulation;
 /**
  * Created by vanhunick on 12/04/16.
  */
-public class TrackMenu {
+public class AddTrainMenu {
 
     // The track id
     private int id;
@@ -40,7 +40,7 @@ public class TrackMenu {
     private  int numbRollingStock;
 
 
-    public TrackMenu(DefaultTrack section, int validID) {
+    public AddTrainMenu(DefaultTrack section, int validID) {
         Dialog dialog = new Dialog<>();
         dialog.initModality(Modality.WINDOW_MODAL);
         dialog.setTitle("Add Train or Stock to section ID: " + section.getId());
@@ -138,15 +138,8 @@ public class TrackMenu {
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == addButton) {
                 //set the fields to return
-
-
                 if(!id.getText().equals("")){
-//                    this.id = Integer.parseInt(id.getText());
-
-//                    if(!sim.validTrainID(this.id)){
-                        new ErrorDialog( "A unique ID has been assigned for you.","Invalid train ID");
-                        this.id = validID;
-//                    }
+                    this.id = validID;
                 }
                 if(!length.getText().equals("")){
                     this.length = Double.parseDouble(length.getText());
@@ -155,12 +148,9 @@ public class TrackMenu {
                 if(!numbStock.getText().equals("")){
                     this.numbRollingStock = Integer.parseInt(numbStock.getText());
                 }
-
-
             }
             return null;
         });
-
         dialog.showAndWait();
     }
 
@@ -170,9 +160,7 @@ public class TrackMenu {
         this.curTrainSelection = t1;
     }
 
-    public boolean addTrain(){
-        return addTrain.isSelected();
-    }
+    public boolean addTrain(){return addTrain.isSelected();}
 
     public boolean addRollingStocl(){
         return addRollingstock.isSelected();
@@ -184,13 +172,9 @@ public class TrackMenu {
         return this.id;
     }
 
-
     public String getCurTrainSelection(){return this.curTrainSelection;}
 
-    public int getNumbRollingStock(){
-        System.out.println(this.numbRollingStock);
-        return this.numbRollingStock;
-    }
+    public int getNumbRollingStock(){return this.numbRollingStock;}
 
     public double getLength(){
         return this.length;
