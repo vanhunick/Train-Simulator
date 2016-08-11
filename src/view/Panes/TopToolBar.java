@@ -107,7 +107,8 @@ public class TopToolBar extends ToolBar {
 
         // Checks which mode the program is in the see which buttons should be disabled
         if(!controller.gerMode().equals(ProgramController.VISUALISATION_MODE)){
-            enableButtons(false);
+            enableButtons();
+            disableBuilderButtons();
         }
 
         control.setOnAction(e -> {
@@ -184,20 +185,47 @@ public class TopToolBar extends ToolBar {
     }
 
     /**
-     * Disables the buttons
+     * Enables all the buttons on the toolbar
      * */
-    public void enableButtons(boolean enable){
-        if(enable){
-            play.setDisable(false);
-            stop.setDisable(false);
-            pause.setDisable(false);
-            event.setDisable(false);
-        }
-        else{
-            play.setDisable(true);
-            stop.setDisable(true);
-            pause.setDisable(true);
-            event.setDisable(true);
-        }
+    public void enableButtons(){
+        play.setDisable(false);
+        pause.setDisable(false);
+        stop.setDisable(false);
+        event.setDisable(false);
+        newSec.setDisable(false);
+        sim.setDisable(false);
+        undoBut.setDisable(false);
+        saveBut.setDisable(false);
+        clear.setDisable(false);
+        control.setDisable(false);
+    }
+
+    /**
+     * Disables the builder buttons
+     * */
+    public void setBuilderButtons(){
+        play.setDisable(true);
+        stop.setDisable(true);
+        pause.setDisable(true);
+        event.setDisable(true);
+    }
+
+    /**
+     * Disables the simulation buttons
+     * */
+    public void disableSimButtons(){
+        play.setDisable(true);
+        stop.setDisable(true);
+        pause.setDisable(true);
+        event.setDisable(true);
+        control.setDisable(true);
+    }
+
+    public void disableBuilderButtons(){
+        undoBut.setDisable(true);
+        newSec.setDisable(true);
+        saveBut.setDisable(true);
+        clear.setDisable(true);
+        sim.setDisable(true);
     }
 }

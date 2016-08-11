@@ -88,11 +88,13 @@ public class ProgramController implements MouseEvents {
             canvas.setHeight(Main.SCREEN_HEIGHT);
 
             setVisualisationMode(null,null,null);
-            toolBar.enableButtons(true);
+            toolBar.enableButtons();
+            toolBar.disableBuilderButtons();
             this.mode = VISUALISATION_MODE;
         }
         else if(modeToSet.equals(BUILDER_MODE)){
-            toolBar.enableButtons(false);
+            toolBar.enableButtons();
+            toolBar.disableSimButtons();
             this.mode = BUILDER_MODE;
             setBuilderMode();
 
@@ -145,6 +147,9 @@ public class ProgramController implements MouseEvents {
             canvas.setWidth(canvas.getWidth() - EventLog.WIDTH);
         }
 
+        // Enable relevant buttons
+        toolBar.enableButtons();
+        toolBar.disableBuilderButtons();
     }
 
 
@@ -154,10 +159,8 @@ public class ProgramController implements MouseEvents {
     public void setBuilderMode(){
         simulationUI.removeUIElementsFromLayout(borderPane);
         trackBuilder.addUIElementsToLayout(borderPane);
-
-        if(simulationUI.logShowing()){
-//            canvas.setWidth(canvas.getWidth() + EventLog.WIDTH);
-        }
+        toolBar.enableButtons();
+        toolBar.setBuilderButtons();
     }
 
     public void setLoadedRailway(File file, LoadedRailway railway){
