@@ -661,7 +661,12 @@ public class TrackBuilder implements MouseEvents{
         if(e.getButton().equals(MouseButton.SECONDARY)){
             DefaultTrack s = getTrack(x,y);
             if(e.getClickCount() == 2 && s!= null){
-                showTrackMenu(s);
+                if(!sectionMode){
+                    new ErrorDialog("Sections must have been created before adding trains", "Cannot Place train");
+
+                } else {
+                    showTrackMenu(s);
+                }
             }
         }
 

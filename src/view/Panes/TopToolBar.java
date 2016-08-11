@@ -30,6 +30,7 @@ public class TopToolBar extends ToolBar {
     Button saveBut;
     Button clear;
     Button control;
+    Button simTrack;
 
 
 
@@ -61,6 +62,7 @@ public class TopToolBar extends ToolBar {
         Image newSection = new Image("file:src/res/train-rails.png",imageSize,imageSize,false,false);
         Image undo = new Image("file:src/res/undo.png",imageSize,imageSize,false,false);
         Image simImage = new Image("file:src/res/metro.png",imageSize,imageSize,false,false);
+        Image simTrackImage = new Image("file:src/res/checked.png",imageSize,imageSize,false,false);
 
         // Buttons with image inside
         play = new Button("", new ImageView(playImage));
@@ -73,6 +75,7 @@ public class TopToolBar extends ToolBar {
         saveBut = new Button("",new ImageView(saveImage));
         clear = new Button("",new ImageView(clearImage));
         control = new Button("", new ImageView(controlImage));
+        simTrack = new Button("", new ImageView(simTrackImage));
 
         // Tool tips
         Tooltip playTip = new Tooltip("Starts the Simulation");
@@ -85,6 +88,7 @@ public class TopToolBar extends ToolBar {
         Tooltip saveTip = new Tooltip("Save the current track to file");
         Tooltip clearTip = new Tooltip("Clears the entire track");
         Tooltip controlTip = new Tooltip("Select a controller");
+        Tooltip simTrackTip = new Tooltip("Click to simulate the created track");
 
         // Add the tooltips to buttons
         play.setTooltip(playTip);
@@ -97,19 +101,28 @@ public class TopToolBar extends ToolBar {
         saveBut.setTooltip(saveTip);
         clear.setTooltip(clearTip);
         control.setTooltip(controlTip);
+        simTrack.setTooltip(simTrackTip );
 
         // use horizontal box to separate out the buttons
         HBox buttonBox = new HBox(5);
         buttonBox.setPrefWidth(this.getPrefWidth());
         buttonBox.setAlignment(Pos.BASELINE_RIGHT);
-        buttonBox.getChildren().addAll(control,sim,clear,saveBut,newSec,undoBut,event,play,stop,pause);
-        HBox.setHgrow( buttonBox, Priority.ALWAYS );
+        buttonBox.getChildren().addAll(control,event,play,stop,pause,simTrack,sim,clear,saveBut,newSec,undoBut);
+        HBox.setHgrow(buttonBox,Priority.ALWAYS);
 
         // Checks which mode the program is in the see which buttons should be disabled
         if(!controller.gerMode().equals(ProgramController.VISUALISATION_MODE)){
             enableButtons();
             disableBuilderButtons();
         }
+
+        simTrack.setOnAction(e -> {
+            if(controller.gerMode().equals(ProgramController.BUILDER_MODE)){
+                if(controller.setSimulationFromBuilder()){
+                    controller.setMode(ProgramController.VISUALISATION_MODE);
+                }
+            }
+        });
 
         control.setOnAction(e -> {
             if(controller.gerMode().equals(ProgramController.VISUALISATION_MODE)){
@@ -198,6 +211,7 @@ public class TopToolBar extends ToolBar {
         saveBut.setDisable(false);
         clear.setDisable(false);
         control.setDisable(false);
+        simTrack.setDisable(false);
     }
 
     /**
@@ -227,5 +241,6 @@ public class TopToolBar extends ToolBar {
         saveBut.setDisable(true);
         clear.setDisable(true);
         sim.setDisable(true);
+        simTrack.setDisable(true);
     }
 }

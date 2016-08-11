@@ -9,6 +9,8 @@ import view.ProgramController;
 import view.Simulation;
 import view.SimulationUI;
 
+import java.util.Optional;
+
 /**
  * Created by Nicky on 2/04/2016.
  */
@@ -34,7 +36,7 @@ public class TopMenuBar extends MenuBar {
         //List for file
         MenuItem newTrackItem = new MenuItem("New Track");
         MenuItem loadTrackItem = new MenuItem("Load Track");
-        MenuItem simulateItem= new MenuItem("Simulate");
+        MenuItem simulateItem = new MenuItem("Simulate");
 
         // List for edit
         MenuItem physics = new MenuItem("Physics");
@@ -111,9 +113,20 @@ public class TopMenuBar extends MenuBar {
     public void logToggled(ActionEvent e){controller.toggleLogView();}
 
     public void handleSimulatePressed(ActionEvent e){
-        if(controller.setSimulationFromBuilder()){
-            controller.setMode(ProgramController.VISUALISATION_MODE);
+        if(controller.getTrackBuilder().getAllTracks().size() > 0){
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Save Tracks");
+            alert.setHeaderText("Are you sure you want to go back to the simulation? You will lose the currently created track");
+            alert.setContentText("Are you ok with this?");
+
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.get() == ButtonType.OK) {
+                controller.setMode(ProgramController.VISUALISATION_MODE);
+            } else {
+                return;
+            }
         }
+        controller.setMode(ProgramController.VISUALISATION_MODE);
     }
 
     public void handleTestModePressed(){
