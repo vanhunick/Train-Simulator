@@ -177,6 +177,8 @@ public class DrawableTrain implements Movable{
             return;
         }
 
+
+
         setConnectionLocation(); // Updates the connection location based on the new position
 
         // Check if direction has changed
@@ -222,6 +224,9 @@ public class DrawableTrain implements Movable{
 
         // Get the rotation from a normal track or junction track
         this.curRotation = curTrack instanceof JunctionTrack ? ((JunctionTrack)curTrack).getNextPoint(this,distMoved) : curTrack.getNextPoint(currentLocation,curRotation, degDone,distMoved, this);
+
+        // Should crash because going backwards on a junction that is thrown
+        if(curTrack instanceof JunctionTrack)crashed = ((JunctionTrack)curTrack).checkThrownCrash(this);
     }
 
     /**

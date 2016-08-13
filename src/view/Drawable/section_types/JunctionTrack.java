@@ -510,6 +510,11 @@ public class JunctionTrack extends DefaultTrack {
         }
     }
 
+
+    public boolean checkThrownCrash(Movable m){
+        return !forwardWithTrack(m) && thrown;
+    }
+
     /**
      * Gets the connection point for a track connected in the direction the
      * straight track is going
