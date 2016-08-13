@@ -85,20 +85,6 @@ public class Quart3 extends DefaultTrack {
 
         if(getDirection().equals("LEFT")){
             if(id == 0 || id == 4 || id == 1){
-                if(trackToConnect instanceof JunctionTrack){
-                    JunctionTrack j = (JunctionTrack)trackToConnect;
-
-                    // We can only connect
-                    if(j.inBound() && j.getDirection().equals("LEFT")){
-                        double conX = j.getInnerTrack().getConnectionPointFrom().getX();
-                        double conY = j.getInnerTrack().getConnectionPointFrom().getY();
-
-                        if(Math.abs(getConnectionPointTo().getX() - conX) < DefaultTrack.CONNECT_SENS &&
-                                Math.abs(getConnectionPointTo().getY() - conY) < DefaultTrack.CONNECT_SENS)return true;
-                    }
-                }
-
-
                 if(Math.abs(getConnectionPointTo().getX() - trackToConnect.getConnectionPointFrom().getX()) < DefaultTrack.CONNECT_SENS &&
                         Math.abs(getConnectionPointTo().getY() - trackToConnect.getConnectionPointFrom().getY()) < DefaultTrack.CONNECT_SENS)return true;
             }
@@ -218,16 +204,6 @@ public class Quart3 extends DefaultTrack {
     public boolean containsPoint(double x, double y){
         return x >= super.getStartX() + super.getLength()/2 && x <= super.getStartX() + super.getLength() &&
                 y >= super.getStartY() + super.getLength()/2 && y <= super.getStartY() + super.getLength();
-    }
-
-    public Point2D getConnectionPoint(){
-        if(super.getDirection().equals("LEFT")){
-            return new Point2D((int)(super.getStartX()+getLength()/2),(int) (getStartY() + getLength() - TRACK_WIDTH/2));
-        }
-        else if(super.getDirection().equals("UP")){
-            return new Point2D((int)(super.getStartX()+ getLength() - TRACK_WIDTH),(int) (getStartY() + getLength()/2));
-        }
-        return null;
     }
 
     public Point2D getConnectionPointFrom(){

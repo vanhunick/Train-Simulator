@@ -226,7 +226,10 @@ public class DrawableTrain implements Movable{
         this.curRotation = curTrack instanceof JunctionTrack ? ((JunctionTrack)curTrack).getNextPoint(this,distMoved) : curTrack.getNextPoint(currentLocation,curRotation, degDone,distMoved, this);
 
         // Should crash because going backwards on a junction that is thrown
-        if(curTrack instanceof JunctionTrack)crashed = ((JunctionTrack)curTrack).checkThrownCrash(this);
+        if(curTrack instanceof JunctionTrack){
+            JunctionTrack j = ((JunctionTrack)curTrack);
+            crashed = j.checkThrownCrash(this);
+        }
     }
 
     /**
