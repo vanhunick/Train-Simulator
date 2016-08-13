@@ -51,6 +51,9 @@ public class TrackBuilder implements MouseEvents{
     private double screenWidth;
     private double screenHeight;
 
+    // The user selected track length
+    private int trackLength;
+
     // If the user is selecting sections
     private boolean sectionMode = false;
 
@@ -143,7 +146,6 @@ public class TrackBuilder implements MouseEvents{
         return this.allTracks;
     }
 
-    //TODO might need this later if I want to add a left panel
     /**
      * Returns the pixel offset from any elements on the screen next to the canvas
      * */
@@ -312,28 +314,43 @@ public class TrackBuilder implements MouseEvents{
         trains.clear();
     }
 
+    /**
+     * Sets the links for the sections
+     * */
     public void finishConnectingUpSections(){
         for(DrawableSection s : sectionsForTrack){
             for(DefaultTrack t : s.getTracks()){
                 if(t instanceof JunctionTrack){
                     s.getSection().setHasJunctionTrack(true);
                     JunctionTrack jt = (JunctionTrack)t;
-                    if(((JunctionTrack) t).inBound()){
-                        s.getSection().setJuncSectionIndex(jt.getInboundFromThrown());
+                    if(jt.inBound()){
+                        s.getSection().setJuncSectionIndex(findSectionForTrack(jt.getInboundFromThrown(),sectionsForTrack));
                     }
                     else {
-                        s.getSection().setJuncSectionIndex(jt.getOutboundToThrown());
+                        s.getSection().setJuncSectionIndex(findSectionForTrack(jt.getOutboundToThrown(),sectionsForTrack));
                     }
                 }
             }
         }
     }
 
+    /**
+     * Returns the id of the section that the track is contained in
+     * */
+    public int findSectionForTrack(int trackIndex, List<DrawableSection> sections){
+        for(DrawableSection s : sections){
+            if(s.containsTrack(allTracks.get(trackIndex))){
+                return s.getSection().getID();
+            }
+        }
+        return -1; //Error
+    }
 
     /**
      * Toggle the checkbox for alternating exampleTracks
      * */
     public void alternateCheckBoxEvent(CheckBox alternate){
+
         alternate.setSelected(!this.alternate);
         this.alternate = !this.alternate;
     }
@@ -487,6 +504,11 @@ public class TrackBuilder implements MouseEvents{
         }
     }
 
+
+
+    public void lengthChanged(int length){
+        this.trackLength = length;
+    }
 
 
     public boolean placeJunctionTrack(JunctionTrack jTrack){
@@ -656,9 +678,7 @@ public class TrackBuilder implements MouseEvents{
 
     @Override
     public void mouseClicked(double x, double y, MouseEvent e){
-
-        // Check is a user double clicks on a track if so show track menu
-        if(e.getButton().equals(MouseButton.SECONDARY)){
+        if(e.getButton().equals(MouseButton.SECONDARY)){// Check is a user double clicks on a track if so show track menu
             DefaultTrack s = getTrack(x,y);
             if(e.getClickCount() == 2 && s!= null){
                 if(!sectionMode){
@@ -681,16 +701,7 @@ public class TrackBuilder implements MouseEvents{
     }
 
     @Override
-    public void mouseMoved(double x, double y, MouseEvent e){
-        // Selects a track if the mouse is on it
-        allTracks.forEach(t -> {
-//            if(t.containsPoint(x,y)){
-//                t.setMouseOn(true);
-//            } else {
-//                t.setMouseOn(false);
-//            }
-        });
-    }
+    public void mouseMoved(double x, double y, MouseEvent e){}
 
     @Override
     public void mouseDragged(double x, double y, MouseEvent e) {
@@ -734,16 +745,16 @@ public class TrackBuilder implements MouseEvents{
      * */
     public DefaultTrack getSelectedTrackFromPanel(int x, int y){
         DefaultTrack[] trackChoices = new DefaultTrack[]{
-                new StraightHoriz(x,y, (int)pieceSize,0,curId, "RIGHT"),
-                new Quart1(x,y, (int)pieceSize*2,1, "RIGHT", curId),
-                new Quart2(x,y, (int)pieceSize*2,2, "DOWN", curId),
-                new Quart3(x,y, (int)pieceSize*2,3, "LEFT", curId),
-                new Quart4(x,y, (int)pieceSize*2,4, "UP", curId),
-                new StraightVert(x,y, (int)pieceSize,5, "DOWN",curId),
-                new JunctionTrack(x,y, (int)pieceSize, 6,curId, "RIGHT",false,true, "UP"),
-                new JunctionTrack(x,y, (int)pieceSize, 6,curId, "RIGHT",false,false, "UP"),
-                new JunctionTrack(x,y, (int)pieceSize, 6,curId, "RIGHT",false,true, "DOWN"),
-                new JunctionTrack(x,y, (int)pieceSize, 6,curId, "RIGHT",false,false, "DOWN")
+                new StraightHoriz(x,y, trackLength,0,curId, "RIGHT"),
+                new Quart1(x,y, trackLength*2,1, "RIGHT", curId),
+                new Quart2(x,y, trackLength*2,2, "DOWN", curId),
+                new Quart3(x,y, trackLength*2,3, "LEFT", curId),
+                new Quart4(x,y, trackLength*2,4, "UP", curId),
+                new StraightVert(x,y, trackLength,5, "DOWN",curId),
+                new JunctionTrack(x,y, trackLength, 6,curId, "RIGHT",false,true, "UP"),
+                new JunctionTrack(x,y, trackLength, 6,curId, "RIGHT",false,false, "UP"),
+                new JunctionTrack(x,y, trackLength, 6,curId, "RIGHT",false,true, "DOWN"),
+                new JunctionTrack(x,y, trackLength, 6,curId, "RIGHT",false,false, "DOWN")
         };
 
         return trackChoices[selectedBox];
@@ -810,7 +821,6 @@ public class TrackBuilder implements MouseEvents{
             y+=boxSize + boxGap;
             sections.add(track);
         }
-
         return sections;
     }
 
@@ -838,8 +848,7 @@ public class TrackBuilder implements MouseEvents{
      * @return the next track in the list
      * */
     public DefaultTrack rotatePiece(){
-        if(selectedBox == 9)selectedBox = 0;
-        else selectedBox++;
+        selectedBox = selectedBox == 9 ? selectedBox = 0 : selectedBox++;
         allTracks.remove(allTracks.size()-1);
         DefaultTrack t = getSelectedTrackFromPanel((int)mouseLocation.getX(),(int)mouseLocation.getY());
         t.setMid(mouseLocation.getX(),mouseLocation.getY());
@@ -873,12 +882,6 @@ public class TrackBuilder implements MouseEvents{
     private VBox createBuilderButtons(){
         VBox vBox = new VBox(8);
         vBox.setPadding(new Insets(5, 5, 5, 5));
-
-        CheckBox alternate = new CheckBox("Alternate");
-        alternate.setSelected(true);
-        alternate.setOnAction(e -> alternateCheckBoxEvent(alternate));
-
-        vBox.getChildren().addAll(alternate);
         vBox.setPrefWidth(WIDTH);
         return vBox;
     }
