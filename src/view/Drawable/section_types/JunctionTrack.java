@@ -353,7 +353,7 @@ public class JunctionTrack extends DefaultTrack {
      * Sets the junction blue if thrown white if not
      * */
     private void setTrackColors(boolean thrown){
-        junctionTracks.forEach(t -> t.setColor(thrown ? Color.BLUE : Color.WHITE));
+        junctionTracks.forEach(t -> t.setColor(thrown ? Color.BLUE : DefaultTrack.RAIL_COLOR));
     }
 
     /**

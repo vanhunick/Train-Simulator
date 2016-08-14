@@ -134,7 +134,8 @@ public class Quart4 extends DefaultTrack {
             g.setStroke(DefaultTrack.SELECTED_COLOR);
         }
         else {
-            g.setStroke(DefaultTrack.RAIL_COLOR);
+            g.setStroke(getColor());
+//            g.setStroke(DefaultTrack.RAIL_COLOR);
         }
 
         g.setLineWidth(2);

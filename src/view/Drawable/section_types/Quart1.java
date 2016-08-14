@@ -125,7 +125,8 @@ public class Quart1 extends DefaultTrack {
                     (int) (midPointY - TRACK_WIDTH/2 + ((radius - TRACK_WIDTH-DefaultTrack.RAIL_OFFSET) * (Math.sin(Math.toRadians(deg))))));
         }
         g.setLineWidth(2);
-        g.setStroke(getSelected() ? DefaultTrack.SELECTED_COLOR : DefaultTrack.RAIL_COLOR);
+//        g.setStroke(getSelected() ? getColor() : DefaultTrack.RAIL_COLOR);
+        g.setStroke(getColor());
         g.strokeArc(getStartX(), getStartY(), getLength(), getLength(), 90, 90, ArcType.OPEN);
         g.strokeArc(getStartX() + TRACK_WIDTH, getStartY()+ TRACK_WIDTH, getLength() - (TRACK_WIDTH* 2), getLength() - (TRACK_WIDTH* 2), 90, 90, ArcType.OPEN);
     }

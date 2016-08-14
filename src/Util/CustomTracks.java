@@ -172,7 +172,8 @@ public class CustomTracks {
 
         // First inside straight
         railway[8].getSection().setToIndex(9);
-        railway[8].getSection().setFromIndex(7);
+        railway[8].getSection().setFromIndex(15);
+        railway[8].getSection().setJuncSectionIndex(7);
 
 
         // Second inside straight
@@ -216,7 +217,6 @@ public class CustomTracks {
         railway[17].getSection().setToIndex(15);
         railway[17].getSection().setFromIndex(13);
         railway[17].getSection().setJuncSectionIndex(9);//TODO 9 i think
-
 
 
         // Set up the drawing of the sections

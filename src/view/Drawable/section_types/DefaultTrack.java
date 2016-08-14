@@ -9,7 +9,7 @@ import view.Drawable.Movable;
  * Created by Nicky on 25/03/2016.
  */
 public abstract class DefaultTrack {
-    private Color color = Color.WHITE;
+    private Color color = DefaultTrack.RAIL_COLOR;
 
     public static final double STATIC_FRICTION = 0.7;
     public static final double  KINETIC_FRICTION = 0.5;

@@ -38,11 +38,9 @@ public class RoutingController extends DefaultController implements Controller {
             model.setSpeed(t.id, 27);
 
             if(t.id == 1){
-                System.out.println("Setting train 1");
                 t.destinationID = 7;
             }
             if(t.id == 2){
-                System.out.println("Setting train 2");
                 t.destinationID = 2;
             }
         }
@@ -61,8 +59,6 @@ public class RoutingController extends DefaultController implements Controller {
 
                 // Section Exit Event
                 if(cs.on){
-                    System.out.println("Event Exit " + sectionID);
-//                    System.out.println("Exit " + cs.id);
                     // There is no longer a train on the current section
                     cs.on = false;
 
@@ -76,16 +72,15 @@ public class RoutingController extends DefaultController implements Controller {
                 }
                 // Section Entry Event
                 else {
-                    System.out.println("Event Entry " + sectionID);
-//                    System.out.println("Entry " + cs.id);
                     // There is now something on the track
                     cs.on = true;
 
 
                     // Check if the section has a junction and therefore can come from different section
                     int juncIndex = cs.section.getJuncSectionIndex(); // The index in the array of the section it could come from
-                    int juncId = getContrlSections()[juncIndex].id; // The id of the section from
+
                     if(juncIndex != -1 && trainOnSection(getContrlSections()[juncIndex].id)){
+                        int juncId = getContrlSections()[juncIndex].id;// The id of the section from
                         getContrlSections()[juncIndex].on = false; // Set the from track to not have a train on it anymore
                         getTrainOnSection(juncId).curSectionID = cs.id; // Set the current track for the relevant train
                         updateTrains(); // Update the trains
@@ -118,7 +113,6 @@ public class RoutingController extends DefaultController implements Controller {
 
         for(Section s : getSections()){
             if(s.getJuncSectionIndex() == index){
-                System.out.println("Found the sob");
                 return getSectionIndex(s.getID());
             }
         }
@@ -134,9 +128,7 @@ public class RoutingController extends DefaultController implements Controller {
             List<Integer> route = routes.getRoute(getSection(t.curSectionID),getSection(t.destinationID),forwardWithTrack(t));
             System.out.println("Train " + t.id + " Route " + route);
 
-            if(t.id == 2){
-                System.out.println(t.curSectionID);
-            }
+
 
             if(t.curSectionID ==  getSection(t.destinationID).getID()){
                // model.setSpeed(t.id, 0);// Stop the train for now
@@ -145,7 +137,7 @@ public class RoutingController extends DefaultController implements Controller {
                 if(getSection(route.get(1)).hasJunctionTrack()){// the next track is junction track
                     Section juncSection = getSection(route.get(1));
                     // check if we need to toggle the junction track
-                    if(!(juncSection.getTo() == getSectionIndex(route.get(2)))){
+                    if(!(juncSection.getToIndexNat() == getSectionIndex(route.get(2)))){
                         if(!juncSection.getJunction().getThrown() && !juncSection.getJunction().inBound() ){
                             model.setJunction(juncSection.getJunction().getId(), true);
                             System.out.println("Toggling Junction");

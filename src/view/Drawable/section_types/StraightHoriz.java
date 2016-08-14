@@ -226,7 +226,7 @@ public class StraightHoriz extends DefaultTrack {
         g.setStroke(DefaultTrack.TIE_COLOR);
         g.setLineWidth(3);
 
-        double y = super.getStartY() -DefaultTrack.RAIL_OFFSET;
+        double y = super.getStartY() - DefaultTrack.RAIL_OFFSET;
         double ey = super.getStartY() + TRACK_WIDTH +DefaultTrack.RAIL_OFFSET;
 
         for(double x = super.getStartX(); x < super.getStartX() + super.getLength(); x+= SimulationUI.RAIL_SEP){
@@ -237,11 +237,12 @@ public class StraightHoriz extends DefaultTrack {
             g.setStroke(DefaultTrack.SELECTED_COLOR);
         }
         else {
-            g.setStroke(DefaultTrack.RAIL_COLOR);
+            g.setStroke(getColor());
+//            g.setStroke(DefaultTrack.RAIL_COLOR);
         }
         g.setLineWidth(2);
         g.strokeLine(super.getStartX(), super.getStartY(), super.getStartX() + super.getLength(), super.getStartY());
         g.strokeLine(super.getStartX(), super.getStartY() + TRACK_WIDTH, super.getStartX() + super.getLength(), super.getStartY()+ TRACK_WIDTH);
-        g.setStroke(Color.WHITE);
+//        g.setStroke(Color.WHITE);
     }
 }

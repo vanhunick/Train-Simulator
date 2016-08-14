@@ -628,14 +628,14 @@ public class Simulation implements MouseEvents {
 
     @Override
     public void mouseMoved(double x, double y, MouseEvent e) {
-        for(DefaultTrack track : tracks){
-            if(track.containsPoint(x,y)){
-                track.setColor(Color.GREEN);
-            }
-            else {
-                track.setColor(Color.WHITE);
-            }
-        }
+//        for(DefaultTrack track : tracks){
+//            if(track.containsPoint(x,y)){
+//                track.setColor(Color.GREEN);
+//            }
+//            else {
+//                track.setColor(Color.WHITE);
+//            }
+//        }
     }
 
     @Override
