@@ -1,5 +1,6 @@
 package view;
 
+import controllers.DefaultController;
 import javafx.geometry.Insets;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.CheckBox;
@@ -109,14 +110,9 @@ public class TrackBuilder implements MouseEvents{
      * @param controller the controller of the program
      * */
     public TrackBuilder(ProgramController controller){
+        initLists();
         this.controller = controller;
         this.vBox = createBuilderButtons();
-        this.tracksInSection = new ArrayList<>();
-        this.trains = new ArrayList<>();
-        this.stocks = new ArrayList<>();
-        this.exampleTracks = setUpDrawPieces();
-        this.sectionsForTrack = new ArrayList<>();
-        this.allTracks = new ArrayList<>();
         this.mouseLocation = new Point(0,0);
     }
 
@@ -124,6 +120,10 @@ public class TrackBuilder implements MouseEvents{
      * Track Builder Constructor for Testing
      * */
     public TrackBuilder(){
+        initLists();
+    }
+
+    public void initLists(){
         this.tracksInSection = new ArrayList<>();
         this.trains = new ArrayList<>();
         this.stocks = new ArrayList<>();
@@ -177,9 +177,7 @@ public class TrackBuilder implements MouseEvents{
         // Tracks
         DefaultTrack[] tracks = new DefaultTrack[allTracks.size()];
         allTracks.toArray(tracks);
-
-//        tracks[0].setFrom(tracks.length-1);
-
+        
         LoadedRailway railway = new LoadedRailway(null,sections,tracks,trains,stocks); // null because not loaded from file
 
         return railway;
@@ -308,12 +306,6 @@ public class TrackBuilder implements MouseEvents{
         curSectionID++;
     }
 
-    public void switchingModes(){
-        sectionMode = false;
-        allTracks.clear();
-        trains.clear();
-    }
-
     /**
      * Sets the links for the sections
      * */
@@ -347,15 +339,6 @@ public class TrackBuilder implements MouseEvents{
     }
 
     /**
-     * Toggle the checkbox for alternating exampleTracks
-     * */
-    public void alternateCheckBoxEvent(CheckBox alternate){
-
-        alternate.setSelected(!this.alternate);
-        this.alternate = !this.alternate;
-    }
-
-    /**
      * Start the simulation by changing the mode in the controller and passing in
      * the created track and trains
      * */
@@ -369,7 +352,7 @@ public class TrackBuilder implements MouseEvents{
     /**
      * Undoes and addition of a track piece
      * */
-    public void undo(){
+    public void undo(){// TODO // FIXME: 14/08/2016 
         if(tracksInSection.size() > 0){
             this.tracksInSection.remove(tracksInSection.size()-1);
         }
@@ -497,6 +480,7 @@ public class TrackBuilder implements MouseEvents{
 
                         allTracks.add(t);
                         mouseSelectedPeice = t;
+                        System.out.println(mouseSelectedPeice);
                         mouseSelectedPeice.setSelected(true);
                     }
                 }
@@ -519,8 +503,12 @@ public class TrackBuilder implements MouseEvents{
 
             // Check if can connect to both
             if(jTrack.inBound() && t.canConnect(jTrack.getInnerTrack())){
+                System.out.println("Doing ");
                 jTrack.setInboundFromThrown(i);
+                jTrack.setStart(allTracks.get(i));
+                jTrack.moveToThrown();
                 t.setTo(allTracks.size()-1);
+                return true;
             }
 
             // Check if connecting to straight piece
@@ -732,6 +720,19 @@ public class TrackBuilder implements MouseEvents{
                     }
                 }
 
+                if(mouseSelectedPeice instanceof JunctionTrack){
+                    JunctionTrack j = (JunctionTrack)mouseSelectedPeice;
+
+                    if(j.inBound()){
+                        DefaultTrack innnerTrack = j.getInnerTrack();
+                        if(t.canConnect(innnerTrack)){
+                            DefaultTrack.SELECTED_COLOR = Color.GREEN;
+                            return;
+                        }
+
+                    }
+                }
+
                 if(t.canConnect(mouseSelectedPeice)){
                     DefaultTrack.SELECTED_COLOR = Color.GREEN;
                     return;
@@ -744,6 +745,7 @@ public class TrackBuilder implements MouseEvents{
      * Returns a new track of the type selected in the track panel
      * */
     public DefaultTrack getSelectedTrackFromPanel(int x, int y){
+        trackLength = 120;
         DefaultTrack[] trackChoices = new DefaultTrack[]{
                 new StraightHoriz(x,y, trackLength,0,curId, "RIGHT"),
                 new Quart1(x,y, trackLength*2,1, "RIGHT", curId),
@@ -848,7 +850,7 @@ public class TrackBuilder implements MouseEvents{
      * @return the next track in the list
      * */
     public DefaultTrack rotatePiece(){
-        selectedBox = selectedBox == 9 ? selectedBox = 0 : selectedBox++;
+        selectedBox = (selectedBox == 9 ? selectedBox = 0 : selectedBox++);
         allTracks.remove(allTracks.size()-1);
         DefaultTrack t = getSelectedTrackFromPanel((int)mouseLocation.getX(),(int)mouseLocation.getY());
         t.setMid(mouseLocation.getX(),mouseLocation.getY());

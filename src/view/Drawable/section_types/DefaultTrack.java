@@ -144,6 +144,9 @@ public abstract class DefaultTrack {
     public double getInitialX(double trainWidth){System.out.println("Should be implemented in subclass");return 0;}
     public double getInitialY(double trainWidth){System.out.println("Should be implemented in subclass"); return 0;}
 
+    public void setMid(){
+
+    }
 
     // Abstract Methods
     public abstract boolean canConnect(DefaultTrack track);

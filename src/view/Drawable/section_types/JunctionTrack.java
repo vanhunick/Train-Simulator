@@ -90,8 +90,6 @@ public class JunctionTrack extends DefaultTrack {
         if(drawDirection.equals("UP")){
             if(direction.equals("RIGHT")){
                 straightTrack.setDirection("RIGHT");
-
-
                 inRight.setStartX(straightTrack.getStartX() + straightTrack.getLength() - ((inRight.getLength()-TRACK_WIDTH/2)/2) - TRACK_WIDTH);
                 inRight.setStartY(straightTrack.getStartY() - inRight.getLength() + TRACK_WIDTH);
 
@@ -134,11 +132,13 @@ public class JunctionTrack extends DefaultTrack {
                 inDown.setDirection("DOWN");
 
                 inRight.setStart(inDown);
+                inRight.setDirection("UP");
                 inRight.setMid();
                 inDown.setMid();
             }
         }
     }
+
 
     public void setOutBoundLocation(String direction){
         if(drawDirection.equals("UP")){
@@ -167,7 +167,7 @@ public class JunctionTrack extends DefaultTrack {
 
                 inRight.setStart(inDown);
                 inRight.setDirection("RIGHT");
-                inRight.setDirection("RIGHT");
+
                 inDown.setMid();
                 inRight.setMid();
             } else if(direction.equals("LEFT")){
@@ -176,6 +176,7 @@ public class JunctionTrack extends DefaultTrack {
                 outRightTrack.setDirection("DOWN");
 
                 outUpTrack.setStart(outRightTrack);
+                inRight.setDirection("LEFT");
                 outRightTrack.setMid();
                 outUpTrack.setMid();
             }
@@ -257,11 +258,30 @@ public class JunctionTrack extends DefaultTrack {
         }
 
         setStartX(straightTrack.getStartX());
-        setStartX(straightTrack.getStartY());
+        setStartY(straightTrack.getStartY());// TODO just changed
     }
 
     public void updateLocation(double startX, double startY){
         setLocation(null,getDirection(),startX,startY);
+    }
+
+    //TODO this is not a good way to do it but all alternatives will take too much time
+    public void moveToThrown(){
+        if(!inBound())return;
+
+        if(drawDirection.equals("DOWN")){
+            straightTrack.setStartY((straightTrack.getStartY() - getLength() + DefaultTrack.TRACK_WIDTH/2));
+            getInnerTrack().setStartY((getInnerTrack().getStartY() - getLength()) + DefaultTrack.TRACK_WIDTH/2);
+            getEndTrack().setStartY((getEndTrack().getStartY() - getLength() + DefaultTrack.TRACK_WIDTH/2));
+        }
+
+        if(drawDirection.equals("UP")){
+            straightTrack.setStartY((straightTrack.getStartY() + getLength() - DefaultTrack.TRACK_WIDTH/2));
+            getInnerTrack().setStartY((getInnerTrack().getStartY() + getLength()) - DefaultTrack.TRACK_WIDTH/2);
+            getEndTrack().setStartY((getEndTrack().getStartY() + getLength() - DefaultTrack.TRACK_WIDTH/2));
+        }
+        getInnerTrack().setMid();
+        getEndTrack().setMid();
     }
 
     @Override
@@ -307,7 +327,25 @@ public class JunctionTrack extends DefaultTrack {
     public boolean canConnectThrown(DefaultTrack trackToConnect){
         int id = trackToConnect.getDrawID();
 
-        // If it is not inbound only
+//        if(inBound()){
+//            DefaultTrack innerTrack = getInnerTrack();
+//            if (getDirection().equals("RIGHT")) {
+//                if (id == 0 || id == 2 || id == 3) {
+//                    if (Math.abs(innerTrack.getConnectionPointTo().getX() - trackToConnect.getConnectionPointFrom().getX()) < DefaultTrack.CONNECT_SENS &&
+//                            Math.abs(innerTrack.getConnectionPointTo().getY() - trackToConnect.getConnectionPointFrom().getY()) < DefaultTrack.CONNECT_SENS)
+//                        return true;
+//                }
+//            } else if (getDirection().equals("LEFT")) {
+//                if (id == 0 || id == 1 || id == 4) {
+//                    if (Math.abs(innerTrack.getConnectionPointTo().getX() - trackToConnect.getConnectionPointFrom().getX()) < DefaultTrack.CONNECT_SENS &&
+//                            Math.abs(innerTrack.getConnectionPointTo().getY() - trackToConnect.getConnectionPointFrom().getY()) < DefaultTrack.CONNECT_SENS)
+//                        return true;
+//                }
+//            }
+//        }
+
+
+        // If it is not inbound
         if(!inBound()) {
 
             DefaultTrack endTrack = getEndTrack();
@@ -454,7 +492,7 @@ public class JunctionTrack extends DefaultTrack {
                 } else {
                     return  outRightTrack;
                 }
-            } else {
+            } else { // Left
                 if(drawDirection.equals("UP")){
                     return outUpTrack;
                 } else {
@@ -479,6 +517,7 @@ public class JunctionTrack extends DefaultTrack {
     }
 
     public DefaultTrack getInnerTrack(){
+
         if(inbound){
             if(getDirection().equals("RIGHT")){
                 if(drawDirection.equals("UP")){
@@ -486,7 +525,7 @@ public class JunctionTrack extends DefaultTrack {
                 } else {
                     return outUpTrack;
                 }
-            } else {
+            } else { // Left
                 if(drawDirection.equals("UP")){
                     return outRightTrack;
                 } else {
