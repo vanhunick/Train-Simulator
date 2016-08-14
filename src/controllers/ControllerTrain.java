@@ -12,8 +12,8 @@ public class ControllerTrain {
         boolean direction;
         boolean orientation;
 
-        // The id of the train it is currently on
-        int curSection;
+        // The id of the section it is currently on
+        int curSectionID;
 
         // Lock of the current section it is on
         int lockCur;
@@ -41,9 +41,9 @@ public class ControllerTrain {
             this.id = id;
             this.direction = direction;
             this.orientation = orientation;
-            this.curSection = startingSection;
+            this.curSectionID = startingSection;
             this.destinationID = destinationID;
-            this.srcSection = curSection;
+            this.srcSection = curSectionID;
             this.lockNext = -1;
             this.lockCur = -1;
         }

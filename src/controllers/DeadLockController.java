@@ -40,7 +40,7 @@ public class DeadLockController  extends DefaultController implements Controller
      * */
     public void updateTrains(){
         for(ControllerTrain t : getTrains()){
-            ControllerSection nextSec = getNextSection(t,getControllerSection(t.curSection));
+            ControllerSection nextSec = getNextSection(t,getControllerSection(t.curSectionID));
 
             boolean locked = false;
 
@@ -70,7 +70,7 @@ public class DeadLockController  extends DefaultController implements Controller
      * */
     public ControllerTrain getTrainForNextSection(int nextSectionID){
         for(ControllerTrain train : getTrains()){
-            if(getNextSection(train,getControllerSection(train.curSection)).id == nextSectionID){
+            if(getNextSection(train,getControllerSection(train.curSectionID)).id == nextSectionID){
                 return train;
             }
 
@@ -106,7 +106,7 @@ public class DeadLockController  extends DefaultController implements Controller
                     getContrlSections()[cs.section.getToIndex()].on = true;
 
                     // Set the current section of the train to the next section
-                    trainWithLock.curSection = getNextSection(trainWithLock, getControllerSection(trainWithLock.curSection)).id;
+                    trainWithLock.curSectionID = getNextSection(trainWithLock, getControllerSection(trainWithLock.curSectionID)).id;
                 }
                 // Section Entry Event
                 else {
@@ -121,7 +121,7 @@ public class DeadLockController  extends DefaultController implements Controller
                     trainOnSectionBefore.lockCur = trainOnSectionBefore.lockNext;
                     trainOnSectionBefore.lockNext = -1;
 
-                    trainOnSectionBefore.curSection = cs.id;
+                    trainOnSectionBefore.curSectionID = cs.id;
                 }
                 // With the new state update the trains
                 updateTrains();
@@ -151,7 +151,7 @@ public class DeadLockController  extends DefaultController implements Controller
      * */
     public ControllerTrain findTrainOnTrack(int trackId){
         for(ControllerTrain train : getTrains()){
-            if(train.curSection == trackId){
+            if(train.curSectionID == trackId){
                 return train;
             }
         }
@@ -168,7 +168,7 @@ public class DeadLockController  extends DefaultController implements Controller
         for(ControllerSection cs :getContrlSections()){
             if(cs.on){
                 for(ControllerTrain ct : getTrains()){
-                    if(ct.curSection == cs.section.getID()){
+                    if(ct.curSectionID == cs.section.getID()){
                         ct.lockCur = cs.id;
                     }
                 }

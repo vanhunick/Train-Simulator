@@ -11,12 +11,15 @@ import java.util.*;
  */
 public class SectionGraph {
 
+    // The sections in the railway
     private Section[] sections;
 
+    // Each node represents a section
     private Set<Node> nodes;
 
 
-    class Node implements Comparable<Node>{
+    // Node to use for finding shortest path
+    private class Node implements Comparable<Node>{
         Section s;
         Node prev;
         double minCost = Double.POSITIVE_INFINITY;
@@ -97,7 +100,20 @@ public class SectionGraph {
 
             // The train is going with the track
             if(dn.s.hasJunctionTrack()){ //TODO not sure if I need to know if inbound or outbound
-                if(nat && !dn.s.getJunction().inBound() || !nat && dn.s.getJunction().inBound()){
+                if(nat && dn.s.getJunction().inBound()){ // TODO test
+                    juncDest = getNode(dn.s.getToIndex());
+
+                    double destCost = juncDest.s.getLength();
+                    double distanceThroughR = dn.minCost + destCost;
+                    if (distanceThroughR < juncDest.minCost) {
+                        nodeQueue.remove(juncDest);
+                        juncDest.minCost = distanceThroughR;
+                        juncDest.prev = dn;
+                        nodeQueue.add(juncDest);
+                    }
+                }
+
+                if(nat && !dn.s.getJunction().inBound()){
                     juncDest = getNode(dn.s.getJuncSectionIndex());
 
                     double destCost = juncDest.s.getLength();
@@ -112,7 +128,8 @@ public class SectionGraph {
             }
 
             // Set the destination depending on if the train is following the nat orientation of the track
-            dest = nat ? getNode(dn.s.getToIndex()) : getNode(dn.s.getFromIndex());
+//            dest = nat ? getNode(dn.s.getToIndex()) : getNode(dn.s.getFromIndex());
+            dest = nat ? getNode(dn.s.getToIndexNat()) : getNode(dn.s.getFromIndexNat());
 
             double destCost = dest.s.getLength();
             double distanceThroughR = dn.minCost + destCost;

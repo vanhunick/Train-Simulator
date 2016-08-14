@@ -327,24 +327,6 @@ public class JunctionTrack extends DefaultTrack {
     public boolean canConnectThrown(DefaultTrack trackToConnect){
         int id = trackToConnect.getDrawID();
 
-//        if(inBound()){
-//            DefaultTrack innerTrack = getInnerTrack();
-//            if (getDirection().equals("RIGHT")) {
-//                if (id == 0 || id == 2 || id == 3) {
-//                    if (Math.abs(innerTrack.getConnectionPointTo().getX() - trackToConnect.getConnectionPointFrom().getX()) < DefaultTrack.CONNECT_SENS &&
-//                            Math.abs(innerTrack.getConnectionPointTo().getY() - trackToConnect.getConnectionPointFrom().getY()) < DefaultTrack.CONNECT_SENS)
-//                        return true;
-//                }
-//            } else if (getDirection().equals("LEFT")) {
-//                if (id == 0 || id == 1 || id == 4) {
-//                    if (Math.abs(innerTrack.getConnectionPointTo().getX() - trackToConnect.getConnectionPointFrom().getX()) < DefaultTrack.CONNECT_SENS &&
-//                            Math.abs(innerTrack.getConnectionPointTo().getY() - trackToConnect.getConnectionPointFrom().getY()) < DefaultTrack.CONNECT_SENS)
-//                        return true;
-//                }
-//            }
-//        }
-
-
         // If it is not inbound
         if(!inBound()) {
 

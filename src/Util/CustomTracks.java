@@ -178,6 +178,7 @@ public class CustomTracks {
         // Second inside straight
         railway[9].getSection().setToIndex(10);
         railway[9].getSection().setFromIndex(8);
+        railway[9].getSection().setJuncSectionIndex(3);//TODO check
 
         // First inside corner
         railway[10].getSection().setToIndex(11);
@@ -214,6 +215,7 @@ public class CustomTracks {
         // First most inside straight
         railway[17].getSection().setToIndex(15);
         railway[17].getSection().setFromIndex(13);
+        railway[17].getSection().setJuncSectionIndex(9);//TODO 9 i think
 
 
 
@@ -425,7 +427,6 @@ public class CustomTracks {
                 new JunctionTrack(100,6,curID++,false, false,"UP"),
                 new StraightHoriz(200,0,curID++),
                 new StraightHoriz(100,0,curID++),
-
                 new JunctionTrack(100,6,curID++,false, true,"UP"),
         };
     }

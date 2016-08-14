@@ -33,6 +33,7 @@ public class RoutingController extends DefaultController implements Controller {
     }
 
     public void startTrains(){
+
         for(ControllerTrain t : getTrains()){
             model.setSpeed(t.id, 27);
 
@@ -55,11 +56,13 @@ public class RoutingController extends DefaultController implements Controller {
 
     @Override
     public void receiveSectionEvent(int sectionID) {
-
         for(ControllerSection cs : getContrlSections()){
             if(cs.id == sectionID){
+
                 // Section Exit Event
                 if(cs.on){
+                    System.out.println("Event Exit " + sectionID);
+//                    System.out.println("Exit " + cs.id);
                     // There is no longer a train on the current section
                     cs.on = false;
 
@@ -69,19 +72,32 @@ public class RoutingController extends DefaultController implements Controller {
                     getContrlSections()[cs.section.getToIndex()].on = true;
 
                     // Set the current section of the train to the next section
-                    trainWithLock.curSection = getNextSection(trainWithLock, cs).id;// Was something else
+                    trainWithLock.curSectionID = getNextSection(trainWithLock, cs).id;// Was something else
                 }
                 // Section Entry Event
                 else {
+                    System.out.println("Event Entry " + sectionID);
+//                    System.out.println("Entry " + cs.id);
                     // There is now something on the track
                     cs.on = true;
+
+
+                    // Check if the section has a junction and therefore can come from different section
+                    int juncIndex = cs.section.getJuncSectionIndex(); // The index in the array of the section it could come from
+                    int juncId = getContrlSections()[juncIndex].id; // The id of the section from
+                    if(juncIndex != -1 && trainOnSection(getContrlSections()[juncIndex].id)){
+                        getContrlSections()[juncIndex].on = false; // Set the from track to not have a train on it anymore
+                        getTrainOnSection(juncId).curSectionID = cs.id; // Set the current track for the relevant train
+                        updateTrains(); // Update the trains
+                        return;
+                    }
 
                     // There is now nothing on the track before it so set to false
                     getContrlSections()[cs.section.getFromIndex()].on = false;// TODO problem is from is junction
 
                     // Get the train that holds the lock to this
                     ControllerTrain trainOnSectionBefore = getTrainOnSection(getContrlSections()[cs.section.getFromIndex()].id);
-                    trainOnSectionBefore.curSection = cs.id;
+                    trainOnSectionBefore.curSectionID = cs.id;
 
                 }
                 // With the new state update the trains
@@ -90,18 +106,42 @@ public class RoutingController extends DefaultController implements Controller {
         }
     }
 
+    public ControllerTrain getTrainOnSection(int sectionID){
+        for(ControllerTrain t : getTrains()){
+            if(t.curSectionID == sectionID)return t;
+        }
+        return null;
+    }
+
+    public int findIndexOfFromJunctionSection(ControllerSection c){
+        int index = getSectionIndex(c.section.getID());
+
+        for(Section s : getSections()){
+            if(s.getJuncSectionIndex() == index){
+                System.out.println("Found the sob");
+                return getSectionIndex(s.getID());
+            }
+        }
+        return -1;
+    }
+
 
 
     public void updateTrains(){
         for(ControllerTrain t : getTrains()){
             // Find the route for the train
             //getSection(t.destinationSection)
-            List<Integer> route = routes.getRoute(getSection(t.curSection),getSection(t.destinationID),forwardWithTrack(t));
+            List<Integer> route = routes.getRoute(getSection(t.curSectionID),getSection(t.destinationID),forwardWithTrack(t));
             System.out.println("Train " + t.id + " Route " + route);
 
-            if(t.curSection ==  getSection(t.destinationID).getID()){
-                model.setSpeed(t.id, 0);// Stop the train for now
-            } else if(route.size() > 2){ // might have to toggle a junction
+            if(t.id == 2){
+                System.out.println(t.curSectionID);
+            }
+
+            if(t.curSectionID ==  getSection(t.destinationID).getID()){
+               // model.setSpeed(t.id, 0);// Stop the train for now
+            }
+            if(route.size() > 2){ // might have to toggle a junction
                 if(getSection(route.get(1)).hasJunctionTrack()){// the next track is junction track
                     Section juncSection = getSection(route.get(1));
                     // check if we need to toggle the junction track
@@ -109,6 +149,11 @@ public class RoutingController extends DefaultController implements Controller {
                         if(!juncSection.getJunction().getThrown() && !juncSection.getJunction().inBound() ){
                             model.setJunction(juncSection.getJunction().getId(), true);
                             System.out.println("Toggling Junction");
+                        }
+                    }else {
+                        if(juncSection.getJunction().getThrown() && !juncSection.getJunction().inBound()){
+                            System.out.println("Toggling");
+                            model.setJunction(juncSection.getJunction().getId(), false);
                         }
                     }
                 }
@@ -130,11 +175,10 @@ public class RoutingController extends DefaultController implements Controller {
         return 0;// ERROR
     }
 
-
-    public ControllerTrain getTrainOnSection(int sectionID){
+    public boolean trainOnSection(int sectionID){
         for(ControllerTrain t : getTrains()){
-            if(t.curSection == sectionID)return t;
+            if(t.curSectionID == sectionID)return true;
         }
-        return null;
+        return false;
     }
 }

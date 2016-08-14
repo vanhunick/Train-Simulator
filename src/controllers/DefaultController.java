@@ -65,7 +65,7 @@ public abstract class DefaultController implements Controller {
         // Lock the sections that have trains on them
         for(ControllerSection cs :contrlSections){
             for(ControllerTrain ct : trains){
-                if(ct.curSection == cs.section.getID()){
+                if(ct.curSectionID == cs.section.getID()){
                     // There is a train starting on this section
                     cs.on = true;
                 }

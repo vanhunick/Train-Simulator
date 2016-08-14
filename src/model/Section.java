@@ -13,7 +13,6 @@ public class Section {
     // Length of the section
     private double length;
 
-    //TODO indexes I think
     // Section it came from
     private int from;
 
@@ -23,7 +22,7 @@ public class Section {
     // IDs
     private int toIndex;
     private int fromIndex;
-    private int juncSectionIndex;
+    private int juncSectionIndex = -1;
 
     // Tracks in the section
     private DefaultTrack[] tracks;
@@ -190,6 +189,14 @@ public class Section {
             jt = (JunctionTrack)tracks[0];
         }
         return jt;
+    }
+
+    public int getToIndexNat(){
+        return toIndex;
+    }
+
+    public int getFromIndexNat(){
+        return fromIndex;
     }
 
     /**
