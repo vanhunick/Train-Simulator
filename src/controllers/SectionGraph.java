@@ -99,9 +99,9 @@ public class SectionGraph {
             Node dest = null;
 
             // The train is going with the track
-            if(dn.s.hasJunctionTrack()){ //TODO not sure if I need to know if inbound or outbound
-                if(nat && dn.s.getJunction().inBound()){ // TODO test
-                    juncDest = getNode(dn.s.getToIndex());
+            if(dn.s.getJuncSectionIndex() != -1){ //TODO not sure if I need to know if inbound or outbound
+                if(nat){
+                    juncDest = getNode(dn.s.getJuncSectionIndex());
 
                     double destCost = juncDest.s.getLength();
                     double distanceThroughR = dn.minCost + destCost;
@@ -113,7 +113,7 @@ public class SectionGraph {
                     }
                 }
 
-                if(nat && !dn.s.getJunction().inBound()){
+                if(dn.s.hasJunctionTrack() && nat && !dn.s.getJunction().inBound()){
                     juncDest = getNode(dn.s.getJuncSectionIndex());
 
                     double destCost = juncDest.s.getLength();

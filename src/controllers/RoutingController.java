@@ -4,6 +4,7 @@ import model.ModelTrack;
 import model.Section;
 import model.Train;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -38,10 +39,19 @@ public class RoutingController extends DefaultController implements Controller {
             model.setSpeed(t.id, 27);
 
             if(t.id == 1){
-                t.destinationID = 7;
+                t.destinationID = 6;
+                t.destinationIDs = new ArrayList<>();
+                t.destinationIDs.add(6);
+                t.destinationIDs.add(2);
+
+                t.curDest = 2;
             }
             if(t.id == 2){
                 t.destinationID = 2;
+                t.destinationIDs = new ArrayList<>();
+                t.destinationIDs.add(2);
+                t.curDest = 2;
+
             }
         }
     }
@@ -125,12 +135,26 @@ public class RoutingController extends DefaultController implements Controller {
         for(ControllerTrain t : getTrains()){
             // Find the route for the train
             //getSection(t.destinationSection)
-            List<Integer> route = routes.getRoute(getSection(t.curSectionID),getSection(t.destinationID),forwardWithTrack(t));
+            List<Integer> route = routes.getRoute(getSection(t.curSectionID),getSection(t.curDest),forwardWithTrack(t));
             System.out.println("Train " + t.id + " Route " + route);
 
 
 
-            if(t.curSectionID ==  getSection(t.destinationID).getID()){
+
+
+            if(t.curSectionID ==  getSection(t.curDest).getID()){
+                System.out.println("Reached destination " + t.curDest);
+
+                for(int i = 0 ; i < t.destinationIDs.size(); i++){
+                    if(t.destinationIDs.get(i) == t.curDest){
+                        if(i == t.destinationIDs.size()-1){
+                            t.curDest = t.destinationIDs.get(0);
+                        } else {
+                            t.curDest = t.destinationIDs.get(i+1);
+                        }
+                        break;
+                    }
+                }
                // model.setSpeed(t.id, 0);// Stop the train for now
             }
             if(route.size() > 2){ // might have to toggle a junction
@@ -147,8 +171,29 @@ public class RoutingController extends DefaultController implements Controller {
                             System.out.println("Toggling");
                             model.setJunction(juncSection.getJunction().getId(), false);
                         }
+                        if(juncSection.getJunction().getThrown() && juncSection.getJunction().inBound()){
+                            System.out.println("Toggling");
+                            model.setJunction(juncSection.getJunction().getId(), false);
+                        }
+
                     }
                 }
+
+                // check if current section can go down a inbound junction
+                int juncIndexInbound = getSection(t.curSectionID).getJuncSectionIndex();
+
+                if(juncIndexInbound != -1){
+                    System.out.println("Here " + juncIndexInbound);
+                    if(getSection(route.get(2)).getID() == juncIndexInbound){ // Means we need to go down it
+                        System.out.println("Going down");
+                        Section juncSection = getSection(route.get(1));
+                        if(!(juncSection.getJunction().getThrown())){
+                            System.out.println("Toggling");
+                            model.setJunction(juncSection.getJunction().getId(), false);
+                        }
+                    }
+                }
+
             }
         }
     }

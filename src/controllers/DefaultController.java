@@ -47,7 +47,7 @@ public abstract class DefaultController implements Controller {
 
         // Add all the trains to the list of trains
         for(Train t : trainStartMap.keySet()){
-            trains.add(new ControllerTrain(t.getId(),t.getDirection(),t.getOrientation(),trainStartMap.get(t),t.getDestinationID()));// TODO chuck in equals meth for train
+            trains.add(new ControllerTrain(t.getId(),t.getDirection(),t.getOrientation(),trainStartMap.get(t),t.getDestinationID(), t.getDestinationIDs()));// TODO chuck in equals meth for train
         }
         createControllerSections();
     }

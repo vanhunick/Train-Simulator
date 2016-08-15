@@ -1,5 +1,9 @@
 package model;
 
+import view.Simulation;
+
+import java.util.List;
+
 /**
  * Created by vanhunick on 22/03/16.
  */
@@ -26,6 +30,8 @@ public class Train {
 
     private double weight;
 
+    private List<Integer> destinationIDs;
+
     private int destinationID;
     private int srcID;
 
@@ -51,6 +57,17 @@ public class Train {
         this.orientation = orientation;
         this.maxSpeed = maxSpeed;
         this.weight = weight;
+    }
+
+    // TODO temp constructor
+    public Train(int id, double length,double maxSpeed,  boolean direction,boolean orientation, double weight, List<Integer> destinations){
+        this.id = id;
+        this.direction = direction;
+        this.length = length;
+        this.orientation = orientation;
+        this.maxSpeed = maxSpeed;
+        this.weight = weight;
+        this.destinationIDs = destinations;
     }
 
     /**
@@ -121,6 +138,10 @@ public class Train {
 
     public int getDestinationID(){
         return destinationID;
+    }
+
+    public List<Integer> getDestinationIDs(){
+        return this.destinationIDs;
     }
 
 

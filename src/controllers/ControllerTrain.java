@@ -1,5 +1,7 @@
 package controllers;
 
+import java.util.List;
+
 /**
  * Created by User on 31/07/2016.
  */
@@ -25,6 +27,9 @@ public class ControllerTrain {
         // The id of the section that is the destination
         int destinationID;
 
+        List<Integer> destinationIDs;
+        int curDest;
+
         int srcSection;
 
 
@@ -37,7 +42,7 @@ public class ControllerTrain {
          *
          * @param orientation if the train is going along the natural orientation or against
          * */
-        public ControllerTrain(int id, boolean direction, boolean orientation, int startingSection, int destinationID){
+        public ControllerTrain(int id, boolean direction, boolean orientation, int startingSection, int destinationID, List<Integer> destinationIDs){
             this.id = id;
             this.direction = direction;
             this.orientation = orientation;
@@ -46,5 +51,6 @@ public class ControllerTrain {
             this.srcSection = curSectionID;
             this.lockNext = -1;
             this.lockCur = -1;
+            this.destinationIDs = destinationIDs;
         }
 }

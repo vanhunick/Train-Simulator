@@ -536,7 +536,7 @@ public class JunctionTrack extends DefaultTrack {
      * Checks if the movable goes over the junction backwards
      * */
     public boolean checkThrownCrash(Movable m){
-        return !forwardWithTrack(m) && thrown;
+        return !forwardWithTrack(m) && thrown || (forwardWithTrack(m) && inbound && thrown && m.getCurTrack() instanceof StraightHoriz); //TODO find better way to check second condition
     }
 
     /**
