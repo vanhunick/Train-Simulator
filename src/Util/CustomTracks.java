@@ -3,6 +3,8 @@ package Util;
 import model.RollingStock;
 import model.Section;
 import model.Train;
+import save.LoadedRailway;
+import save.Save;
 import view.Drawable.DrawableRollingStock;
 import view.Drawable.DrawableTrain;
 import view.Drawable.Movable;
@@ -10,6 +12,8 @@ import view.Drawable.section_types.*;
 import view.Drawable.section_types.JunctionTrack;
 import view.Simulation;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -657,4 +661,27 @@ public class CustomTracks {
 
         return new Railway(sections,tracks);
     }
+
+    public static void main(String[] args) {
+        CustomTracks c = new CustomTracks("FULL");
+        DefaultTrack[] tracks = c.getFullTracks();
+        DrawableSection[] railway = c.getFullSection(tracks);
+
+        List<DrawableRollingStock> stocks = new ArrayList<>();
+
+        // Two trains
+        List<DrawableTrain> trains = CustomTracks.getDefaultTrains(railway);
+
+        File f = new File("src/tracks/full_Track");
+        try {
+            f.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        //new Save().save(l,"am/kings/home1/vanhunick/swen303/Assignment 2/train-simulator/full_Track");
+        LoadedRailway l = new LoadedRailway(f,railway, tracks, trains, stocks);
+        new Save().save(l,"src/tracks/full_Track");
+    }
+
 }

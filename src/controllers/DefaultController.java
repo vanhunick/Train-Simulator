@@ -51,6 +51,10 @@ public abstract class DefaultController implements Controller {
         this.contrlSections = loadedRailway.sections;
         this.trains = loadedRailway.trains;
 
+        for(ControllerSection s : contrlSections){
+            System.out.println(s) ;
+        }
+
         createControllerSections();
     }
 

@@ -63,9 +63,9 @@ public class Save {
             }
 
             sectionObject.put("detect",s.getSection().canDetect());
-            sectionObject.put("from",s.getSection().getFrom());
+            sectionObject.put("from",s.getSection().getFromIndexNat());
             sectionObject.put("length",s.getSection().getLength());
-            sectionObject.put("to",s.getSection().getTo());
+            sectionObject.put("to",s.getSection().getToIndexNat());
             sectionObject.put("hasJunc",s.getSection().hasJunctionTrack());
 
 

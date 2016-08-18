@@ -86,7 +86,10 @@ public class Simulation implements MouseEvents {
 
         } else if(mode.equals("Routing")){
             sendEventToUI("Controlling with routing controller",0);
-            controlMode(new RoutingController(convertoControllerSections(getSections()),convertToControlTrains(trains)));
+//            controlMode(new RoutingController(convertoControllerSections(getSections()),convertToControlTrains(trains)));
+            controlMode(new RoutingController("src/tracks/full_Track.json"));
+//            "am/kings/home1/vanhunick/swen303/Assignment 2/train-simulator/full_Track"
+            ///home/vanhunick/swen303/Assignment 2/train-simulator/src/tracks/full_Track.json
         }
     }
 

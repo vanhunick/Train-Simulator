@@ -41,4 +41,8 @@ public class ControllerSection {
         junction = new ControllerJunction(junctionID, inBound, thrown);
         containsJunction = true;
     }
+
+    public String toString(){
+        return "Id " + id + " from " + fromIndex + " to " + toIndex + " has Junc " + containsJunction + " on " + on;
+    }
 }

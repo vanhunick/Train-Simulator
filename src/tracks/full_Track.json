@@ -1,0 +1,433 @@
+{
+ "trains": [
+  {
+   "curTrack": 0,
+   "orientation": true,
+   "length": 15,
+   "curSectionID": 99,
+   "id": 1,
+   "maxSpeed": 100,
+   "direction": true
+  },
+  {
+   "curTrack": 6,
+   "orientation": true,
+   "length": 15,
+   "curSectionID": 101,
+   "id": 2,
+   "maxSpeed": 100,
+   "direction": true
+  }
+ ],
+ "sections": [
+  {
+   "junctionIndex": -1,
+   "start": true,
+   "length": 200,
+   "detect": true,
+   "from": 7,
+   "id": 99,
+   "to": 1,
+   "hasJunc": false,
+   "tracks": [{
+    "fromJunc": -1,
+    "x": 550,
+    "length": 260,
+    "y": 650,
+    "toJunc": -1,
+    "from": 9,
+    "id": 0,
+    "to": 1,
+    "type": "Straight horizontal"
+   }]
+  },
+  {
+   "junctionIndex": -1,
+   "start": false,
+   "length": 300,
+   "detect": false,
+   "from": 0,
+   "id": 0,
+   "to": 2,
+   "hasJunc": false,
+   "tracks": [{
+    "fromJunc": -1,
+    "length": 260,
+    "toJunc": -1,
+    "from": 0,
+    "id": 1,
+    "to": 2,
+    "type": "Straight horizontal"
+   }]
+  },
+  {
+   "junctionIndex": 9,
+   "inbound": true,
+   "start": false,
+   "length": 300,
+   "detect": true,
+   "from": 1,
+   "id": 1,
+   "to": 3,
+   "hasJunc": true,
+   "juncID": 2,
+   "tracks": [
+    {
+     "fromJunc": -1,
+     "inbound": true,
+     "length": 65,
+     "thrown": 11,
+     "toJunc": -1,
+     "from": 1,
+     "id": 2,
+     "to": 3,
+     "draw": "UP",
+     "type": "Junction"
+    },
+    {
+     "fromJunc": -1,
+     "length": 520,
+     "toJunc": -1,
+     "from": 2,
+     "id": 3,
+     "to": 4,
+     "type": "Q3"
+    }
+   ]
+  },
+  {
+   "junctionIndex": -1,
+   "start": false,
+   "length": 300,
+   "detect": false,
+   "from": 2,
+   "id": 2,
+   "to": 4,
+   "hasJunc": false,
+   "tracks": [{
+    "fromJunc": -1,
+    "length": 520,
+    "toJunc": -1,
+    "from": 3,
+    "id": 4,
+    "to": 5,
+    "type": "Q2"
+   }]
+  },
+  {
+   "junctionIndex": -1,
+   "start": false,
+   "length": 300,
+   "detect": true,
+   "from": 3,
+   "id": 3,
+   "to": 5,
+   "hasJunc": false,
+   "tracks": [{
+    "fromJunc": -1,
+    "length": 325,
+    "toJunc": -1,
+    "from": 4,
+    "id": 5,
+    "to": 6,
+    "type": "Straight horizontal"
+   }]
+  },
+  {
+   "junctionIndex": -1,
+   "start": false,
+   "length": 300,
+   "detect": false,
+   "from": 4,
+   "id": 101,
+   "to": 6,
+   "hasJunc": false,
+   "tracks": [{
+    "fromJunc": -1,
+    "length": 325,
+    "toJunc": -1,
+    "from": 5,
+    "id": 6,
+    "to": 7,
+    "type": "Straight horizontal"
+   }]
+  },
+  {
+   "junctionIndex": -1,
+   "start": false,
+   "length": 300,
+   "detect": true,
+   "from": 5,
+   "id": 4,
+   "to": 7,
+   "hasJunc": false,
+   "tracks": [{
+    "fromJunc": -1,
+    "length": 520,
+    "toJunc": -1,
+    "from": 6,
+    "id": 7,
+    "to": 8,
+    "type": "Q1"
+   }]
+  },
+  {
+   "junctionIndex": 8,
+   "inbound": false,
+   "start": false,
+   "length": 300,
+   "detect": false,
+   "from": 6,
+   "id": 5,
+   "to": 0,
+   "hasJunc": true,
+   "juncID": 9,
+   "tracks": [
+    {
+     "fromJunc": -1,
+     "length": 520,
+     "toJunc": -1,
+     "from": 7,
+     "id": 8,
+     "to": 9,
+     "type": "Q4"
+    },
+    {
+     "fromJunc": -1,
+     "inbound": false,
+     "length": 65,
+     "thrown": 10,
+     "toJunc": -1,
+     "from": 8,
+     "id": 9,
+     "to": 0,
+     "draw": "UP",
+     "type": "Junction"
+    }
+   ]
+  },
+  {
+   "junctionIndex": -1,
+   "start": false,
+   "length": 300,
+   "detect": true,
+   "from": 7,
+   "id": 6,
+   "to": 9,
+   "hasJunc": false,
+   "tracks": [{
+    "fromJunc": 9,
+    "length": 260,
+    "toJunc": -1,
+    "from": 19,
+    "id": 10,
+    "to": 11,
+    "type": "Straight horizontal"
+   }]
+  },
+  {
+   "junctionIndex": 2,
+   "start": false,
+   "length": 300,
+   "detect": false,
+   "from": 8,
+   "id": 7,
+   "to": 10,
+   "hasJunc": false,
+   "tracks": [{
+    "fromJunc": -1,
+    "length": 260,
+    "toJunc": 2,
+    "from": 10,
+    "id": 11,
+    "to": 12,
+    "type": "Straight horizontal"
+   }]
+  },
+  {
+   "junctionIndex": 17,
+   "inbound": true,
+   "start": false,
+   "length": 300,
+   "detect": true,
+   "from": 9,
+   "id": 8,
+   "to": 11,
+   "hasJunc": true,
+   "juncID": 12,
+   "tracks": [
+    {
+     "fromJunc": -1,
+     "inbound": true,
+     "length": 65,
+     "thrown": 21,
+     "toJunc": -1,
+     "from": 11,
+     "id": 12,
+     "to": 13,
+     "draw": "UP",
+     "type": "Junction"
+    },
+    {
+     "fromJunc": -1,
+     "length": 390,
+     "toJunc": -1,
+     "from": 12,
+     "id": 13,
+     "to": 14,
+     "type": "Q3"
+    }
+   ]
+  },
+  {
+   "junctionIndex": -1,
+   "start": false,
+   "length": 300,
+   "detect": false,
+   "from": 12,
+   "id": 9,
+   "to": 10,
+   "hasJunc": false,
+   "tracks": [{
+    "fromJunc": -1,
+    "length": 390,
+    "toJunc": -1,
+    "from": 13,
+    "id": 14,
+    "to": 15,
+    "type": "Q2"
+   }]
+  },
+  {
+   "junctionIndex": -1,
+   "start": false,
+   "length": 300,
+   "detect": true,
+   "from": 11,
+   "id": 10,
+   "to": 13,
+   "hasJunc": false,
+   "tracks": [{
+    "fromJunc": -1,
+    "length": 325,
+    "toJunc": -1,
+    "from": 14,
+    "id": 15,
+    "to": 16,
+    "type": "Straight horizontal"
+   }]
+  },
+  {
+   "junctionIndex": -1,
+   "start": false,
+   "length": 300,
+   "detect": false,
+   "from": 12,
+   "id": 11,
+   "to": 14,
+   "hasJunc": false,
+   "tracks": [{
+    "fromJunc": -1,
+    "length": 325,
+    "toJunc": -1,
+    "from": 15,
+    "id": 16,
+    "to": 17,
+    "type": "Straight horizontal"
+   }]
+  },
+  {
+   "junctionIndex": -1,
+   "start": false,
+   "length": 300,
+   "detect": true,
+   "from": 13,
+   "id": 12,
+   "to": 15,
+   "hasJunc": false,
+   "tracks": [{
+    "fromJunc": -1,
+    "length": 390,
+    "toJunc": -1,
+    "from": 16,
+    "id": 17,
+    "to": 18,
+    "type": "Q1"
+   }]
+  },
+  {
+   "junctionIndex": 16,
+   "inbound": false,
+   "start": false,
+   "length": 300,
+   "detect": false,
+   "from": 14,
+   "id": 13,
+   "to": 8,
+   "hasJunc": true,
+   "juncID": 19,
+   "tracks": [
+    {
+     "fromJunc": -1,
+     "length": 390,
+     "toJunc": -1,
+     "from": 17,
+     "id": 18,
+     "to": 19,
+     "type": "Q4"
+    },
+    {
+     "fromJunc": -1,
+     "inbound": false,
+     "length": 65,
+     "thrown": 20,
+     "toJunc": -1,
+     "from": 18,
+     "id": 19,
+     "to": 10,
+     "draw": "UP",
+     "type": "Junction"
+    }
+   ]
+  },
+  {
+   "junctionIndex": -1,
+   "start": false,
+   "length": 300,
+   "detect": true,
+   "from": 15,
+   "id": 14,
+   "to": 17,
+   "hasJunc": false,
+   "tracks": [{
+    "fromJunc": -1,
+    "length": 260,
+    "toJunc": -1,
+    "from": 19,
+    "id": 20,
+    "to": 21,
+    "type": "Straight horizontal"
+   }]
+  },
+  {
+   "junctionIndex": -1,
+   "start": false,
+   "length": 300,
+   "detect": false,
+   "from": 13,
+   "id": 15,
+   "to": 15,
+   "hasJunc": false,
+   "tracks": [{
+    "fromJunc": -1,
+    "length": 260,
+    "toJunc": -1,
+    "from": 20,
+    "id": 21,
+    "to": 12,
+    "type": "Straight horizontal"
+   }]
+  }
+ ],
+ "stocks": []
+}
