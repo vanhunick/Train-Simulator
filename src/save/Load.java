@@ -90,12 +90,6 @@ public class Load {
                 sections[i].getSection().setJuncSectionIndex(junctionIndex);
             }
 
-
-
-
-            // Set the starts of the tracks
-//            setUpStartingLocations(tracks.toArray(new DefaultTrack[tracks.size()]),startingTrack,0);
-
             Set<Integer> s = new HashSet<>();
             for(int i = 1; i < tracks.size(); i++){
                 s.add(i);
@@ -144,11 +138,9 @@ public class Load {
                     break;
                 }
             }
-
             DrawableTrain dt = new DrawableTrain(t,section,track);
             trains.add(dt);
         }
-
         return trains;
     }
 
@@ -168,7 +160,6 @@ public class Load {
             double weight = stockObject.getDouble("weight");
 
             RollingStock stock = new RollingStock(length, id, weight);
-
             DrawableRollingStock drawStock = new DrawableRollingStock(stock,null,dir,ori);
 
             DefaultTrack track = null;
@@ -190,11 +181,9 @@ public class Load {
             int conToUs = stockObject.getInt("conToUs");
             int conTo = stockObject.getInt("conTo");
 
-
             for(DrawableRollingStock s : stocks){
                 if(conToUs != -1 && s.getStock().getRollID() == conToUs){
                     stocks.get(i).setRollingStockConToUs(s);// I has to be the same in the list as the array
-
                 }
                 if(conTo != -1 &&s.getStock().getRollID() == conTo){
                     stocks.get(i).setConnection(s);// I has to be the same in the list as the array
@@ -208,13 +197,9 @@ public class Load {
                 }
             }
         }
-
         return stocks;
     }
 
-    public void connectTrainsAndStocks(){
-
-    }
 
     public void setupTracks(DefaultTrack currentTrack, DefaultTrack[] tracks, Set<Integer> todo){
         if(currentTrack instanceof JunctionTrack){
@@ -225,18 +210,15 @@ public class Load {
             } else {
                 toIndex = jt.getTo();
             }
-            System.out.println(toIndex);
             if(todo.contains(toIndex)){
                 tracks[toIndex].setStart(jt);
                 todo.remove(toIndex);
                 setupTracks(tracks[toIndex], tracks,todo);
             }
-
             if(!jt.inBound() && todo.contains(jt.getOutboundToThrown())){
                 tracks[jt.getOutboundToThrown()].setStart(jt.getTrackThrown());
                 setupTracks(tracks[jt.getOutboundToThrown()], tracks,todo);
             }
-
         }
         else {
             if(todo.contains(currentTrack.getTo())){
@@ -247,44 +229,18 @@ public class Load {
     }
 
 
-
-
-    public void setUpStartingLocations(DefaultTrack[] tracks, int startTrackIndex, int count){
-        if(count == tracks.length-1){
-            return;
-        }
-
-        //thing at starting index has been created
-        for(int i = 0; i < tracks.length; i++){
-            if(tracks[i].getFrom() == startTrackIndex){
-                if(tracks[startTrackIndex] instanceof JunctionTrack){
-                    JunctionTrack jt = (JunctionTrack)tracks[startTrackIndex];
-
-                    if(!jt.inBound()){
-                        if(jt.getOutboundToThrown() == i){
-                            tracks[i].setStart(jt.getTrackThrown());
-                        }else {
-                            tracks[i].setStart(jt.getStraightTrack());// TODO NOT SURE IF WILL WORK IN ALL SITUATIONS
-                        }
-                    }
-                }
-                else {
-                    tracks[i].setStart(tracks[startTrackIndex]);
-                }
-
-                count++;
-
-                setUpStartingLocations(tracks,i,count);
-
-                return;
-            }
-        }
-    }
-
+    /**
+     * Creates and returns a track in the railway. From the JSON object
+     *
+     * @param trackObject the track to get the data from
+     *
+     * @return The track
+     * */
     public static DefaultTrack getTrackFromObject(JSONObject trackObject){
-        int id = trackObject.getInt("id");
-        int length = trackObject.getInt("length");
+        int id = trackObject.getInt("id"); // Id of the track
+        int length = trackObject.getInt("length"); // Length of the track
 
+        // Process the type of track
         switch (trackObject.getString("type")){
             case "Q1":
                 return new Quart1(length,1,id);
@@ -308,23 +264,28 @@ public class Load {
                 } else{
                   junctionTrack.setInboundFromThrown(thrownIndex);
                 }
-
                 return junctionTrack;
-
             default:
                 System.out.println("No Match for type");
         }
-
-        // Should never happen
-        return null;
+        return null;// Should never happen
     }
 
+    /**
+     * Creates and returns the starting track of the railway. From the JSON object
+     *
+     * @param trackObject the track to get the data from
+     *
+     * @return The starting track
+     * */
     public static DefaultTrack getStartTrackFromObject(JSONObject trackObject){
-        int id = trackObject.getInt("id");
-        int length = trackObject.getInt("length");
-        int x = trackObject.getInt("x");
-        int y = trackObject.getInt("y");
 
+        int id = trackObject.getInt("id"); // The id of the track
+        int length = trackObject.getInt("length"); // The length of the track
+        int x = trackObject.getInt("x"); // The starting x value of the location
+        int y = trackObject.getInt("y"); // The starting y value of the location
+
+        // Process the type of track
         switch (trackObject.getString("type")){
             case "Q1":
                 return new Quart1(x,y,length,1,"RIGHT",id);//TODO put direction in file
@@ -339,29 +300,10 @@ public class Load {
             case "Straight vertical":
                 return new StraightVert(x,y,length,5,"RIGHT",id);
             case "Junction":
-                boolean inbound = trackObject.getBoolean("inbound");//TODO
-                String drawDirection = trackObject.getString("draw");
-                return new JunctionTrack(x,y,length,6,id,"RIGHT",false,inbound, drawDirection);
+                return new JunctionTrack(x,y,length,6,id,"RIGHT",false,trackObject.getBoolean("inbound"), trackObject.getString("draw"));
             default:
                 System.out.println("No Match for type");
         }
-
-        // Should never happen
-        return null;
-    }
-
-    public static void main(String[] args){
-        Load load = new Load();
-        File f = new File("src/tracks/atrackandtrains.json");
-
-        LoadedRailway l = load.loadFromFile(f,"src/tracks/atrackandtrains.json");
-
-        for(DefaultTrack t : l.tracks){
-            System.out.println(t);
-        }
-
-        for(DrawableTrain dt : l.trains){
-            System.out.println(dt);
-        }
+        return null;// Should never happen
     }
 }
