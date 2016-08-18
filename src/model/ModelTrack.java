@@ -4,12 +4,13 @@ import controllers.Controller;
 import view.Drawable.section_types.DefaultTrack;
 import view.Drawable.section_types.JunctionTrack;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by vanhunick on 22/03/16.
  */
-public class ModelTrack implements Events{
+public class ModelTrack implements Events, Event.Listener{
 
     // List of trains on the railway
     private List<Train> trains;
@@ -21,6 +22,8 @@ public class ModelTrack implements Events{
 
     private boolean useController;
 
+    private List<Event.Listener> listeners;
+
     /**
      * Created a ModelTrack object for sending and receiving events
      *
@@ -31,6 +34,11 @@ public class ModelTrack implements Events{
     public ModelTrack(List<Train> trains, Section[] sections){
         this.trains = trains;
         this.sections = sections;
+        this.listeners = new ArrayList<>();
+    }
+
+    public void register(Event.Listener l){
+        listeners.add(l);
     }
 
 
@@ -63,12 +71,12 @@ public class ModelTrack implements Events{
     public void sectionChanged(int id) {
         for(Section s : sections){
             if(s.getID() == id){
-
-                // If the controller is controlling the trains send the event through
-                if(useController){
-                    controller.receiveSectionEvent(id);
+                if(s.getTrainOn()){
+                    eventFromSim(new Event.SectionChanged(id,false));
                 }
-
+                else {
+                    eventFromSim(new Event.SectionChanged(id,true));
+                }
                 //update the section status
                 s.setTrainOn(!s.getTrainOn());
             }
@@ -117,4 +125,29 @@ public class ModelTrack implements Events{
         trains.add(train);
     }
 
+    public void eventFromSim(Event e){
+        listeners.forEach(l -> l.notify(e));
+    }
+
+
+    @Override
+    public void notify(Event e) {
+        // Change speed event
+        if(e instanceof Event.SpeedChanged){
+            Event.SpeedChanged s = (Event.SpeedChanged)e;
+            setSpeed(s.getLocomotive(), s.getSpeed());
+        }
+
+        // Change direction event
+        if(e instanceof Event.DirectionChanged){
+            Event.DirectionChanged d = (Event.DirectionChanged)e;
+            setDirection(d.getLocomotive(),d.getDirection());
+        }
+
+        // Change junction event
+        if(e instanceof Event.TurnoutChanged){
+            Event.TurnoutChanged t = (Event.TurnoutChanged)e;
+            setJunction(t.getTurnout(),t.getThrown());
+        }
+    }
 }

@@ -12,7 +12,7 @@ import java.util.*;
 public class SectionGraph {
 
     // The sections in the railway
-    private Section[] sections;
+    private ControllerSection[] sections;
 
     // Each node represents a section
     private Set<Node> nodes;
@@ -20,11 +20,11 @@ public class SectionGraph {
 
     // Node to use for finding shortest path
     private class Node implements Comparable<Node>{
-        Section s;
+        ControllerSection s;
         Node prev;
         double minCost = Double.POSITIVE_INFINITY;
 
-        public Node(Section s){
+        public Node(ControllerSection s){
             this.s = s;
         }
 
@@ -33,7 +33,7 @@ public class SectionGraph {
     }
 
 
-    public SectionGraph(Section[] sections){
+    public SectionGraph(ControllerSection[] sections){
         this.nodes = createNodes(sections);
         this.sections = sections;
     }
@@ -50,17 +50,17 @@ public class SectionGraph {
         return null;
     }
 
-    public Set<Node> createNodes(Section[] sections){
+    public Set<Node> createNodes(ControllerSection[] sections){
         Set nodes = new HashSet<>();
 
-        for(Section s : sections){
+        for(ControllerSection s : sections){
             nodes.add(new Node(s));
         }
 
         return nodes;
     }
 
-    public List<Integer> getRoute(Section start, Section destination, boolean nat){
+    public List<Integer> getRoute(ControllerSection start, ControllerSection destination, boolean nat){
         Node startNode = null;
         Node destNode = null;
         // Reset Nodes
@@ -78,7 +78,7 @@ public class SectionGraph {
 
         dijkstraSearch(startNode, nat);
         List<Integer> path = new ArrayList<>();
-        getShortestPathTo(destNode).forEach(pn -> path.add(pn.s.getID()));
+        getShortestPathTo(destNode).forEach(pn -> path.add(pn.s.id));
 
         return path;
     }
@@ -99,11 +99,11 @@ public class SectionGraph {
             Node dest = null;
 
             // The train is going with the track
-            if(dn.s.getJuncSectionIndex() != -1){ //TODO not sure if I need to know if inbound or outbound
+            if(dn.s.junctionIndex != -1){ //TODO not sure if I need to know if inbound or outbound
                 if(nat){
-                    juncDest = getNode(dn.s.getJuncSectionIndex());
+                    juncDest = getNode(dn.s.junctionIndex);
 
-                    double destCost = juncDest.s.getLength();
+                    double destCost = juncDest.s.length;
                     double distanceThroughR = dn.minCost + destCost;
                     if (distanceThroughR < juncDest.minCost) {
                         nodeQueue.remove(juncDest);
@@ -113,10 +113,10 @@ public class SectionGraph {
                     }
                 }
 
-                if(dn.s.hasJunctionTrack() && nat && !dn.s.getJunction().inBound()){
-                    juncDest = getNode(dn.s.getJuncSectionIndex());
+                if(dn.s.containsJunction && nat && !dn.s.junction.inbound){
+                    juncDest = getNode(dn.s.junctionIndex);
 
-                    double destCost = juncDest.s.getLength();
+                    double destCost = juncDest.s.length;
                     double distanceThroughR = dn.minCost + destCost;
                     if (distanceThroughR < juncDest.minCost) {
                         nodeQueue.remove(juncDest);
@@ -128,10 +128,9 @@ public class SectionGraph {
             }
 
             // Set the destination depending on if the train is following the nat orientation of the track
-//            dest = nat ? getNode(dn.s.getToIndex()) : getNode(dn.s.getFromIndex());
-            dest = nat ? getNode(dn.s.getToIndexNat()) : getNode(dn.s.getFromIndexNat());
+            dest = nat ? getNode(dn.s.toIndex) : getNode(dn.s.fromIndex);
 
-            double destCost = dest.s.getLength();
+            double destCost = dest.s.length;
             double distanceThroughR = dn.minCost + destCost;
             if (distanceThroughR < dest.minCost) {
                 nodeQueue.remove(dest);
@@ -165,8 +164,8 @@ public class SectionGraph {
         for(int i = 0; i < drawSections.length; i++){
             sections[i] = drawSections[i].getSection();
         }
-        SectionGraph sg = new SectionGraph(sections);
+//        SectionGraph sg = new SectionGraph(sections);
 
-        System.out.println(sg.getRoute(sections[0], sections[9],true));
+//        System.out.println(sg.getRoute(sections[0], sections[9],true));
     }
 }

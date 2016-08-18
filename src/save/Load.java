@@ -19,10 +19,6 @@ import java.util.*;
  */
 public class Load {
 
-
-
-
-
     public LoadedRailway loadFromFile(File file, String filePath){
         System.out.println("Loading File");
         try {
@@ -137,7 +133,6 @@ public class Load {
             boolean dir = trainObject.getBoolean("direction");
             boolean ori = trainObject.getBoolean("orientation");
 
-            //TODO acc and decel
             Train t = new Train(id,length,maxSpeed,dir,ori,71000);//TODO save weight
 
             DefaultTrack track = null;
@@ -330,8 +325,6 @@ public class Load {
         int x = trackObject.getInt("x");
         int y = trackObject.getInt("y");
 
-
-
         switch (trackObject.getString("type")){
             case "Q1":
                 return new Quart1(x,y,length,1,"RIGHT",id);//TODO put direction in file
@@ -357,8 +350,6 @@ public class Load {
         return null;
     }
 
-
-
     public static void main(String[] args){
         Load load = new Load();
         File f = new File("src/tracks/atrackandtrains.json");
@@ -372,8 +363,5 @@ public class Load {
         for(DrawableTrain dt : l.trains){
             System.out.println(dt);
         }
-
     }
-
-
 }

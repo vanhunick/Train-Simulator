@@ -1,10 +1,17 @@
 package controllers;
 
+import model.Event;
 import model.ModelTrack;
 import model.Section;
 import model.Train;
+import save.Load;
+import save.LoadControlerSections;
+import save.LoadedRailway;
+import view.Drawable.section_types.DrawableSection;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -16,9 +23,6 @@ public abstract class DefaultController implements Controller {
     // List of trains to control
     private List<ControllerTrain> trains;
 
-    // List of sections that generate events
-    private Section[] sections;
-
     // Used because the controller should not be able to access information inside the track sections
     private ControllerSection[] contrlSections;
 
@@ -28,28 +32,34 @@ public abstract class DefaultController implements Controller {
     // Used to route the train
     private SectionGraph sectionGraph;
 
+    // Listeners to update when event occours
+    private List<Event.Listener> listeners;
 
-    /**
-     * Sets up the controller copies the information from the sections and the starting location of trains
-     * into the controller objects
-     *
-     * @param  trainStartMap the trains and the starting locations
-     *
-     * @param sections the sections in the track
-     *
-     * @param model the model to send the events to and receive events from
-     * */
-    public DefaultController(Map<Train, Integer> trainStartMap, Section[] sections, ModelTrack model){
-        this.model = model;
-        this.sections = sections;
-        this.contrlSections = new ControllerSection[sections.length];
-        trains = new ArrayList<>();
+    public DefaultController(ControllerSection[] sections, List<ControllerTrain> trains){
+        this.listeners = new ArrayList<>();
+        this.contrlSections = sections;
+        this.trains = trains;
 
-        // Add all the trains to the list of trains
-        for(Train t : trainStartMap.keySet()){
-            trains.add(new ControllerTrain(t.getId(),t.getDirection(),t.getOrientation(),trainStartMap.get(t),t.getDestinationID(), t.getDestinationIDs()));// TODO chuck in equals meth for train
-        }
         createControllerSections();
+    }
+
+    public DefaultController(String filePath){
+        this.listeners = new ArrayList<>();
+
+        LoadControlerSections.LoadedControlRailway  loadedRailway = new LoadControlerSections().loadedControlRailway(filePath);
+
+        this.contrlSections = loadedRailway.sections;
+        this.trains = loadedRailway.trains;
+
+        createControllerSections();
+    }
+
+    public void register(Event.Listener l){
+        listeners.add(l);
+    }
+
+    public void send(Event e){
+        listeners.forEach(l -> l.notify(e));
     }
 
     public abstract void startControlling();
@@ -58,14 +68,11 @@ public abstract class DefaultController implements Controller {
      * Sets up the controller section for the controller and locks the tracks the starting trains are on
      * */
     private void createControllerSections(){
-        for(int i = 0; i < sections.length; i++){
-            contrlSections[i] = new ControllerSection(sections[i],false);
-        }
 
         // Lock the sections that have trains on them
         for(ControllerSection cs :contrlSections){
             for(ControllerTrain ct : trains){
-                if(ct.curSectionID == cs.section.getID()){
+                if(ct.curSectionID == cs.id){
                     // There is a train starting on this section
                     cs.on = true;
                 }
@@ -84,10 +91,10 @@ public abstract class DefaultController implements Controller {
     public ControllerSection getNextSection(ControllerTrain train, ControllerSection currentSection){
         // Check if train is going along nat track direction
         if(forwardWithTrack(train)){
-            return getContrlSections()[currentSection.section.getToIndex()];
+            return getContrlSections()[currentSection.toIndex];
         }
         else {
-            return getContrlSections()[currentSection.section.getFromIndex()];
+            return getContrlSections()[currentSection.fromIndex];
         }
     }
 
@@ -108,12 +115,12 @@ public abstract class DefaultController implements Controller {
         this.trains = trains;
     }
 
-    public Section[] getSections() {
-        return sections;
+    public ControllerSection[] getSections() {
+        return contrlSections;
     }
 
-    public void setSections(Section[] sections) {
-        this.sections = sections;
+    public void setSections(ControllerSection[] sections) {
+        this.contrlSections = sections;
     }
 
     public ControllerSection[] getContrlSections() {

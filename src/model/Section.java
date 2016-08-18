@@ -19,7 +19,7 @@ public class Section {
     // Section it goes to
     private int to;
 
-    // IDs
+    // Indexes
     private int toIndex;
     private int fromIndex;
     private int juncSectionIndex = -1;

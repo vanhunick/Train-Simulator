@@ -2,6 +2,7 @@ package controllers;
 
 import model.*;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -13,14 +14,10 @@ public class DeadLockController  extends DefaultController implements Controller
      * Sets up the controller copies the information from the sections and the starting location of trains
      * into the controller objects
      *
-     * @param  trainStartMap the trains and the starting locations
-     *
      * @param sections the sections in the track
-     *
-     * @param model the model to send the events to and receive events from
      * */
-    public DeadLockController(Map<Train, Integer> trainStartMap, Section[] sections, ModelTrack model){
-        super(trainStartMap,sections,model);
+    public DeadLockController(ControllerSection[] sections, List<ControllerTrain> trains){
+        super(sections,trains);
 
         lockControllerSections();
     }
@@ -103,7 +100,7 @@ public class DeadLockController  extends DefaultController implements Controller
                     trainWithLock.lockNext = -1;
 
                     // There is a train on the next section so set to true
-                    getContrlSections()[cs.section.getToIndex()].on = true;
+                    getContrlSections()[cs.toIndex].on = true;
 
                     // Set the current section of the train to the next section
                     trainWithLock.curSectionID = getNextSection(trainWithLock, getControllerSection(trainWithLock.curSectionID)).id;
@@ -114,7 +111,7 @@ public class DeadLockController  extends DefaultController implements Controller
                     cs.on = true;
 
                     // There is now nothing on the track before it so set to false
-                    getContrlSections()[cs.section.getFromIndex()].on = false;
+                    getContrlSections()[cs.fromIndex].on = false;
 
                     // Get the train that holds the lock to this
                     ControllerTrain trainOnSectionBefore = getTrainThatHoldSectionLock(cs.id);
@@ -168,7 +165,7 @@ public class DeadLockController  extends DefaultController implements Controller
         for(ControllerSection cs :getContrlSections()){
             if(cs.on){
                 for(ControllerTrain ct : getTrains()){
-                    if(ct.curSectionID == cs.section.getID()){
+                    if(ct.curSectionID == cs.id){
                         ct.lockCur = cs.id;
                     }
                 }
@@ -198,5 +195,10 @@ public class DeadLockController  extends DefaultController implements Controller
         }
         // Error
         return null;
+    }
+
+    @Override
+    public void notify(Event e) {
+
     }
 }

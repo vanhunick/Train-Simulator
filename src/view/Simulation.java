@@ -1,9 +1,7 @@
 package view;
 
 import Util.CustomTracks;
-import controllers.DeadLockController;
-import controllers.DefaultController;
-import controllers.RoutingController;
+import controllers.*;
 import javafx.scene.canvas.GraphicsContext;
 
 import javafx.scene.input.MouseButton;
@@ -84,13 +82,44 @@ public class Simulation implements MouseEvents {
         } else if(mode.equals("Locking")){
             sendEventToUI("Controlling with Locking controller",0);
 
-            controlMode(new DeadLockController(getStartMap(),getSections(),modelTrack));
+            controlMode(new DeadLockController(convertoControllerSections(getSections()),convertToControlTrains(trains)));
 
         } else if(mode.equals("Routing")){
             sendEventToUI("Controlling with routing controller",0);
-            controlMode(new RoutingController(getStartMap(),getSections(),modelTrack));
+            controlMode(new RoutingController(convertoControllerSections(getSections()),convertToControlTrains(trains)));
         }
     }
+
+    /**
+     * The controller cannot use the Section class so we must turn them into Controller Sections
+     * */
+    public ControllerSection[] convertoControllerSections(Section[] sections){
+        ControllerSection[] controllerSections = new ControllerSection[sections.length];
+
+        for(int i = 0; i < sections.length; i++){
+            controllerSections[i] = new ControllerSection(sections[i].getID(),sections[i].getFromIndex(),sections[i].getToIndex(),sections[i].getJuncSectionIndex(),sections[i].getLength());
+
+            if(sections[i].hasJunctionTrack()){
+                JunctionTrack j = sections[i].getJunction();
+                controllerSections[i].addJunction(j.getId(),j.inBound(),j.getThrown());
+            }
+        }
+        return controllerSections;
+    }
+
+    /**
+     * The controller cannot use the Train class so we must turn them into Controller Trains
+     * */
+    public List<ControllerTrain> convertToControlTrains(List<DrawableTrain> trains){
+        List<ControllerTrain> controllerTrains = new ArrayList<>();
+
+        for(DrawableTrain t : trains){
+            controllerTrains.add(new ControllerTrain(t.getTrain().getId(),t.getDirection(),t.getOrientation(),t.getCurSection().getSection().getID()));
+        }
+        return controllerTrains;
+    }
+
+
 
     /**
      * Returns the available list of controllers for the user interface
@@ -174,6 +203,10 @@ public class Simulation implements MouseEvents {
     public void controlMode(DefaultController c){
         modelTrack.setController(c);
         modelTrack.useController(true);
+
+        modelTrack.register(c);
+        c.register(modelTrack);
+
         c.startControlling();
     }
 

@@ -13,11 +13,11 @@ import view.Simulation;
 /**
  * Created by vanhunick on 11/08/16.
  */
-public class ControllerSeclection {
+public class ControllerSelection {
 
     private String curLockingSelection;
 
-    public ControllerSeclection(Simulation sim){
+    public ControllerSelection(Simulation sim){
         Dialog dialog = new Dialog<>();
         dialog.initModality(Modality.WINDOW_MODAL);
         dialog.setTitle("Select a controller");

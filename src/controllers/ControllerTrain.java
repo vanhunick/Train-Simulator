@@ -53,4 +53,18 @@ public class ControllerTrain {
             this.lockCur = -1;
             this.destinationIDs = destinationIDs;
         }
+
+        /**
+         * Constructor without a destination
+         * */
+        public ControllerTrain(int id, boolean direction, boolean orientation, int startingSection){
+            this.id = id;
+            this.direction = direction;
+            this.orientation = orientation;
+            this.curSectionID = startingSection;
+        }
+
+        public void setDestinationList(List<Integer> destinationIDs){
+            this.destinationIDs = destinationIDs;
+        }
 }

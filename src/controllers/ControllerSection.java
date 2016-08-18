@@ -9,33 +9,36 @@ import model.Section;
  * Represents a section on the track being controlled
  * */
 public class ControllerSection {
-    Section section;
-
     // Id of the section
-    int id;
+    final int id;
 
     // If there is currently a train on it or not
     boolean on;
     boolean containsJunction;
 
-    // The index of the section the junction leads to
-    int toJunctionIndex;
+    // The index of the section the junction
+    int junctionIndex;
+
+    // From and to index of the section
+    final int fromIndex;
+    final int toIndex;
+
+    // Length of the section
+    final double length;
 
 
     ControllerJunction junction;
 
-    /**
-     * Creates a controller section
-     * */
-    public ControllerSection(Section section, boolean on){
-        this.id = section.getID();
-        this.section = section;
-        this.on = on;
+    public ControllerSection(int id, int fromIndex, int toIndex, int junctionIndex, double length){
+        this.id = id;
+        this.fromIndex = fromIndex;
+        this.toIndex = toIndex;
+        this.junctionIndex = junctionIndex;
+        this.length = length;
+    }
 
-        if(section.hasJunctionTrack()){
-            containsJunction = true;
-            toJunctionIndex = section.getJuncSectionIndex();
-            junction = new ControllerJunction(section.getJunction().getId(),section.getJunction().inBound(), section.getJunction().getThrown());
-        }
+    public void addJunction(int junctionID, boolean inBound, boolean thrown){
+        junction = new ControllerJunction(junctionID, inBound, thrown);
+        containsJunction = true;
     }
 }

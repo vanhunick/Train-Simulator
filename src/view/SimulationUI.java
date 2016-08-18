@@ -70,7 +70,7 @@ public class SimulationUI implements MouseEvents{
 
     public void startControlerDialog(){
         System.out.println("Starting dialog");
-        ControllerSeclection s = new ControllerSeclection(sim);
+        ControllerSelection s = new ControllerSelection(sim);
         String selection = s.getCurLockingSelection();
 
         sim.setMode(selection);

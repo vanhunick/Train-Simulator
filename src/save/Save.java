@@ -68,10 +68,16 @@ public class Save {
             sectionObject.put("to",s.getSection().getTo());
             sectionObject.put("hasJunc",s.getSection().hasJunctionTrack());
 
-            if(s.getSection().hasJunctionTrack()){
-                sectionObject.put("junctionIndex",s.getSection().getJuncSectionIndex());
-            }
 
+            // Always pyt junction index default is -1
+            sectionObject.put("junctionIndex",s.getSection().getJuncSectionIndex());
+
+            // Save junction information
+            if(s.getSection().hasJunctionTrack()){
+                JunctionTrack jt = s.getSection().getJunction();
+                sectionObject.put("inbound",jt.inBound());
+                sectionObject.put("juncID",jt.getId());
+            }
 
             JSONArray trackArray = new JSONArray();
 
@@ -125,6 +131,7 @@ public class Save {
             trainObject.put("maxSpeed",t.getTrain().getMaxSpeed());
             trainObject.put("direction",t.getTrain().getDirection());
             trainObject.put("orientation",t.getTrain().getOrientation());
+            trainObject.put("curSectionID",t.getCurSection().getSection().getID());
 
             trainArray.put(trainObject);
         }
