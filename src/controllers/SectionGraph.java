@@ -155,17 +155,4 @@ public class SectionGraph {
         Collections.reverse(path);
         return path;
     }
-
-    public static void main(String[] args){
-        CustomTracks ct = new CustomTracks("FULL");
-        DrawableSection[] drawSections = ct.getSections();
-
-        Section[] sections = new Section[drawSections.length];
-        for(int i = 0; i < drawSections.length; i++){
-            sections[i] = drawSections[i].getSection();
-        }
-//        SectionGraph sg = new SectionGraph(sections);
-
-//        System.out.println(sg.getRoute(sections[0], sections[9],true));
-    }
 }

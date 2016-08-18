@@ -7,52 +7,22 @@ import java.util.List;
  */
 public class ControllerTrain {
 
-        // The id of the train
-        int id;
+        final int id; // The id of the train
 
         // The direction and orientation of the train
         boolean direction;
         boolean orientation;
 
-        // The id of the section it is currently on
-        int curSectionID;
+        int curSectionID; // The id of the section it is currently on
 
-        // Lock of the current section it is on
-        int lockCur;
+        int lockCur; // Lock of the current section it is on
+        int lockNext; // Lock of the next section it is trying to get to
 
-        // Lock of the next section it is trying to get to
-        int lockNext;
-
-
-        // The id of the section that is the destination
-        int destinationID;
-
-        List<Integer> destinationIDs;
-        int curDest;
+        int destinationID; // The id of the section that is the destination
+        List<Integer> destinationIDs; // List of destination the train should go to
+        int curDest; // The current goal for the train to get to
 
         int srcSection;
-
-
-        /**
-         * Creates a controller train
-         *
-         * @param id the id of the train
-         *
-         * @param direction the direction the train is going
-         *
-         * @param orientation if the train is going along the natural orientation or against
-         * */
-        public ControllerTrain(int id, boolean direction, boolean orientation, int startingSection, int destinationID, List<Integer> destinationIDs){
-            this.id = id;
-            this.direction = direction;
-            this.orientation = orientation;
-            this.curSectionID = startingSection;
-            this.destinationID = destinationID;
-            this.srcSection = curSectionID;
-            this.lockNext = -1;
-            this.lockCur = -1;
-            this.destinationIDs = destinationIDs;
-        }
 
         /**
          * Constructor without a destination

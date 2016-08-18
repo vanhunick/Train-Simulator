@@ -107,9 +107,7 @@ public abstract class DefaultController implements Controller {
      *
      * @param t train to check
      * */
-    public boolean forwardWithTrack(ControllerTrain t){
-        return t.orientation && t.direction || !t.orientation && !t.direction;
-    }
+    public boolean forwardWithTrack(ControllerTrain t){return t.orientation && t.direction || !t.orientation && !t.direction;}
 
     public List<ControllerTrain> getTrains() {
         return trains;
@@ -131,10 +129,6 @@ public abstract class DefaultController implements Controller {
         return contrlSections;
     }
 
-    public void setContrlSections(ControllerSection[] contrlSections) {
-        this.contrlSections = contrlSections;
-    }
-
     public ModelTrack getModel() {
         return model;
     }
@@ -143,11 +137,4 @@ public abstract class DefaultController implements Controller {
         this.model = model;
     }
 
-    public SectionGraph getSectionGraph() {
-        return sectionGraph;
-    }
-
-    public void setSectionGraph(SectionGraph sectionGraph) {
-        this.sectionGraph = sectionGraph;
-    }
 }

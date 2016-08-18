@@ -9,25 +9,20 @@ import model.Section;
  * Represents a section on the track being controlled
  * */
 public class ControllerSection {
-    // Id of the section
-    final int id;
 
-    // If there is currently a train on it or not
-    boolean on;
-    boolean containsJunction;
+    final int id; // Id of the section
 
-    // The index of the section the junction
-    int junctionIndex;
+    boolean on; // If there is currently a train on it or not
+    boolean containsJunction; // If the section contains a junction or not
 
-    // From and to index of the section
-    final int fromIndex;
-    final int toIndex;
+    int junctionIndex; // The index of the section the junction
 
-    // Length of the section
-    final double length;
+    final int fromIndex; // From index of section that comes before it
+    final int toIndex; // To index of the section that comes after it
 
+    final double length; // Length of the section
 
-    ControllerJunction junction;
+    ControllerJunction junction; // Junction inside the section if it has one
 
     public ControllerSection(int id, int fromIndex, int toIndex, int junctionIndex, double length){
         this.id = id;
