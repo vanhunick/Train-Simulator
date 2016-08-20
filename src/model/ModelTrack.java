@@ -134,6 +134,7 @@ public class ModelTrack implements Events, Event.Listener{
     public void notify(Event e) {
         // Change speed event
         if(e instanceof Event.SpeedChanged){
+            System.out.println("Speed update");
             Event.SpeedChanged s = (Event.SpeedChanged)e;
             setSpeed(s.getLocomotive(), s.getSpeed());
         }

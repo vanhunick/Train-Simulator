@@ -27,8 +27,22 @@ public class DeadLockController  extends DefaultController implements Controller
      * Called from the model to start the controller calling the trains
      * */
     public void startControlling(){
+        setTrainSpeed();
         updateTrains();
     }
+
+
+    public void setTrainSpeed(){
+
+        for(ControllerTrain t : getTrains()){
+            if(t.id == 1){
+                send(new Event.SpeedChanged(t.id,40));
+            } else {
+                send(new Event.SpeedChanged(t.id,20));
+            }
+        }
+    }
+
 
 
     /**
@@ -51,10 +65,14 @@ public class DeadLockController  extends DefaultController implements Controller
                 }
             }
             if(locked){
-                getModel().setSpeed(t.id,0); // Make the train stop
+                send(new Event.SpeedChanged(t.id,0));
             }
             else {
-                getModel().setSpeed(t.id,400); // Make the train Go
+                if(t.id == 1){
+                    send(new Event.SpeedChanged(t.id,40));
+                } else {
+                    send(new Event.SpeedChanged(t.id,5));
+                }
                 t.lockNext = nextSec.id;
             }
         }
@@ -198,7 +216,9 @@ public class DeadLockController  extends DefaultController implements Controller
     }
 
     @Override
-    public void notify(Event e) {
-
+    public void notify(Event e){
+        if(e instanceof Event.SectionChanged){
+            this.receiveSectionEvent(((Event.SectionChanged) e).getSection());
+        }
     }
 }
