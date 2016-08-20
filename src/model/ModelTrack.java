@@ -87,7 +87,7 @@ public class ModelTrack implements Events, Event.Listener{
     public void setSpeed(int trainID, double speed) {
         for(Train t : trains){
             if(t.getId() == trainID){
-                t.setTargetSpeed(speed);
+                t.setTargetSpeedPercentage((float)speed);
             }
         }
     }

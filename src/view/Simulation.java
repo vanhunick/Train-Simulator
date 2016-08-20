@@ -167,9 +167,9 @@ public class Simulation implements MouseEvents {
      * */
     public void testMode(){
         for(DrawableTrain t : trains){
-            modelTrack.setSpeed(t.getTrain().getId(), 28);
+            modelTrack.setSpeed(t.getTrain().getId(), 0.5);
         }
-        modelTrack.setSpeed(trains.get(0).getTrain().getId(), 27);
+        modelTrack.setSpeed(trains.get(0).getTrain().getId(), 0.5);
         started = true;
     }
 
@@ -654,7 +654,7 @@ public class Simulation implements MouseEvents {
         trains.add(train);
         movable.add(train);
         modelTrack.addTrain(train.getTrain());
-        train.getTrain().setTargetSpeed(27);//TODO replace with what the user specifies
+        train.getTrain().setTargetSpeedPercentage(0.5f);//TODO replace with what the user specifies
     }
 
     public void addRollingStocktoSimulation(DrawableRollingStock stock){
