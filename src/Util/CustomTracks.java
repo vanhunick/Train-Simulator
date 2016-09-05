@@ -101,29 +101,29 @@ public class CustomTracks {
     public DrawableSection[] getFullSection(DefaultTrack[] tracks){
         DrawableSection[] railway = new DrawableSection[18];
 
-        int curID = 0;
+        int curID = 1;
 
         // Outer loop
-        railway[0] = new DrawableSection(new Section(99,200,new DefaultTrack[]{tracks[0]}));
-        railway[1] =  new DrawableSection(new Section(curID++,300,new DefaultTrack[]{tracks[1]}));
-        railway[2] =  new DrawableSection(new Section(curID++,300,new DefaultTrack[]{tracks[2],tracks[3]}));
-        railway[3] =  new DrawableSection(new Section(curID++,300,new DefaultTrack[]{tracks[4]}));
-        railway[4] =  new DrawableSection(new Section(curID++,300,new DefaultTrack[]{tracks[5]}));
-        railway[5] =  new DrawableSection(new Section(101,300,new DefaultTrack[]{tracks[6]}));
-        railway[6] =  new DrawableSection(new Section(curID++,300,new DefaultTrack[]{tracks[7]}));
-        railway[7] =  new DrawableSection(new Section(curID++,300,new DefaultTrack[]{tracks[8],tracks[9]}));
+        railway[0] = new DrawableSection(new Section(1,200,new DefaultTrack[]{tracks[0]})); // Starting section
+        railway[1] =  new DrawableSection(new Section(2,300,new DefaultTrack[]{tracks[1]}));
+        railway[2] =  new DrawableSection(new Section(3,300,new DefaultTrack[]{tracks[2],tracks[3]}));
+        railway[3] =  new DrawableSection(new Section(4,300,new DefaultTrack[]{tracks[4]}));
+        railway[4] =  new DrawableSection(new Section(5,300,new DefaultTrack[]{tracks[5]}));
+        railway[5] =  new DrawableSection(new Section(6,300,new DefaultTrack[]{tracks[6]}));
+        railway[6] =  new DrawableSection(new Section(7,300,new DefaultTrack[]{tracks[7]}));
+        railway[7] =  new DrawableSection(new Section(8,300,new DefaultTrack[]{tracks[8],tracks[9]}));
 
 
-        railway[8] =  new DrawableSection(new Section(curID++,300,new DefaultTrack[]{tracks[10]}));
-        railway[9] =  new DrawableSection(new Section(curID++,300,new DefaultTrack[]{tracks[11]}));
-        railway[10] =  new DrawableSection(new Section(curID++,300,new DefaultTrack[]{tracks[12],tracks[13]}));
-        railway[11] =  new DrawableSection(new Section(curID++,300,new DefaultTrack[]{tracks[14]}));
-        railway[12] =  new DrawableSection(new Section(curID++,300,new DefaultTrack[]{tracks[15]}));
-        railway[13] =  new DrawableSection(new Section(curID++,300,new DefaultTrack[]{tracks[16]}));
-        railway[14] =  new DrawableSection(new Section(curID++,300,new DefaultTrack[]{tracks[17]}));
-        railway[15] =  new DrawableSection(new Section(curID++,300,new DefaultTrack[]{tracks[18],tracks[19]}));
-        railway[16] =  new DrawableSection(new Section(curID++,300,new DefaultTrack[]{tracks[20]}));
-        railway[17] =  new DrawableSection(new Section(curID++,300,new DefaultTrack[]{tracks[21]}));
+        railway[8] =  new DrawableSection(new Section(9,300,new DefaultTrack[]{tracks[10]}));
+        railway[9] =  new DrawableSection(new Section(10,300,new DefaultTrack[]{tracks[11]}));
+        railway[10] =  new DrawableSection(new Section(11,300,new DefaultTrack[]{tracks[12],tracks[13]}));
+        railway[11] =  new DrawableSection(new Section(12,300,new DefaultTrack[]{tracks[14]}));
+        railway[12] =  new DrawableSection(new Section(13,300,new DefaultTrack[]{tracks[15]}));
+        railway[13] =  new DrawableSection(new Section(14,300,new DefaultTrack[]{tracks[16]}));
+        railway[14] =  new DrawableSection(new Section(15,300,new DefaultTrack[]{tracks[17]}));
+        railway[15] =  new DrawableSection(new Section(16,300,new DefaultTrack[]{tracks[18],tracks[19]}));
+        railway[16] =  new DrawableSection(new Section(17,300,new DefaultTrack[]{tracks[20]}));
+        railway[17] =  new DrawableSection(new Section(18,300,new DefaultTrack[]{tracks[21]}));
 
 
         railway[0].getSection().setCandetect(true);
@@ -539,21 +539,19 @@ public class CustomTracks {
 
         // Add a train to the track
         for(DrawableSection ds : railway) {
-            if (ds.getSection().getID() == 99) {
+            if (ds.getSection().getID() == 1) {
                 //Create the train
-                Train train = new Train(1, 15, 100, true,true,71000);
+                Train train = new Train(2, 15, 100, true,true,71000);
                 DrawableTrain drawableTrain = new DrawableTrain(train, ds,ds.getTracks()[0]);
                  drawableTrain.setUpImage();
                 trains.add(drawableTrain);
-
             }
-            if(ds.getSection().getID() == 101){
-                Train train1 = new Train(2, 15, 100, true,true,71000);
-
-
-                DrawableTrain drawableTrain1 = new DrawableTrain(train1, ds,ds.getTracks()[0]);
-                trains.add(drawableTrain1);
-                drawableTrain1.setUpImage();
+            if(ds.getSection().getID() == 2){
+//                Train train1 = new Train(1, 15, 100, true,true,71000);
+//
+//                DrawableTrain drawableTrain1 = new DrawableTrain(train1, ds,ds.getTracks()[0]);
+//                trains.add(drawableTrain1);
+//                drawableTrain1.setUpImage();
             }
         }
         return trains;

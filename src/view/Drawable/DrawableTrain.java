@@ -115,10 +115,16 @@ public class DrawableTrain implements Movable{
 
         if(currentSpeed <= 0 && engineForce == 0)return 0;
 
-        double netForce = engineForce - (friction * ((train.getWeight()+getRollingstockWeights()) * 9.88) ) - airResistance();
+        double netForce = engineForce - (friction * ((train.getWeight()+getRollingstockWeights()) * 9.88));
+
+
 
         // Apply air resistance when moving
         if(currentSpeed > 0)netForce = netForce - airResistance();
+
+        if(currentSpeed <= 0){
+            netForce = Math.max(0,netForce);
+        }
 
         // Apply brake power
         if(braking){ netForce = netForce - brakePower; }
@@ -161,48 +167,58 @@ public class DrawableTrain implements Movable{
     /**
      * Applies braking when direction is changed and sets engine force to 0
      * */
-    public void directionChanged(){
-        braking = true;// Start braking
-        engineForce = 0;
-    }
 
+
+    boolean changingDirection = false;
 
     /**
      * Updates the location of the train
      * */
     public void update(){
+        setConnectionLocation(); // Updates the connection location based on the new position
         if(crashed){
             distMoved = 0;
             currentSpeed = 0;
             return;
         }
 
-
-
-        setConnectionLocation(); // Updates the connection location based on the new position
-
         // Check if direction has changed
-        if(targetDirection != train.getDirection()){
+        if(targetDirection != train.getDirection()) {
             targetDirection = train.getDirection();
-            directionChanged();
+            changingDirection = true;
         }
 
-        // after changing direction the speed has reached zero so we can go in the other direction
-        if(braking && currentSpeed <=0 && train.getTargetSpeed() != 0){
+        // Trying to go backwards then needing to go forward again // Trying to go forwards then needing to go backward again
+        if(targetDirection == currentDirection && changingDirection){
+            changingDirection = false;
             braking = false;
             engineForce = 494000;
+        }
+        else if(changingDirection){
+            engineForce = 0;// TODO not sure
+            braking = true;
+        }
+
+        if(changingDirection && currentSpeed <= 0){
+            changingDirection = false;
+            braking = false;
             degDone = Math.abs(90 - degDone);
             currentDirection = targetDirection;
+            engineForce = 494000;
 
-            // Change direction of rolling stock
             if(rollingStockConnected != null){
                 rollingStockConnected.setDirection(targetDirection);
             }
         }
-        if(train.getTargetSpeed() == 0){
+
+        if(train.getTargetSpeed() == 0 && currentSpeed > 0){ // MIGHT BE WRONG
             braking = true;
             engineForce = 0;
         }
+        if(train.getTargetSpeed() == 0 && currentSpeed <= 0){
+            braking = false;
+        }
+
 
         if(currentSpeed < 0 )currentSpeed = 0;// TODO find a better way to fix
 
@@ -214,11 +230,10 @@ public class DrawableTrain implements Movable{
             engineForce = Math.max(engineForce -= 1000,0);
         }
 
-
         if(currentSpeed < train.getTargetSpeed() && !braking && acceleration < 0.25){
+            engineForce = Math.max(494000, engineForce);
             engineForce += 1000;
         }
-
 
         distMoved = ((timeChanged/1000.0)* (currentSpeed * Simulation.METER_MULTIPLIER)); // Work out the distance to move in pixels
 

@@ -32,6 +32,8 @@ public abstract class DefaultController implements Controller {
     // Used to route the train
     private SectionGraph sectionGraph;
 
+    boolean ignoreEvents;
+
     // Listeners to update when event occours
     private List<Event.Listener> listeners;
 
@@ -50,10 +52,6 @@ public abstract class DefaultController implements Controller {
 
         this.contrlSections = loadedRailway.sections;
         this.trains = loadedRailway.trains;
-
-        for(ControllerSection s : contrlSections){
-            System.out.println(s) ;
-        }
 
         createControllerSections();
     }
@@ -95,10 +93,10 @@ public abstract class DefaultController implements Controller {
     public ControllerSection getNextSection(ControllerTrain train, ControllerSection currentSection){
         // Check if train is going along nat track direction
         if(forwardWithTrack(train)){
-            return getContrlSections()[currentSection.toIndex];
+            return getContrlSections()[currentSection.toIndex-1];
         }
         else {
-            return getContrlSections()[currentSection.fromIndex];
+            return getContrlSections()[currentSection.fromIndex-1];
         }
     }
 

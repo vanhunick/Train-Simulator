@@ -33,7 +33,7 @@ public class Simulation implements MouseEvents {
 
     public static final int MAX_CONNECTION_SPEED = 2;
 
-    private String currentMode = NO_MODE;
+    private String currentMode = MODE_TEST;
 
     private Movable selectedMovable;
 
@@ -78,18 +78,22 @@ public class Simulation implements MouseEvents {
     public void setMode(String mode){
         if(mode.equals("User")){
             sendEventToUI("Controlled by user events",0);
-
+            testMode();
+            currentMode = MODE_TEST;
         } else if(mode.equals("Locking")){
+
             sendEventToUI("Controlling with Locking controller",0);
 
-            controlMode(new DeadLockController(convertoControllerSections(getSections()),convertToControlTrains(trains)));
-
+//            controlMode(new DeadLockController(convertoControllerSections(getSections()),convertToControlTrains(trains)));
+            controlMode(new DeadLockController("src/tracks/full_Track.json"));
+            currentMode = MODE_CONTROLLER;
         } else if(mode.equals("Routing")){
             sendEventToUI("Controlling with routing controller",0);
 //            controlMode(new RoutingController(convertoControllerSections(getSections()),convertToControlTrains(trains)));
             controlMode(new RoutingController("src/tracks/full_Track.json"));
 //            "am/kings/home1/vanhunick/swen303/Assignment 2/train-simulator/full_Track"
             ///home/vanhunick/swen303/Assignment 2/train-simulator/src/tracks/full_Track.json
+            currentMode = MODE_CONTROLLER;
         }
     }
 
@@ -214,7 +218,6 @@ public class Simulation implements MouseEvents {
     }
 
     public void start(){
-        String mode = userInterface.getSelectedMode();
         // If the section the train is on can detect set on to be true
         for(DrawableTrain t : trains){
             if(t.getCurSection().getSection().canDetect()){
@@ -222,12 +225,11 @@ public class Simulation implements MouseEvents {
             }
         }
 
-        if(mode.equals(MODE_CONTROLLER)){
-//            controlMode();
-        }
-        else if(mode.equals(MODE_TEST)){
+        if(currentMode.equals(MODE_TEST)){
             testMode();
         }
+
+        started = true;
     }
 
     public void restart(){
@@ -403,7 +405,7 @@ public class Simulation implements MouseEvents {
                 if(userInterface != null){
                     userInterface.sendToeventLog(updateTrainOnSection(t.getTrain(), curSection.getSection(),curSection.getSection()),1);
                 }
-                modelTrack.sectionChanged(curSection.getSection().getID());
+                modelTrack.sectionChanged((1+((curSection.getSection().getID()-1) / 2)));
             }
 
             //  Find where it belongs to
@@ -413,7 +415,7 @@ public class Simulation implements MouseEvents {
                     t.setCurSection(ds);//have to do it this way since the destination is not always the same
                     if(ds.getSection().canDetect()){
                         sendEventToUI(updateTrainOnSection(t.getTrain(), last.getSection(), ds.getSection()),1);
-                        modelTrack.sectionChanged(ds.getSection().getID());
+                        modelTrack.sectionChanged((1+((ds.getSection().getID()-1)/2))); // Converts it so that detection sections id increments by 1
                     }
 
                 }
