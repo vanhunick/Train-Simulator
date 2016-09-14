@@ -1,9 +1,7 @@
-package view;
+package simulation;
 
-import controllers.DefaultController;
 import javafx.geometry.Insets;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.CheckBox;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
@@ -15,11 +13,11 @@ import model.Section;
 import model.Train;
 import save.LoadedRailway;
 import save.Save;
-import view.Drawable.DrawableRollingStock;
-import view.Drawable.DrawableTrain;
-import view.Drawable.section_types.*;
-import view.Panes.ErrorDialog;
-import view.Panes.AddTrainMenu;
+import simulation.Drawable.DrawableRollingStock;
+import simulation.Drawable.DrawableTrain;
+import simulation.Drawable.section_types.*;
+import simulation.Panes.ErrorDialog;
+import simulation.Panes.AddTrainMenu;
 
 import java.awt.*;
 import java.io.File;

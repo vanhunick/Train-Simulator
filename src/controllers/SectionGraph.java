@@ -1,9 +1,5 @@
 package controllers;
 
-import Util.CustomTracks;
-import model.Section;
-import view.Drawable.section_types.DrawableSection;
-
 import java.util.*;
 
 /**

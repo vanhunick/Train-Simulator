@@ -1,4 +1,4 @@
-package view;
+package simulation;
 
 import javafx.scene.input.MouseEvent;
 
@@ -10,30 +10,30 @@ public interface MouseEvents {
     /**
      * Called when a key is pressed
      * */
-    public void keyPressed(String code);
+    void keyPressed(String code);
 
     /**
      * Called when the mouse button mouse is pressed
      * */
-    public void mousePressed(double x, double y, MouseEvent e );
+    void mousePressed(double x, double y, MouseEvent e );
 
     /**
      * Called when the mouse button mouse is released
      * */
-    public void mouseReleased(double x, double y, MouseEvent e );
+    void mouseReleased(double x, double y, MouseEvent e );
 
     /**
      * Called when the mouse button mouse is clicked
      * */
-    public void mouseClicked(double x, double y, MouseEvent e );
+    void mouseClicked(double x, double y, MouseEvent e );
 
     /**
      * Called when the mouse button mouse have moved
      * */
-    public void mouseMoved(double x, double y, MouseEvent e );
+    void mouseMoved(double x, double y, MouseEvent e );
 
     /**
      * Called when the mouse button mouse is dragged
      * */
-    public void mouseDragged(double x, double y, MouseEvent e );
+    void mouseDragged(double x, double y, MouseEvent e );
 }

@@ -1,4 +1,4 @@
-package view.Drawable;
+package simulation.Drawable;
 
 import Util.Point2D;
 import javafx.scene.SnapshotParameters;
@@ -8,9 +8,9 @@ import javafx.scene.image.ImageView;
 import javafx.scene.paint.*;
 import javafx.scene.shape.Circle;
 import model.RollingStock;
-import view.Drawable.section_types.DefaultTrack;
-import view.Drawable.section_types.JunctionTrack;
-import view.Simulation;
+import simulation.Drawable.section_types.DefaultTrack;
+import simulation.Drawable.section_types.JunctionTrack;
+import simulation.Simulation;
 
 
 /**
@@ -27,7 +27,7 @@ public class DrawableRollingStock implements Movable{
 
     // Image drawing fields
     private SnapshotParameters params; // Drawing parameters
-    private ImageView trainImageView; // The image view of the rolling stock
+    private ImageView trainImageView; // The image simulation of the rolling stock
     private Image rollingStockImage; // The image of the rolling stock
     private double curRotation;// How far the image should be rotated
 

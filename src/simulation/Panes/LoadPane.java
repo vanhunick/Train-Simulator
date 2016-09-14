@@ -1,6 +1,5 @@
-package view.Panes;
+package simulation.Panes;
 
-import javafx.scene.control.Button;
 import javafx.stage.FileChooser;
 import save.Load;
 import save.LoadedRailway;

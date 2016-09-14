@@ -1,4 +1,4 @@
-package view;
+package simulation;
 
 import Util.CustomTracks;
 import controllers.*;
@@ -6,14 +6,13 @@ import javafx.scene.canvas.GraphicsContext;
 
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.paint.Color;
 import model.*;
 import save.Load;
 import save.LoadedRailway;
-import view.Drawable.DrawableRollingStock;
-import view.Drawable.DrawableTrain;
-import view.Drawable.Movable;
-import view.Drawable.section_types.*;
+import simulation.Drawable.DrawableRollingStock;
+import simulation.Drawable.DrawableTrain;
+import simulation.Drawable.Movable;
+import simulation.Drawable.section_types.*;
 
 
 import java.io.File;
@@ -91,8 +90,6 @@ public class Simulation implements MouseEvents {
             sendEventToUI("Controlling with routing controller",0);
 //            controlMode(new RoutingController(convertoControllerSections(getSections()),convertToControlTrains(trains)));
             controlMode(new RoutingController("src/tracks/full_Track.json"));
-//            "am/kings/home1/vanhunick/swen303/Assignment 2/train-simulator/full_Track"
-            ///home/vanhunick/swen303/Assignment 2/train-simulator/src/tracks/full_Track.json
             currentMode = MODE_CONTROLLER;
         }
     }
@@ -171,9 +168,9 @@ public class Simulation implements MouseEvents {
      * */
     public void testMode(){
         for(DrawableTrain t : trains){
-            modelTrack.setSpeed(t.getTrain().getId(), 0.5);
+            modelTrack.setSpeed(t.getTrain().getId(), 1);
         }
-        modelTrack.setSpeed(trains.get(0).getTrain().getId(), 0.5);
+        modelTrack.setSpeed(trains.get(0).getTrain().getId(), 1);
         started = true;
     }
 

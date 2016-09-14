@@ -5,12 +5,12 @@ import model.Section;
 import model.Train;
 import save.LoadedRailway;
 import save.Save;
-import view.Drawable.DrawableRollingStock;
-import view.Drawable.DrawableTrain;
-import view.Drawable.Movable;
-import view.Drawable.section_types.*;
-import view.Drawable.section_types.JunctionTrack;
-import view.Simulation;
+import simulation.Drawable.DrawableRollingStock;
+import simulation.Drawable.DrawableTrain;
+import simulation.Drawable.Movable;
+import simulation.Drawable.section_types.*;
+import simulation.Drawable.section_types.JunctionTrack;
+import simulation.Simulation;
 
 import java.io.File;
 import java.io.IOException;
@@ -51,46 +51,48 @@ public class CustomTracks {
     public DefaultTrack[] getFullTracks(){
         int curID = 0;
 
-        int length = 260;
+        int length = 34;
         int innerOffset = length/2;
         int lQ = length*2;
+        int juncLegth = 4;
+
         return  new DefaultTrack[]{
                 // s1
                 new StraightHoriz(550,650,length,0,curID++,"RIGHT"), // 0
                 // s2
                 new StraightHoriz(length,0,curID++), // 1
                 // s3
-                new JunctionTrack(65,6,curID++,false,true, "UP"), // 2
+                new JunctionTrack(juncLegth,6,curID++,false,true, "UP"), // 2
                 new Quart3(lQ,3,curID++), // 3
                 // s4
                 new Quart2(lQ,2,curID++),// 4
                 // s5
-                new StraightHoriz(length + length/4,0,curID++), // 5
+                new StraightHoriz(length + juncLegth,0,curID++), // 5
                 // s6
-                new StraightHoriz(length + length/4,0,curID++), // 6
+                new StraightHoriz(length + juncLegth,0,curID++), // 6
                 // s7
                 new Quart1(lQ,1,curID++),// 7
                 // s8
                 new Quart4(lQ,4,curID++),// 8
-                new JunctionTrack(length/4,6,curID++,false,false,"UP"), // 9
+                new JunctionTrack(juncLegth,6,curID++,false,false,"UP"), // 9
                 // s9
                 new StraightHoriz(length,0,curID++), // 10
                 // s10
                 new StraightHoriz(length,0,curID++), // 11
                 // s11
-                new JunctionTrack(length/4,6,curID++,false,true,"UP"), // 12
+                new JunctionTrack(juncLegth,6,curID++,false,true,"UP"), // 12
                 new Quart3(lQ - innerOffset,3,curID++), // 13
                 // s12
                 new Quart2(lQ - innerOffset,2,curID++),// 14
                 // s13
-                new StraightHoriz(length + length/4,0,curID++), // 15
+                new StraightHoriz(length + juncLegth,0,curID++), // 15
                 // s14
-                new StraightHoriz(length + length/4,0,curID++), // 16
+                new StraightHoriz(length + juncLegth,0,curID++), // 16
                 // s15
                 new Quart1(lQ - innerOffset,1,curID++),// 17
                 // s16
                 new Quart4(lQ - innerOffset,4,curID++),// 18
-                new JunctionTrack(length/4,6,curID++,false,false,"UP"), // 19
+                new JunctionTrack(juncLegth,6,curID++,false,false,"UP"), // 19
                 // s17
                 new StraightHoriz(length,0,curID++), // 20
                 // s18
@@ -541,7 +543,7 @@ public class CustomTracks {
         for(DrawableSection ds : railway) {
             if (ds.getSection().getID() == 1) {
                 //Create the train
-                Train train = new Train(2, 15, 100, true,true,71000);
+                Train train = new Train(2, 12.5, 25.0, true,true,71000);
                 DrawableTrain drawableTrain = new DrawableTrain(train, ds,ds.getTracks()[0]);
                  drawableTrain.setUpImage();
                 trains.add(drawableTrain);

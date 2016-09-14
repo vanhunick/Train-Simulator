@@ -1,7 +1,5 @@
 package model;
 
-import view.Simulation;
-
 import java.util.List;
 
 /**
@@ -26,7 +24,7 @@ public class Train {
 
     private double targetSpeed;
 
-    private double width = 4;// In metres
+    private double width = 3;// In metres
 
     private double weight;
 

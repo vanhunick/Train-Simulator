@@ -7,9 +7,9 @@ import model.RollingStock;
 import model.Train;
 //import org.junit.*;
 import org.junit.Test;
-import view.Drawable.DrawableRollingStock;
-import view.Drawable.DrawableTrain;
-import view.Simulation;
+import simulation.Drawable.DrawableRollingStock;
+import simulation.Drawable.DrawableTrain;
+import simulation.Simulation;
 
 /**
  * Created by vanhunick on 25/05/16.

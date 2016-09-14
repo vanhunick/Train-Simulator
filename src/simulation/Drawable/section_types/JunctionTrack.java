@@ -1,9 +1,9 @@
-package view.Drawable.section_types;
+package simulation.Drawable.section_types;
 
 import Util.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import view.Drawable.Movable;
+import simulation.Drawable.Movable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;

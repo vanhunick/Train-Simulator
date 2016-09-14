@@ -1,4 +1,4 @@
-package view.Panes;
+package simulation.Panes;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -8,7 +8,7 @@ import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Modality;
-import view.Simulation;
+import simulation.Simulation;
 
 /**
  * Created by vanhunick on 11/08/16.

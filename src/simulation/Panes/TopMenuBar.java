@@ -1,13 +1,9 @@
-package view.Panes;
+package simulation.Panes;
 
-import Util.CustomTracks;
 import javafx.event.ActionEvent;
 import javafx.scene.control.*;
-import save.Load;
 import save.LoadedRailway;
-import view.ProgramController;
-import view.Simulation;
-import view.SimulationUI;
+import simulation.ProgramController;
 
 import java.util.Optional;
 
@@ -48,7 +44,7 @@ public class TopMenuBar extends MenuBar {
         physics.setOnAction(e -> handlePhysicsPressed(e));
 
         // List for View
-        MenuItem log = new MenuItem("Log view");
+        MenuItem log = new MenuItem("Log simulation");
 
         // List for Mode
         CheckMenuItem testItem = new CheckMenuItem("Test");
@@ -81,7 +77,7 @@ public class TopMenuBar extends MenuBar {
             controller.setSimulationMode("Controller");
         });
 
-        // Actions for view items
+        // Actions for simulation items
         log.setOnAction(e -> logToggled(e));
 
         //Add file items
@@ -89,7 +85,7 @@ public class TopMenuBar extends MenuBar {
         menuFile.getItems().add(loadTrackItem);
         menuFile.getItems().add(simulateItem);
 
-        // Add the view items
+        // Add the simulation items
         menuView.getItems().add(log);
 
         // Add the edit items

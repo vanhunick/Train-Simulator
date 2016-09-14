@@ -1,4 +1,4 @@
-package view.Panes;
+package simulation.Panes;
 
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
@@ -6,10 +6,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import view.ProgramController;
-import view.SimulationUI;
-
-import java.io.File;
+import simulation.ProgramController;
 
 /**
  * Created by Nicky on 8/06/2016.

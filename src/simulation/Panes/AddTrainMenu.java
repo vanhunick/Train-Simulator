@@ -1,4 +1,4 @@
-package view.Panes;
+package simulation.Panes;
 
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -9,8 +9,7 @@ import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Modality;
-import view.Drawable.section_types.DefaultTrack;
-import view.Simulation;
+import simulation.Drawable.section_types.DefaultTrack;
 
 
 /**

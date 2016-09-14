@@ -1,4 +1,4 @@
-package view.Drawable.section_types;
+package simulation.Drawable.section_types;
 
 import javafx.scene.canvas.GraphicsContext;
 import model.Section;

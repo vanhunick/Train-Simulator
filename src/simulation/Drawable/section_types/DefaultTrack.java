@@ -1,9 +1,10 @@
-package view.Drawable.section_types;
+package simulation.Drawable.section_types;
 
 import Util.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import view.Drawable.Movable;
+import simulation.Drawable.Movable;
+import simulation.Simulation;
 
 /**
  * Created by Nicky on 25/03/2016.
@@ -24,6 +25,7 @@ public abstract class DefaultTrack {
     private double startX; // Start x position
     private double startY; // Start y position
     private double length; // The length of the track
+    private double lengthMetres;
     private boolean startPiece; // If it is a start piece or not
     private String direction; // The natural direction of the track
 
@@ -42,8 +44,9 @@ public abstract class DefaultTrack {
     /**
      * Constructor for a piece that connects to another piece
      * */
-    public DefaultTrack(int length, int drawID, int id){
-        this.length = length;
+    public DefaultTrack(int lengthMetres, int drawID, int id){
+        this.lengthMetres = lengthMetres;
+        this.length = lengthMetres * Simulation.METER_MULTIPLIER;
         this.drawID = drawID;
         this.id = id;
         this.juncFrom = -1;
@@ -55,10 +58,11 @@ public abstract class DefaultTrack {
     /**
      * Constructor for the starting piece
      * */
-    public DefaultTrack(int startX, int startY, int length, int drawID,int id, String direction){
+    public DefaultTrack(int startX, int startY, int lengthMetres, int drawID,int id, String direction){
         this.startX = startX;
         this.startY = startY;
-        this.length = length;
+        this.lengthMetres = lengthMetres;
+        this.length = lengthMetres * Simulation.METER_MULTIPLIER;
         this.drawID = drawID;
         this.id = id;
         this.startPiece = true;

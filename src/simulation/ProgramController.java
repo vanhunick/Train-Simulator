@@ -1,18 +1,17 @@
-package view;
+package simulation;
 
 import javafx.event.ActionEvent;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.input.MouseEvent;
-import save.Load;
 import save.LoadedRailway;
-import view.Drawable.DrawableRollingStock;
-import view.Drawable.DrawableTrain;
-import view.Drawable.section_types.DrawableSection;
-import view.Panes.ErrorDialog;
-import view.Panes.EventLog;
-import view.Panes.TopToolBar;
+import simulation.Drawable.DrawableRollingStock;
+import simulation.Drawable.DrawableTrain;
+import simulation.Drawable.section_types.DrawableSection;
+import simulation.Panes.ErrorDialog;
+import simulation.Panes.EventLog;
+import simulation.Panes.TopToolBar;
 
 import java.io.File;
 import java.util.List;

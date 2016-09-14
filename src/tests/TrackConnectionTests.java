@@ -1,8 +1,7 @@
 package tests;
 
 import org.junit.Test;
-import view.Drawable.section_types.*;
-import view.Simulation;
+import simulation.Drawable.section_types.*;
 
 /**
  * Created by User on 23/07/2016.

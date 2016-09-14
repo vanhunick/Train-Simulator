@@ -2,18 +2,10 @@ package controllers;
 
 import model.Event;
 import model.ModelTrack;
-import model.Section;
-import model.Train;
-import save.Load;
 import save.LoadControlerSections;
-import save.LoadedRailway;
-import view.Drawable.section_types.DrawableSection;
 
-import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by User on 31/07/2016.

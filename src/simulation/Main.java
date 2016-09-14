@@ -1,4 +1,4 @@
-package view;
+package simulation;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
@@ -10,8 +10,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import view.Panes.TopMenuBar;
-import view.Panes.TopToolBar;
+import simulation.Panes.TopMenuBar;
+import simulation.Panes.TopToolBar;
 
 import java.util.ArrayList;
 

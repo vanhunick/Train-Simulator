@@ -1,4 +1,4 @@
-package view;
+package simulation;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -12,9 +12,9 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import model.*;
 import save.LoadedRailway;
-import view.Drawable.DrawableTrain;
-import view.Drawable.section_types.DefaultTrack;
-import view.Panes.*;
+import simulation.Drawable.DrawableTrain;
+import simulation.Drawable.section_types.DefaultTrack;
+import simulation.Panes.*;
 
 import java.io.File;
 import java.util.ArrayList;

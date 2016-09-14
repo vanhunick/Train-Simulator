@@ -2,17 +2,15 @@ package tests;
 
 import Util.CustomTracks;
 import model.ModelTrack;
-import model.RollingStock;
 import model.Train;
 //import org.junit.*;
 import org.junit.Test;
-import view.Drawable.DrawableRollingStock;
-import view.Drawable.DrawableTrain;
-import view.Drawable.section_types.DefaultTrack;
-import view.Drawable.section_types.JunctionTrack;
-import view.Drawable.section_types.StraightHoriz;
-import view.Simulation;
-import view.TrackBuilder;
+import simulation.Drawable.DrawableTrain;
+import simulation.Drawable.section_types.DefaultTrack;
+import simulation.Drawable.section_types.JunctionTrack;
+import simulation.Drawable.section_types.StraightHoriz;
+import simulation.Simulation;
+import simulation.TrackBuilder;
 
 import java.util.List;
 

@@ -1,10 +1,10 @@
-package view.Drawable.section_types;
+package simulation.Drawable.section_types;
 
 import Util.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.shape.ArcType;
-import view.Drawable.Movable;
-import view.SimulationUI;
+import simulation.Drawable.Movable;
+import simulation.SimulationUI;
 
 
 

@@ -1,4 +1,4 @@
-package view.Panes;
+package simulation.Panes;
 
 import javafx.scene.control.Alert;
 

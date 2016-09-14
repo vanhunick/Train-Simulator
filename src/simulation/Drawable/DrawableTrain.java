@@ -1,4 +1,4 @@
-package view.Drawable;
+package simulation.Drawable;
 
 import Util.Point2D;
 import javafx.scene.SnapshotParameters;
@@ -7,10 +7,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
 import model.Train;
-import view.Drawable.section_types.*;
-import view.Simulation;
+import simulation.Drawable.section_types.*;
+import simulation.Simulation;
 
 
 /**
@@ -34,7 +33,7 @@ public class DrawableTrain implements Movable{
 
     // Drawing fields
     private Image trainImage; // Image of the train
-    private ImageView trainImageView; // Image view of the train
+    private ImageView trainImageView; // Image simulation of the train
     private double curRotation = 90;  // The current rotation of the train image
     private Point2D currentLocation; // Current location of the train
     private SnapshotParameters params; // Params of the train image
@@ -230,8 +229,12 @@ public class DrawableTrain implements Movable{
             engineForce = Math.max(engineForce -= 1000,0);
         }
 
+        if(currentSpeed == 22){
+            System.out.println(engineForce);
+        }
+
         if(currentSpeed < train.getTargetSpeed() && !braking && acceleration < 0.25){
-            engineForce = Math.max(494000, engineForce);
+//            engineForce = Math.max(494000, engineForce);
             engineForce += 1000;
         }
 

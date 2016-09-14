@@ -1,4 +1,4 @@
-package view.Panes;
+package simulation.Panes;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
