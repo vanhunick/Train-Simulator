@@ -1,6 +1,6 @@
 package controllers;
 
-import model.Event;
+import simulation.model.Event;
 
 import java.util.HashSet;
 
@@ -35,7 +35,7 @@ public class DeadLockController  extends DefaultController implements Controller
 
 
     /**
-     * Called from the model to start the controller calling the trains
+     * Called from the simulation.model to start the controller calling the trains
      * */
     @Override
     public void startControlling(){
@@ -238,7 +238,7 @@ public class DeadLockController  extends DefaultController implements Controller
 
 
     /**
-     * Sets up the controller section for the controller and locks the tracks the starting trains are on
+     * Sets up the controller section for the controller and locks the util.tracks the starting trains are on
      * */
     private void lockControllerSections(){
         // Lock the sections that have trains on them

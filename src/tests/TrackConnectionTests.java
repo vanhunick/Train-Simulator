@@ -1,7 +1,7 @@
 package tests;
 
 import org.junit.Test;
-import simulation.Drawable.section_types.*;
+import simulation.Drawable.tracks.*;
 
 /**
  * Created by User on 23/07/2016.

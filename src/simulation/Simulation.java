@@ -1,18 +1,19 @@
 package simulation;
 
-import Util.CustomTracks;
+import simulation.ui.SimulationUI;
+import util.CustomTracks;
 import controllers.*;
 import javafx.scene.canvas.GraphicsContext;
 
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-import model.*;
-import save.Load;
-import save.LoadedRailway;
+import simulation.model.*;
+import util.save.Load;
+import util.save.LoadedRailway;
 import simulation.Drawable.DrawableRollingStock;
 import simulation.Drawable.DrawableTrain;
 import simulation.Drawable.Movable;
-import simulation.Drawable.section_types.*;
+import simulation.Drawable.tracks.*;
 
 
 import java.io.File;
@@ -54,7 +55,7 @@ public class Simulation implements MouseEvents {
     // Used when restarting a loaded track
     private File loadedFile;
 
-    // The tracks
+    // The util.tracks
     private DefaultTrack tracks[];
 
     // Last time the logic was updated
@@ -84,12 +85,12 @@ public class Simulation implements MouseEvents {
             sendEventToUI("Controlling with Locking controller",0);
 
 //            controlMode(new DeadLockController(convertoControllerSections(getSections()),convertToControlTrains(trains)));
-            controlMode(new DeadLockController("src/tracks/full_Track.json"));
+            controlMode(new DeadLockController("src/util.tracks/full_Track.json"));
             currentMode = MODE_CONTROLLER;
         } else if(mode.equals("Routing")){
             sendEventToUI("Controlling with routing controller",0);
 //            controlMode(new RoutingController(convertoControllerSections(getSections()),convertToControlTrains(trains)));
-            controlMode(new RoutingController("src/tracks/full_Track.json"));
+            controlMode(new RoutingController("src/util.tracks/full_Track.json"));
             currentMode = MODE_CONTROLLER;
         }
     }
@@ -277,7 +278,7 @@ public class Simulation implements MouseEvents {
      * Redraws all the elements on the screen
      * */
     public void refresh(GraphicsContext g){
-        // Draw the sections which will draw the tracks
+        // Draw the sections which will draw the util.tracks
         for(DrawableSection d : railway){
             d.draw(g);
         }
@@ -391,7 +392,7 @@ public class Simulation implements MouseEvents {
 
     /**
      * Checks if the new track the train have moved into is in the current section if not send out an
-     * event for a section change to the model track and for the event log
+     * event for a section change to the simulation.model track and for the event log
      * */
     public void checkSectionChangedEvent(DrawableTrain t,DrawableSection curSection, DefaultTrack destinationTrack){
         // Check if the current section contains the new track to move to
@@ -663,7 +664,7 @@ public class Simulation implements MouseEvents {
 
     @Override
     public void mouseMoved(double x, double y, MouseEvent e) {
-//        for(DefaultTrack track : tracks){
+//        for(DefaultTrack track : util.tracks){
 //            if(track.containsPoint(x,y)){
 //                track.setColor(Color.GREEN);
 //            }

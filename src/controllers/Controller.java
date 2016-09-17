@@ -1,6 +1,6 @@
 package controllers;
 
-import model.Event;
+import simulation.model.Event;
 
 /**
  * Created by vanhunick on 25/05/16.

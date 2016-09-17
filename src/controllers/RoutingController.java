@@ -1,13 +1,9 @@
 package controllers;
 
-import model.Event;
-import model.ModelTrack;
-import model.Section;
-import model.Train;
+import simulation.model.Event;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by User on 30/07/2016.
@@ -151,7 +147,7 @@ public class RoutingController extends DefaultController implements Controller {
                         break;
                     }
                 }
-               // model.setSpeed(t.id, 0);// Stop the train for now
+               // simulation.model.setSpeed(t.id, 0);// Stop the train for now
             }
             if(route.size() > 2){ // might have to toggle a junction
                 if(getSection(route.get(1)).containsJunction){// the next track is junction track
@@ -168,12 +164,12 @@ public class RoutingController extends DefaultController implements Controller {
                             System.out.println("Toggling");
                             send(new Event.TurnoutChanged(juncSection.junction.id,false));
                             juncSection.junction.thrown = !juncSection.junction.thrown;
-//                            model.setJunction(juncSection.getJunction().getId(), false);
+//                            simulation.model.setJunction(juncSection.getJunction().getId(), false);
                         }
                         if(juncSection.junction.thrown && juncSection.junction.inbound){
                             System.out.println("Toggling");
                             juncSection.junction.thrown = !juncSection.junction.thrown;
-//                            model.setJunction(juncSection.getJunction().getId(), false);
+//                            simulation.model.setJunction(juncSection.getJunction().getId(), false);
                             send(new Event.TurnoutChanged(juncSection.junction.id,true));
                         }
 

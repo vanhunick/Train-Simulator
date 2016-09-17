@@ -1,8 +1,8 @@
 package controllers;
 
-import model.Event;
-import model.ModelTrack;
-import save.LoadControlerSections;
+import simulation.model.Event;
+import simulation.model.ModelTrack;
+import util.save.LoadControlerSections;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +18,7 @@ public abstract class DefaultController implements Controller {
     // Used because the controller should not be able to access information inside the track sections
     private ControllerSection[] contrlSections;
 
-    // The model that receives and sends events
+    // The simulation.model that receives and sends events
     private ModelTrack model;
 
     // Used to route the train
@@ -59,7 +59,7 @@ public abstract class DefaultController implements Controller {
     public abstract void startControlling();
 
     /**
-     * Sets up the controller section for the controller and locks the tracks the starting trains are on
+     * Sets up the controller section for the controller and locks the util.tracks the starting trains are on
      * */
     private void createControllerSections(){
 

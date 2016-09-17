@@ -1,9 +1,9 @@
 package simulation.Drawable;
 
 
-import Util.Point2D;
+import util.Point2D;
 import javafx.scene.canvas.GraphicsContext;
-import simulation.Drawable.section_types.DefaultTrack;
+import simulation.Drawable.tracks.DefaultTrack;
 
 
 /**

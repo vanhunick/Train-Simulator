@@ -2,9 +2,9 @@ package tests;
 
 import org.json.JSONObject;
 import org.junit.Test;
-import save.Load;
-import save.LoadedRailway;
-import save.Save;
+import util.save.Load;
+import util.save.LoadedRailway;
+import util.save.Save;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -18,14 +18,14 @@ public class LoadAndSaveTests {
     @Test
     public void loadAndSaveEqaulity(){
         Load load = new Load();
-        File f = new File("src/tracks/simple_track.json");
-        LoadedRailway l = load.loadFromFile(f,"src/tracks/simple_track.json");
+        File f = new File("src/util.tracks/simple_track.json");
+        LoadedRailway l = load.loadFromFile(f,"src/util.tracks/simple_track.json");
 
 
         String str = "";
         Scanner scan = null;
         try {
-            scan = new Scanner(new File("src/tracks/simple_track.json"));
+            scan = new Scanner(new File("src/util.tracks/simple_track.json"));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -37,7 +37,7 @@ public class LoadAndSaveTests {
         JSONObject obj = new JSONObject(str);
 
         Save save = new Save();
-        String JSON = save.save(l,"src/tracks/test_save");
+        String JSON = save.save(l,"src/util.tracks/test_save");
         JSON.replaceAll("\\s+", "");
         String orign = obj.toString().replaceAll("\\s+", "");
         int count = 0;

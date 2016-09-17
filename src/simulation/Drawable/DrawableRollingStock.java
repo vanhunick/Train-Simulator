@@ -1,15 +1,15 @@
 package simulation.Drawable;
 
-import Util.Point2D;
+import util.Point2D;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.*;
 import javafx.scene.shape.Circle;
-import model.RollingStock;
-import simulation.Drawable.section_types.DefaultTrack;
-import simulation.Drawable.section_types.JunctionTrack;
+import simulation.model.RollingStock;
+import simulation.Drawable.tracks.DefaultTrack;
+import simulation.Drawable.tracks.JunctionTrack;
 import simulation.Simulation;
 
 

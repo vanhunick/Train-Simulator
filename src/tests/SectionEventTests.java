@@ -1,10 +1,10 @@
 package tests;
 
 
-import Util.CustomTracks;
-import model.ModelTrack;
-import model.RollingStock;
-import model.Train;
+import util.CustomTracks;
+import simulation.model.ModelTrack;
+import simulation.model.RollingStock;
+import simulation.model.Train;
 //import org.junit.*;
 import org.junit.Test;
 import simulation.Drawable.DrawableRollingStock;

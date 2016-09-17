@@ -8,16 +8,16 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
-import model.RollingStock;
-import model.Section;
-import model.Train;
-import save.LoadedRailway;
-import save.Save;
+import simulation.model.RollingStock;
+import simulation.model.Section;
+import simulation.model.Train;
+import util.save.LoadedRailway;
+import util.save.Save;
 import simulation.Drawable.DrawableRollingStock;
 import simulation.Drawable.DrawableTrain;
-import simulation.Drawable.section_types.*;
-import simulation.Panes.ErrorDialog;
-import simulation.Panes.AddTrainMenu;
+import simulation.Drawable.tracks.*;
+import simulation.ui.ErrorDialog;
+import simulation.ui.AddTrainMenu;
 
 import java.awt.*;
 import java.io.File;
@@ -65,10 +65,10 @@ public class TrackBuilder implements MouseEvents{
     // The added trains to the track
     private List<DrawableTrain> trains;
 
-    // The exampleTracks the incapsulate the tracks
+    // The exampleTracks the incapsulate the util.tracks
     private List<DrawableSection> sectionsForTrack;
 
-    // All the tracks that have been created
+    // All the util.tracks that have been created
     private List<DefaultTrack> allTracks;
 
     // List of stocks on the track
@@ -86,7 +86,7 @@ public class TrackBuilder implements MouseEvents{
     // The program controller
     private ProgramController controller;
 
-    // The current ID of the tracks will be incremented with each piece added
+    // The current ID of the util.tracks will be incremented with each piece added
     private int curId = 0;
 
     // Set if every time you add new piece it alternates between detection and non detection exampleTracks
@@ -163,7 +163,7 @@ public class TrackBuilder implements MouseEvents{
 
         allTracks.forEach(t -> t.setSelected(false));
 
-        // Check if there are tracks that have not been added to a section yet
+        // Check if there are util.tracks that have not been added to a section yet
 
         // Looks at junctions
         finishConnectingUpSections();
@@ -200,7 +200,7 @@ public class TrackBuilder implements MouseEvents{
         // Draw the piece selection panel
         drawShownPanel(gc);
 
-        // Draw the example tracks
+        // Draw the example util.tracks
         exampleTracks.forEach(t -> t.draw(gc));
         // Draw the trains
         trains.forEach(t -> t.draw(gc));
@@ -249,7 +249,7 @@ public class TrackBuilder implements MouseEvents{
     public void save(){
         LoadedRailway railway = getLoadedRailway();
 
-        // Get user to enter a file location to save to
+        // Get user to enter a file location to util.save to
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save Railway");
 
@@ -270,23 +270,23 @@ public class TrackBuilder implements MouseEvents{
         // User clicked create sections for the first time
         if(!sectionMode){
             sectionMode = true;
-            // link up the unconnected tracks
+            // link up the unconnected util.tracks
             connectDestinations();
             return;
         }
         if(tracksInSection.size() == 0){
-            new ErrorDialog("There are no tracks in this section", "Invalid Section");
+            new ErrorDialog("There are no util.tracks in this section", "Invalid Section");
             return;
         }
 
         DefaultTrack[] sectionTracks = new DefaultTrack[tracksInSection.size()];
 
-        // Copy over the created tracks into to section
+        // Copy over the created util.tracks into to section
         for(int i = 0; i < tracksInSection.size(); i++){
             sectionTracks[i] = tracksInSection.get(i);
         }
 
-        // Empty out the tracks
+        // Empty out the util.tracks
         tracksInSection.clear();
 
         Section s = new Section(curSectionID,100,sectionTracks);//TODO do length later
@@ -361,7 +361,7 @@ public class TrackBuilder implements MouseEvents{
 
 
     /**
-     * Removes all added tracks from the list
+     * Removes all added util.tracks from the list
      * */
     public void clear(){
         allTracks.clear();
@@ -389,7 +389,7 @@ public class TrackBuilder implements MouseEvents{
     }
 
     /**
-     * Pops up a menu where you can add tracks or trains to a track or modify attributes of the track
+     * Pops up a menu where you can add util.tracks or trains to a track or modify attributes of the track
      *
      * @param dt the track to modify or add a train or stock to
      * */
@@ -423,7 +423,7 @@ public class TrackBuilder implements MouseEvents{
     }
 
     /**
-     * Returns the section the tracks belongs to null if none
+     * Returns the section the util.tracks belongs to null if none
      * */
     public DrawableSection getSection(DefaultTrack track){
         for(DrawableSection s : sectionsForTrack){
@@ -501,7 +501,6 @@ public class TrackBuilder implements MouseEvents{
 
             // Check if can connect to both
             if(jTrack.inBound() && t.canConnect(jTrack.getInnerTrack())){
-                System.out.println("Doing ");
                 jTrack.setInboundFromThrown(i);
                 jTrack.setStart(allTracks.get(i));
                 jTrack.moveToThrown();
@@ -589,7 +588,7 @@ public class TrackBuilder implements MouseEvents{
     }
 
     public void connectDestinations(){
-        // Go through all tracks checking if they have a destination -1 indicated it does not
+        // Go through all util.tracks checking if they have a destination -1 indicated it does not
         for(int i = 0; i < allTracks.size(); i++){
             DefaultTrack t = allTracks.get(i);
             if(t.getTo() == -1){
@@ -601,7 +600,7 @@ public class TrackBuilder implements MouseEvents{
 
 
     /**
-     * It searches the tracks in the tracks array for a track that matches up with the end
+     * It searches the util.tracks in the util.tracks array for a track that matches up with the end
      * of the track passed in.
      * */
     public DefaultTrack findTrackForConnection(DefaultTrack trackWithoutTo){
@@ -743,7 +742,7 @@ public class TrackBuilder implements MouseEvents{
      * Returns a new track of the type selected in the track panel
      * */
     public DefaultTrack getSelectedTrackFromPanel(int x, int y){
-        trackLength = 120;
+        trackLength = 10;
         DefaultTrack[] trackChoices = new DefaultTrack[]{
                 new StraightHoriz(x,y, trackLength,0,curId, "RIGHT"),
                 new Quart1(x,y, trackLength*2,1, "RIGHT", curId),
@@ -761,7 +760,7 @@ public class TrackBuilder implements MouseEvents{
     }
 
     /**
-     * Returns the index of the track in the tracks array -1
+     * Returns the index of the track in the util.tracks array -1
      * if it does not exist
      * */
     public int getTrackIndex(DefaultTrack track){
@@ -794,14 +793,14 @@ public class TrackBuilder implements MouseEvents{
     }
 
     /**
-     * A list of tracks to show to the user to choose from on the UI
+     * A list of util.tracks to show to the user to choose from on the UI
      * */
     public List<DefaultTrack> setUpDrawPieces(){
         List<DefaultTrack> sections = new ArrayList<>();
 
         double x = (shownPanelStartX + (boxSize/2) + boxGap);//Start of the box to draw in
         double y = 10 + boxGap + (boxSize/2) - DefaultTrack.TRACK_WIDTH/2;
-        double size = boxSize - (boxGap);
+        double size = (boxSize - (boxGap)) / Simulation.METER_MULTIPLIER;
 
         DefaultTrack[] trackChoices = new DefaultTrack[]{
                 new StraightHoriz((int)x,(int)y, (int)size,0,0, "RIGHT"),

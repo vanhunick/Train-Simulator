@@ -3,7 +3,6 @@ package controllers;
 /**
  * Created by User on 31/07/2016.
  */
-import model.Section;
 
 /**
  * Represents a section on the track being controlled

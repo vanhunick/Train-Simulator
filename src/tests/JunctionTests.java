@@ -1,14 +1,14 @@
 package tests;
 
-import Util.CustomTracks;
-import model.ModelTrack;
-import model.Train;
+import util.CustomTracks;
+import simulation.model.ModelTrack;
+import simulation.model.Train;
 //import org.junit.*;
 import org.junit.Test;
 import simulation.Drawable.DrawableTrain;
-import simulation.Drawable.section_types.DefaultTrack;
-import simulation.Drawable.section_types.JunctionTrack;
-import simulation.Drawable.section_types.StraightHoriz;
+import simulation.Drawable.tracks.DefaultTrack;
+import simulation.Drawable.tracks.JunctionTrack;
+import simulation.Drawable.tracks.StraightHoriz;
 import simulation.Simulation;
 import simulation.TrackBuilder;
 
