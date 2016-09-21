@@ -26,8 +26,6 @@ public class TopToolBar extends ToolBar {
     private Button control;
     private Button simTrack;
 
-    private TextField trackLengthField;
-    private Label lengthLabel;
 
 
 
@@ -100,17 +98,11 @@ public class TopToolBar extends ToolBar {
         control.setTooltip(controlTip);
         simTrack.setTooltip(simTrackTip );
 
-        lengthLabel = new Label("Length:");
-        trackLengthField = new TextField ();
-
-
-
-
         // use horizontal box to separate out the buttons
         HBox buttonBox = new HBox(5);
         buttonBox.setPrefWidth(this.getPrefWidth());
         buttonBox.setAlignment(Pos.BASELINE_RIGHT);
-        buttonBox.getChildren().addAll(lengthLabel,trackLengthField, control,event,play,stop,pause,simTrack,sim,clear,saveBut,newSec,undoBut);
+        buttonBox.getChildren().addAll(control,event,play,stop,pause,simTrack,sim,clear,saveBut,newSec,undoBut);
         HBox.setHgrow(buttonBox,Priority.ALWAYS);
 
         // Checks which mode the program is in the see which buttons should be disabled
@@ -193,15 +185,6 @@ public class TopToolBar extends ToolBar {
             }
         });
 
-        trackLengthField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if(!validateNumber(newValue)){
-                trackLengthField.setText(oldValue);
-            } else{
-                if (controller.gerMode().equals(ProgramController.BUILDER_MODE) && !newValue.equals("")) {
-                    controller.getTrackBuilder().lengthChanged(Integer.parseInt(newValue));
-                }
-            }
-        });
 
         // Make it a horizontal tool bar
         this.setOrientation(Orientation.HORIZONTAL);
@@ -227,8 +210,6 @@ public class TopToolBar extends ToolBar {
         clear.setDisable(false);
         control.setDisable(false);
         simTrack.setDisable(false);
-        trackLengthField.setVisible(true);
-        lengthLabel.setVisible(true);
     }
 
     /**
@@ -259,8 +240,6 @@ public class TopToolBar extends ToolBar {
         clear.setDisable(true);
         sim.setDisable(true);
         simTrack.setDisable(true);
-        trackLengthField.setVisible(false);
-        lengthLabel.setVisible(false);
     }
 
     public boolean validateNumber(String string){return string.matches("[0-9]*");}
