@@ -32,6 +32,11 @@ public class Save {
         // Save the rolling stock
         railwayObj.put("stocks", saveRollingStocks(railway.stocks));
 
+        if(location == null){
+            System.out.println("Returning string");
+            return railwayObj.toString();
+        }
+
         try {
             FileWriter file = new FileWriter(location+".json");
             file.write(railwayObj.toString(1));
@@ -110,7 +115,7 @@ public class Save {
                 }
                 trackArray.put(trackObject);
             }
-            sectionObject.put("util/tracks", trackArray);
+            sectionObject.put("tracks", trackArray);
 
             // Put the section in the section array
             sectionArray.put(sectionObject);
@@ -201,7 +206,7 @@ public class Save {
     public static void main(String[] args){
         Load load = new Load();
         File f = new File("src/util.tracks/simple_track.json");
-        LoadedRailway l = load.loadFromFile(f,"src/util.tracks/simple_track.json");
+        LoadedRailway l = load.loadFromFile(f,"src/util.tracks/simple_track.json", null);
 
         Save save = new Save();
         save.save(l,"src/util.tracks/test_save");

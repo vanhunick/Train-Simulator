@@ -18,15 +18,18 @@ import java.util.*;
  */
 public class Load {
 
-    public LoadedRailway loadFromFile(File file, String filePath){
+    public LoadedRailway loadFromFile(File file, String filePath, String configString){
         System.out.println("Loading File");
         try {
-            // Load in the JSON file into a string
             String str = "";
-            Scanner scan = new Scanner(new File(filePath));
-            while (scan.hasNext())
-                str += scan.nextLine();
-            scan.close();
+            if (configString != null){
+                str = configString;
+            } else {
+                Scanner scan = new Scanner(new File(filePath));
+                while (scan.hasNext())
+                    str += scan.nextLine();
+                scan.close();
+            }
 
             // build a JSON object
             JSONObject obj = new JSONObject(str);
@@ -44,7 +47,7 @@ public class Load {
 
                 JSONObject sectionObject = sectionsArray.getJSONObject(i);
 
-                JSONArray trackArray = sectionObject.getJSONArray("util/tracks");
+                JSONArray trackArray = sectionObject.getJSONArray("tracks");
 
                 DefaultTrack[] tracksInSection = new DefaultTrack[trackArray.length()];
 
