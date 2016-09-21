@@ -32,7 +32,7 @@ public class TopMenuBar extends MenuBar {
         //List for file
         MenuItem newTrackItem = new MenuItem("New Track");
         MenuItem loadTrackItem = new MenuItem("Load Track");
-        MenuItem simulateItem = new MenuItem("Simulate");
+        MenuItem simulateItem = new MenuItem("Simulation Mode");
 
         // List for edit
         MenuItem physics = new MenuItem("Physics");

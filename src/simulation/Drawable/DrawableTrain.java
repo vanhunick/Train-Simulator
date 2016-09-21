@@ -87,7 +87,7 @@ public class DrawableTrain implements Movable{
      * Sets up the image fields for the drawable train
      * */
     public void setUpImage(){
-        this.trainImage= new Image("file:src/res/train.gif", train.getWidth() * Simulation.METER_MULTIPLIER, train.getLength() * Simulation.METER_MULTIPLIER, false, false);
+        this.trainImage= new Image("file:src/res/train.png", train.getWidth() * Simulation.METER_MULTIPLIER, train.getLength() * Simulation.METER_MULTIPLIER, false, false);
         this.trainImageView = new ImageView(trainImage);
         this.params = new SnapshotParameters();
         params.setFill(Color.TRANSPARENT);

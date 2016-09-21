@@ -38,7 +38,7 @@ public class Simulation implements MouseEvents {
     private Movable selectedMovable;
 
     // Each pixel is 1/5 of a meter
-    public static final double METER_MULTIPLIER = 5;
+    public static final double METER_MULTIPLIER = 9;
 
     // Model to send events to
     private ModelTrack modelTrack;

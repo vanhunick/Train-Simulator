@@ -169,7 +169,7 @@ public class TopToolBar extends ToolBar {
 
         sim.setOnAction(e -> {
             if (controller.gerMode().equals(ProgramController.BUILDER_MODE)) {
-                controller.getTrackBuilder().simulateTrack();//TODO might not use
+                controller.getTrackBuilder().simulateTrack();
             }
         });
 
