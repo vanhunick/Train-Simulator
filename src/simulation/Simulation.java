@@ -14,6 +14,7 @@ import simulation.Drawable.DrawableRollingStock;
 import simulation.Drawable.DrawableTrain;
 import simulation.Drawable.Movable;
 import simulation.Drawable.tracks.*;
+import util.save.Save;
 
 
 import java.io.File;
@@ -29,7 +30,8 @@ public class Simulation implements MouseEvents {
     public static final String MODE_USER = "user";
     public static final String MODE_TEST = "test";
     public static final String MODE_CONTROLLER = "controller";
-    public static final String NO_MODE = "controller";
+
+
 
     public static final int MAX_CONNECTION_SPEED = 2;
 
@@ -54,13 +56,13 @@ public class Simulation implements MouseEvents {
 
     // Used when restarting a loaded track
     private File loadedFile;
+    private String JSONconfig = "";
 
     // The util.tracks
     private DefaultTrack tracks[];
 
     // Last time the logic was updated
     private long lastUpdate;
-
 
     private SimulationUI userInterface;
 
@@ -75,22 +77,21 @@ public class Simulation implements MouseEvents {
         this.userInterface = userInterface;
     }
 
+    private String configFileName = "full_Track.json";
+
     public void setMode(String mode){
         if(mode.equals("User")){
             sendEventToUI("Controlled by user events",0);
-            testMode();
             currentMode = MODE_TEST;
         } else if(mode.equals("Locking")){
-
             sendEventToUI("Controlling with Locking controller",0);
-
 //            controlMode(new DeadLockController(convertoControllerSections(getSections()),convertToControlTrains(trains)));
-            controlMode(new DeadLockController("src/util.tracks/full_Track.json"));
+            controlMode(new DeadLockController("src/util/tracks/"+configFileName));
             currentMode = MODE_CONTROLLER;
         } else if(mode.equals("Routing")){
             sendEventToUI("Controlling with routing controller",0);
 //            controlMode(new RoutingController(convertoControllerSections(getSections()),convertToControlTrains(trains)));
-            controlMode(new RoutingController("src/util.tracks/full_Track.json"));
+            controlMode(new RoutingController("src/util/tracks/"+configFileName));
             currentMode = MODE_CONTROLLER;
         }
     }
@@ -152,6 +153,7 @@ public class Simulation implements MouseEvents {
         movable = CustomTracks.createMovableList(trains,drawableRollingStocks);
 
         this.modelTrack = new ModelTrack(getTrains(), getSections());
+        this.JSONconfig = saveCurrentConfig();
     }
 
     public void setFromBuilderMode(LoadedRailway loadedRailway){
@@ -162,19 +164,14 @@ public class Simulation implements MouseEvents {
         movable = CustomTracks.createMovableList(trains,drawableRollingStocks);
 
         this.modelTrack = new ModelTrack(getTrains(), getSections());
+        this.JSONconfig = saveCurrentConfig();
     }
 
-    /**
-     * Mode used for testing
-     * */
-    public void testMode(){
-        for(DrawableTrain t : trains){
-            modelTrack.setSpeed(t.getTrain().getId(), 1);
-        }
-        modelTrack.setSpeed(trains.get(0).getTrain().getId(), 1);
-        started = true;
+    public String saveCurrentConfig(){
+        LoadedRailway railway = new LoadedRailway(null, this.railway, this.tracks, trains, drawableRollingStocks);
+        Save s = new Save();
+        return s.save(railway,null);
     }
-
 
 
     public void loadRailway(File file, LoadedRailway loadedRailway) {
@@ -183,14 +180,11 @@ public class Simulation implements MouseEvents {
         this.tracks = loadedRailway.tracks;
         this.trains = loadedRailway.trains;
         this.drawableRollingStocks = loadedRailway.stocks;
+        this.drawableRollingStocks = loadedRailway.stocks;
 
         // Set up the images for the trains and stocks
         trains.forEach(t -> t.setUpImage());
-        trains.forEach(t -> movable.add(t));
         drawableRollingStocks.forEach(s -> s.setUpImage());
-        drawableRollingStocks.forEach(s -> movable.add(s));
-
-        this.drawableRollingStocks = loadedRailway.stocks;
 
         movable = CustomTracks.createMovableList(trains, drawableRollingStocks);
         this.modelTrack = new ModelTrack(getTrains(), getSections());
@@ -222,11 +216,6 @@ public class Simulation implements MouseEvents {
                 t.getCurSection().getSection().setTrainOn(true);
             }
         }
-
-        if(currentMode.equals(MODE_TEST)){
-            testMode();
-        }
-
         started = true;
     }
 
@@ -236,11 +225,36 @@ public class Simulation implements MouseEvents {
         // Reload the file if simulation started from file
         if(loadedFile != null){
             Load load = new Load();
-            LoadedRailway railway = load.loadFromFile(loadedFile,loadedFile.getAbsolutePath());
+            LoadedRailway railway = load.loadFromFile(loadedFile,loadedFile.getAbsolutePath(), null);
             loadRailway(loadedFile,railway);
         }else {
-            setDefault();
+//            setDefault();
+            loadFromConfig();
         }
+        System.out.println("Started is true");
+        started = true;
+    }
+
+
+    public void loadFromConfig(){
+        Load l = new Load();
+        LoadedRailway loadedRailway = l.loadFromFile(null, null, JSONconfig);
+
+        this.tracks = loadedRailway.tracks;
+        this.railway = loadedRailway.sections;
+        this.trains = loadedRailway.trains;
+        this.drawableRollingStocks = loadedRailway.stocks;
+
+        // Set up the images for the trains and stocks
+        this.trains.forEach(t -> t.setUpImage());
+
+        this.modelTrack = new ModelTrack(getTrains(), getSections());
+
+        drawableRollingStocks.forEach(s -> s.setUpImage());
+
+        movable = CustomTracks.createMovableList(trains, drawableRollingStocks);
+
+        System.out.println("Done loading config");
     }
 
     /**
@@ -254,10 +268,19 @@ public class Simulation implements MouseEvents {
         this.railway = railway;
     }
 
+    boolean restart = false;
+
     /**
      * Updates the trains
      * */
     public void update(){
+        if(restart){
+            System.out.println("Restarting");
+            loadFromConfig();
+            restart = false;
+        }
+
+
         if(started){
             trains.forEach(t -> {
                 checkCollision();
@@ -278,13 +301,14 @@ public class Simulation implements MouseEvents {
      * Redraws all the elements on the screen
      * */
     public void refresh(GraphicsContext g){
-        // Draw the sections which will draw the util.tracks
-        for(DrawableSection d : railway){
-            d.draw(g);
-        }
 
-        // Updates all the things that move on the track
-        movable.forEach(m -> m.draw(g));
+            // Draw the sections on the canvas
+            for (DrawableSection d : railway) {
+                d.draw(g);
+            }
+
+            // Updates all the things that move on the track
+            movable.forEach(m -> m.draw(g));
     }
 
     /**
@@ -346,7 +370,9 @@ public class Simulation implements MouseEvents {
 
         // First check the speed of the collision if they are going to fast the rest does not matter
         if(movable1.getCurrentSpeed() + movable2.getCurrentSpeed() > Simulation.MAX_CONNECTION_SPEED || movable1 instanceof DrawableTrain && movable2 instanceof DrawableTrain){
-            crash(movable1,movable2);
+            movable1.setCrashed(true);
+            movable2.setCrashed(true);
+            sendEventToUI("Collision ", 2);
             return;
         }
 
@@ -361,14 +387,10 @@ public class Simulation implements MouseEvents {
             r.setConnection(t);
             t.setRollingStockConnected(r);
         } else {
-            crash(movable1,movable2);
+            movable1.setCrashed(true);
+            movable2.setCrashed(true);
+            sendEventToUI("Collision ", 2);
         }
-    }
-
-    private void crash(Movable m1, Movable m2 ){
-        m1.setCrashed(true);
-        m2.setCrashed(true);
-        sendEventToUI("Collision ", 2);
     }
 
     /**
@@ -503,13 +525,6 @@ public class Simulation implements MouseEvents {
             if(tracks[i].equals(track))return i;
         }
         return -1;
-    }
-
-    public boolean validTrainID(int id){
-        for(DrawableTrain t : trains){
-            if(t.getTrain().getId() == id)return false;
-        }
-        return true;
     }
 
     /**
@@ -681,7 +696,7 @@ public class Simulation implements MouseEvents {
     public void mouseClicked(double x, double y, MouseEvent e) {
         if(e.getButton().equals(MouseButton.PRIMARY)){
             if(e.getClickCount() == 2){
-                toggleJunctionOnPoint(x,y);
+
                 if(getOnTrack(x,y) != null){
                     DefaultTrack dt = getOnTrack(x,y);
                     userInterface.showTrackMenu(dt);
@@ -692,7 +707,10 @@ public class Simulation implements MouseEvents {
                     userInterface.sendToeventLog("Train Selected",1);
                 }
             }
+        } else if(e.getButton().equals(MouseButton.SECONDARY)){
+            toggleJunctionOnPoint(x,y);
         }
+
     }
 
     public void setTracks(DefaultTrack[] tracks){

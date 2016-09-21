@@ -27,7 +27,6 @@ public class TopMenuBar extends MenuBar {
         Menu menuFile = new Menu("File");
         Menu menuEdit = new Menu("Edit");
         Menu menuView = new Menu("View");
-        Menu modeView = new Menu("Mode");
 
         //List for file
         MenuItem newTrackItem = new MenuItem("New Track");
@@ -54,10 +53,6 @@ public class TopMenuBar extends MenuBar {
 
         CheckMenuItem userItem = new CheckMenuItem("User Control");
         CheckMenuItem controllerItem = new CheckMenuItem("Controller");
-
-        modeView.getItems().add(testItem);
-        modeView.getItems().add(userItem);
-        modeView.getItems().add(controllerItem);
 
         testItem.setOnAction(e -> {
             userItem.setSelected(false);
@@ -93,7 +88,7 @@ public class TopMenuBar extends MenuBar {
 
 
         //Add to the menu bar
-        this.getMenus().addAll(menuFile, menuEdit, menuView, modeView);
+        this.getMenus().addAll(menuFile, menuEdit, menuView);
 
     }
 
@@ -123,18 +118,6 @@ public class TopMenuBar extends MenuBar {
             }
         }
         controller.setMode(ProgramController.VISUALISATION_MODE);
-    }
-
-    public void handleTestModePressed(){
-        controller.setModeOfSimulation("Test");
-    }
-
-    public void handleUserModePressed(){
-        controller.setModeOfSimulation("User");
-    }
-
-    public void handleControllerModePressed(){
-
     }
 
 

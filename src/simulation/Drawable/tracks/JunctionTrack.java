@@ -72,10 +72,10 @@ public class JunctionTrack extends DefaultTrack {
      * list of util.tracks that make up the junction
      * */
     private void createAndAddTracks(int length){
-        outRightTrack = new Quart1(length/2+(TRACK_WIDTH/2),1,1);
-        inDown        = new Quart2(length/2+(TRACK_WIDTH/2),2,1);
-        outUpTrack    = new Quart3(length/2+(TRACK_WIDTH/2),3,1);
-        inRight       = new Quart4(length/2 +(TRACK_WIDTH/2),4,1);
+        outRightTrack = new Quart1(length,1,1);//+(TRACK_WIDTH/2)
+        inDown        = new Quart2(length,2,1);//+(TRACK_WIDTH/2)
+        outUpTrack    = new Quart3(length,3,1);///2+(TRACK_WIDTH/2)
+        inRight       = new Quart4(length ,4,1);//+(TRACK_WIDTH/2)
         junctionTracks = new ArrayList<>(Arrays.asList(outRightTrack,inDown,outUpTrack,inRight,straightTrack));
     }
 
@@ -411,10 +411,10 @@ public class JunctionTrack extends DefaultTrack {
 
     public void setMid(double x, double y){
         if(drawDirection.equals("DOWN")){
-            y-= 5;
+            y-= 22;
         }
         else {
-            y+=5;
+            y+=22;
         }
         updateLocation(x,y);
     }

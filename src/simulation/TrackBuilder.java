@@ -365,6 +365,7 @@ public class TrackBuilder implements MouseEvents{
      * */
     public void clear(){
         allTracks.clear();
+        trains.clear();
     }
 
 
@@ -809,10 +810,10 @@ public class TrackBuilder implements MouseEvents{
                 new Quart3((int)x,(int)y, (int)size,3,"RIGHT",0 ),
                 new Quart4((int)x,(int)y, (int)size,4,"RIGHT",0 ),
                 new StraightVert((int)x,(int)y, (int)size,5,"RIGHT",0),
-                new JunctionTrack((int)x,(int)y, (int)size/2,7,0,"RIGHT",false,true, "UP"),
-                new JunctionTrack((int)x,(int)y, (int)size/2,7,0,"RIGHT",false,false, "UP"),
-                new JunctionTrack((int)x,(int)y, (int)size/2,7,0,"RIGHT",false,true, "DOWN"),
-                new JunctionTrack((int)x,(int)y, (int)size/2,7,0,"RIGHT",false,false, "DOWN")
+                new JunctionTrack((int)x,(int)y, (int)size,6,0,"RIGHT",false,true, "UP"),
+                new JunctionTrack((int)x,(int)y, (int)size,6,0,"RIGHT",false,false, "UP"),
+                new JunctionTrack((int)x,(int)y, (int)size,6,0,"RIGHT",false,true, "DOWN"),
+                new JunctionTrack((int)x,(int)y, (int)size,6,0,"RIGHT",false,false, "DOWN")
         };
 
         for(DefaultTrack track : trackChoices){

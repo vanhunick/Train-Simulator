@@ -254,8 +254,8 @@ public class SimulationUI implements MouseEvents {
 
     public void drawTrainInfoPanel(GraphicsContext g){
         if(selectedTrain == null)return;
-        int startX =1000;
-        int startY = 20;
+        int startX = 20;
+        int startY = 30;
 
         g.setFill(Color.BLACK);
         g.fillRect(startX,startY,200,150);
@@ -263,7 +263,7 @@ public class SimulationUI implements MouseEvents {
         g.setLineWidth(1);
         g.strokeRect(startX,startY,200,150);
 
-        g.strokeText("Crashed: " + selectedTrain.isCrashed(),startX+5,startY+=15);
+        g.strokeText("Crashed: " + selectedTrain.isCrashed(),startX+5,startY+=20);
         g.strokeText("Direction: " + selectedTrain.getDirection(),startX+5,startY+=15);
         g.strokeText("Weight: " + selectedTrain.getTrain().getWeight(),startX+5,startY+=20);
         g.strokeText("Engine Power : " + selectedTrain.getEngineForce(),startX+5,startY+=20);

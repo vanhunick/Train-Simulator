@@ -157,7 +157,9 @@ public class TopToolBar extends ToolBar {
 
         stop.setOnAction(e -> {
             if (controller.gerMode().equals(ProgramController.VISUALISATION_MODE)) {
+                System.out.println("Stopping");
                 controller.getSimulationUI().getSim().restart();
+                System.out.println("Done stoppping");
             }
         });
 

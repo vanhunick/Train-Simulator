@@ -54,7 +54,7 @@ public class CustomTracks {
         int length = 34;
         int innerOffset = length/2;
         int lQ = length*2;
-        int juncLegth = 4;
+        int juncLegth = 8;
 
         return  new DefaultTrack[]{
                 // s1
@@ -94,9 +94,9 @@ public class CustomTracks {
                 new Quart4(lQ - innerOffset,4,curID++),// 18
                 new JunctionTrack(juncLegth,6,curID++,false,false,"UP"), // 19
                 // s17
-                new StraightHoriz(length - juncLegth/2,0,curID++), // 20
+                new StraightHoriz(length+1,0,curID++), // 20
                 // s18
-                new StraightHoriz(length - juncLegth/2,0,curID++), // 21
+                new StraightHoriz(length,0,curID++), // 21
         };
     }
 
