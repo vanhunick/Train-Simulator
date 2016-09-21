@@ -178,6 +178,15 @@ public class ProgramController implements MouseEvents {
         }
     }
 
+    public void handleSavePressed(){
+        if(mode.equals(VISUALISATION_MODE)){
+            simulationUI.getSim().save();
+        }
+        else{
+            trackBuilder.save();
+        }
+    }
+
 
     public void setModeOfSimulation(String mode){
         if(!mode.equals(ProgramController.VISUALISATION_MODE))return;

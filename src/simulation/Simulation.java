@@ -1,5 +1,6 @@
 package simulation;
 
+import javafx.stage.FileChooser;
 import simulation.ui.SimulationUI;
 import util.CustomTracks;
 import controllers.*;
@@ -731,6 +732,20 @@ public class Simulation implements MouseEvents {
     public void sendEventToUI(String event, int status){
         if(userInterface != null){
             userInterface.sendToeventLog(event, status);
+        }
+    }
+
+    public void save(){
+        LoadedRailway railwayLoad = new LoadedRailway(null,railway,tracks,trains,drawableRollingStocks);
+
+        // Get user to enter a file location to util.save to
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save Railway");
+
+        File file = fileChooser.showSaveDialog(null);
+        if (file != null) {
+            Save s = new Save();
+            s.save(railwayLoad,file.getAbsolutePath());
         }
     }
 
