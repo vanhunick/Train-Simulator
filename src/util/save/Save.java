@@ -5,6 +5,7 @@ import org.json.JSONObject;
 import simulation.Drawable.DrawableRollingStock;
 import simulation.Drawable.DrawableTrain;
 import simulation.Drawable.tracks.*;
+import simulation.Simulation;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -69,7 +70,7 @@ public class Save {
 
             sectionObject.put("detect",s.getSection().canDetect());
             sectionObject.put("from",s.getSection().getFromIndexNat());
-            sectionObject.put("length",s.getSection().getLength());
+            sectionObject.put("length",s.getSection().getLength()/Simulation.METER_MULTIPLIER);
             sectionObject.put("to",s.getSection().getToIndexNat());
             sectionObject.put("hasJunc",s.getSection().hasJunctionTrack());
 
@@ -101,7 +102,7 @@ public class Save {
                 }
 
                 trackObject.put("from",t.getFrom());
-                trackObject.put("length",t.getLength());
+                trackObject.put("length",t.getLength()/Simulation.METER_MULTIPLIER);
                 if(getTrackType(t).equals("Junction")){
                     JunctionTrack jt = (JunctionTrack)t;
                     trackObject.put("inbound",jt.inBound());
