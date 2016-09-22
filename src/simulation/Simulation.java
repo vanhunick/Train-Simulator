@@ -226,7 +226,7 @@ public class Simulation implements MouseEvents {
         // Reload the file if simulation started from file
         if(loadedFile != null){
             Load load = new Load();
-            LoadedRailway railway = load.loadFromFile(loadedFile,loadedFile.getAbsolutePath(), null);
+            LoadedRailway railway = load.loadFromFile(loadedFile,loadedFile.getAbsolutePath());
             loadRailway(loadedFile,railway);
         }else {
 //            setDefault();
@@ -239,7 +239,7 @@ public class Simulation implements MouseEvents {
 
     public void loadFromConfig(){
         Load l = new Load();
-        LoadedRailway loadedRailway = l.loadFromFile(null, null, JSONconfig);
+        LoadedRailway loadedRailway = l.loadedFromJSONString(JSONconfig);
 
         this.tracks = loadedRailway.tracks;
         this.railway = loadedRailway.sections;

@@ -26,7 +26,7 @@ public class LoadPane {
 
     public void parseFile(File file){
         Load load = new Load();
-        railway = load.loadFromFile(file,file.getAbsolutePath(), null);
+        railway = load.loadFromFile(file,file.getAbsolutePath());
     }
 
     public LoadedRailway getRailway(){

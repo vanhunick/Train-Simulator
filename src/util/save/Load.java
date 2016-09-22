@@ -18,101 +18,106 @@ import java.util.*;
  */
 public class Load {
 
-    public LoadedRailway loadFromFile(File file, String filePath, String configString){
+    public LoadedRailway loadedFromJSONString(String configString) {
+        return load(null, configString);
+    }
+
+    public LoadedRailway loadFromFile(File file, String filePath) {
         System.out.println("Loading File");
         try {
             String str = "";
-            if (configString != null){
-                str = configString;
-            } else {
-                Scanner scan = new Scanner(new File(filePath));
-                while (scan.hasNext())
-                    str += scan.nextLine();
-                scan.close();
+            Scanner scan = new Scanner(new File(filePath));
+
+            while (scan.hasNext()) {
+                str += scan.nextLine();
             }
-
-            // build a JSON object
-            JSONObject obj = new JSONObject(str);
-
-            // Grab the sections array
-            JSONArray sectionsArray = obj.getJSONArray("sections");
-
-            // Create a new array the size of the array in the file
-            DrawableSection[] sections = new DrawableSection[sectionsArray.length()];
-
-            // Go through each of the sections
-            List<DefaultTrack> tracks = new ArrayList<>();
-            int startingTrack = -1;
-            for (int i = 0; i < sectionsArray.length(); i++){
-
-                JSONObject sectionObject = sectionsArray.getJSONObject(i);
-
-                JSONArray trackArray = sectionObject.getJSONArray("tracks");
-
-                DefaultTrack[] tracksInSection = new DefaultTrack[trackArray.length()];
-
-                // Go through and create the track array
-                for(int j = 0; j < trackArray.length(); j++){
-                    JSONObject trackObject = trackArray.getJSONObject(j);
-                    DefaultTrack track = getTrackFromObject(trackObject);
-
-                    if(j == 0 && sectionObject.getBoolean("start")){
-                        track = getStartTrackFromObject(trackObject);
-                        startingTrack = tracks.size();
-                    }
-
-                    int from = trackObject.getInt("from");
-                    int to = trackObject.getInt("to");
-                    int toJunc = trackObject.getInt("toJunc");
-                    int fromJunc = trackObject.getInt("fromJunc");
-
-                    track.setFrom(from);
-                    track.setTo(to);
-                    track.setJuncFrom(fromJunc);
-                    track.setJuncTo(toJunc);
-                    tracks.add(track);
-                    tracksInSection[j] = track;
-                }
-
-                // Create the section object
-
-                // Grab the id of the section
-                int id = sectionObject.getInt("id");
-                int length = sectionObject.getInt("length");
-                int from = sectionObject.getInt("from");
-                int to = sectionObject.getInt("to");
-                boolean detect = sectionObject.getBoolean("detect");
-                int junctionIndex = 0;
-                if(sectionObject.getBoolean("hasJunc")){
-                    junctionIndex = sectionObject.getInt("junctionIndex");
-                }
-
-                sections[i] = new DrawableSection(new Section(id,length,from,to,tracksInSection));//TODO node sure if will work
-                sections[i].getSection().setCandetect(detect);
-                sections[i].getSection().setJuncSectionIndex(junctionIndex);
-            }
-
-            Set<Integer> s = new HashSet<>();
-            for(int i = 1; i < tracks.size(); i++){
-                s.add(i);
-            }
-            setupTracks(tracks.get(0),tracks.toArray(new DefaultTrack[tracks.size()]),s);
-
-            // Load the trains and rolling stocks
-            List<DrawableTrain> trains = loadTrains(obj, sections);
-            List<DrawableRollingStock> stocks = loadRollingStocks(obj,sections, trains);
-
-            LoadedRailway railway = new LoadedRailway(file,sections,tracks.toArray(new DefaultTrack[tracks.size()]),trains,stocks);
-
-            System.out.println("Success Loading Railway File");
-            return railway;
-
-        } catch (FileNotFoundException e) {
+            scan.close();
+            return load(file,str);
+        }catch(FileNotFoundException e) {
             System.out.println("Failed Loading File");
             e.printStackTrace();
         }
         return null;
     }
+
+    public LoadedRailway load(File file, String str) {
+        // build a JSON object
+        JSONObject obj = new JSONObject(str);
+
+        // Grab the sections array
+        JSONArray sectionsArray = obj.getJSONArray("sections");
+
+        // Create a new array the size of the array in the file
+        DrawableSection[] sections = new DrawableSection[sectionsArray.length()];
+
+        // Go through each of the sections
+        List<DefaultTrack> tracks = new ArrayList<>();
+        int startingTrack = -1;
+        for (int i = 0; i < sectionsArray.length(); i++) {
+
+            JSONObject sectionObject = sectionsArray.getJSONObject(i);
+
+            JSONArray trackArray = sectionObject.getJSONArray("tracks");
+
+            DefaultTrack[] tracksInSection = new DefaultTrack[trackArray.length()];
+
+            // Go through and create the track array
+            for (int j = 0; j < trackArray.length(); j++) {
+                JSONObject trackObject = trackArray.getJSONObject(j);
+                DefaultTrack track = getTrackFromObject(trackObject);
+
+                if (j == 0 && sectionObject.getBoolean("start")) {
+                    track = getStartTrackFromObject(trackObject);
+                    startingTrack = tracks.size();
+                }
+
+                int from = trackObject.getInt("from");
+                int to = trackObject.getInt("to");
+                int toJunc = trackObject.getInt("toJunc");
+                int fromJunc = trackObject.getInt("fromJunc");
+
+                track.setFrom(from);
+                track.setTo(to);
+                track.setJuncFrom(fromJunc);
+                track.setJuncTo(toJunc);
+                tracks.add(track);
+                tracksInSection[j] = track;
+            }
+
+            // Create the section object
+
+            // Grab the id of the section
+            int id = sectionObject.getInt("id");
+            int length = sectionObject.getInt("length");
+            int from = sectionObject.getInt("from");
+            int to = sectionObject.getInt("to");
+            boolean detect = sectionObject.getBoolean("detect");
+            int junctionIndex = 0;
+            if (sectionObject.getBoolean("hasJunc")) {
+                junctionIndex = sectionObject.getInt("junctionIndex");
+            }
+
+            sections[i] = new DrawableSection(new Section(id, length, from, to, tracksInSection));//TODO node sure if will work
+            sections[i].getSection().setCandetect(detect);
+            sections[i].getSection().setJuncSectionIndex(junctionIndex);
+        }
+
+        Set<Integer> s = new HashSet<>();
+        for (int i = 1; i < tracks.size(); i++) {
+            s.add(i);
+        }
+        setupTracks(tracks.get(0), tracks.toArray(new DefaultTrack[tracks.size()]), s);
+
+        // Load the trains and rolling stocks
+        List<DrawableTrain> trains = loadTrains(obj, sections);
+        List<DrawableRollingStock> stocks = loadRollingStocks(obj, sections, trains);
+
+        LoadedRailway railway = new LoadedRailway(file, sections, tracks.toArray(new DefaultTrack[tracks.size()]), trains, stocks);
+
+        System.out.println("Success Loading Railway File");
+        return railway;
+    }
+
 
     public List<DrawableTrain> loadTrains(JSONObject obj, DrawableSection[] sections){
         List<DrawableTrain> trains = new ArrayList<>();

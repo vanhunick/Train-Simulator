@@ -203,7 +203,7 @@ public class Save {
     public static void main(String[] args){
         Load load = new Load();
         File f = new File("src/util.tracks/simple_track.json");
-        LoadedRailway l = load.loadFromFile(f,"src/util.tracks/simple_track.json", null);
+        LoadedRailway l = load.loadFromFile(f,"src/util.tracks/simple_track.json");
 
         Save save = new Save();
         save.save(l,"src/util.tracks/test_save");
