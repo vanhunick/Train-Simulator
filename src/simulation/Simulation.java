@@ -171,7 +171,7 @@ public class Simulation implements MouseEvents {
     public String saveCurrentConfig(){
         LoadedRailway railway = new LoadedRailway(null, this.railway, this.tracks, trains, drawableRollingStocks);
         Save s = new Save();
-        return s.save(railway,null);
+        return s.getJSONString(railway);
     }
 
 

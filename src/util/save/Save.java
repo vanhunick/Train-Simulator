@@ -17,9 +17,19 @@ import java.util.List;
  */
 public class Save {
 
+    public void save(LoadedRailway railway, String location){
+        try {
+            FileWriter file = new FileWriter(location+".json");
+            file.write(getJSONString(railway));
+            file.flush();
+            file.close();
 
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
-    public String save(LoadedRailway railway, String location){
+    public String getJSONString(LoadedRailway railway){
 
         // Create the top level JSON object
         JSONObject railwayObj = new JSONObject();
@@ -33,24 +43,10 @@ public class Save {
         // Save the rolling stock
         railwayObj.put("stocks", saveRollingStocks(railway.stocks));
 
-        if(location == null){
-            System.out.println("Returning string");
-            return railwayObj.toString();
-        }
-
-        try {
-            FileWriter file = new FileWriter(location+".json");
-            file.write(railwayObj.toString(1));
-            file.flush();
-            file.close();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
         // Useful for testing
         return railwayObj.toString();
     }
+
 
     public JSONArray saveSections(DrawableSection[] sections){
         // Create the JSON array for each of the sections
