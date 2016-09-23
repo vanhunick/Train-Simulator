@@ -185,7 +185,6 @@ public class JunctionTrack extends DefaultTrack {
     }
 
     public DefaultTrack getTrackToStartOn(int originTrackID){
-
         // outbound condition
         if(!inbound){
 
@@ -513,17 +512,18 @@ public class JunctionTrack extends DefaultTrack {
                     return inRight;
                 }
             }
-        } else {
+        } else {// outbound
             if(getDirection().equals("RIGHT")){
                 if(drawDirection.equals("UP")){
                     return outUpTrack;
                 } else {
                     return inDown;
                 }
-            } else {
+            } else { // Left
                 if(drawDirection.equals("UP")){
                     return inRight;
                 } else {
+                    //TODO should be here
                     return outRightTrack;
                 }
             }

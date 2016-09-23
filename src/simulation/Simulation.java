@@ -126,8 +126,6 @@ public class Simulation implements MouseEvents {
         return controllerTrains;
     }
 
-
-
     /**
      * Returns the available list of controllers for the user interface
      * */

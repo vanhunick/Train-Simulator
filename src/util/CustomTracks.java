@@ -85,7 +85,8 @@ public class CustomTracks {
                 // s12
                 new Quart2(lQ - innerOffset,2,curID++),// 14
                 // s13
-                new StraightHoriz(length + juncLegth,0,curID++), // 15
+                new StraightHoriz(length/2 + juncLegth,0,curID++), // 15  + juncLegth
+
                 // s14
                 new StraightHoriz(length + juncLegth,0,curID++), // 16
                 // s15
@@ -97,11 +98,16 @@ public class CustomTracks {
                 new StraightHoriz(length+1,0,curID++), // 20
                 // s18
                 new StraightHoriz(length,0,curID++), // 21
+
+                // the inside buffer track
+                new JunctionTrack(length/2, 6,curID++,false, false, "DOWN"), //22
+
+                new StraightHoriz(length,0,curID++) //23 straight track after buffer
         };
     }
 
     public DrawableSection[] getFullSection(DefaultTrack[] tracks){
-        DrawableSection[] railway = new DrawableSection[18];
+        DrawableSection[] railway = new DrawableSection[19];
 
         int curID = 1;
 
@@ -119,13 +125,15 @@ public class CustomTracks {
         railway[8] =  new DrawableSection(new Section(9,300,new DefaultTrack[]{tracks[10]}));
         railway[9] =  new DrawableSection(new Section(10,300,new DefaultTrack[]{tracks[11]}));
         railway[10] =  new DrawableSection(new Section(11,300,new DefaultTrack[]{tracks[12],tracks[13]}));
-        railway[11] =  new DrawableSection(new Section(12,300,new DefaultTrack[]{tracks[14]}));
+        railway[11] =  new DrawableSection(new Section(12,300,new DefaultTrack[]{tracks[22],tracks[14]}));
         railway[12] =  new DrawableSection(new Section(13,300,new DefaultTrack[]{tracks[15]}));
         railway[13] =  new DrawableSection(new Section(14,300,new DefaultTrack[]{tracks[16]}));
         railway[14] =  new DrawableSection(new Section(15,300,new DefaultTrack[]{tracks[17]}));
         railway[15] =  new DrawableSection(new Section(16,300,new DefaultTrack[]{tracks[18],tracks[19]}));
         railway[16] =  new DrawableSection(new Section(17,300,new DefaultTrack[]{tracks[20]}));
         railway[17] =  new DrawableSection(new Section(18,300,new DefaultTrack[]{tracks[21]}));
+
+        railway[18] =  new DrawableSection(new Section(19,300,new DefaultTrack[]{tracks[23]})); // inner buffer track section
 
 
         railway[0].getSection().setCandetect(true);
@@ -137,6 +145,7 @@ public class CustomTracks {
         railway[12].getSection().setCandetect(true);
         railway[14].getSection().setCandetect(true);
         railway[16].getSection().setCandetect(true);
+        railway[18].getSection().setCandetect(true);
 
         // Set up Section connections
 
@@ -195,6 +204,8 @@ public class CustomTracks {
         // Second inside corner
         railway[11].getSection().setToIndex(10);
         railway[11].getSection().setFromIndex(12);
+        railway[11].getSection().setJuncSectionIndex(18); // The outbound junction to inner buffer
+        railway[2].getSection().setHasJunctionTrack(true);
 
         // First inside top straight
         railway[12].getSection().setToIndex(13);
@@ -224,6 +235,7 @@ public class CustomTracks {
 
 
 
+
         // Set up the drawing of the sections
         tracks[1].setStart(tracks[0]);
 
@@ -246,8 +258,16 @@ public class CustomTracks {
         tracks[12].setStart(tracks[11]);
 
         tracks[13].setStart(((JunctionTrack)tracks[12]).getStraightTrack());
+
         tracks[14].setStart(tracks[13]);
-        tracks[15].setStart(tracks[14]);
+
+
+
+        // inside buffer
+        tracks[22].setStart((tracks[14]));
+        tracks[15].setStart(tracks[22]);
+
+//        tracks[15].setStart(tracks[14]);
         tracks[16].setStart(tracks[15]);
         tracks[17].setStart(tracks[16]);
         tracks[18].setStart(tracks[17]);
@@ -257,6 +277,10 @@ public class CustomTracks {
 
         tracks[20].setStart(((JunctionTrack)tracks[19]).getTrackThrown());
         tracks[21].setStart(tracks[20]);
+
+        tracks[23].setStart(((JunctionTrack)tracks[22]).getEndTrack());
+
+        tracks[23].setFrom(22);
 
 
         // Set up Junctions 2 , 9 , 12 19
@@ -335,10 +359,15 @@ public class CustomTracks {
 
         // Second inner corner
         tracks[14].setFrom(13);
-        tracks[14].setTo(15);
+        tracks[14].setTo(22);
+
+
+        tracks[22].setFrom(14);
+        tracks[22].setTo(15);
+        ((JunctionTrack)tracks[22]).setOutboundToThrown(23);
 
         // First inner top straight
-        tracks[15].setFrom(14);
+        tracks[15].setFrom(22);
         tracks[15].setTo(16);
 
         // Second inner top straight
