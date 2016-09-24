@@ -40,7 +40,7 @@ public class DrawableTrain implements Movable{
     private Circle connection;
     private double distMoved; // The last distance moved in pixels used by stock
     private double degDone = 0; // The degrees the train is through the curve
-    private double width = 40; // The width of the train
+    private double width; // The width of the train
 
     private int timeChanged = 20; // Time between updates
 
@@ -64,6 +64,7 @@ public class DrawableTrain implements Movable{
         this.targetDirection = train.getDirection();
         this.currentSpeed = 0;
         this.curRotation = 270;// Not nat orientation
+        this.width = (train.getLength()/4)*Simulation.METER_MULTIPLIER;
 
         if(curTrack.getDirection().equals("RIGHT")){
             if(train.getOrientation()){
@@ -87,7 +88,7 @@ public class DrawableTrain implements Movable{
      * Sets up the image fields for the drawable train
      * */
     public void setUpImage(){
-        this.trainImage= new Image("file:src/res/train.png", train.getWidth() * Simulation.METER_MULTIPLIER, train.getLength() * Simulation.METER_MULTIPLIER, false, false);
+        this.trainImage= new Image("file:src/res/train.png", width, train.getLength() * Simulation.METER_MULTIPLIER, false, false);
         this.trainImageView = new ImageView(trainImage);
         this.params = new SnapshotParameters();
         params.setFill(Color.TRANSPARENT);
@@ -159,7 +160,7 @@ public class DrawableTrain implements Movable{
      * */
     public void setConnectionLocation(){
         connection.setCenterX(this.getCurrentLocation().getX() + ((getLengthPixels()/2) * (Math.cos(Math.toRadians(this.getCurRotation()-90+180)))));
-        connection.setCenterY(this.getCurrentLocation().getY() + ((getLengthPixels() / 2) * (Math.sin(Math.toRadians(this.getCurRotation() - 90 + 180)))));
+        connection.setCenterY(this.getCurrentLocation().getY() + ((width/ 2) * (Math.sin(Math.toRadians(this.getCurRotation() - 90 + 180)))));
         connection.setRadius(10);
     }
 
@@ -229,9 +230,6 @@ public class DrawableTrain implements Movable{
             engineForce = Math.max(engineForce -= 1000,0);
         }
 
-        if(currentSpeed == 22){
-            System.out.println(engineForce);
-        }
 
         if(currentSpeed < train.getTargetSpeed() && !braking && acceleration < 0.25){
 //            engineForce = Math.max(494000, engineForce);
@@ -311,7 +309,7 @@ public class DrawableTrain implements Movable{
         // DAP
         double t4 = 0.5 * Math.abs((dX*(aY - y)) + (aX*(y - dY)) + (x*(dY - aY)));
 
-        double rectArea = 21 * getLengthPixels(); //TODO should be the width of the image instead of 21
+        double rectArea = width * getLengthPixels(); //TODO should be the width of the image instead of 21
 
         // if area is bigger point outside the rectangle
         if(t1 + t2 + t3 + t4 > rectArea){

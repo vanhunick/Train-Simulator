@@ -143,7 +143,7 @@ public class SimulationUI implements MouseEvents {
         if(menu.addTrain()){
             String selectedTrain = menu.getCurTrainSelection();
             if(selectedTrain.equals("British Rail Class 25")){
-                Train train1 = new Train(menu.getId(), 15, 500, true, menu.naturalOrientation(),71000);
+                Train train1 = new Train(menu.getId(), 12.5, 500, true, menu.naturalOrientation(),71000);
                 DrawableTrain drawableTrain1 = new DrawableTrain(train1, sim.getSection(dt),dt);
 
                 sim.addTraintoSimulation(drawableTrain1,menu.getNumbRollingStock());
@@ -154,11 +154,6 @@ public class SimulationUI implements MouseEvents {
             else if(selectedTrain.equals("British Rail Class 101 (DMU)")){
 
             }
-        }
-
-        // Checks if a rolling stock should be added to the track
-        if(menu.addRollingStocl()){
-            // Rolling stock should be added TODO WHEN THERE IS NOT TRAIN TO ADD ONLY STOCK
         }
     }
 

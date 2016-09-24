@@ -79,7 +79,7 @@ public class DrawableRollingStock implements Movable{
      * Sets up the image and image params for the rolling stock
      * */
     public void setUpImage(){
-        this.rollingStockImage = new Image("file:src/res/rolling_stock.gif", 20, 80, false, false);
+        this.rollingStockImage = new Image("file:src/res/rolling_stock.gif", rollingStock.getWidth() * Simulation.METER_MULTIPLIER, rollingStock.getLength() * Simulation.METER_MULTIPLIER, false, false);
         this.trainImageView = new ImageView(rollingStockImage);
         this.params = new SnapshotParameters();
         params.setFill(javafx.scene.paint.Color.TRANSPARENT);
@@ -119,8 +119,8 @@ public class DrawableRollingStock implements Movable{
         this.degDone = Math.abs(connectedToMovable.getDegDone() -90);
         this.curRotation = connectedToMovable.getCurRotation();
 
-        double len = getLengthPixels()/2 + 40;
-        double increment = len/40;
+        double len = getLengthPixels()/2 + 80;
+        double increment = len/80;
 
         // set current track to the train we are connected to current track
         this.curTrack = connectedToMovable.getCurTrack();
@@ -220,8 +220,8 @@ public class DrawableRollingStock implements Movable{
         }
 
         // Find the front of the rolling stock
-        double frontX = currentLocation.getX() + ((80/2) * (Math.cos(Math.toRadians(curRotation-90))));
-        double frontY = currentLocation.getY() + ((80/2) * (Math.sin(Math.toRadians(curRotation-90))));
+        double frontX = currentLocation.getX() + ((getLengthPixels()/2) * (Math.cos(Math.toRadians(curRotation-90))));
+        double frontY = currentLocation.getY() + ((getLengthPixels()/2) * (Math.sin(Math.toRadians(curRotation-90))));
 
         // Only draw the line if the train is connected to something
         if(connected){
@@ -243,11 +243,69 @@ public class DrawableRollingStock implements Movable{
      * */
     public boolean containsPoint(double x, double y) {
         double startX = currentLocation.getX() - getLengthPixels()/2;
-        double startY = currentLocation.getY() - getLengthPixels()/2;
+        double startY = currentLocation.getY() - getWidthPixels()/2;
 
-        if(x >= startX && x <= startX + getWidthPixels() && y > startY && y < startY + getLengthPixels())return true;
+        if(x >= startX && x <= startX + getWidthPixels() && y > startY && y < startY + getLengthPixels()){
+            System.out.println("True");
+            return containsPointAccurate(x,y);
+        }
 
         return false;
+    }
+
+    public boolean containsPointAccurate(double x, double y){
+
+        double backX = this.getCurrentLocation().getX() + ((getLengthPixels()/2) * (Math.cos(Math.toRadians(this.getCurRotation()-90+180))));
+        double backY = this.getCurrentLocation().getY() + ((getLengthPixels()/ 2) * (Math.sin(Math.toRadians(this.getCurRotation() - 90 + 180))));
+
+        double frontX = this.getCurrentLocation().getX() - ((getLengthPixels()/2) * (Math.cos(Math.toRadians(this.getCurRotation()-90+180))));
+        double frontY = this.getCurrentLocation().getY() - ((getLengthPixels()/2) * (Math.sin(Math.toRadians(this.getCurRotation() - 90 + 180))));
+
+        // Cross product
+        double x1 = ((backY - frontY)*1) - (0*0);
+        double y1 = (0*0) - ((backX - frontX)*1);
+
+        // Find the magnitude
+        double mag = Math.sqrt((x1*x1) + (y1*y1));
+
+        // 21 is the width of the image
+        double xOffset = (0.5 * 21) * (x1/mag);
+        double yOffset = (0.5 * 21) * (y1/mag);
+
+
+        double aX = frontX - xOffset;//A
+        double aY = frontY - yOffset;
+
+        double bX = frontX + xOffset;// B
+        double bY = frontY + yOffset;
+
+        double cX = backX + xOffset; // C
+        double cY = backY + yOffset;
+
+        double dX = backX - xOffset; // D
+        double dY = backY - yOffset;
+
+        // ABP
+        double t1 = 0.5 * Math.abs((aX*(bY - y)) + (bX*(y - aY)) + (x*(aY - bY)));
+
+        // BCP
+        double t2 = 0.5 * Math.abs((bX*(cY - y)) + (cX*(y - bY)) + (x*(bY - cY)));
+
+        // CDP
+        double t3 = 0.5 * Math.abs((cX*(dY - y)) + (dX*(y - cY)) + (x*(cY - dY)));
+
+        // DAP
+        double t4 = 0.5 * Math.abs((dX*(aY - y)) + (aX*(y - dY)) + (x*(dY - aY)));
+
+        double rectArea = getWidthPixels() * getLengthPixels(); //TODO should be the width of the image instead of 21
+
+        // if area is bigger point outside the rectangle
+        if(t1 + t2 + t3 + t4 > rectArea){
+            return false;
+        }
+        else {
+            return true;
+        }
     }
 
     public void setConnection(Movable movable){

@@ -7,7 +7,7 @@ public class RollingStock {
 
     // Length of rolling stock
     private double length;
-    private double width = 4;
+    private double width;
 //    private double weight;
 
     // The id of the rolling stock
@@ -23,7 +23,8 @@ public class RollingStock {
      * @param rollID the id of the rolling stock
      * */
     public RollingStock(double length, int rollID, double weight){
-        this.length = length;
+        this.length = length/1.5;//TODO fix propaly
+        this.width = this.length/4;
         this.rollID = rollID;
         this.weight = weight;
     }
