@@ -79,7 +79,7 @@ public class DrawableRollingStock implements Movable{
      * Sets up the image and image params for the rolling stock
      * */
     public void setUpImage(){
-        this.rollingStockImage = new Image("file:src/res/rolling_stock.gif", rollingStock.getWidth() * Simulation.METER_MULTIPLIER, rollingStock.getLength() * Simulation.METER_MULTIPLIER, false, false);
+        this.rollingStockImage = new Image("file:src/res/rolling_stock.png", rollingStock.getWidth() * Simulation.METER_MULTIPLIER, rollingStock.getLength() * Simulation.METER_MULTIPLIER, false, false);
         this.trainImageView = new ImageView(rollingStockImage);
         this.params = new SnapshotParameters();
         params.setFill(javafx.scene.paint.Color.TRANSPARENT);
@@ -115,11 +115,10 @@ public class DrawableRollingStock implements Movable{
 
         // the middle of the train it is connected to
         this.currentLocation = new Point2D((int)startPointOfConnection.getX(),(int)startPointOfConnection.getY());
-        System.out.println(connectedToMovable.getCurRotation());
         this.degDone = Math.abs(connectedToMovable.getDegDone() -90);
         this.curRotation = connectedToMovable.getCurRotation();
 
-        double len = getLengthPixels()/2 + 80;
+        double len = getLengthPixels()/2 + 50;
         double increment = len/80;
 
         // set current track to the train we are connected to current track

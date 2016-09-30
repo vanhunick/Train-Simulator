@@ -1,0 +1,136 @@
+{
+ "trains": [{
+  "curTrack": 0,
+  "orientation": true,
+  "length": 15,
+  "curSectionID": 0,
+  "id": 1,
+  "maxSpeed": 500,
+  "direction": true
+ }],
+ "sections": [
+  {
+   "junctionIndex": -1,
+   "start": true,
+   "length": 11.11111111111111,
+   "detect": true,
+   "from": 0,
+   "id": 0,
+   "to": 0,
+   "hasJunc": false,
+   "tracks": [
+    {
+     "fromJunc": -1,
+     "x": 566,
+     "length": 10,
+     "y": 422,
+     "toJunc": -1,
+     "from": 7,
+     "id": 0,
+     "to": 1,
+     "type": "Straight horizontal"
+    },
+    {
+     "fromJunc": -1,
+     "length": 10,
+     "toJunc": -1,
+     "from": 0,
+     "id": 1,
+     "to": 2,
+     "type": "Straight horizontal"
+    }
+   ]
+  },
+  {
+   "junctionIndex": -1,
+   "start": false,
+   "length": 11.11111111111111,
+   "detect": false,
+   "from": 0,
+   "id": 1,
+   "to": 0,
+   "hasJunc": false,
+   "tracks": [
+    {
+     "fromJunc": -1,
+     "length": 20,
+     "toJunc": -1,
+     "from": 1,
+     "id": 2,
+     "to": 3,
+     "type": "Q3"
+    },
+    {
+     "fromJunc": -1,
+     "length": 20,
+     "toJunc": -1,
+     "from": 2,
+     "id": 3,
+     "to": 4,
+     "type": "Q2"
+    }
+   ]
+  },
+  {
+   "junctionIndex": -1,
+   "start": false,
+   "length": 11.11111111111111,
+   "detect": true,
+   "from": 0,
+   "id": 2,
+   "to": 0,
+   "hasJunc": false,
+   "tracks": [
+    {
+     "fromJunc": -1,
+     "length": 10,
+     "toJunc": -1,
+     "from": 3,
+     "id": 4,
+     "to": 5,
+     "type": "Straight horizontal"
+    },
+    {
+     "fromJunc": -1,
+     "length": 10,
+     "toJunc": -1,
+     "from": 4,
+     "id": 5,
+     "to": 6,
+     "type": "Straight horizontal"
+    }
+   ]
+  },
+  {
+   "junctionIndex": -1,
+   "start": false,
+   "length": 11.11111111111111,
+   "detect": false,
+   "from": 0,
+   "id": 3,
+   "to": 0,
+   "hasJunc": false,
+   "tracks": [
+    {
+     "fromJunc": -1,
+     "length": 20,
+     "toJunc": -1,
+     "from": 5,
+     "id": 6,
+     "to": 7,
+     "type": "Q1"
+    },
+    {
+     "fromJunc": -1,
+     "length": 20,
+     "toJunc": -1,
+     "from": 6,
+     "id": 7,
+     "to": 0,
+     "type": "Q4"
+    }
+   ]
+  }
+ ],
+ "stocks": []
+}

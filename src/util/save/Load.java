@@ -213,12 +213,12 @@ public class Load {
             JunctionTrack jt = (JunctionTrack)currentTrack;
             int toIndex = 0;
             if(jt.inBound()){
-                toIndex = jt.getInboundTo();
+                toIndex = jt.getTo();
             } else {
                 toIndex = jt.getTo();
             }
             if(todo.contains(toIndex)){
-                tracks[toIndex].setStart(jt);
+                tracks[toIndex].setStart(jt.getStraightTrack());
                 todo.remove(toIndex);
                 setupTracks(tracks[toIndex], tracks,todo);
             }
@@ -229,7 +229,14 @@ public class Load {
         }
         else {
             if(todo.contains(currentTrack.getTo())){
-                tracks[currentTrack.getTo()].setStart(currentTrack);
+                if(tracks[currentTrack.getTo()] instanceof JunctionTrack && currentTrack.getJuncTo() != 0){ // when the track to place is a junction and the cur track entering the junction
+                    JunctionTrack jTrack = (JunctionTrack)tracks[currentTrack.getTo()];
+                    jTrack.setStart(currentTrack);
+                    jTrack.moveToThrown();
+                } else {
+                    tracks[currentTrack.getTo()].setStart(currentTrack);
+                }
+
                 setupTracks(tracks[currentTrack.getTo()], tracks,todo);
             }
         }

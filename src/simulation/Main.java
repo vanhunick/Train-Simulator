@@ -25,7 +25,7 @@ public class Main extends Application {
     private static BorderPane bl;
 
     // Fps counter fields
-    public boolean debug = true;
+    public boolean debug = false;
     private final long ONE_SECOND = 1000000000;
     private long currentTime = 0;
     private long lastTime = 0;
@@ -129,6 +129,8 @@ public class Main extends Application {
 
                 // Clear the screen
                 gc.setFill(new Color(0.14,0.15,0.15,1));
+
+
                 gc.clearRect(0, 0, primaryStage.getWidth(), primaryStage.getHeight());
                 gc.fillRect(0, 0, primaryStage.getWidth(), primaryStage.getHeight());
                 gc.setStroke(Color.WHITE);
@@ -142,14 +144,14 @@ public class Main extends Application {
                     gc.strokeText("FPS " + fpsText, 0, 20);
                 }
 
-                gc.strokeText("         20m ", 800, 25);
-
-
-                gc.setStroke(Color.WHITE);
-                gc.strokeLine(800,30,800 + (20*Simulation.METER_MULTIPLIER),30);
-
-                gc.strokeLine(800,25,800,35);
-                gc.strokeLine(800 + (20*Simulation.METER_MULTIPLIER),25, 800 + (20*Simulation.METER_MULTIPLIER),35);
+//                gc.strokeText("         20m ", 800, 25);
+//
+//
+//                gc.setStroke(Color.WHITE);
+//                gc.strokeLine(800,30,800 + (20*Simulation.METER_MULTIPLIER),30);
+//
+//                gc.strokeLine(800,25,800,35);
+//                gc.strokeLine(800 + (20*Simulation.METER_MULTIPLIER),25, 800 + (20*Simulation.METER_MULTIPLIER),35);
 
                 gc.save();
                 gc.restore();

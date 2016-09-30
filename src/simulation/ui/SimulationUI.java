@@ -255,6 +255,7 @@ public class SimulationUI implements MouseEvents {
         g.setFill(Color.BLACK);
         g.fillRect(startX,startY,200,150);
         g.setFill(new Color(0,0,0.96,1));
+        g.setStroke(Color.WHITE);
         g.setLineWidth(1);
         g.strokeRect(startX,startY,200,150);
 

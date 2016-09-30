@@ -230,7 +230,6 @@ public class Simulation implements MouseEvents {
 //            setDefault();
             loadFromConfig();
         }
-        System.out.println("Started is true");
         started = true;
     }
 
@@ -252,8 +251,6 @@ public class Simulation implements MouseEvents {
         drawableRollingStocks.forEach(s -> s.setUpImage());
 
         movable = CustomTracks.createMovableList(trains, drawableRollingStocks);
-
-        System.out.println("Done loading config");
     }
 
     /**
@@ -274,7 +271,6 @@ public class Simulation implements MouseEvents {
      * */
     public void update(){
         if(restart){
-            System.out.println("Restarting");
             loadFromConfig();
             restart = false;
         }
@@ -347,7 +343,7 @@ public class Simulation implements MouseEvents {
      * Check if any of the trains or rolling stocks crash into each other.
      * If they are set the trains involved to crashed
      * */
-    public void checkCollision(){
+    public void checkCollision(){//TODO backwards over junction
         for(int i = 0; i < movable.size(); i++){
             for(int j = 0; j < movable.size(); j++){
                 if(j !=i){

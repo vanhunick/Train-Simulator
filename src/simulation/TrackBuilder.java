@@ -1,5 +1,6 @@
 package simulation;
 
+import com.sun.org.apache.xpath.internal.SourceTree;
 import javafx.geometry.Insets;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseButton;
@@ -479,7 +480,6 @@ public class TrackBuilder implements MouseEvents{
 
                         allTracks.add(t);
                         mouseSelectedPeice = t;
-                        System.out.println(mouseSelectedPeice);
                         mouseSelectedPeice.setSelected(true);
                     }
                 }
@@ -506,6 +506,7 @@ public class TrackBuilder implements MouseEvents{
                 jTrack.setStart(allTracks.get(i));
                 jTrack.moveToThrown();
                 t.setTo(allTracks.size()-1);
+                t.setJuncTo(allTracks.size()-1);
                 return true;
             }
 

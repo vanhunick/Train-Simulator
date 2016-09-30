@@ -44,7 +44,7 @@ public class Save {
         railwayObj.put("stocks", saveRollingStocks(railway.stocks));
 
         // Useful for testing
-        return railwayObj.toString();
+        return railwayObj.toString(1);
     }
 
 

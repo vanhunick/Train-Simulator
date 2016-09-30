@@ -58,7 +58,7 @@ public class CustomTracks {
 
         return  new DefaultTrack[]{
                 // s1
-                new StraightHoriz(550,650,length,0,curID++,"RIGHT"), // 0
+                new StraightHoriz(525,700,length,0,curID++,"RIGHT"), // 0
                 // s2
                 new StraightHoriz(length,0,curID++), // 1
                 // s3

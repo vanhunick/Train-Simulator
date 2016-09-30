@@ -1,0 +1,78 @@
+{
+ "trains": [{
+  "curTrack": 0,
+  "orientation": true,
+  "length": 15,
+  "curSectionID": 0,
+  "id": 1,
+  "maxSpeed": 500,
+  "direction": true
+ }],
+ "sections": [
+  {
+   "junctionIndex": -1,
+   "start": true,
+   "length": 11.11111111111111,
+   "detect": true,
+   "from": 0,
+   "id": 0,
+   "to": 0,
+   "hasJunc": false,
+   "tracks": [{
+    "fromJunc": -1,
+    "x": 543,
+    "length": 10,
+    "y": 302,
+    "toJunc": 1,
+    "from": -1,
+    "id": 0,
+    "to": 1,
+    "type": "Straight horizontal"
+   }]
+  },
+  {
+   "junctionIndex": 0,
+   "inbound": true,
+   "start": false,
+   "length": 11.11111111111111,
+   "detect": false,
+   "from": 0,
+   "id": 1,
+   "to": 0,
+   "hasJunc": true,
+   "juncID": 1,
+   "tracks": [{
+    "fromJunc": -1,
+    "inbound": true,
+    "length": 10,
+    "thrown": 0,
+    "toJunc": -1,
+    "from": -1,
+    "id": 1,
+    "to": 2,
+    "draw": "UP",
+    "type": "Junction"
+   }]
+  },
+  {
+   "junctionIndex": -1,
+   "start": false,
+   "length": 11.11111111111111,
+   "detect": true,
+   "from": 0,
+   "id": 2,
+   "to": 0,
+   "hasJunc": false,
+   "tracks": [{
+    "fromJunc": -1,
+    "length": 10,
+    "toJunc": -1,
+    "from": 1,
+    "id": 2,
+    "to": -1,
+    "type": "Straight horizontal"
+   }]
+  }
+ ],
+ "stocks": []
+}

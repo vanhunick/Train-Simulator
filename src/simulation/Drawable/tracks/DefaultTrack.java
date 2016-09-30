@@ -19,7 +19,7 @@ public abstract class DefaultTrack {
     public static final Color BACKGROUND_COLOR = new Color(0.8,0.8,0.8,1);
     public static Color SELECTED_COLOR = new Color(0.9,0.0,0.0,1);
     public static final int CONNECT_SENS = 10;
-    public static final int TRACK_WIDTH = 10;
+    public static final int TRACK_WIDTH = 12;
     public static final int RAIL_OFFSET = 2;
 
     private double startX; // Start x position
