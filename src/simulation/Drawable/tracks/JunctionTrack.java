@@ -275,9 +275,10 @@ public class JunctionTrack extends DefaultTrack {
         }
 
         if(drawDirection.equals("UP")){
-            straightTrack.setStartY((straightTrack.getStartY() + getLength() - DefaultTrack.TRACK_WIDTH/2));
-            getInnerTrack().setStartY((getInnerTrack().getStartY() + getLength()) - DefaultTrack.TRACK_WIDTH/2);
-            getEndTrack().setStartY((getEndTrack().getStartY() + getLength() - DefaultTrack.TRACK_WIDTH/2));
+
+            straightTrack.setStartY((straightTrack.getStartY() + getLength() - DefaultTrack.TRACK_WIDTH));
+            getInnerTrack().setStartY((getInnerTrack().getStartY() + getLength()) - DefaultTrack.TRACK_WIDTH);
+            getEndTrack().setStartY((getEndTrack().getStartY() + getLength() - DefaultTrack.TRACK_WIDTH));
         }
         getInnerTrack().setMid();
         getEndTrack().setMid();
