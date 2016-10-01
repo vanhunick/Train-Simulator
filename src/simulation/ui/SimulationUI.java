@@ -121,6 +121,13 @@ public class SimulationUI implements MouseEvents {
     }
 
     /**
+     * Set the selected train to null
+     * */
+    public void hideTrainMenu(){
+        selectedTrain = null;
+    }
+
+    /**
      * Called when user presses the event button the send an event to a train
      * */
     public void startEventDialog(){
@@ -146,13 +153,13 @@ public class SimulationUI implements MouseEvents {
                 Train train1 = new Train(menu.getId(), 12.5, 25, true, menu.naturalOrientation(),71000);
                 DrawableTrain drawableTrain1 = new DrawableTrain(train1, sim.getSection(dt),dt);
 
-                sim.addTraintoSimulation(drawableTrain1,menu.getNumbRollingStock());
+                sim.addTrainAndStocktoSimulation(drawableTrain1,menu.getNumbRollingStock());
             }
             else if(selectedTrain.equals("British Rail Class 108 (DMU)")){ // Slightly faster train
                 Train train1 = new Train(menu.getId(), 12.5, 30, true, menu.naturalOrientation(),71000);
                 DrawableTrain drawableTrain1 = new DrawableTrain(train1, sim.getSection(dt),dt);
 
-                sim.addTraintoSimulation(drawableTrain1,menu.getNumbRollingStock());
+                sim.addTrainAndStocktoSimulation(drawableTrain1,menu.getNumbRollingStock());
             }
             else if(selectedTrain.equals("British Rail Class 101 (DMU)")){
 

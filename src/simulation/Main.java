@@ -51,9 +51,7 @@ public class Main extends Application {
         // Responds to a key being pressed
         scene.setOnKeyPressed(e -> {String code = e.getCode().toString();if ( !input.contains(code) ){
             input.add( code );
-            controller.keyPressed(code);
-        }
-        });
+            controller.keyPressed(code);}});
 
         //responds to a key being released
         scene.setOnKeyReleased(e -> {String code = e.getCode().toString();input.remove( code );});
@@ -159,6 +157,7 @@ public class Main extends Application {
         }.start();
     }
 
+    // Launches the application
     public static void main(String[] args) {
         Application.launch(args);
     }
