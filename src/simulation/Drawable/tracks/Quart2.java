@@ -166,8 +166,10 @@ public class Quart2 extends DefaultTrack {
 
     @Override
     public boolean checkOnAfterUpdate(Point2D curPoint, double curRot, double rotationDone, double speed, Movable movable){
-        getNextPoint(curPoint, curRot,rotationDone, speed, movable);
-        Point2D p = curPoint;
+        Point2D tempPoint = new Point2D(curPoint.x,curPoint.y); // need to copy it because the method modifies it
+
+        getNextPoint(tempPoint, curRot, rotationDone, speed, movable);
+        Point2D p = tempPoint;
 
         if(super.getDirection().equals("DOWN")){
             if(forwardWithTrack(movable)){
@@ -203,5 +205,18 @@ public class Quart2 extends DefaultTrack {
             }
         }
         return true;
+    }
+
+    @Override
+    public double pixelsLeftAfterMove(Point2D curPoint, double curRot, double rotationDone, double speed, Movable movable) {
+        Point2D tempPoint = new Point2D(curPoint.x, curPoint.y); // need to copy it because the method modifies it
+        getNextPoint(tempPoint, curRot, rotationDone, speed, movable);
+        Point2D p = tempPoint;
+
+        if ((getDirection().equals("LEFT") && forwardWithTrack(movable)) || (getDirection().equals("DOWN") && !forwardWithTrack(movable))) {
+            return (getStartX() + getLength()/2) - (p.x - speed);
+        } else {
+            return (p.y + speed) - (getStartY() + getLength() / 2);
+        }
     }
 }

@@ -172,6 +172,12 @@ public class DrawableTrain implements Movable{
 
     boolean changingDirection = false;
 
+    private double extraDistance;
+
+    public void setExtraDistance(double dist){
+        this.extraDistance = dist;
+    }
+
     /**
      * Updates the location of the train
      * */
@@ -239,10 +245,13 @@ public class DrawableTrain implements Movable{
 
         distMoved = ((timeChanged/1000.0)* (currentSpeed * Simulation.METER_MULTIPLIER)); // Work out the distance to move in pixels
 
+        distMoved+= extraDistance;
+        extraDistance = 0;
+
         // Get the rotation from a normal track or junction track
         this.curRotation = curTrack instanceof JunctionTrack ? ((JunctionTrack)curTrack).getNextPoint(this,distMoved) : curTrack.getNextPoint(currentLocation,curRotation, degDone,distMoved, this);
 
-        // Should crash because going backwards on a junction that is thrown
+        // Check if it shuld crash because going backwards on a junction that is thrown
         if(curTrack instanceof JunctionTrack){
             JunctionTrack j = ((JunctionTrack)curTrack);
             crashed = j.checkThrownCrash(this);

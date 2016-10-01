@@ -161,6 +161,8 @@ public abstract class DefaultTrack {
     public abstract void draw(GraphicsContext g);
     public abstract boolean containsPoint(double x, double y);
 
+    public abstract double pixelsLeftAfterMove(Point2D curPoint,double curRot, double rotationDone, double speed, Movable movable);
+
     public boolean checkOnAfterUpdate(Point2D curPoint,double curRot, double rotationDone, double speed, Movable movable){
         System.out.println("Should be implemented in subclass checkOnAfterUpdate");
         return false;

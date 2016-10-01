@@ -437,8 +437,9 @@ public class Simulation implements MouseEvents {
         timeChanged = 20;
         double pixelsToMove = (timeChanged/1000.0)*speedInPixels;
         lastUpdate = System.currentTimeMillis();
-        return pixelsToMove;
+        return pixelsToMove ;
     }
+
 
     /**
      * Checks if a drawable train is on a track given after it has moved a certain amount based on its speed
@@ -463,6 +464,14 @@ public class Simulation implements MouseEvents {
 
         // Check if the train will be on another track after the update
         if(!curTrack.checkOnAfterUpdate(t.getCurrentLocation(),t.getCurRotation(),t.getDegDone() ,pixelsToMove,t)){
+
+//            double pixelsLeft = curTrack.pixelsLeftAfterMove(t.getCurrentLocation(),t.getCurRotation(),t.getDegDone() ,pixelsToMove,t);
+
+            if(t instanceof DrawableTrain){
+//                ((DrawableTrain) t).setExtraDistance(pixelsLeft);
+            }
+
+//            System.out.println(pixelsLeft);
 
             DefaultTrack destinationTrack = null;
 

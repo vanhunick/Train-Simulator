@@ -93,6 +93,8 @@ public class Quart1 extends DefaultTrack {
         return x >= super.getStartX() && x <= super.getStartX() + super.getLength()/2 && y >= super.getStartY() && y <= super.getStartY() + super.getLength()/2;
     }
 
+
+
     @Override
     public Point2D getConnectionPointFrom(){
         return getDirection().equals("RIGHT") ? new Point2D((int)(super.getStartX()+ TRACK_WIDTH/2),(int) (getStartY() + getLength()/2)) :
@@ -160,8 +162,10 @@ public class Quart1 extends DefaultTrack {
     }
     @Override
     public boolean checkOnAfterUpdate(Point2D curPoint,double curRot, double rotationDone, double speed, Movable movable){
-        getNextPoint(curPoint, curRot, rotationDone, speed, movable);
-        Point2D p = curPoint;
+        Point2D tempPoint = new Point2D(curPoint.x,curPoint.y); // need to copy it because the method modifies it
+
+        getNextPoint(tempPoint, curRot, rotationDone, speed, movable);
+        Point2D p = tempPoint;
 
         if(getDirection().equals("DOWN")){
             if(forwardWithTrack(movable) && (p.getY() > getStartY() + getLength()/2 || p.getX()< getStartX())){
@@ -177,5 +181,18 @@ public class Quart1 extends DefaultTrack {
             }
         }
         return true;
+    }
+
+    @Override
+    public double pixelsLeftAfterMove(Point2D curPoint, double curRot, double rotationDone, double speed, Movable movable) {
+        Point2D tempPoint = new Point2D(curPoint.x, curPoint.y); // need to copy it because the method modifies it
+        getNextPoint(tempPoint, curRot, rotationDone, speed, movable);
+        Point2D p = tempPoint;
+
+        if ((getDirection().equals("RIGHT") && forwardWithTrack(movable)) || (getDirection().equals("DOWN") && !forwardWithTrack(movable))) {
+                return (p.x + speed) - (getStartX() + getLength()/2);
+        } else {
+            return (p.y + speed) - (getStartY() + getLength() / 2);
+        }
     }
 }

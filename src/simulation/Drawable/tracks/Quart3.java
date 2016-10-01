@@ -153,9 +153,10 @@ public class Quart3 extends DefaultTrack {
 
 
     public boolean checkOnAfterUpdate(Point2D curPoint, double curRot, double degDone, double speed, Movable movable){
-        getNextPoint(curPoint, curRot, degDone, speed, movable);
+        Point2D tempPoint = new Point2D(curPoint.x,curPoint.y); // need to copy it because the method modifies it
 
-        Point2D p = curPoint;
+        getNextPoint(tempPoint, curRot, degDone, speed, movable);
+        Point2D p = tempPoint;
 
         if(super.getDirection().equals("LEFT")){//TODO check
             if(forwardWithTrack(movable)){
@@ -230,6 +231,19 @@ public class Quart3 extends DefaultTrack {
         setStartY(y - getLength()*0.75);
 
         setMid();
+    }
+
+    @Override
+    public double pixelsLeftAfterMove(Point2D curPoint, double curRot, double rotationDone, double speed, Movable movable) {
+        Point2D tempPoint = new Point2D(curPoint.x, curPoint.y); // need to copy it because the method modifies it
+        getNextPoint(tempPoint, curRot, rotationDone, speed, movable);
+        Point2D p = tempPoint;
+
+        if ((getDirection().equals("LEFT") && forwardWithTrack(movable)) || (getDirection().equals("UP") && !forwardWithTrack(movable))) {
+            return (getStartX() + getLength()/2) - (p.x - speed);
+        } else {
+            return (getStartY() + getLength() / 2) - (p.y - speed);
+        }
     }
 
     public void draw(GraphicsContext g) {

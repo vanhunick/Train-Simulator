@@ -108,7 +108,7 @@ public class StraightHoriz extends DefaultTrack {
 
 
     public double getNextPoint(Point2D cur, double curRot, double rotDone, double moveBy, Movable movable){
-        cur.setLocation(getNextX(cur.getX(),moveBy,movable),getNextY(cur.getY(),moveBy,movable.getOrientation()));
+        cur.setLocation(getNextX(cur.x,moveBy,movable),getNextY(cur.getY(),moveBy,movable.getOrientation()));
         return getNextRotation(curRot,moveBy,movable.getOrientation(),movable.getDirection());
     }
 
@@ -123,8 +123,15 @@ public class StraightHoriz extends DefaultTrack {
 
 
 
-    public double getPixelsLeft(){
-        return 0;
+    /**
+     * Returns the distance left to move after getting to the end of the track
+     * */
+    public double pixelsLeftAfterMove(Point2D curPoint,double curRot, double rotationDone, double speed, Movable movable){
+        if(getDirection().equals("RIGHT") && forwardWithTrack(movable) || getDirection().equals("LEFT") && !forwardWithTrack(movable)) {
+            return ((curPoint.x + speed) - (getStartX() + getLength()));
+        } else{
+            return getStartX() - (curPoint.x - speed);
+        }
     }
 
 
@@ -165,8 +172,10 @@ public class StraightHoriz extends DefaultTrack {
     }
 
     public boolean checkOnAfterUpdate(Point2D curPoint, double rotation,double rotDone, double dist, Movable movable){
-        if(getNextX(curPoint.getX(),dist, movable) == -1 )return false;
-        if(getNextY(curPoint.getY(),dist, movable.getOrientation()) == -1 )return false;
+        if(getNextX(curPoint.getX(),dist, movable) == -1 ){
+            return false;
+        }
+
         return true;
     }
 

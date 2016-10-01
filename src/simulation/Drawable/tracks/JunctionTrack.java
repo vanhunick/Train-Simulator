@@ -566,7 +566,6 @@ public class JunctionTrack extends DefaultTrack {
 
     // Inbound getters
     public int getInboundFromThrown() {return inboundFromThrown;}
-    public int getInboundTo() {return inboundTo;}
 
     // Outbound getters
     public int getOutboundToThrown() {return outboundToThrown;}
@@ -590,6 +589,11 @@ public class JunctionTrack extends DefaultTrack {
     @Override
     public boolean containsPoint(double x, double y){
         return straightTrack.containsPoint(x,y) || getInnerTrack().containsPoint(x,y) || getEndTrack().containsPoint(x,y);
+    }
+
+    @Override
+    public double pixelsLeftAfterMove(Point2D curPoint, double curRot, double rotationDone, double speed, Movable movable) {
+        return movable.getJuncTrack().pixelsLeftAfterMove(curPoint,curRot,rotationDone,speed,movable);
     }
 
     @Override

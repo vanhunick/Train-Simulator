@@ -171,6 +171,17 @@ public class StraightVert extends DefaultTrack {
         }
         return -1;
     }
+
+    /**
+     * Returns the distance left to move after getting to the end of the track
+     * */
+    public double pixelsLeftAfterMove(Point2D curPoint,double curRot, double rotationDone, double speed, Movable movable){
+        if(getDirection().equals("UP") && forwardWithTrack(movable) || getDirection().equals("DOWN") && !forwardWithTrack(movable)) {
+            return ((curPoint.y - speed) - (getStartY()));
+        } else{
+            return getStartY() + getLength() - (curPoint.y + speed);
+        }
+    }
     
 
     public double getNextX(double curX, double moveBy, boolean nat){
