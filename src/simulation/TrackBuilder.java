@@ -152,13 +152,18 @@ public class TrackBuilder implements MouseEvents{
         return 0;
     }
 
+
+    /**
+     * Start the simulation by changing the mode in the controller and passing in
+     * the created track and trains
+     * */
     public LoadedRailway getLoadedRailway(){
         if(tracksInSection.size() > 0){
             newSection();// Act like the next section button is clicked
         }
 
         if(sectionsForTrack.size() <= 0){
-            new ErrorDialog("No railway to simulate", "Not read to simulate");
+            new ErrorDialog("No railway to simulate", "No need to simulate");
             return null;
         }
 
@@ -178,7 +183,6 @@ public class TrackBuilder implements MouseEvents{
         allTracks.toArray(tracks);
         
         LoadedRailway railway = new LoadedRailway(null,sections,tracks,trains,stocks); // null because not loaded from file
-
         return railway;
     }
 
@@ -337,16 +341,6 @@ public class TrackBuilder implements MouseEvents{
         return -1; //Error
     }
 
-    /**
-     * Start the simulation by changing the mode in the controller and passing in
-     * the created track and trains
-     * */
-    public void simulateTrack(){
-        if(allTracks.size() == 0 || trains.size() == 0){
-            new ErrorDialog("No track or trains to simulate", "Error");
-            return;
-        }
-    }
 
     /**
      * Undoes and addition of a track piece

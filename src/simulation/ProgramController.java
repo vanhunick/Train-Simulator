@@ -65,7 +65,9 @@ public class ProgramController implements MouseEvents {
 
     public boolean setSimulationFromBuilder(){
         LoadedRailway l = trackBuilder.getLoadedRailway();
+        System.out.println("null");
         if(l != null){
+            System.out.println("Not null");
             simulationUI.getSim().setFromBuilderMode(l);
             return true;
         }

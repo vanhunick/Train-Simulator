@@ -149,9 +149,7 @@ public class TopToolBar extends ToolBar {
 
         stop.setOnAction(e -> {
             if (controller.gerMode().equals(ProgramController.VISUALISATION_MODE)) {
-                System.out.println("Stopping");
                 controller.getSimulationUI().getSim().restart();
-                System.out.println("Done stoppping");
             }
         });
 
@@ -163,7 +161,9 @@ public class TopToolBar extends ToolBar {
 
         sim.setOnAction(e -> {
             if (controller.gerMode().equals(ProgramController.BUILDER_MODE)) {
-                controller.getTrackBuilder().simulateTrack();
+                if(controller.setSimulationFromBuilder()){
+                    controller.setMode(ProgramController.VISUALISATION_MODE);
+                }
             }
         });
 
