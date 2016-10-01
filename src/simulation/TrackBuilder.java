@@ -533,11 +533,6 @@ public class TrackBuilder implements MouseEvents{
      * location for the track
      * */
     public boolean placeTrack(DefaultTrack track){
-        // The first track can be placed anywhere
-        if(allTracks.size() == 1){
-            return true;
-        }
-
         // Not the first track must connect to another track
         for(int i = 0; i < allTracks.size()-1; i++){// -1 because the one being added is at the top
             // The track to try connect to
@@ -641,12 +636,14 @@ public class TrackBuilder implements MouseEvents{
         // Check if there is a piece to put down
         mouseSelectedPeice.setSelected(false);
 
-        // Check for special case of placing down junction track
-        if(mouseSelectedPeice instanceof JunctionTrack){
-            placeJunctionTrack((JunctionTrack) mouseSelectedPeice);
-        }
-        else {
-            placeTrack(mouseSelectedPeice);
+        if(!(allTracks.size() == 1)){
+            // Check for special case of placing down junction track
+            if(mouseSelectedPeice instanceof JunctionTrack){
+                placeJunctionTrack((JunctionTrack) mouseSelectedPeice);
+            }
+            else {
+                placeTrack(mouseSelectedPeice);
+            }
         }
 
 
