@@ -134,7 +134,9 @@ public class TopMenuBar extends MenuBar {
 
         l.loadRailway();
         LoadedRailway railway = l.getRailway();
-        controller.setLoadedRailway(railway.file,railway);
+        if(l.getRailway() != null){
+            controller.setLoadedRailway(railway.file,railway);
+        }
     }
 
 
