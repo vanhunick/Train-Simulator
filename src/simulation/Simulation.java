@@ -382,7 +382,6 @@ public class Simulation implements MouseEvents {
             r.setConnection(t);
             t.setRollingStockConnected(r);
         } else {
-
             movable1.setCrashed(true);
             movable2.setCrashed(true);
             sendEventToUI("Collision ", 2);

@@ -536,7 +536,22 @@ public class JunctionTrack extends DefaultTrack {
      * Checks if the movable goes over the junction backwards
      * */
     public boolean checkThrownCrash(Movable m){
-        return !forwardWithTrack(m) && thrown || (forwardWithTrack(m) && inbound && thrown && m.getCurTrack() instanceof StraightHoriz); //TODO find better way to check second condition
+        if(inBound() && forwardWithTrack(m)){ // The train can only crash if it moving against normal orientation
+            if(!(m.getJuncTrack() instanceof StraightHoriz)){
+                return !thrown;
+            } else{
+                return thrown;// True when thrown means it
+            }
+        }
+
+        if(!inBound() && !forwardWithTrack(m)){ // The train can only crash if it moving against normal orientation
+            if(!(m.getJuncTrack() instanceof StraightHoriz)){
+                return !thrown;
+            } else{
+                return thrown;// True when thrown means it
+            }
+        }
+        return false;
     }
 
     /**
