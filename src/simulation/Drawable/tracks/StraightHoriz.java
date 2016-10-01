@@ -73,16 +73,11 @@ public class StraightHoriz extends DefaultTrack {
     }
 
 
-
-
     public boolean canConnect(DefaultTrack trackToConnect){
         int id = trackToConnect.getDrawID();
 
-
         if(getDirection().equals("RIGHT")){
             if(id == 0 || id == 2 || id == 3 || id == 6){
-
-
                 if(Math.abs(getConnectionPointTo().getX() - trackToConnect.getConnectionPointFrom().getX()) < DefaultTrack.CONNECT_SENS &&
                         Math.abs(getConnectionPointTo().getY() - trackToConnect.getConnectionPointFrom().getY()) < DefaultTrack.CONNECT_SENS)return true;
             }
@@ -113,48 +108,23 @@ public class StraightHoriz extends DefaultTrack {
 
 
     public double getNextPoint(Point2D cur, double curRot, double rotDone, double moveBy, Movable movable){
-        cur.setLocation(getNextX(cur.getX(),moveBy,movable.getOrientation(), movable.getDirection()),getNextY(cur.getY(),moveBy,movable.getOrientation()));
+        cur.setLocation(getNextX(cur.getX(),moveBy,movable),getNextY(cur.getY(),moveBy,movable.getOrientation()));
         return getNextRotation(curRot,moveBy,movable.getOrientation(),movable.getDirection());
     }
 
-    public double getNextX(double curX, double moveBy, boolean nat, boolean forward){
-        if(super.getDirection().equals("RIGHT")){
-            if(nat && forward || !nat && !forward){
-                if(curX + moveBy > (super.getStartX() + super.getLength())){
-                    return -1;//No longer in this section TODO update later
-                }
-                else{
-                    return curX + moveBy;
-                }
-            }
-            else{
-                if(curX - moveBy < super.getStartX()){
-                    return -1;//No longer in this section TODO update later
-                }
-                else{
-                    return curX - moveBy;
-                }
-            }
+
+    public double getNextX(double curX, double moveBy, Movable movable){
+        if(getDirection().equals("RIGHT") && forwardWithTrack(movable) || getDirection().equals("LEFT") && !forwardWithTrack(movable)) {
+            return (curX + moveBy < getStartX() + getLength() ? curX + moveBy : -1);
+        } else{
+            return curX - moveBy > getStartX() ? curX - moveBy : -1;
         }
-        else if(super.getDirection().equals("LEFT")){
-            if(nat && forward || !nat && !forward){
-                if(curX - moveBy < super.getStartX()){
-                    return -1;//No longer in this section TODO update later
-                }
-                else{
-                    return curX - moveBy;
-                }
-            }
-            else{
-                if(curX + moveBy > (super.getStartX() + super.getLength())){
-                    return -1;//No longer in this section TODO update later
-                }
-                else{
-                    return curX + moveBy;
-                }
-            }
-        }
-        return -1;
+    }
+
+
+
+    public double getPixelsLeft(){
+        return 0;
     }
 
 
@@ -187,7 +157,6 @@ public class StraightHoriz extends DefaultTrack {
         setStartY(y - (TRACK_WIDTH/2));
     }
 
-
     /**
      * USed to put the train in the middle of the track when first drawn
      * */
@@ -196,10 +165,11 @@ public class StraightHoriz extends DefaultTrack {
     }
 
     public boolean checkOnAfterUpdate(Point2D curPoint, double rotation,double rotDone, double dist, Movable movable){
-        if(getNextX(curPoint.getX(),dist, movable.getOrientation(), movable.getDirection()) == -1 )return false;
+        if(getNextX(curPoint.getX(),dist, movable) == -1 )return false;
         if(getNextY(curPoint.getY(),dist, movable.getOrientation()) == -1 )return false;
         return true;
     }
+
 
     public Point2D getConnectionPointFrom(){
         if(super.getDirection().equals("RIGHT")){
@@ -237,11 +207,9 @@ public class StraightHoriz extends DefaultTrack {
         }
         else {
             g.setStroke(getColor());
-//            g.setStroke(DefaultTrack.RAIL_COLOR);
         }
         g.setLineWidth(2);
         g.strokeLine(super.getStartX(), super.getStartY(), super.getStartX() + super.getLength(), super.getStartY());
         g.strokeLine(super.getStartX(), super.getStartY() + TRACK_WIDTH, super.getStartX() + super.getLength(), super.getStartY()+ TRACK_WIDTH);
-//        g.setStroke(Color.WHITE);
     }
 }
