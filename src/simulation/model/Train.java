@@ -48,24 +48,14 @@ public class Train {
      *
      * @param orientation if it is starting with or again the natural orientation of the track
      * */
-    public Train(int id, double length,double maxSpeed,  boolean direction,boolean orientation, double weight){
+    public Train(int id, double length, double maxSpeed,  boolean direction,boolean orientation, double weight){
         this.id = id;
         this.direction = direction;
         this.length = length;
         this.orientation = orientation;
         this.maxSpeed = maxSpeed;
+        this.targetSpeed = maxSpeed;
         this.weight = weight;
-    }
-
-    // TODO temp constructor
-    public Train(int id, double length, double maxSpeed,  boolean direction,boolean orientation, double weight, List<Integer> destinations){
-        this.id = id;
-        this.direction = direction;
-        this.length = length;
-        this.orientation = orientation;
-        this.maxSpeed = maxSpeed;
-        this.weight = weight;
-        this.destinationIDs = destinations;
     }
 
     public void setTargetSpeedPercentage(float speedPercentage){

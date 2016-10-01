@@ -664,7 +664,6 @@ public class Simulation implements MouseEvents {
         trains.add(train);
         movable.add(train);
         modelTrack.addTrain(train.getTrain());
-        train.getTrain().setTargetSpeedPercentage(0.5f);//TODO replace with what the user specifies
     }
 
     public void addRollingStocktoSimulation(DrawableRollingStock stock){
