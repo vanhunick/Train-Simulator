@@ -674,6 +674,7 @@ public class TrackBuilder implements MouseEvents{
             if(s!=null){
                 s.setSelected(true);
                 tracksInSection.add(s);
+                s.setColor(Color.YELLOW);
             }
         }
     }

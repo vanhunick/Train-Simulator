@@ -66,7 +66,7 @@ public class Main extends Application {
         canvas.setOnMouseDragged(e -> controller.mouseDragged(e.getX(), e.getY(),e));
 
         setupGUI(primaryStage, scene, root,canvas);
-        controller.setDefMode(bl,canvas);
+        controller.setDefMode(canvas);
 
         lastTime = System.nanoTime();
         setupAnimationTimer(primaryStage,canvas);

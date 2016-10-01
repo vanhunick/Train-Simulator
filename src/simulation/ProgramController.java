@@ -23,51 +23,54 @@ public class ProgramController implements MouseEvents {
     public static final String VISUALISATION_MODE = "visualisation_mode";
     public static final String BUILDER_MODE = "builder_mode";
 
-    // The current mode
-    private String mode = "NO_MODE";
+    private String mode = "NO_MODE"; // The current mode
 
-    // The modes
-    private SimulationUI simulationUI;
+    private SimulationUI simulationUI; // The user interface of the simulation
     private TrackBuilder trackBuilder;
 
-    // The place to send the mouse events to
-    private MouseEvents curMode;
+    private MouseEvents curMode; // The place to send the mouse events to
 
-    // Used for adding and removing the UI elements for different modes
-    private BorderPane borderPane;
+    private BorderPane borderPane; // Used for adding and removing the UI elements for different modes
 
-    private TopToolBar toolBar;
-    private Canvas canvas;
+    private TopToolBar toolBar; // The top right toolbar with the buttons
 
+    private Canvas canvas; // The canvas the railroad is drawn on
 
+    /**
+     * Creates a new Program Controller, used to switch between track builder and simulation modes
+     * */
     public ProgramController(){
         trackBuilder = new TrackBuilder(this);
         simulationUI = new SimulationUI();
     }
 
+    /**
+     * Sets the mode of the program to the railway simulation
+     *
+     * @param mode the mode to set
+     * */
     public void setSimulationMode(String mode){
         if(!mode.equals(VISUALISATION_MODE))return;// TODO not in vis mode
-
         simulationUI.setSelectedMode(mode);
     }
 
-    // Canvas
 
     /**
      * The default mode is the simulationUI mode with it default track and trains
      * */
-    public void setDefMode(BorderPane borderPane, Canvas canvas){
+    public void setDefMode(Canvas canvas){
         this.canvas = canvas;
         simulationUI.setCanvas(canvas);
-//        simulationUI.addUIElementsToLayout(borderPane);
         setMode(ProgramController.VISUALISATION_MODE);
     }
 
+
+    /**
+     * Switches modes from builder mode to simulation with the railway from the builder
+     * */
     public boolean setSimulationFromBuilder(){
         LoadedRailway l = trackBuilder.getLoadedRailway();
-        System.out.println("null");
         if(l != null){
-            System.out.println("Not null");
             simulationUI.getSim().setFromBuilderMode(l);
             return true;
         }
@@ -89,7 +92,6 @@ public class ProgramController implements MouseEvents {
             canvas.setWidth(Main.SCREEN_WIDTH);
             canvas.setHeight(Main.SCREEN_HEIGHT);
 
-            setVisualisationMode(null,null,null);
             toolBar.enableButtons();
             toolBar.disableBuilderButtons();
             this.mode = VISUALISATION_MODE;
@@ -107,9 +109,6 @@ public class ProgramController implements MouseEvents {
             trackBuilder.updateSize();
             this.curMode = trackBuilder;
         }
-        else {
-            //Error invalid mode
-        }
     }
 
 
@@ -124,6 +123,7 @@ public class ProgramController implements MouseEvents {
             trackBuilder.update();
         }
     }
+
 
     /**
      * Draws all the elements on the screen for the current mode in focus
@@ -141,23 +141,6 @@ public class ProgramController implements MouseEvents {
     /**
      * Sets the mode of the program by removing UI elements from other mode and adding it's own.
      * */
-    public void setVisualisationMode(DrawableSection[] track, List<DrawableTrain> trains, List<DrawableRollingStock> stocks){
-        trackBuilder.removeUIElementsFromLayout(borderPane);
-        simulationUI.addUIElementsToLayout(borderPane);
-
-        if(simulationUI.logShowing()){
-            canvas.setWidth(canvas.getWidth() - EventLog.WIDTH);
-        }
-
-        // Enable relevant buttons
-        toolBar.enableButtons();
-        toolBar.disableBuilderButtons();
-    }
-
-
-    /**
-     * Sets the mode of the program by removing UI elements from other mode and adding it's own.
-     * */
     public void setBuilderMode(){
         simulationUI.removeUIElementsFromLayout(borderPane);
         trackBuilder.addUIElementsToLayout(borderPane);
@@ -165,12 +148,20 @@ public class ProgramController implements MouseEvents {
         toolBar.setBuilderButtons();
     }
 
+
+    /**
+     * Starts the simulation with a configuration file or the loadedrailway
+     * */
     public void setLoadedRailway(File file, LoadedRailway railway){
         if(mode.equals(VISUALISATION_MODE)){
             simulationUI.startWithLoadedRailway(file, railway);
         }
     }
 
+
+    /**
+     * Shows the physics sliders on the UI
+     * */
     public void handlePhysicsPressed(ActionEvent e){
         if(mode.equals(VISUALISATION_MODE)){
             simulationUI.showPhysicsSliders(borderPane);
@@ -180,6 +171,11 @@ public class ProgramController implements MouseEvents {
         }
     }
 
+
+    /**
+     * Called when the save menu item is clicked passes responsibility over to track builder or
+     * simulation depending on the current mode.
+     * */
     public void handleSavePressed(){
         if(mode.equals(VISUALISATION_MODE)){
             simulationUI.getSim().save();
@@ -190,20 +186,50 @@ public class ProgramController implements MouseEvents {
     }
 
 
-    public void setModeOfSimulation(String mode){
-        if(!mode.equals(ProgramController.VISUALISATION_MODE))return;
-
-        simulationUI.getSim().setMode(mode);
-    }
-
+    /**
+     * Sets the toolbar for the user interface
+     * */
     public void setToolBar(TopToolBar toolBar){
         this.toolBar = toolBar;
     }
 
+
+    /**
+     * Passes key press through to the current mode
+     * */
     public void keyPressed(String code){
         curMode.keyPressed(code);
     }
 
+    public void toggleLogView(){
+        if(mode.equals(VISUALISATION_MODE)){
+            simulationUI.toggleLog(borderPane);
+        }
+    }
+
+    /**
+     * Sets the border pane
+     * */
+    public void setBorderPane(BorderPane borderPane){this.borderPane = borderPane;}
+
+    /**
+     * Returns the user interface of the simulation
+     * */
+    public SimulationUI getSimulationUI(){return this.simulationUI;}
+
+    /**
+     * Returns the track builder
+     * */
+    public TrackBuilder getTrackBuilder(){
+        return this.trackBuilder;
+    }
+
+    /**
+     * Returns the current mode
+     * */
+    public String gerMode(){
+        return this.mode;
+    }
 
     @Override
     public void mousePressed(double x, double y, MouseEvent e) {
@@ -228,33 +254,5 @@ public class ProgramController implements MouseEvents {
     @Override
     public void mouseDragged(double x, double y, MouseEvent e) {
         curMode.mouseDragged(x,y,e);
-    }
-
-    public void setBorderPane(BorderPane borderPane){this.borderPane = borderPane;}
-
-    public void toggleLogView(){
-        if(mode.equals(VISUALISATION_MODE)){
-            simulationUI.toggleLog(borderPane);
-        }
-    }
-
-    public  BorderPane getBorderPane(){return this.borderPane;}
-
-    public double getCanvasWidth(){
-        return borderPane.getCenter().getLayoutBounds().getWidth();
-    }
-
-    public double getCanvasHeight(){
-        return borderPane.getCenter().getLayoutBounds().getHeight();
-    }
-
-    public SimulationUI getSimulationUI(){return this.simulationUI;}
-
-    public TrackBuilder getTrackBuilder(){
-        return this.trackBuilder;
-    }
-
-    public String gerMode(){
-        return this.mode;
     }
 }
