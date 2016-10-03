@@ -134,7 +134,7 @@ public class Load {
             boolean dir = trainObject.getBoolean("direction");
             boolean ori = trainObject.getBoolean("orientation");
 
-            Train t = new Train(id,length,maxSpeed,dir,ori,71000);//TODO util.save weight
+            Train t = new Train(id,length,maxSpeed,dir,ori,71000,7);//TODO SAVE AND LOAD ACCELERAYION
 
             DefaultTrack track = null;
             DrawableSection section = null;

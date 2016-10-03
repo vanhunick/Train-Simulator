@@ -24,6 +24,8 @@ public class Train {
 
     private double targetSpeed;
 
+    private double acceleration;
+
     private double width = 3;// In metres
 
     private double weight;
@@ -50,7 +52,8 @@ public class Train {
      *
      * @param orientation if it is starting with or again the natural orientation of the track
      * */
-    public Train(int id, double length, double maxSpeed,  boolean direction,boolean orientation, double weight){
+    public Train(int id, double length, double maxSpeed,  boolean direction,boolean orientation, double weight, double acceleration){
+        this.acceleration = acceleration;
         this.id = id;
         this.direction = direction;
         this.length = length;
@@ -92,6 +95,14 @@ public class Train {
      * */
     public double getLength() {
         return length;
+    }
+
+    public double getAcceleration(){
+        return this.acceleration;
+    }
+
+    public void setAcceleration(double acc){
+        this.acceleration = acc;
     }
 
     public double getWidth(){ return width; }

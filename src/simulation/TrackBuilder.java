@@ -396,7 +396,7 @@ public class TrackBuilder implements MouseEvents{
         if(menu.addTrain()){
             String selectedTrain = menu.getCurTrainSelection();
             if(selectedTrain.equals("British Rail Class 25")){
-                Train train1 = new Train(getNextTrainID(), menu.getLength(), 500, true,true,71000);
+                Train train1 = new Train(getNextTrainID(), menu.getLength(), 500, true,true,71000,7);
                 DrawableTrain drawableTrain1 = new DrawableTrain(train1, getSection(dt),dt);
                 drawableTrain1.setUpImage();
                 trains.add(drawableTrain1);

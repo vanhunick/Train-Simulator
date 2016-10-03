@@ -130,6 +130,13 @@ public class DrawableTrain implements Movable{
         return netForce / (train.getWeight() + getRollingsWeights());
     }
 
+    public double getPowerForAcceleration(double targetAcc){
+        double  friction = currentSpeed > 0 ? DefaultTrack.KINETIC_FRICTION : DefaultTrack.STATIC_FRICTION;
+        double frictionForce = (friction * ((train.getWeight()+ getRollingsWeights()) * 9.88));
+
+        return (targetAcc *  ((train.getWeight() + getRollingsWeights())) + frictionForce);
+    }
+
     /**
      * Returns the air resistance on the train
      * */
@@ -217,14 +224,18 @@ public class DrawableTrain implements Movable{
 
         currentSpeed += acceleration * (timeChanged/1000.0);// Convert Millisecond to second
 
-        if(currentSpeed > train.getTargetSpeed() && !braking && engineForce - 1000 >= 0){
+        if(currentSpeed > train.getTargetSpeed() && !braking && engineForce - 1000 >= 0 && acceleration > - 1){
             engineForce = Math.max(engineForce -= 1000,0);
+
+            engineForce = getPowerForAcceleration(0);
         }
 
 
-        if(currentSpeed < train.getTargetSpeed() && !braking && acceleration < 0.25){
+        if(currentSpeed < train.getTargetSpeed() && !braking && acceleration < 7){
             engineForce += 1000;
             engineForce = Math.min(engineForce,train.getMaxPower());
+
+            engineForce = getPowerForAcceleration(this.getTrain().getAcceleration());
         }
 
         distMoved = ((timeChanged/1000.0)* (currentSpeed * Simulation.METER_MULTIPLIER)); // Work out the distance to move in pixels

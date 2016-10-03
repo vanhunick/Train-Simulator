@@ -36,7 +36,7 @@ public class JunctionTests {
         simulation.setTracks(railway.tracks);
 
 
-        Train t = new Train(1,100,500,true,true,71000);
+        Train t = new Train(1,100,500,true,true,71000,7);
         DrawableTrain dt = new DrawableTrain(t,railway.sections[0],railway.tracks[0]);
 
         simulation.addTrainAndStocktoSimulation(dt,0);

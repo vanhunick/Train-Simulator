@@ -15,14 +15,14 @@ public class TrainAttributeMenu {
 
     public double weight;
 
-    public double maxPower;
+    public double acceleration;
 
     public double maxSpeed;
 
     public TrainAttributeMenu(DrawableTrain t){
         this.length = t.getTrain().getLength();
         this.weight = t.getTrain().getWeight()/1000;
-        this.maxPower = t.getTrain().getMaxPower()/1000;
+        this.acceleration = t.getTrain().getAcceleration();
         this.maxSpeed = t.getTrain().getMaxSpeed();
 
         Dialog dialog = new Dialog<>();
@@ -54,16 +54,16 @@ public class TrainAttributeMenu {
         grid.add(speed, 0, 1);
 
         // Power of train
-        Slider maxPower = new Slider();
-        maxPower.setMin(1);
-        maxPower.setMax(1000);
-        maxPower.setValue(this.maxPower);
-        maxPower.setShowTickLabels(true);
-        maxPower.setShowTickMarks(true);
-        maxPower.setMinorTickCount(5);
-        maxPower.setMajorTickUnit(500);
-        grid.add(new Label("Power (Kn):"), 0, 2);
-        grid.add(maxPower, 0, 3);
+        Slider acceleration = new Slider();
+        acceleration.setMin(1);
+        acceleration.setMax(20);
+        acceleration.setValue(this.acceleration);
+        acceleration.setShowTickLabels(true);
+        acceleration.setShowTickMarks(true);
+        acceleration.setMinorTickCount(5);
+        acceleration.setMajorTickUnit(5);
+        grid.add(new Label("Acceleration (ms2):"), 0, 2);
+        grid.add(acceleration, 0, 3);
 
         // length of train
         Slider length = new Slider();
@@ -97,8 +97,8 @@ public class TrainAttributeMenu {
             this.maxSpeed = newValue.intValue();
         });
 
-        maxPower.valueProperty().addListener((observable, oldValue, newValue) -> {
-            this.maxPower = newValue.intValue();
+        acceleration.valueProperty().addListener((observable, oldValue, newValue) -> {
+            this.acceleration = newValue.intValue();
         });
 
         length.valueProperty().addListener((observable, oldValue, newValue) -> {
