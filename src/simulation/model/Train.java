@@ -28,7 +28,7 @@ public class Train {
 
     private double weight;
 
-    private double maxPower = 494000;// Default max power
+    private double maxPower = 500000;// Default max power
 
     private List<Integer> destinationIDs;
 
@@ -61,6 +61,7 @@ public class Train {
     }
 
     public void setTargetSpeedPercentage(float speedPercentage){
+        speedPercentage = speedPercentage/100;
         speedPercentage = Math.min(speedPercentage, 1);
         speedPercentage = Math.max(0, speedPercentage);
         this.targetSpeed = maxSpeed * speedPercentage;

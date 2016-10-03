@@ -156,7 +156,7 @@ public class AddTrainMenu {
         });
 
 //
-//        Optional<ButtonType> result = dialog.showAndWait();
+        Optional<ButtonType> result = dialog.showAndWait();
 //        if (result.get() == addButton){
 //            this.canceled = false;
 //        } else {

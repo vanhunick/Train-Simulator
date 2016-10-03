@@ -193,6 +193,7 @@ public class DrawableTrain implements Movable{
             return;
         }
 
+
         // Check if direction has changed
         if(targetDirection != train.getDirection()) {
             targetDirection = train.getDirection();
@@ -245,6 +246,7 @@ public class DrawableTrain implements Movable{
         if(currentSpeed < train.getTargetSpeed() && !braking && acceleration < 0.25){
 //            engineForce = Math.max(494000, engineForce);
             engineForce += 1000;
+            engineForce = Math.min(engineForce,train.getMaxPower());
         }
 
         distMoved = ((timeChanged/1000.0)* (currentSpeed * Simulation.METER_MULTIPLIER)); // Work out the distance to move in pixels

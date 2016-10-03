@@ -116,9 +116,6 @@ public class EventGen {
                 int id = Integer.parseInt(trainId);
                 if(!speed.getText().equals("")){
                     double speedValue = Double.parseDouble(speed.getText());
-
-
-
                     model.setSpeed(id,speedValue);
                 }
 
