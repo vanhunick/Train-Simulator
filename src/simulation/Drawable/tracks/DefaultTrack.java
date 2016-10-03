@@ -10,7 +10,6 @@ import simulation.Simulation;
  * Created by Nicky on 25/03/2016.
  */
 public abstract class DefaultTrack {
-    private Color color = DefaultTrack.RAIL_COLOR;
 
     public static final double STATIC_FRICTION = 0.7;
     public static final double  KINETIC_FRICTION = 0.5;
@@ -22,30 +21,27 @@ public abstract class DefaultTrack {
     public static final int TRACK_WIDTH = 12;
     public static final int RAIL_OFFSET = 2;
 
+    private Color color = DefaultTrack.RAIL_COLOR;
+
     private double startX; // Start x position
     private double startY; // Start y position
     private double length; // The length of the track
-    private double lengthMetres;
     private boolean startPiece; // If it is a start piece or not
     private String direction; // The natural direction of the track
 
     private int to = -1; // The index of the track it leads to
     private int from = -1; // The index of the track it comes from
-
     private int juncFrom; // The index of the junction track it could come from
     private int juncTo; // The index of the junction track it could go to
-
     private int drawID; // 0 is straight line 1 to 4 represent the section of a ring 5 is down straight piece
     private int id; // The ID of the track
-
-    private boolean selected; // Wether the track is selected or not
+    private boolean selected; // Whether the track is selected or not
 
 
     /**
      * Constructor for a piece that connects to another piece
      * */
     public DefaultTrack(int lengthMetres, int drawID, int id){
-        this.lengthMetres = lengthMetres;
         this.length = lengthMetres * Simulation.METER_MULTIPLIER;
         this.drawID = drawID;
         this.id = id;
@@ -61,7 +57,6 @@ public abstract class DefaultTrack {
     public DefaultTrack(int startX, int startY, int lengthMetres, int drawID,int id, String direction){
         this.startX = startX;
         this.startY = startY;
-        this.lengthMetres = lengthMetres;
         this.length = lengthMetres * Simulation.METER_MULTIPLIER;
         this.drawID = drawID;
         this.id = id;
@@ -72,13 +67,35 @@ public abstract class DefaultTrack {
         this.from = -1;
     }
 
+    /**
+     * Returns if the movable is still on the track after the update
+     * */
+    public boolean checkOnAfterUpdate(Point2D curPoint,double curRot, double rotationDone, double speed, Movable movable){
+        System.out.println("Should be implemented in subclass checkOnAfterUpdate");
+        return false;
+    }
+
+    /**
+     * Returns the next rotation for the movable
+     * */
+    public double getNextRotation(double curRotation, double speed, boolean nat, boolean direction){
+        System.out.println("Should be implemented in subclass getNextRotation");
+        return 0;
+    }
+
+    /**
+     * Modifies the curPoint object to be the next point and returns the new rotation angle
+     * */
+    public double getNextPoint(Point2D curPoint,double curRot, double rotationDone, double speed, Movable movable){
+        System.out.println("Should be implemented in subclass getNextPoint");
+        return 0;
+    }
+
     /***
      * Returns the length of a quarter track
      * */
     public double lengthOfQuarter(){
-        double radius = (getLength()-TRACK_WIDTH/2)/2;
-        double circumference = 2 * Math.PI * radius;
-        return circumference/4;
+        return (2 * Math.PI * (getLength()-TRACK_WIDTH/2)/2)/4;
     }
 
     /**
@@ -99,10 +116,7 @@ public abstract class DefaultTrack {
         this.startX = startX;
     }
     public void setDirection(String direction){this.direction = direction;}
-    public void setColor(Color color){
-        this.color = color;
-    }
-
+    public void setColor(Color color){this.color = color;}
     public void setLength(double length){this.length = length;}
     public void setTo(int to){this.to = to;}
     public void setFrom(int from){this.from = from;}
@@ -147,10 +161,7 @@ public abstract class DefaultTrack {
     }
     public double getInitialX(double trainWidth){System.out.println("Should be implemented in subclass");return 0;}
     public double getInitialY(double trainWidth){System.out.println("Should be implemented in subclass"); return 0;}
-
-    public void setMid(){
-
-    }
+    public void setMid(){System.out.println("Set Mid should be implemented in subclass");}
 
     // Abstract Methods
     public abstract boolean canConnect(DefaultTrack track);
@@ -160,32 +171,13 @@ public abstract class DefaultTrack {
     public abstract void setMid(double x, double y);
     public abstract void draw(GraphicsContext g);
     public abstract boolean containsPoint(double x, double y);
-
     public abstract double pixelsLeftAfterMove(Point2D curPoint,double curRot, double rotationDone, double speed, Movable movable);
-
-    public boolean checkOnAfterUpdate(Point2D curPoint,double curRot, double rotationDone, double speed, Movable movable){
-        System.out.println("Should be implemented in subclass checkOnAfterUpdate");
-        return false;
-    }
-
-    public double getNextRotation(double curRotation, double speed, boolean nat, boolean direction){
-        System.out.println("Should be implemented in subclass getNextRotation");
-        return 0;
-    }
-
-    public double getNextPoint(Point2D curPoint,double curRot, double rotationDone, double speed, Movable movable){
-        System.out.println("Should be implemented in subclass getNextPoint");
-        return 0;
-    }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         DefaultTrack that = (DefaultTrack) o;
-
-
         if (Double.compare(that.startX, startX) != 0) return false;
         if (Double.compare(that.startY, startY) != 0) return false;
         if (Double.compare(that.length, length) != 0) return false;
@@ -199,7 +191,6 @@ public abstract class DefaultTrack {
         if (selected != that.selected) return false;
         if (color != null ? !color.equals(that.color) : that.color != null) return false;
         return direction != null ? direction.equals(that.direction) : that.direction == null;
-
     }
 
     @Override
