@@ -14,96 +14,96 @@ public interface Movable {
     /**
      * Returns how far through the movable is through the curve
      * */
-    public double getDegDone();
+    double getDegDone();
 
     /**
      * Sets how far the movable is through the curve.
      * Used for switch directions in a curve
      * */
-    public void setDegDone(double degDone);
+    void setDegDone(double degDone);
 
     /**
      * Draws the movable on the screen
      *
      * @param g the graphics context to draw on
      * */
-    public void draw(GraphicsContext g);
+    void draw(GraphicsContext g);
 
     /**
      * Updates the state of the movable
      * */
-    public void update();
+    void update();
 
     /**
      * Returns the current track it is on
      *
      * @return track
      * */
-    public DefaultTrack getCurTrack();
+    DefaultTrack getCurTrack();
 
     /**
      * Returns the rolling stock if there is one connected null if none
      *
      * @return the rolling stock
      * */
-    public DrawableRollingStock getRollingStockConnected();
+    DrawableRollingStock getRollingStockConnected();
 
     /**
      * Returns out current location
      *
      * @return location
      * */
-    public Point2D getCurrentLocation();
+    Point2D getCurrentLocation();
 
     /**
      * Returns the orientation of the movable
      *
      * @return the orientation
      * */
-    public boolean getOrientation();
+    boolean getOrientation();
 
     /**
      * Returns if the movable is crashed or not
      *
      * @return crashed
      * */
-    public boolean isCrashed();
+    boolean isCrashed();
 
     /**
      * Returns the current rotation of the movable used for drawing it
      *
      * @return the rotation in degrees
      * */
-    public double getCurRotation();
+    double getCurRotation();
 
     /**
      * Sets the movable to crashed when it collides with another train
      *
      * @param crashed crashed or not
      * */
-    public void setCrashed(boolean crashed);
+    void setCrashed(boolean crashed);
 
     /**
      * Returns the direction of the rolling stock
      *
      * @return direction
      * */
-    public boolean getDirection();
+    boolean getDirection();
 
     /**
      * Sets the junction track the movable is currently on
      * */
-    public void setJuncTrack(DefaultTrack jt);
+    void setJuncTrack(DefaultTrack jt);
 
     /**
      * Sets the track the movable is currently on
      * */
-    public void setCurTrack(DefaultTrack curTrack);
+    void setCurTrack(DefaultTrack curTrack);
 
     /**
      * Returns the junction track of the movable if it is on one
      * */
-    public DefaultTrack getJuncTrack();
+    DefaultTrack getJuncTrack();
 
     /**
      * Returns if the point at x,y is on the movable
@@ -112,29 +112,33 @@ public interface Movable {
      *
      * @param y the y location
      * */
-    public boolean containsPoint(double x, double y);
+    boolean containsPoint(double x, double y);
 
     /**
      * Returns the length of the movable
      *
      * @return length
      * */
-    public double getLengthPixels();
+    double getLengthPixels();
 
     /**
      * Returns the speed of the movable
      * */
-    public double getCurrentSpeed();
+    double getCurrentSpeed();
 
 
     /**
      * Returns the last distance moved in pixels of the train
      * */
-    public double getDistanceMoved();
+    double getDistanceMoved();
 
-    public Point2D getFront();
+    /**
+     * Returns the front point of the movable
+     * */
+    Point2D getFront();
 
-    public Point2D getBack();
-
-
+    /**
+     * Returns the back point of the movable
+     * */
+    Point2D getBack();
 }
