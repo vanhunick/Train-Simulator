@@ -374,36 +374,36 @@ public class JunctionTrack extends DefaultTrack {
     }
 
     public double getNextPoint(Movable dt, double moveBy){
-        return dt.getJuncTrack().getNextPoint(dt.getCurrentLocation(),dt.getCurRotation(),dt.getDegDone(),moveBy, dt);
+        return dt.getJunctionTrack().getNextPoint(dt.getCurrentLocation(),dt.getCurRotation(),dt.getDegDone(),moveBy, dt);
     }
 
     /**
      * Junctions util.tracks need to be able to change the lastsubable and need to be able to change the orientation
      * */
     public boolean checkOnAfterUpdate(Movable dt, double moveBy){
-        if(dt.getJuncTrack().checkOnAfterUpdate(dt.getCurrentLocation(), dt.getCurRotation(),dt.getDegDone(), moveBy, dt)){
+        if(dt.getJunctionTrack().checkOnAfterUpdate(dt.getCurrentLocation(), dt.getCurRotation(),dt.getDegDone(), moveBy, dt)){
             return true;
         }
 
-        if(dt.getJuncTrack().equals(straightTrack)){
-            dt.setJuncTrack(null);
+        if(dt.getJunctionTrack().equals(straightTrack)){
+            dt.setJunctionTrack(null);
             return false;
         }
 
         if(forwardWithTrack(dt)){
-            if(dt.getJuncTrack().equals(getEndTrack())){
-                dt.setJuncTrack(null);
+            if(dt.getJunctionTrack().equals(getEndTrack())){
+                dt.setJunctionTrack(null);
                 return false;
             } else {
-                dt.setJuncTrack(getEndTrack());
+                dt.setJunctionTrack(getEndTrack());
                 return true;
             }
         } else {
-            if(dt.getJuncTrack().equals(getInnerTrack())){
-                dt.setJuncTrack(null);
+            if(dt.getJunctionTrack().equals(getInnerTrack())){
+                dt.setJunctionTrack(null);
                 return false;
             } else {
-                dt.setJuncTrack(getInnerTrack());
+                dt.setJunctionTrack(getInnerTrack());
                 return true;
             }
         }
@@ -537,7 +537,7 @@ public class JunctionTrack extends DefaultTrack {
      * */
     public boolean checkThrownCrash(Movable m){
         if(inBound() && forwardWithTrack(m)){ // The train can only crash if it moving against normal orientation
-            if(!(m.getJuncTrack() instanceof StraightHoriz)){
+            if(!(m.getJunctionTrack() instanceof StraightHoriz)){
                 return !thrown;
             } else{
                 return thrown;// True when thrown means it
@@ -545,7 +545,7 @@ public class JunctionTrack extends DefaultTrack {
         }
 
         if(!inBound() && !forwardWithTrack(m)){ // The train can only crash if it moving against normal orientation
-            if(!(m.getJuncTrack() instanceof StraightHoriz)){
+            if(!(m.getJunctionTrack() instanceof StraightHoriz)){
                 return !thrown;
             } else{
                 return thrown;// True when thrown means it
@@ -593,7 +593,7 @@ public class JunctionTrack extends DefaultTrack {
 
     @Override
     public double pixelsLeftAfterMove(Point2D curPoint, double curRot, double rotationDone, double speed, Movable movable) {
-        return movable.getJuncTrack().pixelsLeftAfterMove(curPoint,curRot,rotationDone,speed,movable);
+        return movable.getJunctionTrack().pixelsLeftAfterMove(curPoint,curRot,rotationDone,speed,movable);
     }
 
     @Override

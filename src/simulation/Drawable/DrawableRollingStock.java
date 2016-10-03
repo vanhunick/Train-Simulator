@@ -378,7 +378,7 @@ public class DrawableRollingStock implements Movable{
     }
 
     @Override
-    public void setJuncTrack(DefaultTrack jt) {
+    public void setJunctionTrack(DefaultTrack jt) {
         degDone = 0;
         this.juncTrack = jt;
     }
@@ -455,7 +455,7 @@ public class DrawableRollingStock implements Movable{
     }
 
     @Override
-    public DefaultTrack getJuncTrack() {
+    public DefaultTrack getJunctionTrack() {
         return juncTrack;
     }
 

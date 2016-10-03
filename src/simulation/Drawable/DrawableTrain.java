@@ -30,6 +30,10 @@ public class DrawableTrain implements Movable{
     private boolean braking;// Applied when changing direction or slowing down
     private double engineForce = 494000; // The engine force (could change to vary)
     public int brakePower = 800000; // The power when braking
+    boolean changingDirection = false;
+    private double extraDistance;
+    private Point2D front = new Point2D(0,0);
+    private Point2D back = new Point2D(0,0);
 
     // Drawing fields
     private Image trainImage; // Image of the train
@@ -41,6 +45,7 @@ public class DrawableTrain implements Movable{
     private double distMoved; // The last distance moved in pixels used by stock
     private double degDone = 0; // The degrees the train is through the curve
     private double width; // The width of the train
+    private String fileString; // Changes for different colored trains
 
     private int timeChanged = 20; // Time between updates
 
@@ -66,28 +71,13 @@ public class DrawableTrain implements Movable{
         this.curRotation = 270;// Not nat orientation
         this.width = (train.getLength()/4)*Simulation.METER_MULTIPLIER;
 
-        if(curTrack.getDirection().equals("RIGHT")){
-            if(train.getOrientation()){
-                this.curRotation = 90;// Nat orientation
-            } else {
-                this.curRotation = 270;// Nat orientation
-            }
-        }
+        // Set the starting rotation based on the track direction and the train orientation
+        this.curRotation = curTrack.getDirection().equals("RIGHT") && train.getOrientation() ||
+                            curTrack.getDirection().equals("LEFT") && !train.getOrientation()
+                            ? 90 : 270;
 
-        if(curTrack.getDirection().equals("LEFT")){
-            if(train.getOrientation()) {
-                this.curRotation = 270;// Not nat orientation
-            } else {
-                this.curRotation = 90;
-            }
-        }
         setConnectionLocation(); // Sets up connection location based on position
     }
-
-    private String fileString;
-
-
-
 
     /**
      * Sets up the image fields for the drawable train
@@ -121,30 +111,29 @@ public class DrawableTrain implements Movable{
         // Set friction co-efficient based on whether it is moving or not
         double  friction = currentSpeed > 0 ? DefaultTrack.KINETIC_FRICTION : DefaultTrack.STATIC_FRICTION;
 
+        // If the train is not moving and no engine force applied returns
         if(currentSpeed <= 0 && engineForce == 0)return 0;
 
-        double netForce = engineForce - (friction * ((train.getWeight()+getRollingstockWeights()) * 9.88));
-
-
+        // Work out the direction of all forces
+        double netForce = engineForce - (friction * ((train.getWeight()+ getRollingsWeights()) * 9.88));
 
         // Apply air resistance when moving
         if(currentSpeed > 0)netForce = netForce - airResistance();
 
-        if(currentSpeed <= 0){
-            netForce = Math.max(0,netForce);
-        }
+        // If the train is not moving no friction forces should be applied
+        if(currentSpeed <= 0){netForce = Math.max(0,netForce);}
 
-        // Apply brake power
+        // Apply brake power if the train is braking
         if(braking){ netForce = netForce - brakePower; }
 
         // acceleration = force / mass
-        return netForce / (train.getWeight() + getRollingstockWeights());
+        return netForce / (train.getWeight() + getRollingsWeights());
     }
 
     /**
      * Returns the air resistance on the train
      * */
-    public double airResistance(){
+    private double airResistance(){
         double airDensity = 1.225;// kg/m3
         double velocity = currentSpeed; // should be ms
         double dragCoefficient = 0.525;// Drag coefficient
@@ -156,11 +145,11 @@ public class DrawableTrain implements Movable{
     /**
      * Returns the combined weight of the rolling stock connected
      * */
-    public double getRollingstockWeights(){
+    private double getRollingsWeights(){
         if(rollingStockConnected != null){
-            return rollingStockConnected.getRollingStocConnectedkWeight();
+            return rollingStockConnected.getRollingStocConnectedkWeight(); // Add the weight of connecting stocks
         }
-        return 0;
+        return 0; // No rolling stock connected
     }
 
     /**
@@ -173,14 +162,8 @@ public class DrawableTrain implements Movable{
     }
 
     /**
-     * Applies braking when direction is changed and sets engine force to 0
+     * Extra distance to move the train on one update
      * */
-
-
-    boolean changingDirection = false;
-
-    private double extraDistance;
-
     public void setExtraDistance(double dist){
         this.extraDistance = dist;
     }
@@ -190,14 +173,9 @@ public class DrawableTrain implements Movable{
      * */
     public void update(){
         setConnectionLocation(); // Updates the connection location based on the new position
-        if(crashed){
-            distMoved = 0;
-            currentSpeed = 0;
-            return;
-        }
+        if(crashed){return;}
 
-
-        // Check if direction has changed
+        // Check if direction has changed for the train
         if(targetDirection != train.getDirection()) {
             targetDirection = train.getDirection();
             changingDirection = true;
@@ -208,8 +186,7 @@ public class DrawableTrain implements Movable{
             changingDirection = false;
             braking = false;
             engineForce = 494000;
-        }
-        else if(changingDirection){
+        } else if(changingDirection){
             engineForce = 0;// TODO not sure
             braking = true;
         }
@@ -234,8 +211,7 @@ public class DrawableTrain implements Movable{
             braking = false;
         }
 
-
-        if(currentSpeed < 0 )currentSpeed = 0;// TODO find a better way to fix
+        if(currentSpeed < 0 )currentSpeed = 0;
 
         double acceleration = getAcceleration();// Metres per second per second
 
@@ -247,7 +223,6 @@ public class DrawableTrain implements Movable{
 
 
         if(currentSpeed < train.getTargetSpeed() && !braking && acceleration < 0.25){
-//            engineForce = Math.max(494000, engineForce);
             engineForce += 1000;
             engineForce = Math.min(engineForce,train.getMaxPower());
         }
@@ -260,7 +235,7 @@ public class DrawableTrain implements Movable{
         // Get the rotation from a normal track or junction track
         this.curRotation = curTrack instanceof JunctionTrack ? ((JunctionTrack)curTrack).getNextPoint(this,distMoved) : curTrack.getNextPoint(currentLocation,curRotation, degDone,distMoved, this);
 
-        // Check if it shuld crash because going backwards on a junction that is thrown
+        // Check if it should crash because going backwards on a junction that is thrown
         if(curTrack instanceof JunctionTrack){
             JunctionTrack j = ((JunctionTrack)curTrack);
             crashed = j.checkThrownCrash(this);
@@ -284,13 +259,14 @@ public class DrawableTrain implements Movable{
         return false;
     }
 
-    public boolean containPointAccurate(double x, double y){
-
-        double backX = this.getCurrentLocation().getX() + ((getLengthPixels()/2) * (Math.cos(Math.toRadians(this.getCurRotation()-90+180))));
-        double backY = this.getCurrentLocation().getY() + ((getLengthPixels()/ 2) * (Math.sin(Math.toRadians(this.getCurRotation() - 90 + 180))));
-
-        double frontX = this.getCurrentLocation().getX() - ((getLengthPixels()/2) * (Math.cos(Math.toRadians(this.getCurRotation()-90+180))));
-        double frontY = this.getCurrentLocation().getY() - ((getLengthPixels()/2) * (Math.sin(Math.toRadians(this.getCurRotation() - 90 + 180))));
+    /**
+     * Returns if a point is inside the train
+     * */
+    private boolean containPointAccurate(double x, double y){
+        double backX = getCurrentLocation().getX() + ((getLengthPixels()/2) * (Math.cos(Math.toRadians(getCurRotation()-90+180))));
+        double backY = getCurrentLocation().getY() + ((getLengthPixels()/ 2) * (Math.sin(Math.toRadians(getCurRotation() - 90 + 180))));
+        double frontX = getCurrentLocation().getX() - ((getLengthPixels()/2) * (Math.cos(Math.toRadians(getCurRotation()-90+180))));
+        double frontY = getCurrentLocation().getY() - ((getLengthPixels()/2) * (Math.sin(Math.toRadians(getCurRotation() - 90 + 180))));
 
         // Cross product
         double x1 = ((backY - frontY)*1) - (0*0);
@@ -302,7 +278,6 @@ public class DrawableTrain implements Movable{
         // 21 is the width of the image
         double xOffset = (0.5 * 21) * (x1/mag);
         double yOffset = (0.5 * 21) * (y1/mag);
-
         
         double aX = frontX - xOffset;//A
         double aY = frontY - yOffset;
@@ -328,32 +303,10 @@ public class DrawableTrain implements Movable{
         // DAP
         double t4 = 0.5 * Math.abs((dX*(aY - y)) + (aX*(y - dY)) + (x*(dY - aY)));
 
-        double rectArea = width * getLengthPixels(); //TODO should be the width of the image instead of 21
+        double rectArea = width * getLengthPixels();
 
         // if area is bigger point outside the rectangle
-        if(t1 + t2 + t3 + t4 > rectArea){
-            return false;
-        }
-        else {
-            return true;
-        }
-    }
-
-    private Point2D front = new Point2D(0,0);
-    private Point2D back = new Point2D(0,0);
-
-    @Override
-    public Point2D getFront(){
-        front.x = currentLocation.getX() + (getLengthPixels()/2) * (Math.cos(Math.toRadians(curRotation-90)));
-        front.y = currentLocation.getY() + ((getLengthPixels()/2) * (Math.sin(Math.toRadians(curRotation-90))));
-        return front;
-    }
-
-    @Override
-    public Point2D getBack(){
-        back.x = currentLocation.getX() + ((getLengthPixels()/2) * (Math.cos(Math.toRadians(curRotation-90+180))));
-        back.y = currentLocation.getY() + ((getLengthPixels()/2) * (Math.sin(Math.toRadians(curRotation-90+180))));
-        return back;
+        return !(t1 + t2 + t3 + t4 > rectArea);
     }
 
     /**
@@ -411,7 +364,6 @@ public class DrawableTrain implements Movable{
         return  this.curSection;
     }
 
-
     /**
      * Returns the current speed of the train
      * */
@@ -419,31 +371,11 @@ public class DrawableTrain implements Movable{
         return this.currentSpeed;
     }
 
-    @Override
-    public double getDistanceMoved() {
-        return this.distMoved;
-    }
-
     /**
      * Returns the length of the train in pixels
      * */
     public double getLengthPixels(){
         return train.getLength() * Simulation.METER_MULTIPLIER;
-    }
-
-    /**
-     * Returns the length of the train im metres
-     * */
-    public double getLengthMetres(){
-        return train.getLength();
-    }
-
-
-    /**
-     * Used to connect rolling stock to train before starting simulation
-     * */
-    public void setPixelsMoved(int force){
-        this.distMoved = force;
     }
 
     /**
@@ -456,7 +388,26 @@ public class DrawableTrain implements Movable{
     }
 
     @Override
-    public void setJuncTrack(DefaultTrack juncTrack){
+    public double getDistanceMoved() {
+        return this.distMoved;
+    }
+
+    @Override
+    public Point2D getFront(){
+        front.x = currentLocation.getX() + (getLengthPixels()/2) * (Math.cos(Math.toRadians(curRotation-90)));
+        front.y = currentLocation.getY() + ((getLengthPixels()/2) * (Math.sin(Math.toRadians(curRotation-90))));
+        return front;
+    }
+
+    @Override
+    public Point2D getBack(){
+        back.x = currentLocation.getX() + ((getLengthPixels()/2) * (Math.cos(Math.toRadians(curRotation-90+180))));
+        back.y = currentLocation.getY() + ((getLengthPixels()/2) * (Math.sin(Math.toRadians(curRotation-90+180))));
+        return back;
+    }
+
+    @Override
+    public void setJunctionTrack(DefaultTrack juncTrack){
         degDone = 0;
         this.juncTrack = juncTrack;
     }
@@ -472,21 +423,20 @@ public class DrawableTrain implements Movable{
         this.curTrack = track;
     }
 
-
-
     @Override
     public DrawableRollingStock getRollingStockConnected(){
         return this.rollingStockConnected;
     }
 
     @Override
-    public DefaultTrack getJuncTrack(){
+    public DefaultTrack getJunctionTrack(){
         return this.juncTrack;
     }
 
     @Override
     public void setCrashed(boolean crashed){
         this.crashed = crashed;
+        this.currentSpeed = 0;
         if(rollingStockConnected != null && !rollingStockConnected.isCrashed()){
             rollingStockConnected.setCrashed(true);
         }

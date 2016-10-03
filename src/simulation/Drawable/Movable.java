@@ -93,7 +93,7 @@ public interface Movable {
     /**
      * Sets the junction track the movable is currently on
      * */
-    void setJuncTrack(DefaultTrack jt);
+    void setJunctionTrack(DefaultTrack jt);
 
     /**
      * Sets the track the movable is currently on
@@ -103,7 +103,7 @@ public interface Movable {
     /**
      * Returns the junction track of the movable if it is on one
      * */
-    DefaultTrack getJuncTrack();
+    DefaultTrack getJunctionTrack();
 
     /**
      * Returns if the point at x,y is on the movable

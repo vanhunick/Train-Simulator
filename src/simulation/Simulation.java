@@ -508,7 +508,7 @@ public class Simulation implements MouseEvents {
             // If the destination is a junction we need to work out which track inside the junction track it goes to
             if(destinationTrack instanceof JunctionTrack){
                 JunctionTrack jt = (JunctionTrack)destinationTrack;
-                t.setJuncTrack(jt.getTrackToStartOn(prevTrackID));
+                t.setJunctionTrack(jt.getTrackToStartOn(prevTrackID));
             }
 
             // Check if the track it moves to is in a different section
