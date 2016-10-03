@@ -154,6 +154,11 @@ public class DrawableRollingStock implements Movable{
         backConnection.setRadius(20);
     }
 
+    public boolean connectedToStock(DrawableRollingStock stock){
+        if(conToThis == null)return false;
+        if(conToThis.equals(stock))return true;
+        return conToThis.connectedToStock(stock);
+    }
 
     /**
      * Sets the direction of the rolling stock
@@ -245,7 +250,6 @@ public class DrawableRollingStock implements Movable{
         double startY = currentLocation.getY() - getWidthPixels()/2;
 
         if(x >= startX && x <= startX + getWidthPixels() && y > startY && y < startY + getLengthPixels()){
-            System.out.println("True");
             return containsPointAccurate(x,y);
         }
 
@@ -416,8 +420,13 @@ public class DrawableRollingStock implements Movable{
 
     @Override
     public  void setCrashed(boolean crashed){
-        System.out.println("Crashed");
         this.isCrashed = crashed;
+        if(conToThis != null && !conToThis.isCrashed){
+            conToThis.setCrashed(true);
+        }
+        if(connectedToMovable != null && !connectedToMovable.isCrashed()){
+            connectedToMovable.setCrashed(true);
+        }
     }
 
     @Override
@@ -452,5 +461,42 @@ public class DrawableRollingStock implements Movable{
 
     public RollingStock getStock(){
         return this.rollingStock;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof DrawableRollingStock)) return false;
+
+        DrawableRollingStock that = (DrawableRollingStock) o;
+
+        if (Double.compare(that.getCurRotation(), getCurRotation()) != 0) return false;
+        if (isConnected() != that.isConnected()) return false;
+        if (isCrashed() != that.isCrashed()) return false;
+        if (getDirection() != that.getDirection()) return false;
+        if (getOrientation() != that.getOrientation()) return false;
+        if (Double.compare(that.getCurrentSpeed(), getCurrentSpeed()) != 0) return false;
+        if (rollingStock != null ? !rollingStock.equals(that.rollingStock) : that.rollingStock != null) return false;
+        if (connectedToMovable != null ? !connectedToMovable.equals(that.connectedToMovable) : that.connectedToMovable != null)
+            return false;
+        if (getConToThis() != null ? !getConToThis().equals(that.getConToThis()) : that.getConToThis() != null)
+            return false;
+        return getCurrentLocation() != null ? getCurrentLocation().equals(that.getCurrentLocation()) : that.getCurrentLocation() == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result;
+        long temp;
+        temp = Double.doubleToLongBits(getCurRotation());
+        result = (int) (temp ^ (temp >>> 32));
+        result = 31 * result + (isConnected() ? 1 : 0);
+        result = 31 * result + (isCrashed() ? 1 : 0);
+        result = 31 * result + (getDirection() ? 1 : 0);
+        result = 31 * result + (getOrientation() ? 1 : 0);
+        temp = Double.doubleToLongBits(getCurrentSpeed());
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        return result;
     }
 }

@@ -86,6 +86,9 @@ public class DrawableTrain implements Movable{
 
     private String fileString;
 
+
+
+
     /**
      * Sets up the image fields for the drawable train
      * */
@@ -484,6 +487,9 @@ public class DrawableTrain implements Movable{
     @Override
     public void setCrashed(boolean crashed){
         this.crashed = crashed;
+        if(rollingStockConnected != null && !rollingStockConnected.isCrashed()){
+            rollingStockConnected.setCrashed(true);
+        }
     }
 
     @Override

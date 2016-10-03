@@ -635,7 +635,8 @@ public class Simulation implements MouseEvents {
                maxID = t.getTrain().getId();
             }
         }
-        return maxID++;
+        maxID++;
+        return maxID;
     }
 
 
@@ -710,7 +711,6 @@ public class Simulation implements MouseEvents {
         if(e.getButton().equals(MouseButton.PRIMARY)){
             if(e.getClickCount() == 2){
                 if(getOnTrain(x,y) != null){
-                    System.out.println("Showing train attribute menu");
                     userInterface.showTrainAttributeMenu(getOnTrain(x,y));
                     return;
                 }
