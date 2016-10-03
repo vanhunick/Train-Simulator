@@ -147,7 +147,7 @@ public class DrawableTrain implements Movable{
      * */
     private double getRollingsWeights(){
         if(rollingStockConnected != null){
-            return rollingStockConnected.getRollingStocConnectedkWeight(); // Add the weight of connecting stocks
+            return rollingStockConnected.getRollingStockConnectedWeight(); // Add the weight of connecting stocks
         }
         return 0; // No rolling stock connected
     }

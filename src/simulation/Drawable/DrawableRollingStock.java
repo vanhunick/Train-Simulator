@@ -18,20 +18,18 @@ import simulation.Simulation;
  */
 public class DrawableRollingStock implements Movable{
 
-    // The rolling stock it represents
     private RollingStock rollingStock;
 
-    // Connection can be null
-    private Movable connectedToMovable;
+    private Movable connectedToMovable;// Connection can be null
     private DrawableRollingStock conToThis;// Rolling stock we are pulling or pushing
 
-    // Image drawing fields
     private SnapshotParameters params; // Drawing parameters
     private ImageView trainImageView; // The image simulation of the rolling stock
     private Image rollingStockImage; // The image of the rolling stock
     private double curRotation;// How far the image should be rotated
+    private Point2D front = new Point2D(0,0);
+    private Point2D back = new Point2D(0,0);
 
-    // Rolling stock state information
     private boolean connected; // Connected to a train or not
     private boolean isCrashed; // Currently crashed or not
     private boolean direction; // Forward or backwards direction
@@ -43,7 +41,7 @@ public class DrawableRollingStock implements Movable{
     private DefaultTrack curTrack; // The current track it is on
     private Point2D currentLocation;// The location of the rolling stock
     private double degDone = 0; // The degrees through the curve
-
+    private double distMoved;
 
     /**
      * Creates a new drawable rolling stock object
@@ -68,13 +66,6 @@ public class DrawableRollingStock implements Movable{
         }
     }
 
-    public double getRollingStocConnectedkWeight(){
-        if(conToThis != null){
-            return rollingStock.getWeight() + conToThis.getRollingStocConnectedkWeight();
-        }
-        return rollingStock.getWeight();
-    }
-
     /**
      * Sets up the image and image params for the rolling stock
      * */
@@ -85,7 +76,6 @@ public class DrawableRollingStock implements Movable{
         params.setFill(javafx.scene.paint.Color.TRANSPARENT);
     }
 
-
     /**
      * Used when rolling stock is started on a track not connected to a train.
      * places the rolling stock on the track
@@ -95,9 +85,8 @@ public class DrawableRollingStock implements Movable{
     public void setStartNotConnected(DefaultTrack startingTrack){
         this.curTrack = startingTrack;
         this.currentLocation = new Point2D((int) curTrack.getInitialX(20),(int) curTrack.getInitialY(20));
-        setConnectionsLocatons();
+        setConnectionsLocations();
     }
-
 
     /**
      * Sets the start of the train. The way it does it is by placing the rolling stock on top
@@ -110,8 +99,7 @@ public class DrawableRollingStock implements Movable{
      * @param sim the visualisation used to simulate the movement back
      * */
     public void setStart(Point2D startPointOfConnection, Simulation sim){
-        // Reverse direction so we can reverse it away from the train
-        this.direction = !direction;
+        this.direction = !direction; // Reverse direction so we can reverse it away from the train
 
         // the middle of the train it is connected to
         this.currentLocation = new Point2D((int)startPointOfConnection.getX(),(int)startPointOfConnection.getY());
@@ -141,11 +129,13 @@ public class DrawableRollingStock implements Movable{
             }
             total+=increment;
         }
-        // Set the direction back to normal
-        setDirection(!this.direction);
+        setDirection(!this.direction);// Set the direction back to normal
     }
 
-    private void setConnectionsLocatons(){
+    /**
+     * Update the connection
+     * */
+    private void setConnectionsLocations(){
         frontConnection.setCenterX(getFront().getX());
         frontConnection.setCenterY(getFront().getY());
         frontConnection.setRadius(20);
@@ -154,10 +144,11 @@ public class DrawableRollingStock implements Movable{
         backConnection.setRadius(20);
     }
 
-    public boolean connectedToStock(DrawableRollingStock stock){
-        if(conToThis == null)return false;
-        if(conToThis.equals(stock))return true;
-        return conToThis.connectedToStock(stock);
+    /**
+     * Returns the weight of itself and any stocks connected
+     * */
+    public double getRollingStockConnectedWeight(){
+        return conToThis != null ? rollingStock.getWeight() + conToThis.getRollingStockConnectedWeight() : rollingStock.getWeight();
     }
 
     /**
@@ -174,14 +165,13 @@ public class DrawableRollingStock implements Movable{
         this.direction = directionToSet;
     }
 
-
     /**
      * Updates the location of the rolling stock
      * */
     public void update(){
         if(!connected || isCrashed)return;
 
-        setConnectionsLocatons();
+        setConnectionsLocations();
 
         if(connected){
             this.distMoved = connectedToMovable.getDistanceMoved();
@@ -195,8 +185,9 @@ public class DrawableRollingStock implements Movable{
         }
     }
 
-    private double distMoved;
-
+    /**
+     * Returns the previous distance moved
+     * */
     public double getDistanceMoved(){
         return this.distMoved;
     }
@@ -207,11 +198,8 @@ public class DrawableRollingStock implements Movable{
      * @param g the graphics context to draw on
      * */
     public void draw(GraphicsContext g){
-        // Rotate the image by the current rotation
-        trainImageView.setRotate(curRotation);
-        Image rotatedImage = trainImageView.snapshot(params, null);
-        rollingStockImage = rotatedImage;
-
+        trainImageView.setRotate(curRotation);// Rotate the image by the current rotation
+        rollingStockImage = trainImageView.snapshot(params, null);
 
         // Find the back of the train
         double conX = 0;
@@ -256,11 +244,9 @@ public class DrawableRollingStock implements Movable{
         return false;
     }
 
-    public boolean containsPointAccurate(double x, double y){
-
+    private boolean containsPointAccurate(double x, double y){
         double backX = this.getCurrentLocation().getX() + ((getLengthPixels()/2) * (Math.cos(Math.toRadians(this.getCurRotation()-90+180))));
         double backY = this.getCurrentLocation().getY() + ((getLengthPixels()/ 2) * (Math.sin(Math.toRadians(this.getCurRotation() - 90 + 180))));
-
         double frontX = this.getCurrentLocation().getX() - ((getLengthPixels()/2) * (Math.cos(Math.toRadians(this.getCurRotation()-90+180))));
         double frontY = this.getCurrentLocation().getY() - ((getLengthPixels()/2) * (Math.sin(Math.toRadians(this.getCurRotation() - 90 + 180))));
 
@@ -302,15 +288,12 @@ public class DrawableRollingStock implements Movable{
 
         double rectArea = getWidthPixels() * getLengthPixels(); //TODO should be the width of the image instead of 21
 
-        // if area is bigger point outside the rectangle
-        if(t1 + t2 + t3 + t4 > rectArea){
-            return false;
-        }
-        else {
-            return true;
-        }
+        return !(t1 + t2 + t3 + t4 > rectArea);// if area is bigger point outside the rectangle
     }
 
+    /**
+     * Connects movable to the rolling stock
+     * */
     public void setConnection(Movable movable){
         this.connectedToMovable = movable;
         this.direction = movable.getDirection();
@@ -318,29 +301,10 @@ public class DrawableRollingStock implements Movable{
         this.connected = true;
     }
 
-    private Point2D front = new Point2D(0,0);
-    private Point2D back = new Point2D(0,0);
-
-    @Override
-    public Point2D getFront(){
-        front.x = currentLocation.getX() + (getLengthPixels()/2) * (Math.cos(Math.toRadians(curRotation-90)));
-        front.y = currentLocation.getY() + ((getLengthPixels()/2) * (Math.sin(Math.toRadians(curRotation-90))));
-        return front;
-    }
-
-    @Override
-    public Point2D getBack(){
-        back.x = currentLocation.getX() + ((getLengthPixels()/2) * (Math.cos(Math.toRadians(curRotation-90+180))));
-        back.y = currentLocation.getY() + ((getLengthPixels()/2) * (Math.sin(Math.toRadians(curRotation-90+180))));
-        return back;
-    }
-
-
     /**
      * Returns if the rolling stock is connected to a train or rolling stock or not
      * */
     public boolean isConnected(){return this.connected;}
-
 
     /**
      * Sets the rolling stock connected to us
@@ -349,10 +313,12 @@ public class DrawableRollingStock implements Movable{
         this.conToThis = stock;
     }
 
+    /**
+     * Returns the stock or train we are connected to
+     * */
     public DrawableRollingStock getConToThis(){
         return conToThis;
     }
-
 
     /**
      * Returns the circle representing area of the front connection point of the rolling stock
@@ -375,6 +341,27 @@ public class DrawableRollingStock implements Movable{
      * */
     public double getWidthPixels(){
         return rollingStock.getWidth()*Simulation.METER_MULTIPLIER;//TODO decide if to store here or in rolling stock
+    }
+
+    /**
+     * Returns the stock object
+     * */
+    public RollingStock getStock(){
+        return this.rollingStock;
+    }
+
+    @Override
+    public Point2D getFront(){
+        front.x = currentLocation.getX() + (getLengthPixels()/2) * (Math.cos(Math.toRadians(curRotation-90)));
+        front.y = currentLocation.getY() + ((getLengthPixels()/2) * (Math.sin(Math.toRadians(curRotation-90))));
+        return front;
+    }
+
+    @Override
+    public Point2D getBack(){
+        back.x = currentLocation.getX() + ((getLengthPixels()/2) * (Math.cos(Math.toRadians(curRotation-90+180))));
+        back.y = currentLocation.getY() + ((getLengthPixels()/2) * (Math.sin(Math.toRadians(curRotation-90+180))));
+        return back;
     }
 
     @Override
@@ -417,7 +404,6 @@ public class DrawableRollingStock implements Movable{
         return null;// TODO remove
     }
 
-
     @Override
     public  void setCrashed(boolean crashed){
         this.isCrashed = crashed;
@@ -457,10 +443,6 @@ public class DrawableRollingStock implements Movable{
     @Override
     public DefaultTrack getJunctionTrack() {
         return juncTrack;
-    }
-
-    public RollingStock getStock(){
-        return this.rollingStock;
     }
 
     @Override
