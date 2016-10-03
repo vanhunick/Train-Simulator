@@ -28,6 +28,8 @@ public class Train {
 
     private double weight;
 
+    private double maxPower = 494000;// Default max power
+
     private List<Integer> destinationIDs;
 
     private int destinationID;
@@ -93,6 +95,8 @@ public class Train {
 
     public double getWidth(){ return width; }
 
+    public void setMaxPower(double power){this.maxPower = power;}
+
     /**
      * Get the maxSpeed of the train
      *
@@ -138,6 +142,9 @@ public class Train {
         return this.destinationIDs;
     }
 
+    public double getMaxPower(){
+        return this.maxPower;
+    }
 
     private void setTargetSpeed(double speed){
         this.targetSpeed = speed;
@@ -148,6 +155,10 @@ public class Train {
     public double getWeight(){
         return this.weight;
     }
+
+    public void setWeight(double weight){this.weight = weight;}
+
+    public void setLength(double length){this.length = length;}
 
     @Override
     public boolean equals(Object o) {

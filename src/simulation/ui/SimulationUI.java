@@ -100,6 +100,15 @@ public class SimulationUI implements MouseEvents {
         }
     }
 
+    public void showTrainAttributeMenu(DrawableTrain trainToModify){
+        TrainAttributeMenu tMenu = new TrainAttributeMenu(trainToModify);
+
+        trainToModify.getTrain().setMaxSpeed(tMenu.maxSpeed);
+        trainToModify.getTrain().setLength(tMenu.length);
+        trainToModify.getTrain().setWeight(tMenu.weight*1000);
+        trainToModify.getTrain().setMaxPower(tMenu.maxPower*1000);
+    }
+
 
     public String getSelectedMode(){
         return this.selectedMode;
@@ -145,6 +154,8 @@ public class SimulationUI implements MouseEvents {
      * */
     public void showTrackMenu(DefaultTrack dt){
         AddTrainMenu menu = new AddTrainMenu(dt, sim.getNextTrainID());
+
+        if(menu.canceled)return;
 
         // Checks if a train should be added to the track
         if(menu.addTrain()){
@@ -399,9 +410,13 @@ public class SimulationUI implements MouseEvents {
         }
     }
 
+
+
     public Simulation getSim(){
         return this.sim;
     }
+
+
 
     @Override
     public void mouseClicked(double x, double y, MouseEvent e) {

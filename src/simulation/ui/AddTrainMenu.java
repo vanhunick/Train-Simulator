@@ -11,6 +11,8 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Modality;
 import simulation.Drawable.tracks.DefaultTrack;
 
+import java.util.Optional;
+
 
 /**
  * Created by vanhunick on 12/04/16.
@@ -37,6 +39,8 @@ public class AddTrainMenu {
 
     // The number of rolling stock to connect to the train
     private  int numbRollingStock;
+
+    public boolean canceled;
 
 
     public AddTrainMenu(DefaultTrack section, int validID) {
@@ -150,7 +154,14 @@ public class AddTrainMenu {
             }
             return null;
         });
-        dialog.showAndWait();
+
+//
+//        Optional<ButtonType> result = dialog.showAndWait();
+//        if (result.get() == addButton){
+//            this.canceled = false;
+//        } else {
+//            this.canceled = true;
+//        }
     }
 
     public boolean validateNumber(String string){return string.matches("[0-9]*");}

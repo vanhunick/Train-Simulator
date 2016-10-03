@@ -691,6 +691,14 @@ public class Simulation implements MouseEvents {
         movable.add(stock);
     }
 
+
+    public DrawableTrain getOnTrain(double x, double y){
+        for(DrawableTrain t : trains){
+            if(t.containsPoint(x,y))return t;
+        }
+        return null;
+    }
+
     @Override
     public void mouseMoved(double x, double y, MouseEvent e) {}
 
@@ -701,6 +709,12 @@ public class Simulation implements MouseEvents {
     public void mouseClicked(double x, double y, MouseEvent e) {
         if(e.getButton().equals(MouseButton.PRIMARY)){
             if(e.getClickCount() == 2){
+                if(getOnTrain(x,y) != null){
+                    System.out.println("Showing train attribute menu");
+                    userInterface.showTrainAttributeMenu(getOnTrain(x,y));
+                    return;
+                }
+
                 if(getOnTrack(x,y) != null){
                     DefaultTrack dt = getOnTrack(x,y);
                     userInterface.showTrackMenu(dt);

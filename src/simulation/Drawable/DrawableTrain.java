@@ -463,6 +463,8 @@ public class DrawableTrain implements Movable{
         this.curTrack = track;
     }
 
+
+
     @Override
     public DrawableRollingStock getRollingStockConnected(){
         return this.rollingStockConnected;
