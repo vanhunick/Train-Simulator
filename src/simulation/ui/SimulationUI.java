@@ -105,6 +105,7 @@ public class SimulationUI implements MouseEvents {
 
         trainToModify.getTrain().setMaxSpeed(tMenu.maxSpeed);
         trainToModify.getTrain().setLength(tMenu.length);
+        trainToModify.setUpImage();
         trainToModify.getTrain().setWeight(tMenu.weight*1000);
         trainToModify.getTrain().setMaxPower(tMenu.maxPower*1000);
     }
