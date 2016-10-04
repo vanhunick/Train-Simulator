@@ -134,7 +134,8 @@ public class DrawableTrain implements Movable{
         double  friction = currentSpeed > 0 ? DefaultTrack.KINETIC_FRICTION : DefaultTrack.STATIC_FRICTION;
         double frictionForce = (friction * ((train.getWeight()+ getRollingsWeights()) * 9.88));
 
-        return (targetAcc *  ((train.getWeight() + getRollingsWeights())) + frictionForce);
+//        return (targetAcc *  ((train.getWeight() + getRollingsWeights())) + frictionForce);
+        return (targetAcc *  ((train.getWeight())) + frictionForce);
     }
 
     /**

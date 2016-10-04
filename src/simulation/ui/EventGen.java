@@ -81,12 +81,12 @@ public class EventGen {
         speed.setPromptText("Speed %");
 
         // Create an option box for the trains
-        ObservableList<String> optionsDirection = FXCollections.observableArrayList("Forward","Reverse");
-        curDerSelection = "Forward";
+        ObservableList<String> optionsDirection = FXCollections.observableArrayList("Stop","Forward","Reverse");
+        curDerSelection = "Stop";
 
         ComboBox trainComboBoxDir = new ComboBox(optionsDirection);
 
-        trainComboBoxDir.setValue("Forward");
+        trainComboBoxDir.setValue("Stop");
 
         trainComboBoxDir.valueProperty().addListener(new ChangeListener<String>() {
             @Override public void changed(ObservableValue ov, String t, String t1) {
@@ -114,20 +114,21 @@ public class EventGen {
             if (dialogButton == addButton) {
 
                 int id = Integer.parseInt(trainId);
-                if(!speed.getText().equals("")){
+
+                if(curDerSelection.equals("Stop")){
+                    System.out.println("Stopping");
+                    model.setSpeed(id,0);
+                } else if(!speed.getText().equals("")){
                     double speedValue = Double.parseDouble(speed.getText());
                     model.setSpeed(id,speedValue);
                 }
 
 
                 boolean dir = true;
-                if(curDerSelection.equals("Forward")){
-                    dir = true;
+                if(!curDerSelection.equals("Stop")){
+                    dir = curDerSelection.equals("Forward") ? true : false;
+                    model.setDirection(id,dir);
                 }
-                else {
-                    dir = false;
-                }
-                model.setDirection(id,dir);
             }
             return null;
         });
