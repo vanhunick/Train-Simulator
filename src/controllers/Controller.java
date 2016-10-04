@@ -13,5 +13,4 @@ public interface Controller extends Event.Listener{
      * @param sectionID the ID of the section that triggered the event
      * */
     void receiveSectionEvent(int sectionID);
-
 }

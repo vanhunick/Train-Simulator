@@ -12,22 +12,38 @@ public class RoutingController extends DefaultController implements Controller {
 
     private SectionGraph routes;
 
+
+    /**
+     * Sets up the controller copies the information from the sections and the starting location of trains
+     * into the controller objects
+     *
+     * @param sections the sections in the track
+     * */
     public RoutingController(ControllerSection[] sections, List<ControllerTrain> trains){
         super(sections,trains);
         this.routes = new SectionGraph(getSections());
     }
 
+    /**
+     * Creates the controller state from a file specified with the file path
+     *
+     * @param configFilePath location of the file
+     * */
     public RoutingController(String configFilePath){
         super(configFilePath);
         this.routes = new SectionGraph(getSections());
     }
 
 
+    /**
+     * Start the trains
+     * */
     public void startTrains(){
 
         for(ControllerTrain t : getTrains()){
-            send(new Event.SpeedChanged(t.id,27)); //TODO change to percentage
+            send(new Event.SpeedChanged(t.id,50));
 
+            // Set the destinations
             if(t.id == 1){
                 t.destinationID = 6;
                 t.destinationIDs = new ArrayList<>();
@@ -41,7 +57,6 @@ public class RoutingController extends DefaultController implements Controller {
                 t.destinationIDs = new ArrayList<>();
                 t.destinationIDs.add(2);
                 t.curDest = 2;
-
             }
         }
     }
@@ -59,8 +74,9 @@ public class RoutingController extends DefaultController implements Controller {
     }
 
 
-    @Override
     public void receiveSectionEvent(int sectionID) {
+        sectionID = 1 + ((sectionID-1) * 2);
+
         for(ControllerSection cs : getContrlSections()){
             if(cs.id == sectionID){
 
@@ -72,7 +88,7 @@ public class RoutingController extends DefaultController implements Controller {
                     // Find the train that holds the lock
                     ControllerTrain trainWithLock = getTrainOnSection(cs.id);
                     // There is a train on the next section so set to true
-                    getContrlSections()[cs.toIndex].on = true;
+                    getContrlSections()[cs.toIndex-1].on = true;
 
                     // Set the current section of the train to the next section
                     trainWithLock.curSectionID = getNextSection(trainWithLock, cs).id;// Was something else
@@ -81,7 +97,6 @@ public class RoutingController extends DefaultController implements Controller {
                 else {
                     // There is now something on the track
                     cs.on = true;
-
 
                     // Check if the section has a junction and therefore can come from different section
                     int juncIndex = cs.junctionIndex; // The index in the array of the section it could come from
@@ -95,10 +110,10 @@ public class RoutingController extends DefaultController implements Controller {
                     }
 
                     // There is now nothing on the track before it so set to false
-                    getContrlSections()[cs.fromIndex].on = false;// TODO problem is from is junction
+                    getContrlSections()[cs.fromIndex-1].on = false;// TODO problem is from is junction
 
                     // Get the train that holds the lock to this
-                    ControllerTrain trainOnSectionBefore = getTrainOnSection(getContrlSections()[cs.fromIndex].id);
+                    ControllerTrain trainOnSectionBefore = getTrainOnSection(getContrlSections()[cs.fromIndex-1].id);
                     trainOnSectionBefore.curSectionID = cs.id;
 
                 }
@@ -125,8 +140,6 @@ public class RoutingController extends DefaultController implements Controller {
         }
         return -1;
     }
-
-
 
     public void updateTrains(){
         for(ControllerTrain t : getTrains()){

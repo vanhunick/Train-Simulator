@@ -84,8 +84,9 @@ public class Simulation implements MouseEvents {
             controlMode(new DeadLockController("src/util/tracks/"+configFileName));
         } else if(mode.equals("Routing")){
             sendEventToUI("Controlling with routing controller",0);
-//            controlMode(new RoutingController(convertoControllerSections(getSections()),convertToControlTrains(trains)));
-            controlMode(new RoutingController("src/util/tracks/"+configFileName));
+            controlMode(new RoutingController(convertoControllerSections(getSections()),convertToControlTrains(trains)));
+//            controlMode(new RoutingController("src/util/tracks/"+configFileName));
+
         }
     }
 

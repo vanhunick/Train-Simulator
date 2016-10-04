@@ -26,10 +26,14 @@ public class DeadLockController  extends DefaultController implements Controller
         lockControllerSections();
     }
 
+    /**
+     * Creates the controller state from a file specified with the file path
+     *
+     * @param configFilePath location of the file
+     * */
     public DeadLockController(String configFilePath){
         super(configFilePath);
         this.stoppedTrains = new HashSet<>();
-
         lockControllerSections();
     }
 
@@ -49,7 +53,6 @@ public class DeadLockController  extends DefaultController implements Controller
         ControllerTrain t2 = getTrain(2);
         t2.lockCur = 1;
 
-        System.out.println("Updating");
         updateTrains();
     }
 
@@ -72,7 +75,6 @@ public class DeadLockController  extends DefaultController implements Controller
     }
 
 
-
     /**
      * Checks if any of the trains that are stopped can no go and acquire the locks of the
      * section they more into
@@ -93,20 +95,15 @@ public class DeadLockController  extends DefaultController implements Controller
                 }
             }
             if(locked){
-                System.out.println("Locking");
-
                 // To stop it sending unnecessary events to the hardware
                 if(!stoppedTrains.contains(t.id)){
-                    System.out.println("Stopping train " + t.id + " Train on next section");
-                    send(new Event.SpeedChanged(t.id,0));
+                    send(new Event.SpeedChanged(t.id,0.0f));
 //                    send(new Event.EmergencyStop(t.id));
                     stoppedTrains.add(t.id);
                 }
-            }
-            else {
+            } else {
                 // Only start the train if it is stopped
                 if(stoppedTrains.contains(t.id)){
-                    System.out.println("Resuming train " + t.id);
                     if(t.id == 1){
                         send(new Event.SpeedChanged(t.id,0.8f));
                     } else {
@@ -114,7 +111,6 @@ public class DeadLockController  extends DefaultController implements Controller
                     }
                     stoppedTrains.remove(t.id);
                 }
-
                 t.lockNext = nextSec.id;
             }
         }
@@ -150,7 +146,6 @@ public class DeadLockController  extends DefaultController implements Controller
     public void receiveSectionEvent(int sectionID){
         // Go through all the controller sections to see which one it applies to
         sectionID = 1 + ((sectionID-1) * 2);
-        System.out.println(sectionID);
 
         for(ControllerSection cs : getContrlSections()){
             if(cs.id == sectionID){
