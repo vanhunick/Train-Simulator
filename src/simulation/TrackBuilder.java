@@ -392,6 +392,8 @@ public class TrackBuilder implements MouseEvents{
     public void showTrackMenu(DefaultTrack dt){
         AddTrainMenu menu = new AddTrainMenu(dt, getNextTrainID());
 
+        if(menu.canceled)return;
+
         // Checks if a train should be added to the track
         if(menu.addTrain()){
             String selectedTrain = menu.getCurTrainSelection();

@@ -155,13 +155,10 @@ public class AddTrainMenu {
             return null;
         });
 
-//
         Optional<ButtonType> result = dialog.showAndWait();
-//        if (result.get() == addButton){
-//            this.canceled = false;
-//        } else {
-//            this.canceled = true;
-//        }
+        if (result.isPresent()) {
+            canceled = result.get().getText().equalsIgnoreCase("CANCEL");
+        }
     }
 
     public boolean validateNumber(String string){return string.matches("[0-9]*");}

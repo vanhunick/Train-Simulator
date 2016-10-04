@@ -6,6 +6,8 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Modality;
 import simulation.Drawable.DrawableTrain;
 
+import java.util.Optional;
+
 /**
  * Created by vanhunick on 3/10/16.
  */
@@ -18,6 +20,8 @@ public class TrainAttributeMenu {
     public double acceleration;
 
     public double maxSpeed;
+
+    public boolean canceled;
 
     public TrainAttributeMenu(DrawableTrain t){
         this.length = t.getTrain().getLength();
@@ -109,6 +113,9 @@ public class TrainAttributeMenu {
             this.weight = newValue.intValue();
         });
 
-        dialog.showAndWait();
+        Optional<ButtonType> result = dialog.showAndWait();
+        if (result.isPresent()) {
+                canceled = result.get().getText().equalsIgnoreCase("CANCEL");
+        }
     }
 }

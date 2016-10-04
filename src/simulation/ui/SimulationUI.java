@@ -102,6 +102,7 @@ public class SimulationUI implements MouseEvents {
 
     public void showTrainAttributeMenu(DrawableTrain trainToModify){
         TrainAttributeMenu tMenu = new TrainAttributeMenu(trainToModify);
+        if (tMenu.canceled)return; // Checks if the cancel button was used to close the menu
 
         trainToModify.getTrain().setMaxSpeed(tMenu.maxSpeed);
         trainToModify.getTrain().setLength(tMenu.length);
