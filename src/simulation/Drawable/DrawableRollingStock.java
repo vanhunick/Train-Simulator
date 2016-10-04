@@ -112,6 +112,12 @@ public class DrawableRollingStock implements Movable{
         // set current track to the train we are connected to current track
         this.curTrack = connectedToMovable.getCurTrack();
 
+
+        // If it starts on a junction track the inner junction track also needs to be set
+        if(curTrack instanceof JunctionTrack){
+            this.setJunctionTrack(connectedToMovable.getJunctionTrack());
+        }
+
         // The amount we have moved
         double total = 0;
 
@@ -127,6 +133,7 @@ public class DrawableRollingStock implements Movable{
                 // Get the next point for the train
                 this.curRotation = curTrack.getNextPoint(currentLocation,curRotation, degDone,increment, this);
             }
+
             total+=increment;
         }
         setDirection(!this.direction);// Set the direction back to normal

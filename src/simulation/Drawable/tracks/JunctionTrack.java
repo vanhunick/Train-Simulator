@@ -378,7 +378,7 @@ public class JunctionTrack extends DefaultTrack {
     }
 
     /**
-     * Junctions util.tracks need to be able to change the lastsubable and need to be able to change the orientation
+     * Junctions tracks need to be able to change the last subable and need to be able to change the orientation
      * */
     public boolean checkOnAfterUpdate(Movable dt, double moveBy){
         if(dt.getJunctionTrack().checkOnAfterUpdate(dt.getCurrentLocation(), dt.getCurRotation(),dt.getDegDone(), moveBy, dt)){
