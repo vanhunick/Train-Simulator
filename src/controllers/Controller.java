@@ -7,8 +7,11 @@ import simulation.model.Event;
  */
 public interface Controller extends Event.Listener{
 
-    public void receiveSectionEvent(int sectionID);
-
-
+    /**
+     * Responds to a train changing sections
+     *
+     * @param sectionID the ID of the section that triggered the event
+     * */
+    void receiveSectionEvent(int sectionID);
 
 }
