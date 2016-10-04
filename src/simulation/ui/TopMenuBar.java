@@ -42,7 +42,7 @@ public class TopMenuBar extends MenuBar {
         newTrackItem.setOnAction(e -> handleNewTrackPressed(e));
         loadTrackItem.setOnAction(e -> handleLoadTrackPressed(e));
         simulateItem.setOnAction(e -> handleSimulatePressed(e));
-        physics.setOnAction(e -> handlePhysicsPressed(e));
+        physics.setOnAction(e -> new PhysicsMenu());
         save.setOnAction(e -> handleSavePressed(e));
 
         // List for View

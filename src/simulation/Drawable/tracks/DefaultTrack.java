@@ -11,8 +11,8 @@ import simulation.Simulation;
  */
 public abstract class DefaultTrack {
 
-    public static final double STATIC_FRICTION = 0.7;
-    public static final double  KINETIC_FRICTION = 0.5;
+    public static double STATIC_FRICTION = 0.7;
+    public static double  KINETIC_FRICTION = 0.5;
     public static final Color TIE_COLOR = new Color(0.5,0.29,0,1);
     public static final Color RAIL_COLOR = new Color(0.5,0.5,0.5,1);
     public static final Color BACKGROUND_COLOR = new Color(0.8,0.8,0.8,1);

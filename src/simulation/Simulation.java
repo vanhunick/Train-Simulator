@@ -225,6 +225,7 @@ public class Simulation implements MouseEvents {
         started = false;// Stop the updates
         drawableRollingStocks.clear();
         trains.clear();
+        userInterface.setSelectedTrain(null);
 
         // Reload the file if simulation started from file
         if(loadedFile != null){
