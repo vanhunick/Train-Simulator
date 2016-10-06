@@ -47,7 +47,7 @@ public class DrawableTrain implements Movable{
     private double width; // The width of the train
     private String fileString; // Changes for different colored trains
 
-    private int timeChanged = 20; // Time between updates
+    public static long timeChanged = 20; // Time between updates TODO find better way
 
     /**
      * Creates a new drawable train object
@@ -236,7 +236,7 @@ public class DrawableTrain implements Movable{
             engineForce += 1000;
             engineForce = Math.min(engineForce,train.getMaxPower());
 
-            engineForce = getPowerForAcceleration(this.getTrain().getAcceleration());
+            engineForce = Math.min(getPowerForAcceleration(this.getTrain().getAcceleration()),train.getMaxPower()); // Max sure does not go above max power
         }
 
         distMoved = ((timeChanged/1000.0)* (currentSpeed * Simulation.METER_MULTIPLIER)); // Work out the distance to move in pixels

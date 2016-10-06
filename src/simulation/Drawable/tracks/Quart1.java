@@ -1,5 +1,6 @@
 package simulation.Drawable.tracks;
 
+import javafx.scene.paint.Color;
 import util.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.shape.ArcType;
@@ -114,22 +115,46 @@ public class Quart1 extends DefaultTrack {
         setMid();
     }
 
+
+    @Override
+    public void setRailpaceLeft(double spaceLeftPrev){
+        this.railSpaceLeft = (lengthOfQuarter() - spaceLeftPrev) % SimulationUI.RAIL_SEP;
+    }
+
     @Override
     public void draw(GraphicsContext g) {
         g.setFill(DefaultTrack.BACKGROUND_COLOR);
         g.setStroke(DefaultTrack.TIE_COLOR);
-        for(int deg = 180; deg < 270; deg+=(90/ lengthOfQuarter()) * SimulationUI.RAIL_SEP*1.5) {
+
+//        double extraDeg = (90/ lengthOfQuarter()) * railSpaceLeft;
+
+//        + (int)extraDeg
+        for(int deg = 180; deg < 270; deg+=(90/ lengthOfQuarter()) * SimulationUI.RAIL_SEP*1) {
             g.setStroke(DefaultTrack.TIE_COLOR);
-            g.setLineWidth(3);
+            g.setLineWidth(4);
             g.strokeLine((int) (midPointX -TRACK_WIDTH/2 + ((radius+DefaultTrack.RAIL_OFFSET) * (Math.cos(Math.toRadians(deg))))),
                     (int) (midPointY  - TRACK_WIDTH/2 + ((radius+DefaultTrack.RAIL_OFFSET) * (Math.sin(Math.toRadians(deg))))),
                     (int) (midPointX - TRACK_WIDTH/2 + ((radius - TRACK_WIDTH-DefaultTrack.RAIL_OFFSET) * (Math.cos(Math.toRadians(deg))))),
                     (int) (midPointY - TRACK_WIDTH/2 + ((radius - TRACK_WIDTH-DefaultTrack.RAIL_OFFSET) * (Math.sin(Math.toRadians(deg))))));
         }
-        g.setLineWidth(2);
+
+        double sx = getStartX();
+        double sy = getStartY();
+        double l = getLength();
+
+        g.setLineWidth(1);
         g.setStroke(getSelected() ? DefaultTrack.SELECTED_COLOR : getColor());
-        g.strokeArc(getStartX(), getStartY(), getLength(), getLength(), 90, 90, ArcType.OPEN);
-        g.strokeArc(getStartX() + TRACK_WIDTH, getStartY()+ TRACK_WIDTH, getLength() - (TRACK_WIDTH* 2), getLength() - (TRACK_WIDTH* 2), 90, 90, ArcType.OPEN);
+        g.strokeArc(sx-1, sy-1, l+1, l+1, 90, 90, ArcType.OPEN);
+        g.setStroke(DefaultTrack.SPECIAL_GREY);
+        g.strokeArc(sx, sy, l, l, 90, 90, ArcType.OPEN);
+        g.setStroke(getSelected() ? DefaultTrack.SELECTED_COLOR : getColor());
+        g.strokeArc(sx + 1, sy + 1, l-1, l-1, 90, 90, ArcType.OPEN);
+
+        g.strokeArc(sx + TRACK_WIDTH -1, sy+ TRACK_WIDTH -1, l - (TRACK_WIDTH* 2) + 1, l - (TRACK_WIDTH* 2) + 1, 90, 90, ArcType.OPEN);
+        g.setStroke(DefaultTrack.SPECIAL_GREY);
+        g.strokeArc(sx + TRACK_WIDTH, sy + TRACK_WIDTH, l - (TRACK_WIDTH* 2), l - (TRACK_WIDTH* 2), 90, 90, ArcType.OPEN);
+        g.setStroke(getSelected() ? DefaultTrack.SELECTED_COLOR : getColor());
+        g.strokeArc(sx + TRACK_WIDTH +1, sy+ TRACK_WIDTH +1, l - (TRACK_WIDTH* 2) - 1, l - (TRACK_WIDTH* 2) -1, 90, 90, ArcType.OPEN);
     }
 
     @Override

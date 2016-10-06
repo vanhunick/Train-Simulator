@@ -1,6 +1,7 @@
 package simulation.Drawable.tracks;
 
 
+import javafx.scene.paint.Color;
 import util.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.shape.ArcType;
@@ -116,21 +117,52 @@ public class Quart2 extends DefaultTrack {
     }
 
     @Override
+    public void setRailpaceLeft(double spaceLeftPrev){
+        this.railSpaceLeft = (lengthOfQuarter() - spaceLeftPrev) % SimulationUI.RAIL_SEP;
+    }
+
+    @Override
     public void draw(GraphicsContext g) {
+
+        double extraDeg = (90/ lengthOfQuarter()) * railSpaceLeft;
+        //+ (int)extraDeg
+
         g.setStroke(DefaultTrack.TIE_COLOR);
-        for(int deg = 270; deg < 360; deg+=(90/ lengthOfQuarter()) * SimulationUI.RAIL_SEP*1.5) {
+        for(int deg = 270; deg < 360; deg+=(90/ lengthOfQuarter()) * SimulationUI.RAIL_SEP*1) {
             double sX = (int) (midPointX + TRACK_WIDTH/2 + ((radius+DefaultTrack.RAIL_OFFSET) * (Math.cos(Math.toRadians(deg)))));
             double sY = (int) (midPointY - TRACK_WIDTH/2 + ((radius+DefaultTrack.RAIL_OFFSET) * (Math.sin(Math.toRadians(deg)))));
             double eX = (int) (midPointX + TRACK_WIDTH/2 + ((radius - TRACK_WIDTH-DefaultTrack.RAIL_OFFSET) * (Math.cos(Math.toRadians(deg)))));
             double eY = (int) (midPointY - TRACK_WIDTH/2 + ((radius - TRACK_WIDTH-DefaultTrack.RAIL_OFFSET) * (Math.sin(Math.toRadians(deg)))));
-            g.setLineWidth(3);
+            g.setLineWidth(4);
             g.strokeLine(sX,sY,eX,eY);
         }
 
+
+
+        double sx = getStartX();
+        double sy = getStartY();
+        double l = getLength();
+
         g.setStroke(getSelected() ? DefaultTrack.SELECTED_COLOR : getColor());
-        g.setLineWidth(2);
-        g.strokeArc(getStartX(), getStartY(), getLength(), getLength(), 360, 90, ArcType.OPEN);
-        g.strokeArc(getStartX() + TRACK_WIDTH, getStartY() + TRACK_WIDTH, getLength() - (TRACK_WIDTH*2), getLength() - (TRACK_WIDTH*2), 360, 90, ArcType.OPEN);
+        g.setLineWidth(1);
+
+        g.strokeArc(sx, sy-1, l+1, l, 360, 90, ArcType.OPEN);
+
+        g.setStroke(DefaultTrack.SPECIAL_GREY);
+        g.strokeArc(sx, sy, l,l, 360, 90, ArcType.OPEN);
+
+        g.setStroke(getSelected() ? DefaultTrack.SELECTED_COLOR : getColor());
+        g.strokeArc(sx, sy+1, l-1, l, 360, 90, ArcType.OPEN);
+
+
+        // Rail 2
+        g.strokeArc(sx + TRACK_WIDTH, sy-1 + TRACK_WIDTH, l+1 - (TRACK_WIDTH*2), l - (TRACK_WIDTH*2), 360, 90, ArcType.OPEN);
+
+        g.setStroke(DefaultTrack.SPECIAL_GREY);
+        g.strokeArc(sx + TRACK_WIDTH, sy + TRACK_WIDTH, l - (TRACK_WIDTH*2), l - (TRACK_WIDTH*2), 360, 90, ArcType.OPEN);
+
+        g.setStroke(getSelected() ? DefaultTrack.SELECTED_COLOR : getColor());
+        g.strokeArc(sx + TRACK_WIDTH, sy+1 + TRACK_WIDTH, l-1 - (TRACK_WIDTH*2), l - (TRACK_WIDTH*2), 360, 90, ArcType.OPEN);
     }
 
     @Override

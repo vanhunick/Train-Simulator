@@ -1,5 +1,6 @@
 package simulation.Drawable.tracks;
 
+import javafx.beans.value.WritableObjectValue;
 import util.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 import simulation.Drawable.Movable;
@@ -64,6 +65,12 @@ public class StraightVert extends DefaultTrack {
         }
         setStartX(startX);
         setStartY(startY);
+    }
+
+
+    @Override
+    public void setRailpaceLeft(double spaceLeftPrev){
+        this.railSpaceLeft = (getLength() - spaceLeftPrev) % SimulationUI.RAIL_SEP;
     }
 
     @Override

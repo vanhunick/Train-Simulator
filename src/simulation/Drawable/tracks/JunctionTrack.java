@@ -1,5 +1,6 @@
 package simulation.Drawable.tracks;
 
+import simulation.ui.SimulationUI;
 import util.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -139,6 +140,10 @@ public class JunctionTrack extends DefaultTrack {
         }
     }
 
+    @Override
+    public void setRailpaceLeft(double spaceLeftPrev){
+        this.railSpaceLeft = (getLength() - spaceLeftPrev) % SimulationUI.RAIL_SEP;
+    }
 
     public void setOutBoundLocation(String direction){
         if(drawDirection.equals("UP")){

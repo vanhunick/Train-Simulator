@@ -86,7 +86,6 @@ public class Simulation implements MouseEvents {
             sendEventToUI("Controlling with routing controller",0);
             controlMode(new RoutingController(convertoControllerSections(getSections()),convertToControlTrains(trains)));
 //            controlMode(new RoutingController("src/util/tracks/"+configFileName));
-
         }
     }
 
@@ -290,16 +289,25 @@ public class Simulation implements MouseEvents {
         }
     }
 
+    public void setRailOffsets(){
+        for(int i = 0; i < tracks.length; i++){
+            if(i == 0){
+                tracks[i].setRailpaceLeft(0);
+            } else {
+                tracks[i].setRailpaceLeft(tracks[tracks[i].getFrom()].railSpaceLeft);
+            }
+        }
+    }
+
 
     /**
      * Redraws all the elements on the screen
      * */
     public void refresh(GraphicsContext g){
-            // Draw the sections on the canvas
-            for (DrawableSection d : railway) {
-                d.draw(g);
-            }
-            movable.forEach(m -> m.draw(g)); // Updates all the things that move on the track
+        for(DefaultTrack t : tracks){
+            t.draw(g);
+        }
+        movable.forEach(m -> m.draw(g)); // Updates all the things that move on the track
     }
 
     /**
@@ -438,7 +446,12 @@ public class Simulation implements MouseEvents {
         double speedInPixels = drawableTrain.getCurrentSpeed() * Simulation.METER_MULTIPLIER;//
         long curTime = System.currentTimeMillis();
         long timeChanged = curTime - lastUpdate;
-        timeChanged = 20;
+        if(timeChanged > 50)timeChanged = 20;
+
+        DrawableTrain.timeChanged = timeChanged;
+//        System.out.println(timeChanged);
+
+//        timeChanged = 20;
         double pixelsToMove = (timeChanged/1000.0)*speedInPixels;
         lastUpdate = System.currentTimeMillis();
         return pixelsToMove ;

@@ -2,10 +2,13 @@ package simulation;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
+import javafx.scene.CacheHint;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
@@ -67,6 +70,11 @@ public class Main extends Application {
         controller.setDefMode(canvas);
 
         lastTime = System.nanoTime();
+
+        this.image= new Image("file:src/res/Green.jpg", 200, 200, false, false);
+        System.out.println(image.getHeight());
+        this.imageView= new ImageView(image);
+
         setupAnimationTimer(primaryStage,canvas);
     }
 
@@ -99,11 +107,20 @@ public class Main extends Application {
         canvas.setWidth(SCREEN_WIDTH);
         canvas.setHeight(SCREEN_HEIGHT);
 
+        canvas.setCache(true);
+
+        canvas.setCacheHint(CacheHint.SPEED);
+
         root.getChildren().add(bl);
         primaryStage.setResizable(false);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
+
+    Image image;
+    ImageView imageView;
+
+    Color background = new Color(0.55,0.64,0.27,1);
 
     public void setupAnimationTimer(Stage primaryStage, Canvas canvas){
         final GraphicsContext gc = canvas.getGraphicsContext2D();
@@ -112,7 +129,7 @@ public class Main extends Application {
             @Override
             public void handle(long now) {
                 // Shows fps counter in debug mode
-                if(debug){
+                if(true){
                     currentTime = now;
                     fps++;
                     delta += currentTime-lastTime;
@@ -126,31 +143,29 @@ public class Main extends Application {
                 }
 
                 // Clear the screen
-                gc.setFill(new Color(0.14,0.15,0.15,1));
+                gc.setFill(background);
 
-
-                gc.clearRect(0, 0, primaryStage.getWidth(), primaryStage.getHeight());
                 gc.fillRect(0, 0, primaryStage.getWidth(), primaryStage.getHeight());
                 gc.setStroke(Color.WHITE);
+
 
                 // Update and draw the controller
                 controller.update();
                 controller.refresh(gc);
 
                 // Draw the fps counter
-                if(debug){
+                if(true){
                     gc.strokeText("FPS " + fpsText, 0, 20);
                 }
+                gc.strokeText("         20m ", 800, 25);
+//
+//
+                gc.setStroke(Color.WHITE);
+                gc.strokeLine(800,30,800 + (20*Simulation.METER_MULTIPLIER),30);
 
-//                gc.strokeText("         20m ", 800, 25);
+                gc.strokeLine(800,25,800,35);
+                gc.strokeLine(800 + (20*Simulation.METER_MULTIPLIER),25, 800 + (20*Simulation.METER_MULTIPLIER),35);
 //
-//
-//                gc.setStroke(Color.WHITE);
-//                gc.strokeLine(800,30,800 + (20*Simulation.METER_MULTIPLIER),30);
-//
-//                gc.strokeLine(800,25,800,35);
-//                gc.strokeLine(800 + (20*Simulation.METER_MULTIPLIER),25, 800 + (20*Simulation.METER_MULTIPLIER),35);
-
                 gc.save();
                 gc.restore();
             }

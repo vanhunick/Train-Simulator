@@ -23,11 +23,14 @@ public class TrainAttributeMenu {
 
     public boolean canceled;
 
+    public double maxPower;
+
     public TrainAttributeMenu(DrawableTrain t){
         this.length = t.getTrain().getLength();
         this.weight = t.getTrain().getWeight()/1000;
         this.acceleration = t.getTrain().getAcceleration();
         this.maxSpeed = t.getTrain().getMaxSpeed();
+        this.maxPower = t.getTrain().getMaxPower()/1000;
 
         Dialog dialog = new Dialog<>();
         dialog.initModality(Modality.WINDOW_MODAL);
@@ -93,12 +96,28 @@ public class TrainAttributeMenu {
         grid.add(new Label("Weight (Ton):"), 0, 6);
         grid.add(weight, 0, 7);
 
+        // Max power of train
+        Slider maxPower = new Slider();
+        maxPower.setMin(100);
+        maxPower.setMax(1000);
+        maxPower.setValue(this.maxPower);
+        maxPower.setShowTickMarks(true);
+        maxPower.setShowTickLabels(true);
+        maxPower.setMajorTickUnit(500);
+        maxPower.setMinorTickCount(5);
+        grid.add(new Label("Max Power (kn):"), 0, 8);
+        grid.add(maxPower, 0, 9);
+
         dialog.getDialogPane().setContent(grid);
 
         // Set up slider listeners
         // Handle Slider value change events.
         speed.valueProperty().addListener((observable, oldValue, newValue) -> {
             this.maxSpeed = newValue.intValue();
+        });
+
+        maxPower.valueProperty().addListener((observable, oldValue, newValue) -> {
+            this.maxPower = newValue.intValue();
         });
 
         acceleration.valueProperty().addListener((observable, oldValue, newValue) -> {

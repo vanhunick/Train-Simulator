@@ -1,5 +1,6 @@
 package simulation.Drawable.tracks;
 
+import simulation.ui.SimulationUI;
 import util.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -13,13 +14,19 @@ public abstract class DefaultTrack {
 
     public static double STATIC_FRICTION = 0.7;
     public static double  KINETIC_FRICTION = 0.5;
-    public static final Color TIE_COLOR = new Color(0.5,0.29,0,1);
-    public static final Color RAIL_COLOR = new Color(0.5,0.5,0.5,1);
+//    public static final Color TIE_COLOR = new Color(0.5,0.29,0,1);
+    public static final Color TIE_COLOR = new Color(0.2,0,0,1);
+
+    public static final Color SPECIAL_GREY = new Color(0.7,0.7,0.7,1);
+
+
+    //    public static final Color RAIL_COLOR = new Color(0.5,0.5,0.5,1);
+    public static final Color RAIL_COLOR = Color.BLACK;
     public static final Color BACKGROUND_COLOR = new Color(0.8,0.8,0.8,1);
     public static Color SELECTED_COLOR = new Color(0.9,0.0,0.0,1);
     public static final int CONNECT_SENS = 10;
     public static final int TRACK_WIDTH = 12;
-    public static final int RAIL_OFFSET = 2;
+    public static final int RAIL_OFFSET = 6; // Length or rail
 
     private Color color = DefaultTrack.RAIL_COLOR;
 
@@ -91,12 +98,20 @@ public abstract class DefaultTrack {
         return 0;
     }
 
+    public double railSpaceLeft;
+
     /***
      * Returns the length of a quarter track
      * */
     public double lengthOfQuarter(){
         return (2 * Math.PI * (getLength()-TRACK_WIDTH/2)/2)/4;
     }
+
+
+    abstract public void setRailpaceLeft(double spaceLeftPrev);
+
+
+
 
     /**
      * Returns if the train is going along with the natural orientation of the track

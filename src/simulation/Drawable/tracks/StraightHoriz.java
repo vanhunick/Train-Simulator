@@ -1,5 +1,7 @@
 package simulation.Drawable.tracks;
 
+import javafx.scene.paint.Color;
+import simulation.Simulation;
 import util.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 import simulation.Drawable.Movable;
@@ -172,7 +174,17 @@ public class StraightHoriz extends DefaultTrack {
     }
 
     public boolean checkOnAfterUpdate(Point2D curPoint, double rotation,double rotDone, double dist, Movable movable){
+
+
         if(getNextX(curPoint.getX(),dist, movable) == -1 ){
+
+            //TODO temp
+            if(forwardWithTrack(movable)){
+                curPoint.setLocation(getConnectionPointTo().getX(),getConnectionPointTo().getY());
+            } else {
+                curPoint.setLocation(getConnectionPointFrom().getX(),getConnectionPointFrom().getY());
+            }
+
             return false;
         }
 
@@ -200,25 +212,47 @@ public class StraightHoriz extends DefaultTrack {
         return null;
     }
 
+    public void setRailpaceLeft(double spaceLeftPrev){
+        this.railSpaceLeft = (getLength() - spaceLeftPrev) % SimulationUI.RAIL_SEP;
+    }
+
+    //Drawing fields
+
+
+
+
     public void draw(GraphicsContext g) {
         g.setStroke(DefaultTrack.TIE_COLOR);
-        g.setLineWidth(3);
+        g.setLineWidth(4);
 
         double y = super.getStartY() - DefaultTrack.RAIL_OFFSET;
-        double ey = super.getStartY() + TRACK_WIDTH +DefaultTrack.RAIL_OFFSET;
+        double ey = super.getStartY() + TRACK_WIDTH + DefaultTrack.RAIL_OFFSET;
 
-        for(double x = super.getStartX(); x < super.getStartX() + super.getLength(); x+= SimulationUI.RAIL_SEP){
+        for(double x = getStartX() + railSpaceLeft; x < getStartX() + getLength(); x+= SimulationUI.RAIL_SEP){
             g.strokeLine(x,y,x,ey);
         }
 
-        if(super.getSelected()){
-            g.setStroke(DefaultTrack.SELECTED_COLOR);
-        }
-        else {
-            g.setStroke(getColor());
-        }
-        g.setLineWidth(2);
-        g.strokeLine(super.getStartX(), super.getStartY(), super.getStartX() + super.getLength(), super.getStartY());
-        g.strokeLine(super.getStartX(), super.getStartY() + TRACK_WIDTH, super.getStartX() + super.getLength(), super.getStartY()+ TRACK_WIDTH);
+        double sx = getStartX();
+        double sy = getStartY();
+        double l = getLength();
+
+        g.setLineWidth(1);
+        g.setStroke(Color.BLACK);
+        g.strokeLine(sx, sy-1, sx + l, sy-1);
+
+        g.setStroke(Color.WHITE);
+        g.strokeLine(sx, sy, sx + l, sy);
+
+        g.setStroke(Color.BLACK);
+        g.strokeLine(sx, sy+1, sx + l, sy+1);
+
+        g.setStroke(Color.BLACK);
+        g.strokeLine(sx, sy-1 + TRACK_WIDTH, sx + l, sy-1 +TRACK_WIDTH);
+
+        g.setStroke(Color.WHITE);
+        g.strokeLine(sx, sy + TRACK_WIDTH, sx + l, sy + TRACK_WIDTH);
+
+        g.setStroke(Color.BLACK);
+        g.strokeLine(sx, sy + 1 + TRACK_WIDTH, sx + l, sy+ 1 + TRACK_WIDTH);
     }
 }
