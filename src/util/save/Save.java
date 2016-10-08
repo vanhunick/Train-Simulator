@@ -169,6 +169,7 @@ public class Save {
             else {
                 stockObject.put("conTo",t.getOrientation());
             }
+            stockArray.put(stockObject);
         }
         return stockArray;
     }
