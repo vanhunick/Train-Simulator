@@ -1,6 +1,7 @@
 package simulation;
 
 import javafx.stage.FileChooser;
+import simulation.ui.RollingStockMenu;
 import simulation.ui.SimulationUI;
 import util.CustomTracks;
 import controllers.*;
@@ -273,6 +274,7 @@ public class Simulation implements MouseEvents {
      * Updates the trains
      * */
     public void update(){
+        setRailOffsets();
         if(started){
             // Update the trains
             trains.forEach(t -> {
@@ -286,18 +288,21 @@ public class Simulation implements MouseEvents {
                 onSectionCheck(r,r.getDistanceMoved());
                 r.update();
             });
+            lastUpdate = System.currentTimeMillis();
         }
     }
 
     public void setRailOffsets(){
+
+        double prevSpaceLeft = SimulationUI.RAIL_SEP;
+
         for(int i = 0; i < tracks.length; i++){
-            if(i == 0){
-                tracks[i].setRailpaceLeft(0);
-            } else {
-                tracks[i].setRailpaceLeft(tracks[tracks[i].getFrom()].railSpaceLeft);
-            }
+            tracks[i].setRailOffset(SimulationUI.RAIL_SEP - prevSpaceLeft);
+            prevSpaceLeft = tracks[i].getRailspaceLeft() * -1;
         }
     }
+
+
 
 
     /**
@@ -448,12 +453,12 @@ public class Simulation implements MouseEvents {
         long timeChanged = curTime - lastUpdate;
         if(timeChanged > 50)timeChanged = 20;
 
-        DrawableTrain.timeChanged = timeChanged;
+        drawableTrain.setTimeChanged(timeChanged);
 //        System.out.println(timeChanged);
 
 //        timeChanged = 20;
         double pixelsToMove = (timeChanged/1000.0)*speedInPixels;
-        lastUpdate = System.currentTimeMillis();
+
         return pixelsToMove ;
     }
 
@@ -715,6 +720,13 @@ public class Simulation implements MouseEvents {
         return null;
     }
 
+    public DrawableRollingStock getOnStock(double x, double y){
+        for(DrawableRollingStock s : drawableRollingStocks){
+            if(s.containsPoint(x,y))return s;
+        }
+        return null;
+    }
+
     @Override
     public void mouseMoved(double x, double y, MouseEvent e) {}
 
@@ -730,7 +742,13 @@ public class Simulation implements MouseEvents {
                     return;
                 }
 
-                if(getOnTrack(x,y) != null){
+                if(getOnStock(x,y) != null){
+                    new RollingStockMenu(getOnStock(x,y).getStock());
+                    return;
+                }
+
+
+                if(getOnTrack(x,y) != null && getOnTrack(x,y) instanceof StraightHoriz){ //TODO later make trains start on curves
                     DefaultTrack dt = getOnTrack(x,y);
                     userInterface.showTrackMenu(dt);
                 }
