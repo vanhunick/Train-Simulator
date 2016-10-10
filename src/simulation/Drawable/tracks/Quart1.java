@@ -117,8 +117,8 @@ public class Quart1 extends DefaultTrack {
 
 
     @Override
-    public void setRailpaceLeft(double spaceLeftPrev){
-        this.railSpaceLeft = (lengthOfQuarter() - spaceLeftPrev) % SimulationUI.RAIL_SEP;
+    public double getRailspaceLeft(){
+        return ((lengthOfQuarter() - getRailOffSet()) % SimulationUI.RAIL_SEP) - SimulationUI.RAIL_SEP;
     }
 
     @Override
@@ -126,10 +126,9 @@ public class Quart1 extends DefaultTrack {
         g.setFill(DefaultTrack.BACKGROUND_COLOR);
         g.setStroke(DefaultTrack.TIE_COLOR);
 
-//        double extraDeg = (90/ lengthOfQuarter()) * railSpaceLeft;
+        double extraDeg = (90/ lengthOfQuarter()) * getRailOffSet();
 
-//        + (int)extraDeg
-        for(int deg = 180; deg < 270; deg+=(90/ lengthOfQuarter()) * SimulationUI.RAIL_SEP*1) {
+        for(int deg = 180+ (int)extraDeg; deg < 270; deg+=(90/ lengthOfQuarter()) * SimulationUI.RAIL_SEP*1) {
             g.setStroke(DefaultTrack.TIE_COLOR);
             g.setLineWidth(4);
             g.strokeLine((int) (midPointX -TRACK_WIDTH/2 + ((radius+DefaultTrack.RAIL_OFFSET) * (Math.cos(Math.toRadians(deg))))),

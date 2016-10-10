@@ -112,8 +112,9 @@ public class Quart4 extends DefaultTrack {
                 y >= super.getStartY() + super.getLength()/2 && y <= super.getStartY() + super.getLength();
     }
 
-    public void setRailpaceLeft(double spaceLeftPrev){
-        this.railSpaceLeft = (lengthOfQuarter() - spaceLeftPrev) % SimulationUI.RAIL_SEP;
+    @Override
+    public double getRailspaceLeft(){
+        return ((lengthOfQuarter() - getRailOffSet()) % SimulationUI.RAIL_SEP) - SimulationUI.RAIL_SEP;
     }
 
     public void draw(GraphicsContext g) {
@@ -121,12 +122,12 @@ public class Quart4 extends DefaultTrack {
 
         double degreesToMove = (90/ lengthOfQuarter()) * SimulationUI.RAIL_SEP*1;
 
-//        double extraDeg = (90/ lengthOfQuarter()) * railSpaceLeft;
+        double extraDeg = (90/ lengthOfQuarter()) * getRailOffSet();
 
-//        + (int)extraDeg;
+//        ;
 
         g.setStroke(DefaultTrack.TIE_COLOR);
-        for(int deg = 90;  deg < 180; deg+=degreesToMove) {
+        for(int deg = 90 + (int)extraDeg;  deg < 180; deg+=degreesToMove) {
 
             double sX = (int) (midPointX - TRACK_WIDTH/2 + ((radius+DefaultTrack.RAIL_OFFSET) * (Math.cos(Math.toRadians(deg)))));
             double sY = (int) (midPointY + TRACK_WIDTH/2 + ((radius+DefaultTrack.RAIL_OFFSET) * (Math.sin(Math.toRadians(deg)))));

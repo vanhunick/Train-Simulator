@@ -174,8 +174,6 @@ public class StraightHoriz extends DefaultTrack {
     }
 
     public boolean checkOnAfterUpdate(Point2D curPoint, double rotation,double rotDone, double dist, Movable movable){
-
-
         if(getNextX(curPoint.getX(),dist, movable) == -1 ){
 
             //TODO temp
@@ -184,10 +182,8 @@ public class StraightHoriz extends DefaultTrack {
             } else {
                 curPoint.setLocation(getConnectionPointFrom().getX(),getConnectionPointFrom().getY());
             }
-
             return false;
         }
-
         return true;
     }
 
@@ -212,14 +208,11 @@ public class StraightHoriz extends DefaultTrack {
         return null;
     }
 
-    public void setRailpaceLeft(double spaceLeftPrev){
-        this.railSpaceLeft = (getLength() - spaceLeftPrev) % SimulationUI.RAIL_SEP;
+
+    @Override
+    public double getRailspaceLeft(){
+        return ((getLength() - getRailOffSet()) % SimulationUI.RAIL_SEP) - SimulationUI.RAIL_SEP;
     }
-
-    //Drawing fields
-
-
-
 
     public void draw(GraphicsContext g) {
         g.setStroke(DefaultTrack.TIE_COLOR);
@@ -228,7 +221,7 @@ public class StraightHoriz extends DefaultTrack {
         double y = super.getStartY() - DefaultTrack.RAIL_OFFSET;
         double ey = super.getStartY() + TRACK_WIDTH + DefaultTrack.RAIL_OFFSET;
 
-        for(double x = getStartX() + railSpaceLeft; x < getStartX() + getLength(); x+= SimulationUI.RAIL_SEP){
+        for(double x = getStartX() + getRailOffSet(); x <= getStartX() + getLength(); x+= SimulationUI.RAIL_SEP){
             g.strokeLine(x,y,x,ey);
         }
 
@@ -237,22 +230,22 @@ public class StraightHoriz extends DefaultTrack {
         double l = getLength();
 
         g.setLineWidth(1);
-        g.setStroke(Color.BLACK);
+        g.setStroke(getSelected() ? DefaultTrack.SELECTED_COLOR : getColor());
         g.strokeLine(sx, sy-1, sx + l, sy-1);
 
         g.setStroke(Color.WHITE);
         g.strokeLine(sx, sy, sx + l, sy);
 
-        g.setStroke(Color.BLACK);
+        g.setStroke(getSelected() ? DefaultTrack.SELECTED_COLOR : getColor());
         g.strokeLine(sx, sy+1, sx + l, sy+1);
 
-        g.setStroke(Color.BLACK);
+        g.setStroke(getSelected() ? DefaultTrack.SELECTED_COLOR : getColor());
         g.strokeLine(sx, sy-1 + TRACK_WIDTH, sx + l, sy-1 +TRACK_WIDTH);
 
         g.setStroke(Color.WHITE);
         g.strokeLine(sx, sy + TRACK_WIDTH, sx + l, sy + TRACK_WIDTH);
 
-        g.setStroke(Color.BLACK);
+        g.setStroke(getSelected() ? DefaultTrack.SELECTED_COLOR : getColor());
         g.strokeLine(sx, sy + 1 + TRACK_WIDTH, sx + l, sy+ 1 + TRACK_WIDTH);
     }
 }

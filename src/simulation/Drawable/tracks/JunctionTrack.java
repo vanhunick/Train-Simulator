@@ -141,8 +141,8 @@ public class JunctionTrack extends DefaultTrack {
     }
 
     @Override
-    public void setRailpaceLeft(double spaceLeftPrev){
-        this.railSpaceLeft = (getLength() - spaceLeftPrev) % SimulationUI.RAIL_SEP;
+    public double getRailspaceLeft(){
+        return ((getLength() - getRailOffSet()) % SimulationUI.RAIL_SEP) - SimulationUI.RAIL_SEP;
     }
 
     public void setOutBoundLocation(String direction){

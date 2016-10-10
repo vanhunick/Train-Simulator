@@ -98,7 +98,7 @@ public abstract class DefaultTrack {
         return 0;
     }
 
-    public double railSpaceLeft;
+    public double railSpaceLeft = -1;
 
     /***
      * Returns the length of a quarter track
@@ -108,8 +108,17 @@ public abstract class DefaultTrack {
     }
 
 
-    abstract public void setRailpaceLeft(double spaceLeftPrev);
+    abstract public double getRailspaceLeft();
 
+    private double railOffset;
+
+    public void setRailOffset(double railOffset){
+        this.railOffset = railOffset;
+    }
+
+    public double getRailOffSet(){
+        return this.railOffset;
+    }
 
 
 

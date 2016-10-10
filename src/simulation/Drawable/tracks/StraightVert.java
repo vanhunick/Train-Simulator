@@ -1,6 +1,7 @@
 package simulation.Drawable.tracks;
 
 import javafx.beans.value.WritableObjectValue;
+import javafx.scene.paint.Color;
 import util.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 import simulation.Drawable.Movable;
@@ -69,9 +70,10 @@ public class StraightVert extends DefaultTrack {
 
 
     @Override
-    public void setRailpaceLeft(double spaceLeftPrev){
-        this.railSpaceLeft = (getLength() - spaceLeftPrev) % SimulationUI.RAIL_SEP;
+    public double getRailspaceLeft(){
+        return ((getLength() - getRailOffSet()) % SimulationUI.RAIL_SEP) - SimulationUI.RAIL_SEP;
     }
+
 
     @Override
     public boolean canConnect(DefaultTrack trackToConnect){
@@ -106,10 +108,10 @@ public class StraightVert extends DefaultTrack {
     @Override
     public Point2D getConnectionPointFrom(){
         if(super.getDirection().equals("UP")){
-            return new Point2D((int)(super.getStartX() + TRACK_WIDTH/2),(int) (getStartY() + getLength()));
+            return new Point2D((int)(super.getStartX() - TRACK_WIDTH/2),(int) (getStartY() + getLength()));
         }
         else if(super.getDirection().equals("DOWN")){
-            return new Point2D((int)(super.getStartX()+ TRACK_WIDTH/2),(int) (getStartY()));
+            return new Point2D((int)(super.getStartX() - TRACK_WIDTH/2),(int) (getStartY()));
         }
         return null;
     }
@@ -117,10 +119,10 @@ public class StraightVert extends DefaultTrack {
     @Override
     public Point2D getConnectionPointTo(){
         if(super.getDirection().equals("UP")){
-            return new Point2D((int)(super.getStartX()+ TRACK_WIDTH/2),(int) (getStartY()));
+            return new Point2D((int)(super.getStartX()- TRACK_WIDTH/2),(int) (getStartY()));
         }
         else if(super.getDirection().equals("DOWN")){
-            return new Point2D((int)(super.getStartX() + TRACK_WIDTH/2),(int) (getStartY() + getLength()));
+            return new Point2D((int)(super.getStartX() - TRACK_WIDTH/2),(int) (getStartY() + getLength()));
         }
         return null;
     }
@@ -203,14 +205,30 @@ public class StraightVert extends DefaultTrack {
         double x = super.getStartX() - DefaultTrack.RAIL_OFFSET - TRACK_WIDTH;
         double eX = super.getStartX() + DefaultTrack.RAIL_OFFSET;
 
-        for(double y = getStartY(); y < getStartY() + getLength(); y += SimulationUI.RAIL_SEP){
+        for(double y = getStartY() + getRailOffSet(); y < getStartY() + getLength(); y += SimulationUI.RAIL_SEP){
             g.strokeLine(x,y,eX,y);
         }
 
-        g.setStroke(DefaultTrack.RAIL_COLOR);
-        g.setLineWidth(2);
-        g.setStroke(getSelected() ? DefaultTrack.SELECTED_COLOR : DefaultTrack.RAIL_COLOR);
+        g.setLineWidth(1);
+
+        g.setStroke(getSelected() ? DefaultTrack.SELECTED_COLOR : getColor());
+        g.strokeLine(getStartX()-1, getStartY(), getStartX()-1, getStartY() + getLength());
+
+        g.setStroke(Color.WHITE);
         g.strokeLine(getStartX(), getStartY(), getStartX(), getStartY() + getLength());
+
+        g.setStroke(getSelected() ? DefaultTrack.SELECTED_COLOR : getColor());
+        g.strokeLine(getStartX()+1, getStartY(), getStartX()+1, getStartY() + getLength());
+
+
+        // Rail two
+
+        g.strokeLine(getStartX() - TRACK_WIDTH-1, getStartY(), getStartX() - TRACK_WIDTH-1, getStartY() + getLength());
+
+        g.setStroke(Color.WHITE);
         g.strokeLine(getStartX() - TRACK_WIDTH, getStartY(), getStartX() - TRACK_WIDTH, getStartY() + getLength());
+
+        g.setStroke(getSelected() ? DefaultTrack.SELECTED_COLOR : getColor());
+        g.strokeLine(getStartX() - TRACK_WIDTH+1, getStartY(), getStartX() - TRACK_WIDTH+1, getStartY() + getLength());
     }
 }
