@@ -601,7 +601,7 @@ public class CustomTracks {
                 drawableTrain.setUpImage();
                 RollingStock rollingStock = new RollingStock(80,5,0.9);
                 DrawableRollingStock drawableRollingStock = new DrawableRollingStock(rollingStock,drawableTrain,drawableTrain.getTrain().getDirection(),train.getOrientation());
-                drawableRollingStock.setStart(drawableTrain.getCurrentLocation(),sim);
+                drawableRollingStock.setStart(drawableTrain.getCurrentLocation(),sim,drawableTrain.getLengthPixels());
 //                drawableTrain.setRollingStockConnected(drawableRollingStock);
 //                drawableRollingStocks.add(drawableRollingStock);
                 trains.add(drawableTrain);

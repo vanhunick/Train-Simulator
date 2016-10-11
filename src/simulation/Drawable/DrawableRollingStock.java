@@ -99,7 +99,7 @@ public class DrawableRollingStock implements Movable{
      *
      * @param sim the visualisation used to simulate the movement back
      * */
-    public void setStart(Point2D startPointOfConnection, Simulation sim){
+    public void setStart(Point2D startPointOfConnection, Simulation sim, double lengthOfMovable){
         this.direction = !direction; // Reverse direction so we can reverse it away from the train
 
         // the middle of the train it is connected to
@@ -107,7 +107,7 @@ public class DrawableRollingStock implements Movable{
         this.degDone = Math.abs(connectedToMovable.getDegDone() -90);
         this.curRotation = connectedToMovable.getCurRotation();
 
-        double len = getLengthPixels()/2 + 50;
+        double len = (lengthOfMovable/2) + 50;
         double increment = len/80;
 
         // set current track to the train we are connected to current track
@@ -197,6 +197,9 @@ public class DrawableRollingStock implements Movable{
      * Returns the previous distance moved
      * */
     public double getDistanceMoved(){
+        if(connectedToMovable != null){
+            return connectedToMovable.getDistanceMoved();
+        }
         return this.distMoved;
     }
 
@@ -225,9 +228,11 @@ public class DrawableRollingStock implements Movable{
 
         // Only draw the line if the train is connected to something
         if(connected){
-            g.setStroke(Color.GREEN);
+            g.setLineWidth(6);
+            g.setStroke(Color.BLACK);
             g.strokeLine(frontX, frontY,conX,conY);
         }
+        g.setLineWidth(1);
 
         // Draw the image
         g.drawImage(rollingStockImage, currentLocation.getX() - rollingStockImage.getWidth()/2, currentLocation.getY() - rollingStockImage.getHeight()/2);
@@ -248,8 +253,6 @@ public class DrawableRollingStock implements Movable{
         if(x >= startX && x <= startX + getLengthPixels() && y > startY && y < startY + getLengthPixels()){
             return containsPointAccurate(x,y);
         }
-
-        System.out.println("False");
         return false;
     }
 
@@ -296,8 +299,6 @@ public class DrawableRollingStock implements Movable{
         double t4 = 0.5 * Math.abs((dX*(aY - y)) + (aX*(y - dY)) + (x*(dY - aY)));
 
         double rectArea = getWidthPixels() * getLengthPixels(); //TODO should be the width of the image instead of 21
-
-        System.out.println(!(t1 + t2 + t3 + t4 > rectArea));
 
         return !(t1 + t2 + t3 + t4 > rectArea);// if area is bigger point outside the rectangle
     }

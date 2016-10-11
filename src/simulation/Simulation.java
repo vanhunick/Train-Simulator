@@ -285,6 +285,7 @@ public class Simulation implements MouseEvents {
             // Update the rolling stock
             drawableRollingStocks.forEach(r -> {
                 checkCollision();
+
                 onSectionCheck(r,r.getDistanceMoved());
                 r.update();
             });
@@ -672,7 +673,7 @@ public class Simulation implements MouseEvents {
             DrawableRollingStock drawableRollingStock = new DrawableRollingStock(new RollingStock(12.5,1,50000), train, train.getDirection(), train.getOrientation());
 
             // Places it on the location of the train in from of it and reverses until in place
-            drawableRollingStock.setStart(train.getCurrentLocation(),this);
+            drawableRollingStock.setStart(train.getCurrentLocation(),this,train.getLengthPixels());
 
             movable.add(drawableRollingStock);
             drawableRollingStocks.add(drawableRollingStock);
@@ -687,7 +688,7 @@ public class Simulation implements MouseEvents {
             // If the user enters a number greater than one make more
             for(int i = 1; i < numberOfRollingStock; i++){
                 DrawableRollingStock nRS = new DrawableRollingStock(new RollingStock(12.5,1,10000), currentRollingStock, train.getDirection(),train.getOrientation());
-                nRS.setStart(currentRollingStock.getCurrentLocation(), this);
+                nRS.setStart(currentRollingStock.getCurrentLocation(), this,currentRollingStock.getLengthPixels());
                 currentRollingStock = nRS;
 
                 // Add rolling stock to simulation

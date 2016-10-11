@@ -177,11 +177,11 @@ public class StraightHoriz extends DefaultTrack {
         if(getNextX(curPoint.getX(),dist, movable) == -1 ){
 
             //TODO temp
-            if(forwardWithTrack(movable)){
-                curPoint.setLocation(getConnectionPointTo().getX(),getConnectionPointTo().getY());
-            } else {
-                curPoint.setLocation(getConnectionPointFrom().getX(),getConnectionPointFrom().getY());
-            }
+//            if(forwardWithTrack(movable)){
+//                curPoint.setLocation(getConnectionPointTo().getX(),getConnectionPointTo().getY());
+//            } else {
+//                curPoint.setLocation(getConnectionPointFrom().getX(),getConnectionPointFrom().getY());
+//            }
             return false;
         }
         return true;

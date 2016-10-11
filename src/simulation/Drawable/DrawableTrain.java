@@ -243,8 +243,8 @@ public class DrawableTrain implements Movable{
 
         distMoved = ((timeChanged/1000.0)* (currentSpeed * Simulation.METER_MULTIPLIER)); // Work out the distance to move in pixels
 
-        distMoved+= extraDistance;
-        extraDistance = 0;
+//        distMoved+= extraDistance;
+//        extraDistance = 0;
 
         // Get the rotation from a normal track or junction track
         this.curRotation = curTrack instanceof JunctionTrack ? ((JunctionTrack)curTrack).getNextPoint(this,distMoved) : curTrack.getNextPoint(currentLocation,curRotation, degDone,distMoved, this);
@@ -318,8 +318,6 @@ public class DrawableTrain implements Movable{
         double t4 = 0.5 * Math.abs((dX*(aY - y)) + (aX*(y - dY)) + (x*(dY - aY)));
 
         double rectArea = width * getLengthPixels();
-        System.out.println("Rec " + rectArea);
-        System.out.println("Tri " + t1 + t2 + t3 + t4);
 
         // if area is bigger point outside the rectangle
         return !(t1 + t2 + t3 + t4 > rectArea);
