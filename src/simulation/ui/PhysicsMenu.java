@@ -21,8 +21,8 @@ public class PhysicsMenu {
     public PhysicsMenu(){
         Dialog dialog = new Dialog<>();
         dialog.initModality(Modality.WINDOW_MODAL);
-        dialog.setTitle("Modify Train");
-        dialog.setHeaderText("Enter Details");
+        dialog.setTitle("Modify Track Friction");
+        dialog.setHeaderText("Enter Track friction co-efficients");
 
         double tempKineteicFriction = DefaultTrack.KINETIC_FRICTION;
         double tempStaticFriction = DefaultTrack.STATIC_FRICTION;

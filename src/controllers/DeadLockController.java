@@ -10,7 +10,7 @@ import java.util.Set;
 /**
  * Created by vanhunick on 17/05/16.
  */
-public class DeadLockController  extends DefaultController implements Controller {
+public class DeadLockController extends DefaultController implements Controller {
 
     private Set<Integer> stoppedTrains;
 

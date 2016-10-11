@@ -747,7 +747,6 @@ public class Simulation implements MouseEvents {
                     return;
                 }
 
-
                 if(getOnTrack(x,y) != null && getOnTrack(x,y) instanceof StraightHoriz){ //TODO later make trains start on curves
                     DefaultTrack dt = getOnTrack(x,y);
                     userInterface.showTrackMenu(dt);

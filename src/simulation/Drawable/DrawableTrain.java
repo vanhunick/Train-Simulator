@@ -1,5 +1,6 @@
 package simulation.Drawable;
 
+import simulation.Main;
 import util.Point2D;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.GraphicsContext;
@@ -47,7 +48,7 @@ public class DrawableTrain implements Movable{
     private double width; // The width of the train
     private String fileString; // Changes for different colored trains
 
-    public static long timeChanged = 20; // Time between updates TODO find better way
+    public long timeChanged = 20; // Time between updates TODO find better way
 
     /**
      * Creates a new drawable train object
@@ -86,7 +87,8 @@ public class DrawableTrain implements Movable{
         if(fileString == null){
             this.fileString = new String[]{"_blue","_orange","_yellow",""}[((int)(Math.random()*4))];
         }
-        this.trainImage= new Image("file:src/res/train"+fileString+".png", width, train.getLength() * Simulation.METER_MULTIPLIER, false, false);
+
+        this.trainImage= new Image(Main.class.getResourceAsStream("/res/train"+fileString+".png"), width, train.getLength() * Simulation.METER_MULTIPLIER, false, false);
         this.trainImageView = new ImageView(trainImage);
         this.params = new SnapshotParameters();
         params.setFill(Color.TRANSPARENT);
@@ -316,9 +318,15 @@ public class DrawableTrain implements Movable{
         double t4 = 0.5 * Math.abs((dX*(aY - y)) + (aX*(y - dY)) + (x*(dY - aY)));
 
         double rectArea = width * getLengthPixels();
+        System.out.println("Rec " + rectArea);
+        System.out.println("Tri " + t1 + t2 + t3 + t4);
 
         // if area is bigger point outside the rectangle
         return !(t1 + t2 + t3 + t4 > rectArea);
+    }
+
+    public void setTimeChanged(long timeChanged){
+        this.timeChanged = timeChanged;
     }
 
     /**

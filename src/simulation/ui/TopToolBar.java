@@ -6,7 +6,10 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import simulation.Main;
 import simulation.ProgramController;
+
+import java.net.URL;
 
 /**
  * Created by Nicky on 8/06/2016.
@@ -45,19 +48,20 @@ public class TopToolBar extends ToolBar {
 
 
         // Simulation Icons
-        Image playImage = new Image("file:src/res/play.png",imageSize,imageSize,false,false);
-        Image pauseImage = new Image("file:src/res/pause.png",imageSize,imageSize,false,false);
-        Image stopImage = new Image("file:src/res/stop.png",imageSize,imageSize,false,false);
-        Image eventImage = new Image("file:src/res/event.png",imageSize,imageSize,false,false);
-        Image saveImage = new Image("file:src/res/save.png",imageSize,imageSize,false,false);
-        Image clearImage = new Image("file:src/res/clear.png",imageSize,imageSize,false,false);
-        Image controlImage = new Image("file:src/res/control.png",imageSize,imageSize,false,false);
+        Image playImage = new Image(Main.class.getResourceAsStream("/res/play.png"),imageSize,imageSize,false,false);
+
+        Image pauseImage = new Image(Main.class.getResourceAsStream("/res/pause.png"),imageSize,imageSize,false,false);
+        Image stopImage = new Image(Main.class.getResourceAsStream("/res/stop.png"),imageSize,imageSize,false,false);
+        Image eventImage = new Image(Main.class.getResourceAsStream("/res/event.png"),imageSize,imageSize,false,false);
+        Image saveImage = new Image(Main.class.getResourceAsStream("/res/save.png"),imageSize,imageSize,false,false);
+        Image clearImage = new Image(Main.class.getResourceAsStream("/res/clear.png"),imageSize,imageSize,false,false);
+        Image controlImage = new Image(Main.class.getResourceAsStream("/res/control.png"),imageSize,imageSize,false,false);
 
         // Track Builder Icons
-        Image newSection = new Image("file:src/res/train-rails.png",imageSize,imageSize,false,false);
-        Image undo = new Image("file:src/res/undo.png",imageSize,imageSize,false,false);
-        Image simImage = new Image("file:src/res/metro.png",imageSize,imageSize,false,false);
-        Image simTrackImage = new Image("file:src/res/checked.png",imageSize,imageSize,false,false);
+        Image newSection = new Image(Main.class.getResourceAsStream("/res/train-rails.png"),imageSize,imageSize,false,false);
+        Image undo = new Image(Main.class.getResourceAsStream("/res/undo.png"),imageSize,imageSize,false,false);
+        Image simImage = new Image(Main.class.getResourceAsStream("/res/metro.png"),imageSize,imageSize,false,false);
+        Image simTrackImage = new Image(Main.class.getResourceAsStream("/res/checked.png"),imageSize,imageSize,false,false);
 
         // Buttons with image inside
         play = new Button("", new ImageView(playImage));

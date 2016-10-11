@@ -1,5 +1,6 @@
 package simulation.Drawable;
 
+import simulation.Main;
 import util.Point2D;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.GraphicsContext;
@@ -70,7 +71,7 @@ public class DrawableRollingStock implements Movable{
      * Sets up the image and image params for the rolling stock
      * */
     public void setUpImage(){
-        this.rollingStockImage = new Image("file:src/res/rolling_stock.png", rollingStock.getWidth() * Simulation.METER_MULTIPLIER, rollingStock.getLength() * Simulation.METER_MULTIPLIER, false, false);
+        this.rollingStockImage = new Image(Main.class.getResourceAsStream("/res/rolling_stock.png"), rollingStock.getWidth() * Simulation.METER_MULTIPLIER, rollingStock.getLength() * Simulation.METER_MULTIPLIER, false, false);
         this.trainImageView = new ImageView(rollingStockImage);
         this.params = new SnapshotParameters();
         params.setFill(javafx.scene.paint.Color.TRANSPARENT);
@@ -242,12 +243,13 @@ public class DrawableRollingStock implements Movable{
      * */
     public boolean containsPoint(double x, double y) {
         double startX = currentLocation.getX() - getLengthPixels()/2;
-        double startY = currentLocation.getY() - getWidthPixels()/2;
+        double startY = currentLocation.getY() - getLengthPixels()/2;
 
-        if(x >= startX && x <= startX + getWidthPixels() && y > startY && y < startY + getLengthPixels()){
+        if(x >= startX && x <= startX + getLengthPixels() && y > startY && y < startY + getLengthPixels()){
             return containsPointAccurate(x,y);
         }
 
+        System.out.println("False");
         return false;
     }
 
@@ -294,6 +296,8 @@ public class DrawableRollingStock implements Movable{
         double t4 = 0.5 * Math.abs((dX*(aY - y)) + (aX*(y - dY)) + (x*(dY - aY)));
 
         double rectArea = getWidthPixels() * getLengthPixels(); //TODO should be the width of the image instead of 21
+
+        System.out.println(!(t1 + t2 + t3 + t4 > rectArea));
 
         return !(t1 + t2 + t3 + t4 > rectArea);// if area is bigger point outside the rectangle
     }
