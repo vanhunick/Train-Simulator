@@ -97,7 +97,7 @@ public class Load {
                 junctionIndex = sectionObject.getInt("junctionIndex");
             }
 
-            sections[i] = new DrawableSection(new Section(id, length, from, to, tracksInSection));//TODO node sure if will work
+            sections[i] = new DrawableSection(new Section(id, length, from, to, tracksInSection));
             sections[i].getSection().setCandetect(detect);
             sections[i].getSection().setJuncSectionIndex(junctionIndex);
         }
@@ -133,8 +133,10 @@ public class Load {
             int maxSpeed = trainObject.getInt("maxSpeed");
             boolean dir = trainObject.getBoolean("direction");
             boolean ori = trainObject.getBoolean("orientation");
+            double acceleration = trainObject.getDouble("acceleration");
 
-            Train t = new Train(id,length,maxSpeed,dir,ori,71000,7);//TODO SAVE AND LOAD ACCELERAYION
+            Train t = new Train(id,length,maxSpeed,dir,ori,71000,acceleration);
+
 
             DefaultTrack track = null;
             DrawableSection section = null;

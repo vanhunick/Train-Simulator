@@ -134,6 +134,7 @@ public class Save {
             trainObject.put("direction",t.getTrain().getDirection());
             trainObject.put("orientation",t.getTrain().getOrientation());
             trainObject.put("curSectionID",t.getCurSection().getSection().getID());
+            trainObject.put("acceleration",t.getTrain().getAcceleration());
 
             trainArray.put(trainObject);
         }
