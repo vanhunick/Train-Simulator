@@ -262,7 +262,7 @@ public class JunctionTrack extends DefaultTrack {
         }
 
         setStartX(straightTrack.getStartX());
-        setStartY(straightTrack.getStartY());// TODO just changed
+        setStartY(straightTrack.getStartY());
     }
 
     public void updateLocation(double startX, double startY){
@@ -529,7 +529,6 @@ public class JunctionTrack extends DefaultTrack {
                 if(drawDirection.equals("UP")){
                     return inRight;
                 } else {
-                    //TODO should be here
                     return outRightTrack;
                 }
             }

@@ -667,9 +667,9 @@ public class CustomTracks {
 
         DefaultTrack[] tracks = new DefaultTrack[]{
                 // s1
-                new StraightHoriz(350, 600, 200, 0, 0, "RIGHT"), // 0
+                new StraightHoriz(350, 600, 20, 0, 0, "RIGHT"), // 0
                 // s2
-                new StraightHoriz(200, 0, 1)
+                new StraightHoriz(20, 0, 1)
         };
 
         DrawableSection[] sections = new DrawableSection[2];

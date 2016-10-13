@@ -95,7 +95,7 @@ public class SectionGraph {
             Node dest = null;
 
             // The train is going with the track
-            if(dn.s.junctionIndex != -1){ //TODO not sure if I need to know if inbound or outbound
+            if(dn.s.junctionIndex != -1){
                 if(nat){
                     juncDest = getNode(dn.s.junctionIndex);
 

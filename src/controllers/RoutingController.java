@@ -110,7 +110,7 @@ public class RoutingController extends DefaultController implements Controller {
                     }
 
                     // There is now nothing on the track before it so set to false
-                    getContrlSections()[cs.fromIndex-1].on = false;// TODO problem is from is junction
+                    getContrlSections()[cs.fromIndex-1].on = false;
 
                     // Get the train that holds the lock to this
                     ControllerTrain trainOnSectionBefore = getTrainOnSection(getContrlSections()[cs.fromIndex-1].id);

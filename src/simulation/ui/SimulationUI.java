@@ -286,7 +286,7 @@ public class SimulationUI implements MouseEvents {
         g.strokeText("Crashed: " + selectedTrain.isCrashed(),startX+5,startY+=20);
         g.strokeText("Direction: " + selectedTrain.getDirection(),startX+5,startY+=15);
         g.strokeText("Weight: " + selectedTrain.getTrain().getWeight(),startX+5,startY+=20);
-        g.strokeText("Engine Power : " + selectedTrain.getEngineForce(),startX+5,startY+=20);
+        g.strokeText("Engine Power : " + String.format("%.2f",selectedTrain.getEngineForce()) ,startX+5,startY+=20);
 
         g.strokeText("Target Speed m/s: " + String.format("%.2f", selectedTrain.getTrain().getTargetSpeed()), startX + 5, startY += 20);
         g.strokeText("Speed m/s: " + String.format("%.2f", selectedTrain.getCurrentSpeed()), startX + 5, startY += 20);

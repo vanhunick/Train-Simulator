@@ -51,7 +51,7 @@ public class Quart4 extends DefaultTrack {
                 startY = from.getStartY();
             }
             else if(from.getDrawID() == 5){
-                startX = from.getStartX()  - TRACK_WIDTH;//TODO might need to account for different sizes
+                startX = from.getStartX()  - TRACK_WIDTH;
                 startY = from.getStartY() + from.getLength() - super.getLength()/2;
             }
         }

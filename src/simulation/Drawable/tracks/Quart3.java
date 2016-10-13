@@ -159,7 +159,7 @@ public class Quart3 extends DefaultTrack {
         getNextPoint(tempPoint, curRot, degDone, speed, movable);
         Point2D p = tempPoint;
 
-        if(super.getDirection().equals("LEFT")){//TODO check
+        if(getDirection().equals("LEFT")){
             if(forwardWithTrack(movable)){
                 if(p.getY() > super.getStartY() + super.getLength()){
                     return false;//No longer in this section

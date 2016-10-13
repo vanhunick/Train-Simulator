@@ -28,6 +28,9 @@ import java.util.*;
  */
 public class Simulation implements MouseEvents {
 
+    private boolean testMode;
+    private long tickTime;
+
     // Modes
     public static final String MODE_USER = "user";
     public static final String MODE_TEST = "test";
@@ -371,6 +374,7 @@ public class Simulation implements MouseEvents {
      * if possible
      * */
     public void collided(Movable movable1, Movable movable2){
+        System.out.println("Collided");
         if(!notConnected(movable1,movable2))return;
 
         // First check the speed of the collision if they are going to fast the rest does not matter
@@ -454,15 +458,21 @@ public class Simulation implements MouseEvents {
         long timeChanged = curTime - lastUpdate;
         if(timeChanged > 50)timeChanged = 20;
 
+        // Used when testing not in real time
+        if(testMode){timeChanged = tickTime;}
+
         drawableTrain.setTimeChanged(timeChanged);
-//        System.out.println(timeChanged);
-
-//        timeChanged = 20;
-        double pixelsToMove = (timeChanged/1000.0)*speedInPixels;
-
-        return pixelsToMove ;
+        return (timeChanged/1000.0)*speedInPixels;
     }
 
+    /**
+     * Returns the distance the train should move in pixels given a certain time change
+     * */
+    public double getDistanceToMoveTrain(DrawableTrain train, long timeChanged){
+        double speedInPixels = train.getCurrentSpeed() * Simulation.METER_MULTIPLIER;
+        train.setTimeChanged(timeChanged);
+        return (timeChanged/1000.0)*speedInPixels;
+    }
 
     /**
      * Checks if a drawable train is on a track given after it has moved a certain amount based on its speed
@@ -487,15 +497,10 @@ public class Simulation implements MouseEvents {
 
         // Check if the train will be on another track after the update
         if(!curTrack.checkOnAfterUpdate(t.getCurrentLocation(),t.getCurRotation(),t.getDegDone() ,pixelsToMove,t)){
-
 //            double pixelsLeft = curTrack.pixelsLeftAfterMove(t.getCurrentLocation(),t.getCurRotation(),t.getDegDone() ,pixelsToMove,t);
-
             if(t instanceof DrawableTrain){
 //                ((DrawableTrain) t).setExtraDistance(pixelsLeft);
             }
-
-//            System.out.println(pixelsLeft);
-
             DefaultTrack destinationTrack = null;
 
             // If the train is going forward along the natural orientation of the current track
@@ -677,7 +682,11 @@ public class Simulation implements MouseEvents {
 
             movable.add(drawableRollingStock);
             drawableRollingStocks.add(drawableRollingStock);
-            drawableRollingStock.setUpImage();
+
+            if(!testMode){ // No need to setup image in test mode
+                drawableRollingStock.setUpImage();
+            }
+
 
             // Connect it to the train
             train.setRollingStockConnected(drawableRollingStock);
@@ -694,14 +703,18 @@ public class Simulation implements MouseEvents {
                 // Add rolling stock to simulation
                 movable.add(nRS);
                 drawableRollingStocks.add(nRS);
-                nRS.setUpImage();
+
+                if(!testMode){nRS.setUpImage();}
             }
         }
 
         // Add the train to simulation
-        train.setUpImage();
+        if(!testMode){
+            train.setUpImage();
+        }
         trains.add(train);
         movable.add(train);
+        System.out.println(modelTrack);
         modelTrack.addTrain(train.getTrain());
     }
 
@@ -809,6 +822,15 @@ public class Simulation implements MouseEvents {
 
     public ModelTrack getModelTrack(){
         return this.modelTrack;
+    }
+
+    public void setTestMode(boolean testMode, long tickTime){
+        this.testMode = testMode;
+        this.tickTime = tickTime;
+    }
+
+    public boolean getTestModeOn(){
+        return this.testMode;
     }
 
     @Override

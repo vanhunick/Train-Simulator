@@ -48,7 +48,7 @@ public class DrawableTrain implements Movable{
     private double width; // The width of the train
     private String fileString; // Changes for different colored trains
 
-    public long timeChanged = 20; // Time between updates TODO find better way
+    public long timeChanged = 20; // Time between updates
 
     /**
      * Creates a new drawable train object
@@ -197,7 +197,7 @@ public class DrawableTrain implements Movable{
             braking = false;
             engineForce = 494000;
         } else if(changingDirection){
-            engineForce = 0;// TODO not sure
+            engineForce = 0;
             braking = true;
         }
 

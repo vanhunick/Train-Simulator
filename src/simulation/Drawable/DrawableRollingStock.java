@@ -167,7 +167,7 @@ public class DrawableRollingStock implements Movable{
     public void setDirection(boolean directionToSet){
         // Check the direction is actually different
         if(directionToSet != this.direction){
-            degDone = Math.abs(90- degDone);//TODO test
+            degDone = Math.abs(90- degDone);
         }
         // Set the direction
         this.direction = directionToSet;
@@ -298,7 +298,7 @@ public class DrawableRollingStock implements Movable{
         // DAP
         double t4 = 0.5 * Math.abs((dX*(aY - y)) + (aX*(y - dY)) + (x*(dY - aY)));
 
-        double rectArea = getWidthPixels() * getLengthPixels(); //TODO should be the width of the image instead of 21
+        double rectArea = getWidthPixels() * getLengthPixels();
 
         return !(t1 + t2 + t3 + t4 > rectArea);// if area is bigger point outside the rectangle
     }
@@ -352,7 +352,7 @@ public class DrawableRollingStock implements Movable{
      * @return width in pixels
      * */
     public double getWidthPixels(){
-        return rollingStock.getWidth()*Simulation.METER_MULTIPLIER;//TODO decide if to store here or in rolling stock
+        return rollingStock.getWidth()*Simulation.METER_MULTIPLIER;
     }
 
     /**

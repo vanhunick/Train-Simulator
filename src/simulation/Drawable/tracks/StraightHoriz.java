@@ -175,13 +175,6 @@ public class StraightHoriz extends DefaultTrack {
 
     public boolean checkOnAfterUpdate(Point2D curPoint, double rotation,double rotDone, double dist, Movable movable){
         if(getNextX(curPoint.getX(),dist, movable) == -1 ){
-
-            //TODO temp
-//            if(forwardWithTrack(movable)){
-//                curPoint.setLocation(getConnectionPointTo().getX(),getConnectionPointTo().getY());
-//            } else {
-//                curPoint.setLocation(getConnectionPointFrom().getX(),getConnectionPointFrom().getY());
-//            }
             return false;
         }
         return true;

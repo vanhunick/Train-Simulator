@@ -169,7 +169,7 @@ public class DeadLockController extends DefaultController implements Controller 
                     trainWithLock.lockNext = -1;
 
                     // There is a train on the next section so set to true
-                    getContrlSections()[cs.toIndex-1].on = true; //TODO -1 because in the file it uses id and not index
+                    getContrlSections()[cs.toIndex-1].on = true; // -1 because in the file it uses id and not index
 
                     // Set the current section of the train to the next section
                     trainWithLock.curSectionID = getNextSection(trainWithLock, getControllerSection(trainWithLock.curSectionID)).id;
