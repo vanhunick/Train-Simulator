@@ -133,9 +133,9 @@ public class JunctionTests {
         // Create the track builder object
         TrackBuilder tb = new TrackBuilder();
 
-        StraightHoriz s1 = new StraightHoriz(0,0,100,0,0,"RIGHT");
+        StraightHoriz s1 = new StraightHoriz(0,0,10,0,0,"RIGHT");
 
-        StraightHoriz s2 = new StraightHoriz(100,0,100,0,1,"RIGHT");
+        StraightHoriz s2 = new StraightHoriz((int)(10*Simulation.METER_MULTIPLIER),0,100,0,1,"RIGHT");
 
         List<DefaultTrack> tracks = tb.getAllTracks();
         tracks.add(s1);
@@ -159,20 +159,22 @@ public class JunctionTests {
         TrackBuilder tb = new TrackBuilder();
 
         StraightHoriz s1 = new StraightHoriz(0,0,47,0,0,"RIGHT");
+        System.out.println(s1.getLength());
 
-        JunctionTrack j = new JunctionTrack(100,100,100,6,1,"RIGHT",false,true,"UP");
-
+        JunctionTrack j = new JunctionTrack(423,0,20,6,1,"RIGHT",false,true,"UP");
+        j.setMid((int)(423 + j.getLength()/2),0 - DefaultTrack.TRACK_WIDTH); // The method moves to center of x,y point so have to move back
         List<DefaultTrack> tracks = tb.getAllTracks();
         tracks.add(s1);
         tracks.add(j);
 
         System.out.println(j.getInnerTrack().getStartX() + j.getInnerTrack().getLength()/2);
+        System.out.println(j.getStraightTrack().getStartX());
         System.out.println(j.getInnerTrack().getConnectionPointFrom().getX());
-        System.out.println(j.getInnerTrack().getStartY());
+        System.out.println(j.getStraightTrack().getStartY());
 
         tb.connectDestinations();
 
-        System.out.println("TO " + s1.getTo());
+        System.out.println("TO " + s1.getJuncTo());
         // The track s1 should now be connected to s2
         assert (s1.getTo() == 1);
 

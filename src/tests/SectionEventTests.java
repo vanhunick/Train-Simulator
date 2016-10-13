@@ -29,28 +29,23 @@ public class SectionEventTests {
 
         simulation.setRailway(railway.sections);
         simulation.setTracks(railway.tracks);
+        simulation.setTestMode(true,20);
 
-
-        Train t = new Train(1,100,500,true,true,71000, 7);
+        Train t = new Train(1,12,30,true,true,5000, 7);
         DrawableTrain dt = new DrawableTrain(t,railway.sections[0],railway.tracks[0]);
+
+        ModelTrack model = new ModelTrack(simulation.getTrains(),simulation.getSections());
+        simulation.setModelTrack(model);
 
         simulation.addTrainAndStocktoSimulation(dt,0);
 
-        ModelTrack model = new ModelTrack(simulation.getTrains(),simulation.getSections());
-
-        simulation.setModelTrack(model);
-
-
         // Set the target speed for the train
-        model.setSpeed(1,200);
+        model.setSpeed(1,100);
 
         simulation.setStart(true);
-
         boolean success = false;
 
-        System.out.println(dt.getCurSection().getSection().getID());
-
-        for(int i = 0; i < 80; i++){
+        for(int i = 0; i < 200; i++){
             simulation.update();
             if(dt.getCurSection().getSection().getID() == 1){
                 success = true;
@@ -68,29 +63,32 @@ public class SectionEventTests {
 
         simulation.setRailway(railway.sections);
         simulation.setTracks(railway.tracks);
+        simulation.setTestMode(true,20);
 
         // Create a train
-        Train t = new Train(1,100,500,false,true,71000,7);
+        Train t = new Train(1,12.5,500,false,true,71000,7);
         DrawableTrain dt = new DrawableTrain(t,railway.sections[1],railway.tracks[1]);
-
-        RollingStock rollingStock = new RollingStock(15,2,0.9);
+        System.out.println("S "+dt.getCurrentLocation().getX());
+        RollingStock rollingStock = new RollingStock(15,2,10000);
         DrawableRollingStock drawableRollingStock = new DrawableRollingStock(rollingStock,null,true, true);
 
         drawableRollingStock.setStartNotConnected(railway.tracks[0]);
 
+        ModelTrack model = new ModelTrack(simulation.getTrains(),simulation.getSections());
+        simulation.setModelTrack(model);
         simulation.addTrainAndStocktoSimulation(dt,0);
         simulation.addRollingStocktoSimulation(drawableRollingStock);
 
-        ModelTrack model = new ModelTrack(simulation.getTrains(),simulation.getSections());
+
 
         // Set the target speed for the train
         model.setSpeed(1, 100);
-
         simulation.setStart(true);
 
         boolean success = false;
-        for(int i = 0; i < 80; i++){
+        for(int i = 0; i < 500; i++){
             simulation.update();
+            System.out.println(dt.getCurrentLocation().x);
             if(dt.getRollingStockConnected() != null){
                 success = true;
                 break;
@@ -111,6 +109,7 @@ public class SectionEventTests {
 
         simulation.setRailway(railway.sections);
         simulation.setTracks(railway.tracks);
+        simulation.setTestMode(true,20);// Turn on test mode with a tick of 20ms
 
         // Create a train that is facing towards the rolling stock
         Train t = new Train(1,100,500,true,false,71000,7);
@@ -121,10 +120,12 @@ public class SectionEventTests {
 
         drawableRollingStock.setStartNotConnected(railway.tracks[0]);
 
+        ModelTrack model = new ModelTrack(simulation.getTrains(),simulation.getSections());
+        simulation.setModelTrack(model);
         simulation.addTrainAndStocktoSimulation(dt,0);
         simulation.addRollingStocktoSimulation(drawableRollingStock);
 
-        ModelTrack model = new ModelTrack(simulation.getTrains(),simulation.getSections());
+
 
         // Set the target speed for the train
         model.setSpeed(1,100);
@@ -133,7 +134,7 @@ public class SectionEventTests {
 
         boolean connected = false;
         boolean crashed = false;
-        for(int i = 0; i < 80; i++){
+        for(int i = 0; i < 200; i++){
             simulation.update();
             if(dt.getRollingStockConnected() != null){
                 connected = true;
