@@ -374,7 +374,6 @@ public class Simulation implements MouseEvents {
      * if possible
      * */
     public void collided(Movable movable1, Movable movable2){
-        System.out.println("Collided");
         if(!notConnected(movable1,movable2))return;
 
         // First check the speed of the collision if they are going to fast the rest does not matter
@@ -714,7 +713,6 @@ public class Simulation implements MouseEvents {
         }
         trains.add(train);
         movable.add(train);
-        System.out.println(modelTrack);
         modelTrack.addTrain(train.getTrain());
     }
 

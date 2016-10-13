@@ -68,7 +68,6 @@ public class SectionEventTests {
         // Create a train
         Train t = new Train(1,12.5,500,false,true,71000,7);
         DrawableTrain dt = new DrawableTrain(t,railway.sections[1],railway.tracks[1]);
-        System.out.println("S "+dt.getCurrentLocation().getX());
         RollingStock rollingStock = new RollingStock(15,2,10000);
         DrawableRollingStock drawableRollingStock = new DrawableRollingStock(rollingStock,null,true, true);
 
@@ -88,7 +87,6 @@ public class SectionEventTests {
         boolean success = false;
         for(int i = 0; i < 500; i++){
             simulation.update();
-            System.out.println(dt.getCurrentLocation().x);
             if(dt.getRollingStockConnected() != null){
                 success = true;
                 break;
