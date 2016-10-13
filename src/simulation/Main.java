@@ -154,17 +154,17 @@ public class Main extends Application {
                 controller.refresh(gc);
 
                 // Draw the fps counter
-                if(true){
-                    gc.strokeText("FPS " + fpsText, 0, 20);
-                }
-                gc.strokeText("         20m ", 800, 25);
+//                if(true){
+//                    gc.strokeText("FPS " + fpsText, 0, 20);
+//                }
+//                gc.strokeText("         20m ", 800, 25);
 //
 //
-                gc.setStroke(Color.WHITE);
-                gc.strokeLine(800,30,800 + (20*Simulation.METER_MULTIPLIER),30);
-
-                gc.strokeLine(800,25,800,35);
-                gc.strokeLine(800 + (20*Simulation.METER_MULTIPLIER),25, 800 + (20*Simulation.METER_MULTIPLIER),35);
+//                gc.setStroke(Color.WHITE);
+//                gc.strokeLine(800,30,800 + (20*Simulation.METER_MULTIPLIER),30);
+//
+//                gc.strokeLine(800,25,800,35);
+//                gc.strokeLine(800 + (20*Simulation.METER_MULTIPLIER),25, 800 + (20*Simulation.METER_MULTIPLIER),35);
 //
                 gc.save();
                 gc.restore();

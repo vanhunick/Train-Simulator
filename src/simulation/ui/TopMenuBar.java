@@ -33,6 +33,7 @@ public class TopMenuBar extends MenuBar {
         MenuItem loadTrackItem = new MenuItem("Load Track");
         MenuItem simulateItem = new MenuItem("Simulation Mode");
         MenuItem save = new MenuItem("Save");
+        MenuItem help = new MenuItem("Help");
 
 
         // List for edit
@@ -44,6 +45,8 @@ public class TopMenuBar extends MenuBar {
         simulateItem.setOnAction(e -> handleSimulatePressed(e));
         physics.setOnAction(e -> new PhysicsMenu());
         save.setOnAction(e -> handleSavePressed(e));
+
+        help.setOnAction(e -> new HelpDialog());
 
         // List for View
         MenuItem log = new MenuItem("Log simulation");
@@ -83,6 +86,7 @@ public class TopMenuBar extends MenuBar {
         menuFile.getItems().add(loadTrackItem);
         menuFile.getItems().add(simulateItem);
         menuFile.getItems().add(save);
+        menuFile.getItems().add(help);
 
         // Add the simulation items
         menuView.getItems().add(log);
