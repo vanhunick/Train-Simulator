@@ -92,6 +92,8 @@ public class LoadAndSaveTests {
         assert train.getDirection() == trainObject.getBoolean("direction");
 
         assert train.getOrientation() == trainObject.getBoolean("orientation");
+
+        assert train.getAcceleration() == trainObject.getDouble("acceleration");
     }
 
     @Test
