@@ -68,7 +68,7 @@ public class SectionEventTests {
         // Create a train
         Train t = new Train(1,12.5,500,false,true,71000,7);
         DrawableTrain dt = new DrawableTrain(t,railway.sections[1],railway.tracks[1]);
-        RollingStock rollingStock = new RollingStock(15,2,10000);
+        RollingStock rollingStock = new RollingStock(10,2,10000);
         DrawableRollingStock drawableRollingStock = new DrawableRollingStock(rollingStock,null,true, true);
 
         drawableRollingStock.setStartNotConnected(railway.tracks[0]);
@@ -113,7 +113,7 @@ public class SectionEventTests {
         Train t = new Train(1,100,500,true,false,71000,7);
         DrawableTrain dt = new DrawableTrain(t,railway.sections[1],railway.tracks[1]);
 
-        RollingStock rollingStock = new RollingStock(15,2,0.9);
+        RollingStock rollingStock = new RollingStock(10,2,0.9);
         DrawableRollingStock drawableRollingStock = new DrawableRollingStock(rollingStock,null,true, true);
 
         drawableRollingStock.setStartNotConnected(railway.tracks[0]);
@@ -142,7 +142,7 @@ public class SectionEventTests {
                 crashed = true;
             }
         }
-        assert (!connected);//TODO  && crashed
+        assert (!connected);
     }
 
 

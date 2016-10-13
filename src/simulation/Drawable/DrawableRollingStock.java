@@ -413,7 +413,7 @@ public class DrawableRollingStock implements Movable{
 
     @Override
     public DrawableRollingStock getRollingStockConnected() {
-        return null;// TODO remove
+        return null;
     }
 
     @Override

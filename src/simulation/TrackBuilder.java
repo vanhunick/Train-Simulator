@@ -413,7 +413,7 @@ public class TrackBuilder implements MouseEvents{
 
         // Checks if a rolling stock should be added to the track
         if(menu.addRollingStocl()){
-            RollingStock rollingStock = new RollingStock(80,100,51000);
+            RollingStock rollingStock = new RollingStock(10,100,51000);
             DrawableRollingStock drawableRollingStock = new DrawableRollingStock(rollingStock, null, true, true);
             drawableRollingStock.setStartNotConnected(dt);
             stocks.add(drawableRollingStock);

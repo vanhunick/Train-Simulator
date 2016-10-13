@@ -304,7 +304,7 @@ public class Load {
         // Process the type of track
         switch (trackObject.getString("type")){
             case "Q1":
-                return new Quart1(x,y,length,1,"RIGHT",id);//TODO put direction in file
+                return new Quart1(x,y,length,1,"RIGHT",id);
             case "Q2":
                 return new Quart2(x,y,length,2,"RIGHT",id);
             case "Q3":

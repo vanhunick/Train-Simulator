@@ -96,7 +96,7 @@ public class LoadControlerSections {
             boolean ori = trainObject.getBoolean("orientation");
             int curSectionID = trainObject.getInt("curSectionID");
 
-            ControllerTrain t = new ControllerTrain(id,dir,ori,curSectionID);//TODO util.save weight
+            ControllerTrain t = new ControllerTrain(id,dir,ori,curSectionID);
             trains.add(t);
         }
         return trains;

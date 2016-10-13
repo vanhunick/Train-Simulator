@@ -165,7 +165,7 @@ public class LoadAndSaveTests {
 
         assert drawableRollingStock.getCurTrack().getId() == stockObject.getInt("curTrack");
 
-        assert stock.getLength() == stockObject.getDouble("length"); // TODO // FIXME: 8/10/16 Length in rolling stock
+        assert stock.getLength() == stockObject.getDouble("length");
 
         assert drawableRollingStock.getOrientation() == stockObject.getBoolean("orientation");
 

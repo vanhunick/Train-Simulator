@@ -193,7 +193,7 @@ public class CustomTracks {
         // Second inside straight
         railway[9].getSection().setToIndex(10);
         railway[9].getSection().setFromIndex(8);
-        railway[9].getSection().setJuncSectionIndex(2); // TODO just added
+        railway[9].getSection().setJuncSectionIndex(2);
 
         // First inside corner
         railway[10].getSection().setToIndex(11);
@@ -341,7 +341,7 @@ public class CustomTracks {
 
 
         // First inner straight
-        tracks[10].setFrom(19);//TODO check if it could be multiple util.tracks fourth junction
+        tracks[10].setFrom(19);
         tracks[10].setJuncFrom(9);//Second Junction
         tracks[10].setTo(11);
 
@@ -599,7 +599,7 @@ public class CustomTracks {
                 Train train = new Train(1, 15, 500, false,true,71000,7);
                 DrawableTrain drawableTrain = new DrawableTrain(train, ds,ds.getTracks()[0]);
                 drawableTrain.setUpImage();
-                RollingStock rollingStock = new RollingStock(80,5,0.9);
+                RollingStock rollingStock = new RollingStock(10,5,0.9);
                 DrawableRollingStock drawableRollingStock = new DrawableRollingStock(rollingStock,drawableTrain,drawableTrain.getTrain().getDirection(),train.getOrientation());
                 drawableRollingStock.setStart(drawableTrain.getCurrentLocation(),sim,drawableTrain.getLengthPixels());
 //                drawableTrain.setRollingStockConnected(drawableRollingStock);
@@ -619,7 +619,7 @@ public class CustomTracks {
         for(DrawableSection ds : railway) {
             if (ds.getSection().getID() == 99) {
 
-                RollingStock rollingStock = new RollingStock(15,828282,50000);
+                RollingStock rollingStock = new RollingStock(10,828282,50000);
                 DrawableRollingStock drawableRollingStock = new DrawableRollingStock(rollingStock,null,true, true);
                 drawableRollingStock.setUpImage();
 
@@ -628,7 +628,7 @@ public class CustomTracks {
                 stocks.add(drawableRollingStock);
             }
             if (ds.getSection().getID() == 101) {
-                RollingStock rollingStock = new RollingStock(15,28282,50000);
+                RollingStock rollingStock = new RollingStock(10,28282,50000);
                 DrawableRollingStock drawableRollingStock = new DrawableRollingStock(rollingStock,null,true, true);
                 drawableRollingStock.setUpImage();
 
