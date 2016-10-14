@@ -71,8 +71,6 @@ public class Main extends Application {
 
         lastTime = System.nanoTime();
 
-        this.image= new Image("file:src/res/Green.jpg", 200, 200, false, false);
-        System.out.println(image.getHeight());
         this.imageView= new ImageView(image);
 
         setupAnimationTimer(primaryStage,canvas);

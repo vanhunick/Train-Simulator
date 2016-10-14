@@ -6,7 +6,8 @@
   "curSectionID": 0,
   "id": 1,
   "maxSpeed": 500,
-  "direction": true
+  "direction": true,
+  "acceleration": 7
  }],
  "sections": [
   {

@@ -294,7 +294,7 @@ public class TrackBuilder implements MouseEvents{
         // Empty out the util.tracks
         tracksInSection.clear();
 
-        Section s = new Section(curSectionID,100,sectionTracks);//TODO do length later
+        Section s = new Section(curSectionID,100,sectionTracks);
 
         // Set the Section to be from the one before
         s.setFrom(sectionsForTrack.size()-1);
@@ -345,7 +345,7 @@ public class TrackBuilder implements MouseEvents{
     /**
      * Undoes and addition of a track piece
      * */
-    public void undo(){// TODO // FIXME: 14/08/2016 
+    public void undo(){
         if(tracksInSection.size() > 0){
             this.tracksInSection.remove(tracksInSection.size()-1);
         }
@@ -514,7 +514,7 @@ public class TrackBuilder implements MouseEvents{
                     jTrack.setFrom(i);
                 }
                 if(!jTrack.inBound()){
-                    jTrack.setFrom(i);//TODO might be different
+                    jTrack.setFrom(i);//
                 }
 
                 placed = true;
@@ -605,7 +605,7 @@ public class TrackBuilder implements MouseEvents{
             for(int i = 0; i < allTracks.size(); i++){
                 if(j.canConnectThrown(allTracks.get(i))){
                     j.setOutboundToThrown(i);
-                    allTracks.get(i).setFrom(getTrackIndex(j));// TODO not sure how to find if it's junc from or from
+                    allTracks.get(i).setFrom(getTrackIndex(j));//
                 }
             }
         }
@@ -613,9 +613,9 @@ public class TrackBuilder implements MouseEvents{
 
         for(int i = 0; i < allTracks.size(); i++){
             if(allTracks.get(i) instanceof JunctionTrack){
-                if (trackWithoutTo.canConnect(allTracks.get(i))) {//TODO not done
+                if (trackWithoutTo.canConnect(allTracks.get(i))) {//
                     trackWithoutTo.setTo(i);
-                    ((JunctionTrack) allTracks.get(i)).setInboundFromThrown(getTrackIndex(trackWithoutTo));//TODO THROWN OR NOT?
+                    ((JunctionTrack) allTracks.get(i)).setInboundFromThrown(getTrackIndex(trackWithoutTo));//
                 }
             }
             else {

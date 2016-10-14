@@ -51,8 +51,6 @@ public class EventGen {
         grid.setPadding(new Insets(20, 150, 10, 10));
 
 
-
-        //TODO put get ids method in simulation.model
         List<String> names = new ArrayList<>();
         for(Train t : trains){
             names.add("" + t.getId());

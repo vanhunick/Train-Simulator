@@ -707,7 +707,7 @@ public class CustomTracks {
         }
 
         //new Save().util.save(l,"am/kings/home1/vanhunick/swen303/Assignment 2/train-simulator/full_Track");
-        LoadedRailway l = new LoadedRailway(f,railway, tracks, trains, stocks);
+        LoadedRailway l = new LoadedRailway(null,railway, tracks, trains, stocks);
         new Save().save(l,"src/util.tracks/full_Track");
     }
 

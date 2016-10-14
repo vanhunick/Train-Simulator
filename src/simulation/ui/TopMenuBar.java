@@ -41,7 +41,7 @@ public class TopMenuBar extends MenuBar {
 
         //Handle file events
         newTrackItem.setOnAction(e -> handleNewTrackPressed(e));
-        loadTrackItem.setOnAction(e -> handleLoadTrackPressed(e));
+        loadTrackItem.setOnAction(e -> handleLoadTrackPressed());
         simulateItem.setOnAction(e -> handleSimulatePressed(e));
         physics.setOnAction(e -> new PhysicsMenu());
         save.setOnAction(e -> handleSavePressed(e));
@@ -133,7 +133,10 @@ public class TopMenuBar extends MenuBar {
     }
 
 
-    public void handleLoadTrackPressed(ActionEvent e){
+    /**
+     * Called when the user presses the load button on the menu
+     * */
+    public void handleLoadTrackPressed(){
         LoadPane l = new LoadPane();
 
         l.loadRailway();
@@ -142,6 +145,4 @@ public class TopMenuBar extends MenuBar {
             controller.setLoadedRailway(railway.file,railway);
         }
     }
-
-
 }

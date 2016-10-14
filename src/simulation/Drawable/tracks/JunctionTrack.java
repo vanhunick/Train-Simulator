@@ -269,7 +269,7 @@ public class JunctionTrack extends DefaultTrack {
         setLocation(null,getDirection(),startX,startY);
     }
 
-    //TODO this is not a good way to do it but all alternatives will take too much time
+
     public void moveToThrown(){
         if(!inBound())return;
 
