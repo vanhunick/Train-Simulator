@@ -25,12 +25,15 @@ public class TrainAttributeMenu {
 
     public double maxPower;
 
+    public double brakePower;
+
     public TrainAttributeMenu(DrawableTrain t){
         this.length = t.getTrain().getLength();
         this.weight = t.getTrain().getWeight()/1000;
         this.acceleration = t.getTrain().getAcceleration();
         this.maxSpeed = t.getTrain().getMaxSpeed();
         this.maxPower = t.getTrain().getMaxPower()/1000;
+        this.brakePower = t.getBrakePower()/1000;
 
         Dialog dialog = new Dialog<>();
         dialog.initModality(Modality.WINDOW_MODAL);
@@ -108,6 +111,20 @@ public class TrainAttributeMenu {
         grid.add(new Label("Max Power (kn):"), 0, 8);
         grid.add(maxPower, 0, 9);
 
+        // Max power of train
+        Slider brakePower = new Slider();
+        brakePower.setMin(100);
+        brakePower.setMax(1000);
+        brakePower.setValue(this.brakePower);
+        brakePower.setShowTickMarks(true);
+        brakePower.setShowTickLabels(true);
+        brakePower.setMajorTickUnit(500);
+        brakePower.setMinorTickCount(5);
+        grid.add(new Label("Brake Power (kn):"), 0, 10);
+        grid.add(brakePower, 0, 11);
+
+
+
         dialog.getDialogPane().setContent(grid);
 
         // Set up slider listeners
@@ -130,6 +147,10 @@ public class TrainAttributeMenu {
 
         weight.valueProperty().addListener((observable, oldValue, newValue) -> {
             this.weight = newValue.intValue();
+        });
+
+        brakePower.valueProperty().addListener((observable, oldValue, newValue) -> {
+            this.brakePower = newValue.intValue();
         });
 
         Optional<ButtonType> result = dialog.showAndWait();

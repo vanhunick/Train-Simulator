@@ -30,7 +30,7 @@ public class DrawableTrain implements Movable{
     private double currentSpeed; // The current speed of the train metres per second
     private boolean braking;// Applied when changing direction or slowing down
     private double engineForce = 494000; // The engine force (could change to vary)
-    public int brakePower = 800000; // The power when braking
+    private int brakePower = 800000; // The power when braking
     boolean changingDirection = false;
     private double extraDistance;
     private Point2D front = new Point2D(0,0);
@@ -79,6 +79,8 @@ public class DrawableTrain implements Movable{
 
         setConnectionLocation(); // Sets up connection location based on position
     }
+
+
 
     /**
      * Sets up the image fields for the drawable train
@@ -403,6 +405,15 @@ public class DrawableTrain implements Movable{
      * */
     public void setRollingStockConnected(DrawableRollingStock dr){
         this.rollingStockConnected = dr;
+    }
+
+
+    public void setBrakePower(int brakePower){
+        this.brakePower = brakePower;
+    }
+
+    public int getBrakePower(){
+        return this.brakePower;
     }
 
     @Override
